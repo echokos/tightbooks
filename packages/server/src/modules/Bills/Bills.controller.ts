@@ -17,6 +17,7 @@ import {
   Get,
   Query,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { BillsApplication } from './Bills.application';
 import { IBillsFilter } from './Bills.types';
@@ -28,6 +29,11 @@ import {
   BulkDeleteDto,
   ValidateBulkDeleteResponseDto,
 } from '@/common/dtos/BulkDelete.dto';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { BillAction } from './Bills.types';
 
 @Controller('bills')
 @ApiTags('Bills')
@@ -35,10 +41,12 @@ import {
 @ApiExtraModels(PaginatedResponseDto)
 @ApiCommonHeaders()
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class BillsController {
   constructor(private billsApplication: BillsApplication) { }
 
   @Post('validate-bulk-delete')
+  @RequirePermission(BillAction.Delete, AbilitySubject.Bill)
   @ApiOperation({
     summary: 'Validate which bills can be deleted and return the results.',
   })
@@ -58,6 +66,7 @@ export class BillsController {
   }
 
   @Post('bulk-delete')
+  @RequirePermission(BillAction.Delete, AbilitySubject.Bill)
   @ApiOperation({ summary: 'Deletes multiple bills.' })
   @HttpCode(200)
   @ApiResponse({
@@ -73,12 +82,14 @@ export class BillsController {
   }
 
   @Post()
+  @RequirePermission(BillAction.Create, AbilitySubject.Bill)
   @ApiOperation({ summary: 'Create a new bill.' })
   createBill(@Body() billDTO: CreateBillDto) {
     return this.billsApplication.createBill(billDTO);
   }
 
   @Put(':id')
+  @RequirePermission(BillAction.Edit, AbilitySubject.Bill)
   @ApiOperation({ summary: 'Edit the given bill.' })
   @ApiParam({
     name: 'id',
@@ -91,6 +102,7 @@ export class BillsController {
   }
 
   @Delete(':id')
+  @RequirePermission(BillAction.Delete, AbilitySubject.Bill)
   @ApiOperation({ summary: 'Delete the given bill.' })
   @ApiParam({
     name: 'id',
@@ -103,6 +115,7 @@ export class BillsController {
   }
 
   @Get()
+  @RequirePermission(BillAction.View, AbilitySubject.Bill)
   @ApiOperation({ summary: 'Retrieves the bills.' })
   @ApiResponse({
     status: 200,
@@ -132,6 +145,7 @@ export class BillsController {
   }
 
   @Get(':id/payment-transactions')
+  @RequirePermission(BillAction.View, AbilitySubject.Bill)
   @ApiOperation({
     summary: 'Retrieve the specific bill associated payment transactions.',
   })
@@ -146,6 +160,7 @@ export class BillsController {
   }
 
   @Get(':id')
+  @RequirePermission(BillAction.View, AbilitySubject.Bill)
   @ApiOperation({ summary: 'Retrieves the bill details.' })
   @ApiResponse({
     status: 200,
@@ -165,6 +180,7 @@ export class BillsController {
   }
 
   @Patch(':id/open')
+  @RequirePermission(BillAction.Edit, AbilitySubject.Bill)
   @ApiOperation({ summary: 'Open the given bill.' })
   @ApiParam({
     name: 'id',
@@ -177,6 +193,7 @@ export class BillsController {
   }
 
   @Get('due')
+  @RequirePermission(BillAction.View, AbilitySubject.Bill)
   @ApiOperation({ summary: 'Retrieves the due bills.' })
   getDueBills(@Body('vendorId') vendorId?: number) {
     return this.billsApplication.getDueBills(vendorId);

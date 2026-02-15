@@ -1,5 +1,4 @@
-import { Controller, Get, Headers } from '@nestjs/common';
-import { Query, Res } from '@nestjs/common';
+import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common';
 import { ARAgingSummaryApplication } from './ARAgingSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
@@ -12,14 +11,21 @@ import {
 import { ARAgingSummaryQueryDto } from './ARAgingSummaryQuery.dto';
 import { ARAgingSummaryResponseExample } from './ARAgingSummary.swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { ReportsAction } from '../../types/Report.types';
 
 @Controller('reports/receivable-aging-summary')
 @ApiTags('Reports')
 @ApiCommonHeaders()
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class ARAgingSummaryController {
   constructor(private readonly ARAgingSummaryApp: ARAgingSummaryApplication) {}
 
   @Get()
+  @RequirePermission(ReportsAction.READ_AR_AGING_SUMMARY, AbilitySubject.Report)
   @ApiOperation({ summary: 'Get receivable aging summary' })
   @ApiResponse({
     status: 200,

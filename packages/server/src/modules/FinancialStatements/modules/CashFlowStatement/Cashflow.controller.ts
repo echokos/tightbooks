@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
+import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common';
 import { AcceptType } from '@/constants/accept-type';
 import { CashflowSheetApplication } from './CashflowSheetApplication';
 import {
@@ -11,14 +11,21 @@ import {
 import { CashFlowStatementQueryDto } from './CashFlowStatementQuery.dto';
 import { CashflowStatementResponseExample } from './CashflowStatement.swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { ReportsAction } from '../../types/Report.types';
 
 @Controller('reports/cashflow-statement')
 @ApiTags('Reports')
 @ApiCommonHeaders()
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class CashflowController {
   constructor(private readonly cashflowSheetApp: CashflowSheetApplication) { }
 
   @Get()
+  @RequirePermission(ReportsAction.READ_CASHFLOW, AbilitySubject.Report)
   @ApiResponse({
     status: 200,
     description: 'Cashflow statement report',

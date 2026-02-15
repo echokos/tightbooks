@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
+import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common';
 import { APAgingSummaryApplication } from './APAgingSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
 import {
@@ -11,14 +11,21 @@ import {
 import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 import { APAgingSummaryResponseExample } from './APAgingSummary.swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { ReportsAction } from '../../types/Report.types';
 
 @Controller('reports/payable-aging-summary')
 @ApiTags('Reports')
 @ApiCommonHeaders()
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class APAgingSummaryController {
   constructor(private readonly APAgingSummaryApp: APAgingSummaryApplication) { }
 
   @Get()
+  @RequirePermission(ReportsAction.READ_AP_AGING_SUMMARY, AbilitySubject.Report)
   @ApiOperation({ summary: 'Get payable aging summary' })
   @ApiResponse({
     status: 200,
