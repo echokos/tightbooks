@@ -37,7 +37,7 @@ export default class InviteSendMainNotificationSubscribe {
     const organizationId = tenant.organizationId;
     const userId = authedUser.id;
 
-    this.sendInviteMailQueue.add(SendInviteUserMailJob, {
+    await this.sendInviteMailQueue.add(SendInviteUserMailJob, {
       fromUser: invitingUser,
       invite,
       userId,
