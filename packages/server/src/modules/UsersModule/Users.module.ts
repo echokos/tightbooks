@@ -20,6 +20,7 @@ import { GetUsersService } from './queries/GetUsers.service';
 import { AcceptInviteUserService } from './commands/AcceptInviteUser.service';
 import { InviteTenantUserService } from './commands/InviteUser.service';
 import { UsersInviteController } from './UsersInvite.controller';
+import { UsersInvitePublicController } from './UsersInvitePublic.controller';
 import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
 import { SendInviteUserMailQueue } from './Users.constants';
 import InviteSendMainNotificationSubscribe from './subscribers/InviteSendMailNotification.subscriber';
@@ -60,6 +61,6 @@ const models = [InjectSystemModel(UserInvite)];
     SendInviteUsersMailMessage,
     UsersApplication
   ],
-  controllers: [UsersController, UsersInviteController],
+  controllers: [UsersController, UsersInviteController, UsersInvitePublicController],
 })
 export class UsersModule {}
