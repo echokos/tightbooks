@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { sumBy } from 'lodash';
 import {
+  ICreditNoteAppliedToInvoice,
   ICreditNoteAppliedToInvoiceModel,
   IApplyCreditToInvoicesDTO,
   IApplyCreditToInvoicesCreatedPayload,
@@ -71,7 +72,7 @@ export class CreditNoteApplyToInvoices {
     // Validate invoices has remaining amount to apply.
     this.validateInvoicesRemainingAmount(
       appliedInvoicesEntries,
-      creditNoteAppliedModel.amount,
+      creditNoteAppliedModel.entries,
     );
     // Validate the credit note remaining amount.
     this.creditNoteDTOTransform.validateCreditRemainingAmount(
@@ -122,17 +123,18 @@ export class CreditNoteApplyToInvoices {
   };
 
   /**
-   * Validate the invoice remaining amount.
+   * Validate each invoice has sufficient remaining amount for the applied credit.
    * @param {ISaleInvoice[]} invoices
-   * @param {number} amount
+   * @param {ICreditNoteAppliedToInvoice[]} entries
    */
   private validateInvoicesRemainingAmount = (
     invoices: SaleInvoice[],
-    amount: number,
+    entries: ICreditNoteAppliedToInvoice[],
   ) => {
-    const invalidInvoices = invoices.filter(
-      (invoice) => invoice.dueAmount < amount,
-    );
+    const invalidInvoices = invoices.filter((invoice) => {
+      const entry = entries.find((e) => e.invoiceId === invoice.id);
+      return entry && invoice.dueAmount < entry.amount;
+    });
     if (invalidInvoices.length > 0) {
       throw new ServiceError(ERRORS.INVOICES_HAS_NO_REMAINING_AMOUNT);
     }
