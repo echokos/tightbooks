@@ -65,7 +65,7 @@ export class AuthController {
     return this.authApp.signUp(signupDto);
   }
 
-  @Post('/signup/confirm')
+  @Post('/signup/verify')
   @ApiOperation({ summary: 'Confirm user signup' })
   @ApiBody({
     schema: {
