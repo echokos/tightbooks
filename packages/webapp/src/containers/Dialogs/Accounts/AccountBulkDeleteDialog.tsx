@@ -5,7 +5,7 @@ import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
 
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeleteAccounts } from '@/hooks/query/accounts';
+import { useBulkDeleteAccountsTrpc } from '@/hooks/trpc';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withAccountsTableActions } from '@/containers/Accounts/withAccountsTableActions';
@@ -28,7 +28,7 @@ function AccountBulkDeleteDialog({
   // #withDialogActions
   closeDialog,
 }) {
-  const { mutateAsync: bulkDeleteAccounts, isLoading } = useBulkDeleteAccounts();
+  const { mutateAsync: bulkDeleteAccounts, isLoading } = useBulkDeleteAccountsTrpc();
 
   const handleCancel = () => {
     closeDialog(dialogName);

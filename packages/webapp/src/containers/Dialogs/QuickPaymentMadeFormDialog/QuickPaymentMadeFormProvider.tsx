@@ -3,10 +3,10 @@ import React, { useMemo } from 'react';
 import { DialogContent } from '@/components';
 import {
   useBill,
-  useAccounts,
   useBranches,
   useCreatePaymentMade,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { pick } from 'lodash';
@@ -27,7 +27,7 @@ function QuickPaymentMadeFormProvider({ query, billId, dialogName, ...props }) {
   });
 
   // Handle fetch accounts data.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Create payment made mutations.
   const { mutateAsync: createPaymentMadeMutate } = useCreatePaymentMade();

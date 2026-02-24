@@ -5,11 +5,11 @@ import { pick } from 'lodash';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
-  useAccounts,
   useVendorCredit,
   useBranches,
   useCreateRefundVendorCredit,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 
 const RefundVendorCreditContext = React.createContext();
 
@@ -24,7 +24,7 @@ function RefundVendorCreditFormProvider({
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Handle fetch accounts data.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Fetches the branches list.
   const {

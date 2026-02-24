@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
 import { useBankRule } from '@/hooks/query/bank-rules';
-import { useAccounts } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 
 interface RuleFormBootValues {
   bankRule?: null;
@@ -27,7 +27,7 @@ function RuleFormBoot({ bankRuleId, ...props }: RuleFormBootProps) {
       enabled: !!bankRuleId,
     },
   );
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts({}, {});
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   const isNewMode = !bankRuleId;
   const isEditMode = !isNewMode;

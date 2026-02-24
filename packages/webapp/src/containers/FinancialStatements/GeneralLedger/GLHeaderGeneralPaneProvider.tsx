@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { createContext, useContext } from 'react';
 
-import { useAccounts } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
 const GLHeaderGeneralPanelContext = createContext();
@@ -11,7 +11,7 @@ const GLHeaderGeneralPanelContext = createContext();
  */
 function GLHeaderGeneralPanelProvider({ ...props }) {
   // Accounts list.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Provider
   const provider = {

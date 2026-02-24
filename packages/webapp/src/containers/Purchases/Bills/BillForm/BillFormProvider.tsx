@@ -5,7 +5,6 @@ import { useFeatureCan } from '@/hooks/state';
 import { DashboardInsider } from '@/components/Dashboard';
 import { useProjects } from '@/containers/Projects/hooks';
 import {
-  useAccounts,
   useVendors,
   useItems,
   useBill,
@@ -15,6 +14,7 @@ import {
   useCreateBill,
   useEditBill,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { useTaxRates } from '@/hooks/query/taxRates';
 
 const BillFormContext = createContext();
@@ -48,7 +48,7 @@ function BillFormProvider({ billId, ...props }) {
   const isProjectsFeatureCan = featureCan(Features.Projects);
 
   // Handle fetch accounts.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Handle fetch vendors data table
   const {

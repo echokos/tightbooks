@@ -127,7 +127,10 @@
     "uuid": "^10.0.0",
     "xlsx": "^0.18.5",
     "yup": "^0.28.1",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@trpc/server": "^11.0.0-rc.648",
+    "nestjs-trpc": "^1.6.1",
+    "superjson": "^2.2.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

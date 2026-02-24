@@ -7,7 +7,6 @@ import { useProjects } from '@/containers/Projects/hooks';
 import {
   useSettingsPaymentReceives,
   usePaymentReceiveEditPage,
-  useAccounts,
   useCustomers,
   useBranches,
   useCreatePaymentReceive,
@@ -15,6 +14,7 @@ import {
   usePaymentReceivedState,
   PaymentReceivedStateResponse,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 
 interface PaymentReceivedFormContextValue {
@@ -52,7 +52,7 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
   const paymentEntriesEditPage = paymentReceivedEditData?.entries
 
   // Handle fetch accounts data.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Fetch payment made settings.
   const fetchSettings = useSettingsPaymentReceives();

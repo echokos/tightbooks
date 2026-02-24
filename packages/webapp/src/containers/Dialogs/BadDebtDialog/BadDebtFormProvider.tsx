@@ -2,7 +2,8 @@
 import React from 'react';
 
 import { DialogContent } from '@/components';
-import { useAccounts, useInvoice, useCreateBadDebt } from '@/hooks/query';
+import { useInvoice, useCreateBadDebt } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 
 const BadDebtContext = React.createContext();
 
@@ -11,7 +12,7 @@ const BadDebtContext = React.createContext();
  */
 function BadDebtFormProvider({ invoiceId, dialogName, ...props }) {
   // Handle fetch accounts data.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Handle fetch invoice data.
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {

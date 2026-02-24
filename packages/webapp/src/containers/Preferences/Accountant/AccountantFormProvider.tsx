@@ -5,7 +5,8 @@ import styled from 'styled-components';
 
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { useAccounts, useSaveSettings, useSettings } from '@/hooks/query';
+import { useSaveSettings, useSettings } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import PreferencesPageLoader from '../PreferencesPageLoader';
 
 const AccountantFormContext = React.createContext();
@@ -15,7 +16,7 @@ const AccountantFormContext = React.createContext();
  */
 function AccountantFormProvider({ ...props }) {
   // Fetches the accounts list.
-  const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
+  const { isLoading: isAccountsLoading, data: accounts } = useAccountsTrpc();
 
   // Fetches Organization Settings.
   const { isLoading: isSettingsLoading } = useSettings();

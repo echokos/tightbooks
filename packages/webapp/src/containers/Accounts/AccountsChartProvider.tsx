@@ -1,7 +1,8 @@
 // @ts-nocheck
 import React, { createContext } from 'react';
 import { DashboardInsider } from '@/components';
-import { useResourceViews, useResourceMeta, useAccounts } from '@/hooks/query';
+import { useResourceViews, useResourceMeta } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { getFieldsFromResourceMeta } from '@/utils';
 
 const AccountsChartContext = createContext();
@@ -26,7 +27,7 @@ function AccountsChartProvider({ query, tableStateChanged, ...props }) {
     data: accounts,
     isFetching: isAccountsFetching,
     isLoading: isAccountsLoading,
-  } = useAccounts(query, { keepPreviousData: true });
+  } = useAccountsTrpc(query, { placeholderData: (previousData) => previousData });
 
   // Provider payload.
   const provider = {

@@ -19,5 +19,8 @@
     "dev": "npm run build -- --watch"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@trpc/server": "^11.10.0"
+  }
 }

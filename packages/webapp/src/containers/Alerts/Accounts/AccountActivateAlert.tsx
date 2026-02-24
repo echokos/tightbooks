@@ -7,7 +7,7 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
-import { useActivateAccount } from '@/hooks/query';
+import { useActivateAccountTrpc } from '@/hooks/trpc';
 import { compose } from '@/utils';
 
 /**
@@ -24,8 +24,8 @@ function AccountActivateAlert({
   
   const {
     mutateAsync: activateAccount,
-    isLoading 
-  } = useActivateAccount();
+    isLoading
+  } = useActivateAccountTrpc();
 
   // Handle alert cancel.
   const handleCancel = () => {

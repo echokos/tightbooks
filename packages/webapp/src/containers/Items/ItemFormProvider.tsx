@@ -7,8 +7,8 @@ import {
   useItemsCategories,
   useCreateItem,
   useEditItem,
-  useAccounts,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { useWatchItemError } from './utils';
 import { useTaxRates } from '@/hooks/query/taxRates';
 
@@ -23,7 +23,7 @@ function ItemFormProvider({ itemId, ...props }) {
   const duplicateId = state?.action;
 
   // Fetches the accounts list.
-  const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
+  const { isLoading: isAccountsLoading, data: accounts } = useAccountsTrpc();
 
   // Fetches the items categories list.
   const {

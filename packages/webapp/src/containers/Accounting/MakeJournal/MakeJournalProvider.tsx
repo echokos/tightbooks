@@ -4,7 +4,6 @@ import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { DashboardInsider } from '@/components';
 import {
-  useAccounts,
   useAutoCompleteContacts,
   useCurrencies,
   useJournal,
@@ -13,6 +12,7 @@ import {
   useBranches,
   useSettingsManualJournals,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { useProjects } from '@/containers/Projects/hooks';
 
 const MakeJournalFormContext = createContext();
@@ -27,7 +27,7 @@ function MakeJournalProvider({ journalId, query, ...props }) {
   const isProjectFeatureCan = featureCan(Features.Projects);
 
   // Load the accounts list.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Load the customers list.
   const { data: contacts, isLoading: isContactsLoading } =

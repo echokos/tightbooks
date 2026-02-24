@@ -1,7 +1,8 @@
 import React from 'react';
 import { Spinner } from '@blueprintjs/core';
 import { Features } from '@/constants';
-import { useAccounts, useBranches } from '@/hooks/query';
+import { useBranches } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { useFeatureCan } from '@/hooks/state';
 
 interface MatchingReconcileTransactionBootProps {
@@ -21,7 +22,7 @@ export function MatchingReconcileTransactionBoot({
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
 
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts({}, {});
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
   const { data: branches, isLoading: isBranchesLoading } = useBranches(
     {},
     {

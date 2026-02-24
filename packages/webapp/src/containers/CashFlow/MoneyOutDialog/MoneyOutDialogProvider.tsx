@@ -4,12 +4,12 @@ import { DialogContent } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
-  useAccounts,
   useBranches,
   useCreateCashflowTransaction,
   useCashflowAccounts,
   useSettingCashFlow,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 
 const MoneyInDialogContent = React.createContext();
 
@@ -30,7 +30,7 @@ function MoneyOutProvider({
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Fetches accounts list.
-  const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
+  const { isLoading: isAccountsLoading, data: accounts } = useAccountsTrpc();
 
   // Fetches the branches list.
   const {

@@ -8,11 +8,11 @@ import {
   useCurrencies,
   useCustomers,
   useExpense,
-  useAccounts,
   useBranches,
   useCreateExpense,
   useEditExpense,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { useProjects } from '@/containers/Projects/hooks';
 
 const ExpenseFormPageContext = createContext();
@@ -47,7 +47,7 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Fetch accounts list.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Fetch the  projects list.
   const {

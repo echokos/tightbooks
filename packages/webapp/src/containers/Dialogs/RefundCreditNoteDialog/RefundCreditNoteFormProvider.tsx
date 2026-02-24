@@ -5,11 +5,11 @@ import { pick } from 'lodash';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
-  useAccounts,
   useCreditNote,
   useBranches,
   useCreateRefundCreditNote,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 
 const RefundCreditNoteContext = React.createContext();
 
@@ -27,7 +27,7 @@ function RefundCreditNoteFormProvider({
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Handle fetch accounts data.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Handle fetch credit note data.
   const { data: creditNote, isLoading: isCreditNoteLoading } = useCreditNote(

@@ -5,12 +5,12 @@ import { DialogContent } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
-  useAccounts,
   useInvoice,
   useBranches,
   useSettingsPaymentReceives,
   useCreatePaymentReceive,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 
 const QuickPaymentReceiveContext = createContext();
 
@@ -28,7 +28,7 @@ function QuickPaymentReceiveFormProvider({
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Handle fetch accounts data.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Handle fetch invoice data.
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {

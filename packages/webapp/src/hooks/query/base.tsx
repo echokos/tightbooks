@@ -1,4 +1,6 @@
 // @ts-nocheck
+import { QueryClient } from '@tanstack/react-query';
+
 // Query client config.
 export const queryConfig = {
   defaultOptions: {
@@ -8,3 +10,6 @@ export const queryConfig = {
     },
   },
 };
+
+// Create a new QueryClient instance for tRPC
+export const tanstackQueryClient = new QueryClient(queryConfig);

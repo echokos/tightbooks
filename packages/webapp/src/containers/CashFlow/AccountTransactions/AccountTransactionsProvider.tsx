@@ -2,7 +2,8 @@
 import React, { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DashboardInsider } from '@/components';
-import { useCashflowAccounts, useAccount } from '@/hooks/query';
+import { useCashflowAccounts } from '@/hooks/query';
+import { useAccountTrpc } from '@/hooks/trpc';
 import { useAppQueryString } from '@/hooks';
 import { useGetBankAccountSummaryMeta } from '@/hooks/query/bank-rules';
 
@@ -33,7 +34,7 @@ function AccountTransactionsProvider({ query, ...props }) {
     data: currentAccount,
     isFetching: isCurrentAccountFetching,
     isLoading: isCurrentAccountLoading,
-  } = useAccount(accountId, { keepPreviousData: true });
+  } = useAccountTrpc(accountId, { placeholderData: (previousData) => previousData });
 
   // Retrieves the bank account meta summary.
   const {

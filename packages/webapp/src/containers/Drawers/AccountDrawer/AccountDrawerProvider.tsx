@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { useAccount, useAccountTransactions } from '@/hooks/query';
+import { useAccountTrpc, useAccountTransactionsTrpc } from '@/hooks/trpc';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 
@@ -11,13 +11,13 @@ const AccountDrawerContext = React.createContext();
  */
 function AccountDrawerProvider({ accountId, name, ...props }) {
   // Fetches the specific account details.
-  const { data: account, isLoading: isAccountLoading } = useAccount(accountId, {
+  const { data: account, isLoading: isAccountLoading } = useAccountTrpc(accountId, {
     enabled: !!accountId,
   });
 
   // Load the specific account transactions.
   const { data: accounts, isLoading: isAccountsLoading } =
-    useAccountTransactions(accountId, {
+    useAccountTransactionsTrpc(accountId, {}, {
       enabled: !!accountId,
     });
 

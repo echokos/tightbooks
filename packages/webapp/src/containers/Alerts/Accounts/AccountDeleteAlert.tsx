@@ -14,7 +14,7 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { useDeleteAccount } from '@/hooks/query';
+import { useDeleteAccountTrpc } from '@/hooks/trpc';
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 
@@ -34,7 +34,7 @@ function AccountDeleteAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { isLoading, mutateAsync: deleteAccount } = useDeleteAccount();
+  const { isLoading, mutateAsync: deleteAccount } = useDeleteAccountTrpc();
 
   // handle cancel delete account alert.
   const handleCancelAccountDelete = () => {

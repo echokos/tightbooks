@@ -5,11 +5,11 @@ import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
   useItem,
-  useAccounts,
   useBranches,
   useWarehouses,
   useCreateInventoryAdjustment,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 
 const InventoryAdjustmentContext = createContext();
 
@@ -23,7 +23,7 @@ function InventoryAdjustmentFormProvider({ itemId, dialogName, ...props }) {
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Fetches accounts list.
-  const { isFetching: isAccountsLoading, data: accounts } = useAccounts();
+  const { isLoading: isAccountsLoading, data: accounts } = useAccountsTrpc();
 
   // Fetches the item details.
   const { isFetching: isItemLoading, data: item } = useItem(itemId);

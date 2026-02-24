@@ -8,7 +8,7 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { compose } from '@/utils';
-import { useInactivateAccount } from '@/hooks/query';
+import { useInactivateAccountTrpc } from '@/hooks/trpc';
 
 /**
  * Account inactivate alert.
@@ -23,7 +23,7 @@ function AccountInactivateAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: inactivateAccount, isLoading } = useInactivateAccount();
+  const { mutateAsync: inactivateAccount, isLoading } = useInactivateAccountTrpc();
 
   const handleCancelInactiveAccount = () => {
     closeAlert('account-inactivate');

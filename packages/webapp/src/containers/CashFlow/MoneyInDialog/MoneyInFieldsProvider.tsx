@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
-import { useAccount } from '@/hooks/query';
+import { useAccountTrpc } from '@/hooks/trpc';
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 
 const MoneyInFieldsContext = React.createContext();
@@ -13,7 +13,7 @@ function MoneyInFieldsProvider({ ...props }) {
   const { accountId } = useMoneyInDailogContext();
 
   // Fetches the specific account details.
-  const { data: account, isLoading: isAccountLoading } = useAccount(accountId, {
+  const { data: account, isLoading: isAccountLoading } = useAccountTrpc(accountId, {
     enabled: !!accountId,
   });
   // Provider data.

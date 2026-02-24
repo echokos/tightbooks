@@ -5,7 +5,6 @@ import { useFeatureCan } from '@/hooks/state';
 import { DashboardInsider } from '@/components/Dashboard';
 import {
   useReceipt,
-  useAccounts,
   useSettingsReceipts,
   useCustomers,
   useWarehouses,
@@ -16,6 +15,7 @@ import {
   useGetReceiptState,
   IGetReceiptStateResponse,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { useProjects } from '@/containers/Projects/hooks';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 
@@ -43,7 +43,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     enabled: !!receiptId,
   });
   // Fetch accounts list.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Fetch customers list.
   const {

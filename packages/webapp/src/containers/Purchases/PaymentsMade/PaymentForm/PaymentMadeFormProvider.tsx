@@ -3,7 +3,6 @@ import React, { createContext, useContext, useState } from 'react';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
-  useAccounts,
   useVendors,
   useItems,
   useBranches,
@@ -12,6 +11,7 @@ import {
   useCreatePaymentMade,
   useEditPaymentMade,
 } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { DashboardInsider } from '@/components';
 
 // Payment made form context.
@@ -29,7 +29,7 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Handle fetch accounts data.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Handle fetch Items data table or list.
   const {

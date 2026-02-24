@@ -4,6 +4,7 @@ import { Router, Switch, Route } from 'react-router';
 import { createBrowserHistory } from 'history';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { trpc, trpcClient, queryClient } from '@/trpc';
 
 import '@/style/App.scss';
 import 'moment/locale/ar-ly';
@@ -86,14 +87,16 @@ export default function App() {
   const queryClient = new QueryClient(queryConfig);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <SplashScreen />
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <SplashScreen />
 
-      <AppIntlLoader>
-        <AppInsider history={history} />
-      </AppIntlLoader>
+        <AppIntlLoader>
+          <AppInsider history={history} />
+        </AppIntlLoader>
 
-      <ReactQueryDevtools initialIsOpen />
-    </QueryClientProvider>
+        <ReactQueryDevtools initialIsOpen />
+      </QueryClientProvider>
+    </trpc.Provider>
   );
 }

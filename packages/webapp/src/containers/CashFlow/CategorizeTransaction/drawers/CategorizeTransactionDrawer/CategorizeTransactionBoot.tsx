@@ -2,7 +2,8 @@
 import React, { useMemo } from 'react';
 import { first } from 'lodash';
 import { DrawerLoading } from '@/components';
-import { useAccounts, useBranches } from '@/hooks/query';
+import { useBranches } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 import { Spinner } from '@blueprintjs/core';
@@ -43,7 +44,7 @@ function CategorizeTransactionBoot({
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Fetches accounts list.
-  const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
+  const { isLoading: isAccountsLoading, data: accounts } = useAccountsTrpc();
 
   // Fetches the branches list.
   const { data: branches, isLoading: isBranchesLoading } = useBranches(

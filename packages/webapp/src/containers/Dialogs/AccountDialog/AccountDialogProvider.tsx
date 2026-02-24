@@ -2,13 +2,15 @@
 import React, { createContext, useContext } from 'react';
 import { DialogContent } from '@/components';
 import {
-  useCreateAccount,
-  useAccountsTypes,
   useCurrencies,
-  useAccount,
-  useAccounts,
-  useEditAccount,
 } from '@/hooks/query';
+import {
+  useCreateAccountTrpc,
+  useAccountsTypesTrpc,
+  useAccountTrpc,
+  useAccountsTrpc,
+  useEditAccountTrpc,
+} from '@/hooks/trpc';
 import { AccountDialogAction, getDisabledFormFields } from './utils';
 
 const AccountDialogContext = createContext();
@@ -18,18 +20,18 @@ const AccountDialogContext = createContext();
  */
 function AccountDialogProvider({ dialogName, payload, ...props }) {
   // Create and edit account mutations.
-  const { mutateAsync: createAccountMutate } = useCreateAccount();
-  const { mutateAsync: editAccountMutate } = useEditAccount();
+  const { mutateAsync: createAccountMutate } = useCreateAccountTrpc();
+  const { mutateAsync: editAccountMutate } = useEditAccountTrpc();
 
   // Fetches accounts list.
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
 
   // Fetches accounts types.
   const { data: accountsTypes, isLoading: isAccountsTypesLoading } =
-    useAccountsTypes();
+    useAccountsTypesTrpc();
 
   // Fetches the specific account details.
-  const { data: account, isLoading: isAccountLoading } = useAccount(
+  const { data: account, isLoading: isAccountLoading } = useAccountTrpc(
     payload.accountId,
     {
       enabled:

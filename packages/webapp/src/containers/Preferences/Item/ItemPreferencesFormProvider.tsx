@@ -5,7 +5,8 @@ import styled from 'styled-components';
 
 import { CLASSES } from '@/constants/classes';
 import { Card } from '@/components';
-import { useSettingsItems, useAccounts, useSaveSettings } from '@/hooks/query';
+import { useSettingsItems, useSaveSettings } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import PreferencesPageLoader from '../PreferencesPageLoader';
 
 const ItemFormContext = createContext();
@@ -16,7 +17,7 @@ const ItemFormContext = createContext();
 
 function ItemPreferencesFormProvider({ ...props }) {
   // Fetches the accounts list.
-  const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
+  const { isLoading: isAccountsLoading, data: accounts } = useAccountsTrpc();
 
   const {
     isLoading: isItemsSettingsLoading,

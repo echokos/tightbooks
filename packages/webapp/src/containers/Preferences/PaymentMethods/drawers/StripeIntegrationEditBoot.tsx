@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
-import { useAccounts } from '@/hooks/query';
+import { useAccountsTrpc } from '@/hooks/trpc';
 import { useGetPaymentMethod } from '@/hooks/query/payment-services';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 
@@ -40,7 +40,7 @@ export const StripeIntegrationEditBoot: React.FC<
     payload: { stripePaymentMethodId },
   } = useDrawerContext();
 
-  const { data: accounts, isLoading: isAccountsLoading } = useAccounts({}, {});
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountsTrpc();
   const { data: paymentMethod, isLoading: isPaymentMethodLoading } =
     useGetPaymentMethod(stripePaymentMethodId, {
       enabled: !!stripePaymentMethodId,
