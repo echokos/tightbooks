@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -14,6 +15,10 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { CreditNoteAction } from '../CreditNotes/types/CreditNotes.types';
+import { GetCreditNoteAssociatedInvoicesToApply } from './queries/GetCreditNoteAssociatedInvoicesToApply.service';
+import { CreditNoteApplyToInvoices } from './commands/CreditNoteApplyToInvoices.service';
+import { DeleteCreditNoteApplyToInvoices } from './commands/DeleteCreditNoteApplyToInvoices.service';
+import { ApplyCreditNoteToInvoicesDto } from './dtos/ApplyCreditNoteToInvoices.dto';
 
 @Controller('credit-notes')
 @ApiTags('Credit Notes Apply Invoice')
@@ -22,6 +27,9 @@ import { CreditNoteAction } from '../CreditNotes/types/CreditNotes.types';
 export class CreditNotesApplyInvoiceController {
   constructor(
     private readonly getCreditNoteAssociatedAppliedInvoicesService: GetCreditNoteAssociatedAppliedInvoices,
+    private readonly getCreditNoteAssociatedInvoicesToApplyService: GetCreditNoteAssociatedInvoicesToApply,
+    private readonly creditNoteApplyToInvoicesService: CreditNoteApplyToInvoices,
+    private readonly deleteCreditNoteApplyToInvoicesService: DeleteCreditNoteApplyToInvoices,
   ) {}
 
   @Get(':creditNoteId/applied-invoices')
@@ -39,6 +47,23 @@ export class CreditNotesApplyInvoiceController {
     );
   }
 
+  @Get(':creditNoteId/apply-invoices')
+  @RequirePermission(CreditNoteAction.View, AbilitySubject.CreditNote)
+  @ApiOperation({ summary: 'Get credit note associated invoices to apply' })
+  @ApiResponse({
+    status: 200,
+    description: 'Credit note associated invoices to apply',
+  })
+  @ApiResponse({ status: 404, description: 'Credit note not found' })
+  @ApiResponse({ status: 400, description: 'Invalid input data' })
+  getCreditNoteAssociatedInvoicesToApply(
+    @Param('creditNoteId') creditNoteId: number,
+  ) {
+    return this.getCreditNoteAssociatedInvoicesToApplyService.getCreditAssociatedInvoicesToApply(
+      creditNoteId,
+    );
+  }
+
   @Post(':creditNoteId/apply-invoices')
   @RequirePermission(CreditNoteAction.Edit, AbilitySubject.CreditNote)
   @ApiOperation({ summary: 'Apply credit note to invoices' })
@@ -48,9 +73,32 @@ export class CreditNotesApplyInvoiceController {
   })
   @ApiResponse({ status: 404, description: 'Credit note not found' })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
-  applyCreditNoteToInvoices(@Param('creditNoteId') creditNoteId: number) {
-    return this.getCreditNoteAssociatedAppliedInvoicesService.getCreditAssociatedAppliedInvoices(
+  applyCreditNoteToInvoices(
+    @Param('creditNoteId') creditNoteId: number,
+    @Body() applyDto: ApplyCreditNoteToInvoicesDto,
+  ) {
+    return this.creditNoteApplyToInvoicesService.applyCreditNoteToInvoices(
       creditNoteId,
+      applyDto,
+    );
+  }
+
+  @Delete('applied-invoices/:applyCreditToInvoicesId')
+  @RequirePermission(CreditNoteAction.Edit, AbilitySubject.CreditNote)
+  @ApiOperation({ summary: 'Delete applied credit note to invoice' })
+  @ApiResponse({
+    status: 200,
+    description: 'Credit note application successfully deleted',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Credit note application not found',
+  })
+  deleteApplyCreditNoteToInvoices(
+    @Param('applyCreditToInvoicesId') applyCreditToInvoicesId: number,
+  ) {
+    return this.deleteCreditNoteApplyToInvoicesService.deleteApplyCreditNoteToInvoices(
+      applyCreditToInvoicesId,
     );
   }
 }
