@@ -55,7 +55,7 @@ export default function CustomerFormPrimarySection({}) {
         label={<T id={'company_name'} />}
         inline={true}
       >
-        <InputGroup name={'company_name'} />
+        <FInputGroup name={'company_name'} />
       </FFormGroup>
 
       {/*----------- Display Name -----------*/}

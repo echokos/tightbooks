@@ -48,7 +48,10 @@ export class EditVendorDto extends ContactAddressDto {
   @IsString()
   personalPhone?: string;
 
-  @ApiProperty({ required: false, description: 'Additional notes about the vendor' })
+  @ApiProperty({
+    required: false,
+    description: 'Additional notes about the vendor',
+  })
   @IsOptional()
   @IsString()
   note?: string;
