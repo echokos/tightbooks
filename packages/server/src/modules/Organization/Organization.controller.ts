@@ -28,6 +28,7 @@ import { UpdateOrganizationService } from './commands/UpdateOrganization.service
 import { IgnoreTenantInitializedRoute } from '../Tenancy/EnsureTenantIsInitialized.guard';
 import { IgnoreTenantSeededRoute } from '../Tenancy/EnsureTenantIsSeeded.guards';
 import { IgnoreTenantModelsInitialize } from '../Tenancy/TenancyInitializeModels.guard';
+import { IgnoreUserVerifiedRoute } from '../Auth/guards/EnsureUserVerified.guard';
 import { GetBuildOrganizationBuildJob } from './commands/GetBuildOrganizationJob.service';
 import { OrganizationBaseCurrencyLocking } from './Organization/OrganizationBaseCurrencyLocking.service';
 import {
@@ -93,6 +94,7 @@ export class OrganizationController {
 
   @Get('current')
   @HttpCode(200)
+  @IgnoreUserVerifiedRoute()
   @ApiOperation({ summary: 'Get current organization' })
   @ApiResponse({
     status: 200,
