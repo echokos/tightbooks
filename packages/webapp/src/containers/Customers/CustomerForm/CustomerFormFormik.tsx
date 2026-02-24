@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 import { CLASSES } from '@/constants/classes';
 import { CreateCustomerForm, EditCustomerForm } from './CustomerForm.schema';
-import { compose, transformToForm, saveInvoke } from '@/utils';
+import { compose, transformToForm, saveInvoke, parseBoolean } from '@/utils';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { defaultInitialValues } from './utils';
 
@@ -60,7 +60,10 @@ function CustomerFormFormik({
   // Handles the form submit.
   const handleFormSubmit = (values, formArgs) => {
     const { setSubmitting, resetForm } = formArgs;
-    const formValues = { ...values };
+    const formValues = {
+      ...values,
+      active: parseBoolean(values.active, true),
+    };
 
     const onSuccess = (res) => {
       AppToaster.show({

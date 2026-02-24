@@ -21,7 +21,7 @@ import VendorFloatingActions from './VendorFloatingActions';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { useVendorFormContext } from './VendorFormProvider';
-import { compose, transformToForm, safeInvoke } from '@/utils';
+import { compose, transformToForm, safeInvoke, parseBoolean } from '@/utils';
 import { defaultInitialValues } from './utils';
 
 import '@/style/pages/Vendors/Form.scss';
@@ -69,7 +69,10 @@ function VendorFormFormik({
   // Handles the form submit.
   const handleFormSubmit = (values, form) => {
     const { setSubmitting, resetForm } = form;
-    const requestForm = { ...values };
+    const requestForm = {
+      ...values,
+      active: parseBoolean(values.active, true),
+    };
 
     setSubmitting(true);
 

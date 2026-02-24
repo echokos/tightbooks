@@ -27,20 +27,20 @@ const CustomerBillingAddress = ({}) => {
 
           {/*------------ Billing Address 1  -----------*/}
           <FFormGroup
-            name={'billing_address_1'}
+            name={'billing_address1'}
             label={<T id={'address_line_1'} />}
             inline={true}
           >
-            <FTextArea name={'billing_address_1'} />
+            <FTextArea name={'billing_address1'} />
           </FFormGroup>
 
           {/*------------ Billing Address 2  -----------*/}
           <FFormGroup
-            name={'billing_address_2'}
+            name={'billing_address2'}
             label={<T id={'address_line_2'} />}
             inline={true}
           >
-            <FTextArea name={'billing_address_2'} />
+            <FTextArea name={'billing_address2'} />
           </FFormGroup>
           {/*------------ Billing Address city  -----------*/}
           <FFormGroup
@@ -93,20 +93,20 @@ const CustomerBillingAddress = ({}) => {
 
           {/*------------ Shipping Address 1  -----------*/}
           <FFormGroup
-            name={'shipping_address_1'}
+            name={'shipping_address1'}
             label={<T id={'address_line_1'} />}
             inline={true}
           >
-            <FTextArea name={'shipping_address_1'} />
+            <FTextArea name={'shipping_address1'} />
           </FFormGroup>
 
           {/*------------ Shipping Address 2  -----------*/}
           <FFormGroup
-            name={'shipping_address_2'}
+            name={'shipping_address2'}
             label={<T id={'address_line_2'} />}
             inline={true}
           >
-            <FTextArea name={'shipping_address_2'} />
+            <FTextArea name={'shipping_address2'} />
           </FFormGroup>
 
           {/*------------ Shipping Address city  -----------*/}
