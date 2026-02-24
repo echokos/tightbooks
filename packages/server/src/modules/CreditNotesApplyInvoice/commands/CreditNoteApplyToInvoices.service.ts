@@ -18,6 +18,7 @@ import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
 import { CreditNoteAppliedInvoice } from '../models/CreditNoteAppliedInvoice';
 import { CommandCreditNoteDTOTransform } from '@/modules/CreditNotes/commands/CommandCreditNoteDTOTransform.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { ApplyCreditNoteToInvoicesDto } from '../dtos/ApplyCreditNoteToInvoices.dto';
 
 @Injectable()
 export class CreditNoteApplyToInvoices {
@@ -49,7 +50,7 @@ export class CreditNoteApplyToInvoices {
    */
   public async applyCreditNoteToInvoices(
     creditNoteId: number,
-    applyCreditToInvoicesDTO: IApplyCreditToInvoicesDTO,
+    applyCreditToInvoicesDTO: ApplyCreditNoteToInvoicesDto,
   ): Promise<CreditNoteAppliedInvoice[]> {
     // Saves the credit note or throw not found service error.
     const creditNote = await this.creditNoteModel()
@@ -131,11 +132,12 @@ export class CreditNoteApplyToInvoices {
     invoices: SaleInvoice[],
     entries: ICreditNoteAppliedToInvoice[],
   ) => {
-    const invalidInvoices = invoices.filter((invoice) => {
-      const entry = entries.find((e) => e.invoiceId === invoice.id);
-      return entry && invoice.dueAmount < entry.amount;
+    const invoiceMap = new Map(invoices.map((inv) => [inv.id, inv]));
+    const invalidEntries = entries.filter((entry) => {
+      const invoice = invoiceMap.get(entry.invoiceId);
+      return invoice != null && invoice.dueAmount < entry.amount;
     });
-    if (invalidInvoices.length > 0) {
+    if (invalidEntries.length > 0) {
       throw new ServiceError(ERRORS.INVOICES_HAS_NO_REMAINING_AMOUNT);
     }
   };
