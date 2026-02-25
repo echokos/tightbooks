@@ -14,9 +14,10 @@ enum ROW_TYPE {
 
 export class TransactionsByContactsTableRows {
   public i18n: I18nService;
+  public dateFormat: string;
 
   public dateAccessor = (value): string => {
-    return moment(value.date).format('YYYY MMM DD');
+    return moment(value.date).format(this.dateFormat);
   };
 
   /**

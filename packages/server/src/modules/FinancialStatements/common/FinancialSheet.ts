@@ -15,6 +15,7 @@ export class FinancialSheet {
     negativeFormat: 'mines',
   };
   public baseCurrency: string;
+  public dateFormat: string = 'YYYY MMM DD';
 
   /**
    * Transformes the number format query to settings
@@ -140,9 +141,10 @@ export class FinancialSheet {
    * @param {string} format
    * @returns
    */
-  protected getDateMeta(date: moment.MomentInput, format = 'YYYY-MM-DD') {
+  protected getDateMeta(date: moment.MomentInput, format?: string) {
+    const dateFormat = format || this.dateFormat || 'YYYY MMM DD';
     return {
-      formattedDate: moment(date).format(format),
+      formattedDate: moment(date).format(dateFormat),
       date: moment(date).toDate(),
     };
   }
