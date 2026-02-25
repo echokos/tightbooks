@@ -23,8 +23,8 @@ export class CashflowSheetMeta {
     query: ICashFlowStatementQuery,
   ): Promise<ICashFlowStatementMeta> {
     const meta = await this.financialSheetMeta.meta();
-    const formattedToDate = moment(query.toDate).format('YYYY/MM/DD');
-    const formattedFromDate = moment(query.fromDate).format('YYYY/MM/DD');
+    const formattedToDate = moment(query.toDate).format(meta.dateFormat);
+    const formattedFromDate = moment(query.fromDate).format(meta.dateFormat);
     const fromLabel = this.i18n.t('cash_flow_statement.from_date');
     const toLabel = this.i18n.t('cash_flow_statement.to_date');
     const formattedDateRange = `${fromLabel} ${formattedFromDate} | ${toLabel} ${formattedToDate}`;

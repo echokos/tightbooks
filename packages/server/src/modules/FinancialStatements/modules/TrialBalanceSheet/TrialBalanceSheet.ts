@@ -12,6 +12,7 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 import { ModelObject } from 'objection';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
+import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
 
 export class TrialBalanceSheet extends FinancialSheet {
   /**
@@ -42,14 +43,15 @@ export class TrialBalanceSheet extends FinancialSheet {
   constructor(
     query: ITrialBalanceSheetQuery,
     repository: TrialBalanceSheetRepository,
-    baseCurrency: string
+    meta: IFinancialReportMeta,
   ) {
     super();
 
     this.query = query;
     this.repository = repository;
     this.numberFormat = this.query.numberFormat;
-    this.baseCurrency = baseCurrency;
+    this.baseCurrency = meta.baseCurrency;
+    this.dateFormat = meta.dateFormat || DEFAULT_REPORT_META.dateFormat;
   }
 
   /**
