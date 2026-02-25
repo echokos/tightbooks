@@ -149,6 +149,11 @@ export class FinancialSheet {
     };
   }
 
+  protected getDateFormatted(date: moment.MomentInput, format?: string) {
+    const dateFormat = format || this.dateFormat || 'YYYY MMM DD';
+    return moment(date).format(dateFormat);
+  }
+
   getPercentageBasis = (base, amount) => {
     return base ? amount / base : 0;
   };
