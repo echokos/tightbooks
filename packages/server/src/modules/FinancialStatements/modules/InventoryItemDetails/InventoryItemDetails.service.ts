@@ -40,15 +40,11 @@ export class InventoryDetailsService {
     const meta = await this.inventoryDetailsMeta.meta(query);
 
     // Inventory details report mapper.
-    // Get tenant metadata for baseCurrency
-    const tenantMetadata = await this.tenancyContext.getTenantMetadata();
-
-    // Inventory details report mapper.
     const inventoryDetailsInstance = new InventoryDetails(
       filter,
       this.inventoryItemDetailsRepository,
       this.i18n,
-      { baseCurrency: tenantMetadata.baseCurrency, dateFormat: meta.dateFormat },
+      { baseCurrency: meta.baseCurrency, dateFormat: meta.dateFormat },
     );
 
     return {
