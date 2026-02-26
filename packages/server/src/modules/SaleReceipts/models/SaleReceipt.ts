@@ -72,7 +72,7 @@ export class SaleReceipt extends ExtendedModel {
    * Timestamps columns.
    */
   get timestamps() {
-    return ['created_at', 'updated_at'];
+    return ['createdAt', 'updatedAt'];
   }
 
   /**

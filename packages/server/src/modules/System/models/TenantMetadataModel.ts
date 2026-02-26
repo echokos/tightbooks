@@ -51,6 +51,13 @@ export class TenantMetadata extends BaseModel {
   static tableName = 'tenants_metadata';
 
   /**
+   * Timestamps columns.
+   */
+  get timestamps() {
+    return [];
+  }
+
+  /**
    * Virtual attributes.
    */
   static get virtualAttributes() {
