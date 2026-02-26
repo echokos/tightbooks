@@ -45,6 +45,13 @@ export class Item extends TenantBaseModel {
   }
 
   /**
+   * Timestamps columns.
+   */
+  get timestamps() {
+    return ['createdAt', 'updatedAt'];
+  }
+
+  /**
    * Model modifiers.
    */
   static get modifiers() {
