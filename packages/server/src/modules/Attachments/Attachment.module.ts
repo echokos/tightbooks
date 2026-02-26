@@ -15,6 +15,8 @@ import { AttachmentsOnPaymentsReceived } from "./events/AttachmentsOnPaymentsRec
 import { AttachmentsOnManualJournals } from "./events/AttachmentsOnManualJournals";
 import { AttachmentsOnVendorCredits } from "./events/AttachmentsOnVendorCredits";
 import { AttachmentsOnSaleInvoiceCreated } from "./events/AttachmentsOnSaleInvoice";
+import { AttachmentsOnSaleReceipt } from "./events/AttachmentsOnSaleReceipts";
+import { AttachmentsOnSaleEstimates } from "./events/AttachmentsOnSaleEstimates";
 import { AttachmentsController } from "./Attachments.controller";
 import { RegisterTenancyModel } from "../Tenancy/TenancyModels/Tenancy.module";
 import { DocumentModel } from "./models/Document.model";
@@ -50,6 +52,8 @@ const models = [
     AttachmentsOnManualJournals,
     AttachmentsOnVendorCredits,
     AttachmentsOnSaleInvoiceCreated,
+    AttachmentsOnSaleReceipt,
+    AttachmentsOnSaleEstimates,
     AttachmentsApplication,
     UploadDocument,
     AttachmentUploadPipeline,
