@@ -11,7 +11,9 @@ import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { CreditNoteMeta } from './CreditNote.meta';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { CreditNoteDefaultViews } from '../constants';
+import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttachable.decorator';
 
+@InjectAttachable()
 @ExportableModel()
 @ImportableModel()
 @InjectModelMeta(CreditNoteMeta)
