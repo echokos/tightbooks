@@ -180,7 +180,6 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     isInvoiceStateLoading,
 
     isBootLoading,
-    isNewMode,
   };
 
   return <InvoiceFormContext.Provider value={provider} {...props} />;
