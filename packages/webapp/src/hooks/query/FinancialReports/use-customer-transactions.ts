@@ -22,10 +22,12 @@ export function useCustomersTransactionsReport(query, props) {
       select: (res) => ({
         data: res.data.table,
         tableRows: res.data.table.rows,
+        meta: res.data.meta,
       }),
       defaultData: {
         tableRows: [],
         data: [],
+        meta: {},
       },
       ...props,
     },

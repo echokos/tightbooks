@@ -17,7 +17,7 @@ export default function VendorsBalanceSummaryTable({
   organizationName,
 }) {
   const {
-    VendorBalanceSummary: { table, query },
+    VendorBalanceSummary: { table, query, meta },
   } = useVendorsBalanceSummaryContext();
 
   // vendors balance summary columns.
@@ -27,7 +27,7 @@ export default function VendorsBalanceSummaryTable({
     <VendorBalanceFinancialSheet
       companyName={organizationName}
       sheetType={intl.get('vendors_balance_summary')}
-      asDate={query.as_date}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
     >
       <VendorBalanceDataTable
         columns={columns}

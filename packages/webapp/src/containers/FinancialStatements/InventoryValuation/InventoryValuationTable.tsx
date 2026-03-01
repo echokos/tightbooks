@@ -19,7 +19,7 @@ export default function InventoryValuationTable({
 }) {
   // Inventory valuation context.
   const {
-    inventoryValuation: { table, query },
+    inventoryValuation: { table, query, meta },
     isLoading,
   } = useInventoryValuationContext();
 
@@ -30,7 +30,7 @@ export default function InventoryValuationTable({
     <InventoryValuationSheet
       companyName={companyName}
       sheetType={intl.get('inventory_valuation')}
-      asDate={query.as_date}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
       loading={isLoading}
     >
       <InventoryValuationDataTable
