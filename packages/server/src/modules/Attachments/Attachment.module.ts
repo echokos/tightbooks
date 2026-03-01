@@ -3,7 +3,7 @@ import * as multerS3 from 'multer-s3';
 import { S3_CLIENT, S3Module } from "../S3/S3.module";
 import { DeleteAttachment } from "./DeleteAttachment";
 import { GetAttachment } from "./GetAttachment";
-import { getAttachmentPresignedUrl } from "./GetAttachmentPresignedUrl";
+import { GetAttachmentPresignedUrl } from "./GetAttachmentPresignedUrl";
 import { LinkAttachment } from "./LinkAttachment";
 import { UnlinkAttachment } from "./UnlinkAttachment";
 import { ValidateAttachments } from "./ValidateAttachments";
@@ -35,12 +35,12 @@ const models = [
 
 @Module({
   imports: [S3Module, ...models],
-  exports: [...models],
+  exports: [...models, GetAttachmentPresignedUrl],
   controllers: [AttachmentsController],
   providers: [
     DeleteAttachment,
     GetAttachment,
-    getAttachmentPresignedUrl,
+    GetAttachmentPresignedUrl,
     LinkAttachment,
     UnlinkAttachment,
     ValidateAttachments,
