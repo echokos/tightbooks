@@ -20,7 +20,7 @@ export default function CustomersTransactionsTable({
 }) {
   // Customers transactions context.
   const {
-    customersTransactions: { tableRows },
+    customersTransactions: { tableRows, meta },
     query,
   } = useCustomersTransactionsContext();
 
@@ -36,8 +36,7 @@ export default function CustomersTransactionsTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('customers_transactions')}
-      fromDate={query.from_date}
-      toDate={query.to_date}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
       fullWidth={true}
     >
       <CustomersTransactionsDataTable

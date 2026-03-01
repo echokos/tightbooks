@@ -23,7 +23,7 @@ import { useJournalSheetColumns } from './dynamicColumns';
 export function JournalTable({ companyName }) {
   // Journal sheet context.
   const {
-    journalSheet: { table, query },
+    journalSheet: { table, query, meta },
     isLoading,
   } = useJournalSheetContext();
 
@@ -37,8 +37,7 @@ export function JournalTable({ companyName }) {
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('journal_sheet')}
-      fromDate={query.from_date}
-      toDate={query.to_date}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
       loading={isLoading}
       fullWidth={true}
       name="journal"

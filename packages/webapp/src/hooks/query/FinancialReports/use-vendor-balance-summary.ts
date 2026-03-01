@@ -22,10 +22,12 @@ export function useVendorsBalanceSummaryReport(query, props) {
       select: (res) => ({
         query: res.data.query,
         table: res.data.table,
+        meta: res.data.meta,
       }),
       defaultData: {
         table: {},
         query: {},
+        meta: {},
       },
       ...props,
     },

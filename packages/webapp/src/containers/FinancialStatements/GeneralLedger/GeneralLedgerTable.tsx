@@ -21,7 +21,7 @@ import { useGeneralLedgerTableColumns } from './dynamicColumns';
 export default function GeneralLedgerTable({ companyName }) {
   // General ledger context.
   const {
-    generalLedger: { query, table },
+    generalLedger: { query, table, meta },
     isLoading,
   } = useGeneralLedgerContext();
 
@@ -38,8 +38,7 @@ export default function GeneralLedgerTable({ companyName }) {
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('general_ledger_sheet')}
-      fromDate={query.from_date}
-      toDate={query.to_date}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
       loading={isLoading}
       fullWidth={true}
     >

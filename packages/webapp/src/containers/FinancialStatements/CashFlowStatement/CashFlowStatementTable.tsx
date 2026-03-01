@@ -18,7 +18,7 @@ export default function CashFlowStatementTable({
   companyName,
 }) {
   const {
-    cashFlowStatement: { tableRows },
+    cashFlowStatement: { tableRows, meta },
     query,
   } = useCashFlowStatementContext();
 
@@ -32,8 +32,7 @@ export default function CashFlowStatementTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('statement_of_cash_flow')}
-      fromDate={query.from_date}
-      toDate={query.to_date}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
       basis={query.basis}
     >
       <CashflowStatementDataTable
