@@ -18,7 +18,7 @@ export default function BalanceSheetTable({
 }) {
   // Balance sheet context.
   const {
-    balanceSheet: { table, query },
+    balanceSheet: { table, query, meta },
   } = useBalanceSheetContext();
 
   // Retrieve the database columns.
@@ -34,7 +34,7 @@ export default function BalanceSheetTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('balance_sheet')}
-      asDate={query.to_date}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
       basis={query.basis}
     >
       <BalanceSheetDataTable

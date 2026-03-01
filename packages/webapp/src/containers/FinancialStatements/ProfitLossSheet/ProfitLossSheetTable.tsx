@@ -19,7 +19,7 @@ export default function ProfitLossSheetTable({
 }) {
   // Profit/Loss sheet context.
   const {
-    profitLossSheet: { table, query },
+    profitLossSheet: { table, query, meta },
   } = useProfitLossSheetContext();
 
   // Retrieves the profit/loss table columns.
@@ -35,8 +35,7 @@ export default function ProfitLossSheetTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={<T id={'profit_loss_sheet'} />}
-      fromDate={query.from_date}
-      toDate={query.to_date}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
       basis={query.basis}
     >
       <ProfitLossDataTable

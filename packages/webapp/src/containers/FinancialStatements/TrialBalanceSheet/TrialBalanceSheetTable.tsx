@@ -16,7 +16,7 @@ import { useTrialBalanceSheetTableColumns } from './hooks';
 export default function TrialBalanceSheetTable({ companyName }) {
   // Trial balance sheet context.
   const {
-    trialBalanceSheet: { table, query },
+    trialBalanceSheet: { table, query, meta },
     isLoading,
   } = useTrialBalanceSheetContext();
 
@@ -27,8 +27,7 @@ export default function TrialBalanceSheetTable({ companyName }) {
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('trial_balance_sheet')}
-      fromDate={query.from_date}
-      toDate={query.to_date}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
       name="trial-balance"
       loading={isLoading}
       basis={'cash'}

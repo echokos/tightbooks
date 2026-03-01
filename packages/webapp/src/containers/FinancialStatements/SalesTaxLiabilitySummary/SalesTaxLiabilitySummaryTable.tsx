@@ -19,7 +19,7 @@ function SalesTaxLiabilitySummaryTableRoot({
 }) {
   // Balance sheet context.
   const {
-    salesTaxLiabilitySummary: { table, query },
+    salesTaxLiabilitySummary: { table, query, meta },
   } = useSalesTaxLiabilitySummaryContext();
 
   // Retrieve the database columns.
@@ -35,8 +35,7 @@ function SalesTaxLiabilitySummaryTableRoot({
     <FinancialSheet
       companyName={organizationName}
       sheetType={'Sales Tax Liability Summary'}
-      fromDate={query.from_date}
-      toDate={query.to_date}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
       basis={''}
     >
       <SalesTaxLiabilitySummaryDataTable

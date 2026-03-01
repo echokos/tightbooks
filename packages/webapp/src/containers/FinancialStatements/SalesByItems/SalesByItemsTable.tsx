@@ -15,7 +15,7 @@ import { TableStyle } from '@/constants';
 export default function SalesByItemsTable({ companyName }) {
   // Sales by items context.
   const {
-    salesByItems: { table, query },
+    salesByItems: { table, query, meta },
     isLoading,
   } = useSalesByItemsContext();
 
@@ -26,8 +26,7 @@ export default function SalesByItemsTable({ companyName }) {
     <SalesByItemsSheet
       companyName={companyName}
       sheetType={intl.get('sales_by_items')}
-      fromDate={query.from_date}
-      toDate={query.to_date}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
       loading={isLoading}
     >
       <SalesByItemsDataTable

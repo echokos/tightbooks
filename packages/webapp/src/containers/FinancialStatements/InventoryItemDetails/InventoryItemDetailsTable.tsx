@@ -18,7 +18,7 @@ export function InventoryItemDetailsTable({
   companyName,
 }) {
   const {
-    inventoryItemDetails: { tableRows },
+    inventoryItemDetails: { tableRows, meta },
     isInventoryItemDetailsLoading,
     query,
   } = useInventoryItemDetailsContext();
@@ -35,8 +35,7 @@ export function InventoryItemDetailsTable({
       companyName={companyName}
       sheetType={intl.get('inventory_item_details')}
       loading={isInventoryItemDetailsLoading}
-      fromDate={query.fromDate}
-      toDate={query.toDate}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
       fullWidth={true}
     >
       <InventoryItemDetailsDataTable

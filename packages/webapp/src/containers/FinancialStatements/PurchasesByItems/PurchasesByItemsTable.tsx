@@ -17,7 +17,7 @@ import { usePurchasesByItemsTableColumns } from './dynamicColumns';
 export default function PurchasesByItemsTable({ companyName }) {
   // Purchases by items context.
   const {
-    purchaseByItems: { table, query },
+    purchaseByItems: { table, query, meta },
   } = usePurchaseByItemsContext();
 
   // Purchases by items table columns.
@@ -27,8 +27,7 @@ export default function PurchasesByItemsTable({ companyName }) {
     <PurchasesByItemsSheet
       companyName={companyName}
       sheetType={intl.get('purchases_by_items')}
-      fromDate={query.from_date}
-      toDate={query.to_date}
+      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
     >
       <PurchasesByItemsDataTable
         columns={columns}
