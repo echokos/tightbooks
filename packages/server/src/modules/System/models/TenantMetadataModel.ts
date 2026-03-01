@@ -4,7 +4,6 @@ import {
   organizationAddressTextFormat,
 } from '@/utils/address-text-format';
 import { findByIsoCountryCode } from '@bigcapital/utils';
-// import { getUploadedObjectUri } from '../../services/Attachments/utils';
 
 export class TenantMetadata extends BaseModel {
   public baseCurrency!: string;
@@ -65,17 +64,9 @@ export class TenantMetadata extends BaseModel {
   }
 
   /**
-   * Organization logo url.
-   * @returns {string | null}
+   * Retrieves the organization address formatted text.
+   * @returns {string}
    */
-  // public get logoUri() {
-  // return this.logoKey ? getUploadedObjectUri(this.logoKey) : null;
-  // }
-
-  // /**
-  //  * Retrieves the organization address formatted text.
-  //  * @returns {string}
-  //  */
   public get addressTextFormatted() {
     const addressCountry = findByIsoCountryCode(this.location);
 
