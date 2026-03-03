@@ -36,6 +36,7 @@ import { CustomerAction } from './types/Customers.types';
 @Controller('customers')
 @ApiTags('Customers')
 @ApiExtraModels(CustomerResponseDto)
+@ApiExtraModels(ValidateBulkDeleteCustomersResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class CustomersController {

@@ -12,6 +12,7 @@ import {
 import { VendorsApplication } from './VendorsApplication.service';
 import { VendorOpeningBalanceEditDto } from './dtos/VendorOpeningBalanceEdit.dto';
 import {
+  ApiExtraModels,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -33,6 +34,7 @@ import { VendorAction } from '../Customers/types/Customers.types';
 
 @Controller('vendors')
 @ApiTags('Vendors')
+@ApiExtraModels(ValidateBulkDeleteVendorsResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class VendorsController {
