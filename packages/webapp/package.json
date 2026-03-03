@@ -3,9 +3,9 @@
   "version": "0.10.2",
   "private": true,
   "dependencies": {
-    "@bigcapital/email-components": "*",
-    "@bigcapital/pdf-templates": "*",
-    "@bigcapital/utils": "*",
+    "@bigcapital/email-components": "workspace:*",
+    "@bigcapital/pdf-templates": "workspace:*",
+    "@bigcapital/utils": "workspace:*",
     "@blueprintjs-formik/core": "^0.3.7",
     "@blueprintjs-formik/datetime": "^0.4.0",
     "@blueprintjs-formik/select": "^0.4.5",

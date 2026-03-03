@@ -415,9 +415,6 @@ importers:
       '@bigcapital/pdf-templates':
         specifier: workspace:*
         version: link:../../shared/pdf-templates
-      '@bigcapital/sdk-ts':
-        specifier: workspace:*
-        version: link:../../shared/sdk-ts
       '@bigcapital/utils':
         specifier: workspace:*
         version: link:../../shared/bigcapital-utils
@@ -478,9 +475,6 @@ importers:
       '@stripe/react-connect-js':
         specifier: ^3.3.13
         version: 3.3.13(@stripe/connect-js@3.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@tanstack/react-query':
-        specifier: ^5.80.0
-        version: 5.90.21(react@18.3.1)
       '@testing-library/react':
         specifier: ^9.4.0
         version: 9.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -625,9 +619,6 @@ importers:
       moment-timezone:
         specifier: ^0.5.33
         version: 0.5.45
-      openapi-typescript-fetch:
-        specifier: ^2.2.1
-        version: 2.2.1
       path-browserify:
         specifier: ^1.0.1
         version: 1.0.1
@@ -5088,14 +5079,6 @@ packages:
   '@supercharge/promise-pool@3.2.0':
     resolution: {integrity: sha512-pj0cAALblTZBPtMltWOlZTQSLT07jIaFNeM8TWoJD1cQMgDB9mcMlVMoetiB35OzNJpqQ2b+QEtwiR9f20mADg==}
     engines: {node: '>=8'}
-
-  '@tanstack/query-core@5.90.20':
-    resolution: {integrity: sha512-OMD2HLpNouXEfZJWcKeVKUgQ5n+n3A2JFmBaScpNDUqSrQSjiveC7dKMe53uJUg1nDG16ttFPz2xfilz6i2uVg==}
-
-  '@tanstack/react-query@5.90.21':
-    resolution: {integrity: sha512-0Lu6y5t+tvlTJMTO7oh5NSpJfpg/5D41LlThfepTixPYkJ0sE2Jj0m0f6yYqujBwIXlId87e234+MxG3D3g7kg==}
-    peerDependencies:
-      react: ^18 || ^19
 
   '@testing-library/dom@10.1.0':
     resolution: {integrity: sha512-wdsYKy5zupPyLCW2Je5DLHSxSfbIp6h80WoHOQc+RPtmPGA52O9x5MJEkv92Sjonpq+poOAtUKhh1kBGAXBrNA==}
@@ -19714,13 +19697,6 @@ snapshots:
       '@styled-system/css': 5.1.5
 
   '@supercharge/promise-pool@3.2.0': {}
-
-  '@tanstack/query-core@5.90.20': {}
-
-  '@tanstack/react-query@5.90.21(react@18.3.1)':
-    dependencies:
-      '@tanstack/query-core': 5.90.20
-      react: 18.3.1
 
   '@testing-library/dom@10.1.0':
     dependencies:
