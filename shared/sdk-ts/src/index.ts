@@ -3,7 +3,8 @@
  * Run `pnpm run generate:sdk-types` from repo root to regenerate schema from the server OpenAPI spec.
  */
 export type { paths, components, operations } from './schema';
-export { normalizeApiPath, ApiFetcher } from './fetch-utils';
+export type { ApiFetcher, CreateApiFetcherConfig } from './fetch-utils';
+export { normalizeApiPath, createApiFetcher } from './fetch-utils';
 export {
   ACCOUNTS_ROUTES,
   fetchAccounts,
@@ -272,14 +273,45 @@ export {
   fetchCurrencies,
   fetchCurrency,
   fetchCurrencyByCode,
+  createCurrency,
+  editCurrency,
+  deleteCurrency,
 } from './currencies';
-export type { CurrenciesListResponse, Currency } from './currencies';
+export type {
+  CurrenciesListResponse,
+  Currency,
+  CreateCurrencyBody,
+  EditCurrencyBody,
+} from './currencies';
+export {
+  TAX_RATES_ROUTES,
+  fetchTaxRates,
+  fetchTaxRate,
+  createTaxRate,
+  editTaxRate,
+  deleteTaxRate,
+  activateTaxRate,
+  inactivateTaxRate,
+} from './tax-rates';
+export type {
+  TaxRatesListResponse,
+  TaxRate,
+  CreateTaxRateBody,
+  EditTaxRateBody,
+} from './tax-rates';
+export {
+  ATTACHMENTS_ROUTES,
+  deleteAttachment,
+  fetchAttachmentPresignedUrl,
+} from './attachments';
 export {
   INVITE_ROUTES,
   inviteUser,
   resendInvite,
+  acceptInvite,
+  fetchInviteCheck,
 } from './invite';
-export type { InviteUserBody } from './invite';
+export type { InviteUserBody, AcceptInviteBody } from './invite';
 export {
   AUTH_ROUTES,
   fetchAuthedAccount,
@@ -315,7 +347,12 @@ export {
   TRANSACTIONS_LOCKING_ROUTES,
   fetchTransactionsLocking,
   fetchTransactionsLockingByModule,
+  lockTransactions,
+  cancelLockTransactions,
+  unlockPartialTransactions,
+  cancelUnlockPartialTransactions,
 } from './transactions-locking';
+export type { TransactionsLockingListResponse } from './transactions-locking';
 export {
   VENDOR_CREDITS_ROUTES,
   fetchVendorCredits,
@@ -338,12 +375,24 @@ export {
   createSaleEstimate,
   editSaleEstimate,
   deleteSaleEstimate,
+  bulkDeleteSaleEstimates,
+  validateBulkDeleteSaleEstimates,
+  deliverSaleEstimate,
+  approveSaleEstimate,
+  rejectSaleEstimate,
+  notifySaleEstimateBySms,
+  fetchSaleEstimateSmsDetails,
+  fetchSaleEstimateMail,
+  sendSaleEstimateMail,
+  fetchSaleEstimatesState,
 } from './sale-estimates';
 export type {
   SaleEstimatesListResponse,
   SaleEstimate,
   CreateSaleEstimateBody,
   EditSaleEstimateBody,
+  BulkDeleteEstimatesBody,
+  ValidateBulkDeleteEstimatesResponse,
 } from './sale-estimates';
 export {
   SALE_RECEIPTS_ROUTES,
@@ -366,12 +415,20 @@ export {
   createPaymentReceived,
   editPaymentReceived,
   deletePaymentReceived,
+  bulkDeletePaymentsReceived,
+  validateBulkDeletePaymentsReceived,
+  fetchPaymentReceiveEditPage,
+  fetchPaymentReceiveMail,
+  sendPaymentReceiveMail,
+  fetchPaymentReceivedState,
 } from './payment-receives';
 export type {
   PaymentsReceivedListResponse,
   PaymentReceived,
   CreatePaymentReceivedBody,
   EditPaymentReceivedBody,
+  BulkDeletePaymentsReceivedBody,
+  ValidateBulkDeletePaymentsReceivedResponse,
 } from './payment-receives';
 export {
   BILL_PAYMENTS_ROUTES,
@@ -380,6 +437,7 @@ export {
   createBillPayment,
   editBillPayment,
   deleteBillPayment,
+  fetchBillPaymentEditPage,
 } from './payment-mades';
 export type {
   BillPaymentsListResponse,
@@ -432,3 +490,33 @@ export {
   fetchBankingAccountSummary,
 } from './cashflow-accounts';
 export type { BankingAccountsListResponse } from './cashflow-accounts';
+export {
+  BANK_RULES_ROUTES,
+  fetchBankRules,
+  fetchBankRule,
+  createBankRule,
+  editBankRule,
+  deleteBankRule,
+  disconnectBankAccount,
+  refreshBankAccount,
+  fetchMatchedTransactions,
+  matchTransaction,
+  unmatchMatchedTransaction,
+  excludeBankTransaction,
+  unexcludeBankTransaction,
+  excludeBankTransactionsBulk,
+  unexcludeBankTransactionsBulk,
+  fetchRecognizedTransaction,
+  fetchRecognizedTransactions,
+  fetchExcludedBankTransactions,
+  fetchPendingTransactions,
+  fetchAutofillCategorizeTransaction,
+} from './bank-rules';
+export type {
+  BankRulesListResponse,
+  BankRuleResponse,
+  CreateBankRuleBody,
+  EditBankRuleBody,
+  CreateBankRuleResponse,
+  MatchTransactionBody,
+} from './bank-rules';

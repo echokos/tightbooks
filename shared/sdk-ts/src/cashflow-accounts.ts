@@ -20,7 +20,8 @@ export async function fetchBankingAccounts(fetcher: ApiFetcher): Promise<Banking
 export async function fetchBankingAccountSummary(
   fetcher: ApiFetcher,
   bankAccountId: number
-): Promise<void> {
+): Promise<unknown> {
   const get = fetcher.path(BANKING_ACCOUNTS_ROUTES.SUMMARY).method('get').create();
-  await get({ bankAccountId });
+  const { data } = await get({ bankAccountId });
+  return data;
 }

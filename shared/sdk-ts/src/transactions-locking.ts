@@ -10,15 +10,51 @@ export const TRANSACTIONS_LOCKING_ROUTES = {
   BY_MODULE: '/api/transactions-locking/{module}',
 } as const satisfies Record<string, keyof paths>;
 
-export async function fetchTransactionsLocking(fetcher: ApiFetcher): Promise<void> {
+export type TransactionsLockingListResponse = unknown;
+
+export async function fetchTransactionsLocking(fetcher: ApiFetcher): Promise<TransactionsLockingListResponse> {
   const get = fetcher.path(TRANSACTIONS_LOCKING_ROUTES.LIST).method('get').create();
-  await get({});
+  const { data } = await get({});
+  return data;
 }
 
 export async function fetchTransactionsLockingByModule(
   fetcher: ApiFetcher,
   module: string
-): Promise<void> {
+): Promise<unknown> {
   const get = fetcher.path(TRANSACTIONS_LOCKING_ROUTES.BY_MODULE).method('get').create();
-  await get({ module });
+  const { data } = await get({ module });
+  return data;
+}
+
+export async function lockTransactions(
+  fetcher: ApiFetcher,
+  values: Record<string, unknown>
+): Promise<void> {
+  const put = fetcher.path(TRANSACTIONS_LOCKING_ROUTES.LOCK).method('put').create();
+  await put(values as never);
+}
+
+export async function cancelLockTransactions(
+  fetcher: ApiFetcher,
+  values: Record<string, unknown>
+): Promise<void> {
+  const put = fetcher.path(TRANSACTIONS_LOCKING_ROUTES.CANCEL_LOCK).method('put').create();
+  await put(values as never);
+}
+
+export async function unlockPartialTransactions(
+  fetcher: ApiFetcher,
+  values: Record<string, unknown>
+): Promise<void> {
+  const put = fetcher.path(TRANSACTIONS_LOCKING_ROUTES.UNLOCK_PARTIAL).method('put').create();
+  await put(values as never);
+}
+
+export async function cancelUnlockPartialTransactions(
+  fetcher: ApiFetcher,
+  values: Record<string, unknown>
+): Promise<void> {
+  const put = fetcher.path(TRANSACTIONS_LOCKING_ROUTES.CANCEL_UNLOCK_PARTIAL).method('put').create();
+  await put(values as never);
 }

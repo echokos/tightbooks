@@ -10,8 +10,27 @@ export const INVITE_ROUTES = {
 
 type InviteUser = paths[typeof INVITE_ROUTES.INVITE]['patch'];
 type ResendInvite = paths[typeof INVITE_ROUTES.RESEND]['post'];
+type AcceptInvite = paths[typeof INVITE_ROUTES.ACCEPT]['post'];
+type CheckInvite = paths[typeof INVITE_ROUTES.CHECK]['get'];
 
 export type InviteUserBody = InviteUser['requestBody']['content']['application/json'];
+export type AcceptInviteBody = AcceptInvite extends { requestBody: { content: { 'application/json': infer J } } } ? J : Record<string, unknown>;
+
+export async function acceptInvite(
+  fetcher: ApiFetcher,
+  token: string,
+  values: AcceptInviteBody
+): Promise<unknown> {
+  const post = fetcher.path(INVITE_ROUTES.ACCEPT).method('post').create();
+  const { data } = await post({ token, ...values } as never);
+  return data;
+}
+
+export async function fetchInviteCheck(fetcher: ApiFetcher, token: string): Promise<unknown> {
+  const get = fetcher.path(INVITE_ROUTES.CHECK).method('get').create();
+  const { data } = await get({ token });
+  return data;
+}
 
 export async function inviteUser(
   fetcher: ApiFetcher,

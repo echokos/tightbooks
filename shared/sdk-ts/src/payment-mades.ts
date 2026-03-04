@@ -55,3 +55,12 @@ export async function deleteBillPayment(fetcher: ApiFetcher, billPaymentId: numb
   const del = fetcher.path(BILL_PAYMENTS_ROUTES.BY_ID).method('delete').create();
   await del({ billPaymentId });
 }
+
+export async function fetchBillPaymentEditPage(
+  fetcher: ApiFetcher,
+  billPaymentId: number
+): Promise<unknown> {
+  const get = fetcher.path(BILL_PAYMENTS_ROUTES.EDIT_PAGE).method('get').create();
+  const { data } = await get({ billPaymentId });
+  return data;
+}
