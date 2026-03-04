@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const EXPENSES_ROUTES = {
   LIST: '/api/expenses',
@@ -9,22 +10,20 @@ export const EXPENSES_ROUTES = {
   BULK_DELETE: '/api/expenses/bulk-delete',
 } as const satisfies Record<string, keyof paths>;
 
-type GetExpenses = paths[typeof EXPENSES_ROUTES.LIST]['get'];
-type GetExpense = paths[typeof EXPENSES_ROUTES.BY_ID]['get'];
-type CreateExpense = paths[typeof EXPENSES_ROUTES.LIST]['post'];
-type EditExpense = paths[typeof EXPENSES_ROUTES.BY_ID]['put'];
-type DeleteExpense = paths[typeof EXPENSES_ROUTES.BY_ID]['delete'];
+export type ExpensesListResponse = OpResponseBody<OpForPath<typeof EXPENSES_ROUTES.LIST, 'get'>>;
+export type Expense = OpResponseBody<OpForPath<typeof EXPENSES_ROUTES.BY_ID, 'get'>>;
+export type CreateExpenseBody = OpRequestBody<OpForPath<typeof EXPENSES_ROUTES.LIST, 'post'>>;
+export type EditExpenseBody = OpRequestBody<OpForPath<typeof EXPENSES_ROUTES.BY_ID, 'put'>>;
+export type GetExpensesQuery = OpQueryParams<OpForPath<typeof EXPENSES_ROUTES.LIST, 'get'>>;
 
-type GetExpenses200 = GetExpenses['responses'][200];
-type GetExpense200 = GetExpense['responses'][200];
-export type ExpensesListResponse = GetExpenses200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type Expense = GetExpense200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type CreateExpenseBody = CreateExpense['requestBody']['content']['application/json'];
-export type EditExpenseBody = EditExpense['requestBody']['content']['application/json'];
-
-export async function fetchExpenses(fetcher: ApiFetcher): Promise<ExpensesListResponse> {
+export async function fetchExpenses(
+  fetcher: ApiFetcher,
+  query?: GetExpensesQuery
+): Promise<ExpensesListResponse> {
   const get = fetcher.path(EXPENSES_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await (get as (params?: GetExpensesQuery) => Promise<{ data: ExpensesListResponse }>)(
+    query ?? {}
+  );
   return data;
 }
 

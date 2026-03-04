@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const CREDIT_NOTES_ROUTES = {
   LIST: '/api/credit-notes',
@@ -15,36 +16,25 @@ export const CREDIT_NOTES_ROUTES = {
   APPLIED_INVOICE_BY_ID: '/api/credit-notes/applied-invoices/{applyCreditToInvoicesId}',
 } as const satisfies Record<string, keyof paths>;
 
-type GetCreditNotes = paths[typeof CREDIT_NOTES_ROUTES.LIST]['get'];
-type GetCreditNote = paths[typeof CREDIT_NOTES_ROUTES.BY_ID]['get'];
-type GetCreditNoteState = paths[typeof CREDIT_NOTES_ROUTES.STATE]['get'];
-type CreateCreditNote = paths[typeof CREDIT_NOTES_ROUTES.LIST]['post'];
-type EditCreditNote = paths[typeof CREDIT_NOTES_ROUTES.BY_ID]['put'];
-type DeleteCreditNote = paths[typeof CREDIT_NOTES_ROUTES.BY_ID]['delete'];
-type OpenCreditNote = paths[typeof CREDIT_NOTES_ROUTES.OPEN]['put'];
-type ValidateBulkDeleteCreditNotes = paths[typeof CREDIT_NOTES_ROUTES.VALIDATE_BULK_DELETE]['post'];
-type BulkDeleteCreditNotes = paths[typeof CREDIT_NOTES_ROUTES.BULK_DELETE]['post'];
-type GetCreditNoteRefunds = paths[typeof CREDIT_NOTES_ROUTES.REFUNDS]['get'];
-type CreateRefundCreditNote = paths[typeof CREDIT_NOTES_ROUTES.REFUNDS]['post'];
-type DeleteRefundCreditNote = paths[typeof CREDIT_NOTES_ROUTES.REFUND_BY_ID]['delete'];
-type GetAppliedInvoices = paths[typeof CREDIT_NOTES_ROUTES.APPLIED_INVOICES]['get'];
-type GetApplyInvoices = paths[typeof CREDIT_NOTES_ROUTES.APPLY_INVOICES]['get'];
-type ApplyCreditNoteToInvoices = paths[typeof CREDIT_NOTES_ROUTES.APPLY_INVOICES]['post'];
-type DeleteApplyCreditNoteToInvoices = paths[typeof CREDIT_NOTES_ROUTES.APPLIED_INVOICE_BY_ID]['delete'];
+export type CreditNotesListResponse = OpResponseBody<OpForPath<typeof CREDIT_NOTES_ROUTES.LIST, 'get'>>;
+export type CreditNote = OpResponseBody<OpForPath<typeof CREDIT_NOTES_ROUTES.BY_ID, 'get'>>;
+export type CreateCreditNoteBody = OpRequestBody<OpForPath<typeof CREDIT_NOTES_ROUTES.LIST, 'post'>>;
+export type EditCreditNoteBody = OpRequestBody<OpForPath<typeof CREDIT_NOTES_ROUTES.BY_ID, 'put'>>;
+export type ValidateBulkDeleteCreditNotesBody = OpRequestBody<OpForPath<typeof CREDIT_NOTES_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
+export type ValidateBulkDeleteCreditNotesResponse = OpResponseBody<OpForPath<typeof CREDIT_NOTES_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
+export type BulkDeleteCreditNotesBody = OpRequestBody<OpForPath<typeof CREDIT_NOTES_ROUTES.BULK_DELETE, 'post'>>;
+export type CreateRefundCreditNoteBody = OpRequestBody<OpForPath<typeof CREDIT_NOTES_ROUTES.REFUNDS, 'post'>>;
+export type ApplyCreditNoteToInvoicesBody = OpRequestBody<OpForPath<typeof CREDIT_NOTES_ROUTES.APPLY_INVOICES, 'post'>>;
+export type GetCreditNotesQuery = OpQueryParams<OpForPath<typeof CREDIT_NOTES_ROUTES.LIST, 'get'>>;
 
-export type CreditNotesListResponse = GetCreditNotes['responses'][200]['content']['application/json'];
-export type CreditNote = GetCreditNote['responses'][200]['content']['application/json'];
-export type CreateCreditNoteBody = CreateCreditNote['requestBody']['content']['application/json'];
-export type EditCreditNoteBody = EditCreditNote['requestBody']['content']['application/json'];
-export type ValidateBulkDeleteCreditNotesBody = ValidateBulkDeleteCreditNotes['requestBody']['content']['application/json'];
-export type ValidateBulkDeleteCreditNotesResponse = ValidateBulkDeleteCreditNotes['responses'][200]['content']['application/json'];
-export type BulkDeleteCreditNotesBody = BulkDeleteCreditNotes['requestBody']['content']['application/json'];
-export type CreateRefundCreditNoteBody = CreateRefundCreditNote['requestBody']['content']['application/json'];
-export type ApplyCreditNoteToInvoicesBody = ApplyCreditNoteToInvoices['requestBody']['content']['application/json'];
-
-export async function fetchCreditNotes(fetcher: ApiFetcher): Promise<CreditNotesListResponse> {
+export async function fetchCreditNotes(
+  fetcher: ApiFetcher,
+  query?: GetCreditNotesQuery
+): Promise<CreditNotesListResponse> {
   const getCreditNotes = fetcher.path(CREDIT_NOTES_ROUTES.LIST).method('get').create();
-  const { data } = await getCreditNotes({});
+  const { data } = await (
+    getCreditNotes as (params: GetCreditNotesQuery) => Promise<{ data: CreditNotesListResponse }>
+  )(query ?? {});
   return data;
 }
 

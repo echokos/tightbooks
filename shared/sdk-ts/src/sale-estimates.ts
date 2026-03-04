@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const SALE_ESTIMATES_ROUTES = {
   LIST: '/api/sale-estimates',
@@ -15,18 +16,10 @@ export const SALE_ESTIMATES_ROUTES = {
   MAIL: '/api/sale-estimates/{id}/mail',
 } as const satisfies Record<string, keyof paths>;
 
-type GetSaleEstimates = paths[typeof SALE_ESTIMATES_ROUTES.LIST]['get'];
-type GetSaleEstimate = paths[typeof SALE_ESTIMATES_ROUTES.BY_ID]['get'];
-type CreateSaleEstimate = paths[typeof SALE_ESTIMATES_ROUTES.LIST]['post'];
-type EditSaleEstimate = paths[typeof SALE_ESTIMATES_ROUTES.BY_ID]['put'];
-type DeleteSaleEstimate = paths[typeof SALE_ESTIMATES_ROUTES.BY_ID]['delete'];
-
-type GetSaleEstimates200 = GetSaleEstimates['responses'][200];
-type GetSaleEstimate200 = GetSaleEstimate['responses'][200];
-export type SaleEstimatesListResponse = GetSaleEstimates200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type SaleEstimate = GetSaleEstimate200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type CreateSaleEstimateBody = CreateSaleEstimate['requestBody']['content']['application/json'];
-export type EditSaleEstimateBody = EditSaleEstimate['requestBody']['content']['application/json'];
+export type SaleEstimatesListResponse = OpResponseBody<OpForPath<typeof SALE_ESTIMATES_ROUTES.LIST, 'get'>>;
+export type SaleEstimate = OpResponseBody<OpForPath<typeof SALE_ESTIMATES_ROUTES.BY_ID, 'get'>>;
+export type CreateSaleEstimateBody = OpRequestBody<OpForPath<typeof SALE_ESTIMATES_ROUTES.LIST, 'post'>>;
+export type EditSaleEstimateBody = OpRequestBody<OpForPath<typeof SALE_ESTIMATES_ROUTES.BY_ID, 'put'>>;
 
 export async function fetchSaleEstimates(fetcher: ApiFetcher): Promise<SaleEstimatesListResponse> {
   const get = fetcher.path(SALE_ESTIMATES_ROUTES.LIST).method('get').create();

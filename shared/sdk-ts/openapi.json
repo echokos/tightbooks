@@ -62,6 +62,182 @@
         ]
       }
     },
+    "/api/auth/signin": {
+      "post": {
+        "operationId": "AuthController_signin",
+        "summary": "Sign in a user",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string", "example": "user@example.com", "description": "User email address" },
+                  "password": { "type": "string", "example": "password123", "description": "User password" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sign-in successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": { "type": "string", "description": "JWT access token" },
+                    "organizationId": { "type": "string", "description": "Organization ID" },
+                    "tenantId": { "type": "number", "description": "Tenant ID" },
+                    "userId": { "type": "number", "description": "User ID" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/auth/signup": {
+      "post": {
+        "operationId": "AuthController_signup",
+        "summary": "Sign up a new user",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["firstName", "lastName", "email", "password"],
+                "properties": {
+                  "firstName": { "type": "string", "example": "John", "description": "User first name" },
+                  "lastName": { "type": "string", "example": "Doe", "description": "User last name" },
+                  "email": { "type": "string", "format": "email", "example": "john.doe@example.com", "description": "User email address" },
+                  "password": { "type": "string", "example": "password123", "description": "User password" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Sign-up initiated. Check email for confirmation." }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/auth/signup/verify": {
+      "post": {
+        "operationId": "AuthController_signupConfirm",
+        "summary": "Confirm user signup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "token"],
+                "properties": {
+                  "email": { "type": "string", "example": "user@example.com", "description": "User email address" },
+                  "token": { "type": "string", "example": "confirmation-token", "description": "Signup confirmation token from email" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Signup confirmed successfully." }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/auth/send_reset_password": {
+      "post": {
+        "operationId": "AuthController_sendResetPassword",
+        "summary": "Send reset password email",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": {
+                  "email": { "type": "string", "example": "user@example.com", "description": "User email address to send reset link to" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Reset password email sent if the account exists." }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/auth/reset_password/{token}": {
+      "post": {
+        "operationId": "AuthController_resetPassword",
+        "summary": "Reset password using token",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "description": "Reset password token from email link",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["password"],
+                "properties": {
+                  "password": { "type": "string", "example": "new-password", "description": "New password" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Password reset successfully." }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/auth/meta": {
+      "get": {
+        "operationId": "AuthController_meta",
+        "summary": "Get auth metadata (e.g. signup disabled)",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Auth metadata for the login/signup page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "signupDisabled": { "type": "boolean", "description": "Whether signup is disabled" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
     "/api/api-keys/generate": {
       "post": {
         "operationId": "AuthApiKeysController_generate",

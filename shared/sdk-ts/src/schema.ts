@@ -54,6 +54,108 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/signin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sign in a user */
+        post: operations["AuthController_signin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sign up a new user */
+        post: operations["AuthController_signup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signup/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm user signup */
+        post: operations["AuthController_signupConfirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/send_reset_password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send reset password email */
+        post: operations["AuthController_sendResetPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/reset_password/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reset password using token */
+        post: operations["AuthController_resetPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/meta": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get auth metadata (e.g. signup disabled) */
+        get: operations["AuthController_meta"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/api-keys/generate": {
         parameters: {
             query?: never;
@@ -11916,6 +12018,209 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    AuthController_signin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description User email address
+                     * @example user@example.com
+                     */
+                    email: string;
+                    /**
+                     * @description User password
+                     * @example password123
+                     */
+                    password: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Sign-in successful */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description JWT access token */
+                        accessToken?: string;
+                        /** @description Organization ID */
+                        organizationId?: string;
+                        /** @description Tenant ID */
+                        tenantId?: number;
+                        /** @description User ID */
+                        userId?: number;
+                    };
+                };
+            };
+        };
+    };
+    AuthController_signup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description User first name
+                     * @example John
+                     */
+                    firstName: string;
+                    /**
+                     * @description User last name
+                     * @example Doe
+                     */
+                    lastName: string;
+                    /**
+                     * Format: email
+                     * @description User email address
+                     * @example john.doe@example.com
+                     */
+                    email: string;
+                    /**
+                     * @description User password
+                     * @example password123
+                     */
+                    password: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Sign-up initiated. Check email for confirmation. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_signupConfirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description User email address
+                     * @example user@example.com
+                     */
+                    email: string;
+                    /**
+                     * @description Signup confirmation token from email
+                     * @example confirmation-token
+                     */
+                    token: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Signup confirmed successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_sendResetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description User email address to send reset link to
+                     * @example user@example.com
+                     */
+                    email: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Reset password email sent if the account exists. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_resetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Reset password token from email link */
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description New password
+                     * @example new-password
+                     */
+                    password: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Password reset successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_meta: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Auth metadata for the login/signup page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description Whether signup is disabled */
+                        signupDisabled?: boolean;
+                    };
+                };
             };
         };
     };

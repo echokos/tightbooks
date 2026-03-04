@@ -1,14 +1,12 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpResponseBody } from './utils';
 
 export const VIEWS_ROUTES = {
   RESOURCE: '/api/views/resource/{resourceModel}',
 } as const satisfies Record<string, keyof paths>;
 
-type GetResourceView = paths[typeof VIEWS_ROUTES.RESOURCE]['get'];
-
-type GetResourceView200 = GetResourceView['responses'][200];
-export type ResourceViewResponse = GetResourceView200 extends { content?: { 'application/json': infer J } } ? J : unknown;
+export type ResourceViewResponse = OpResponseBody<OpForPath<typeof VIEWS_ROUTES.RESOURCE, 'get'>>;
 
 export async function fetchResourceView(
   fetcher: ApiFetcher,

@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const WAREHOUSE_TRANSFERS_ROUTES = {
   LIST: '/api/warehouse-transfers',
@@ -8,24 +9,20 @@ export const WAREHOUSE_TRANSFERS_ROUTES = {
   TRANSFERRED: '/api/warehouse-transfers/{id}/transferred',
 } as const satisfies Record<string, keyof paths>;
 
-type GetWarehouseTransfers = paths[typeof WAREHOUSE_TRANSFERS_ROUTES.LIST]['get'];
-type GetWarehouseTransfer = paths[typeof WAREHOUSE_TRANSFERS_ROUTES.BY_ID]['get'];
-type CreateWarehouseTransfer = paths[typeof WAREHOUSE_TRANSFERS_ROUTES.LIST]['post'];
-type EditWarehouseTransfer = paths[typeof WAREHOUSE_TRANSFERS_ROUTES.BY_ID]['put'];
-type DeleteWarehouseTransfer = paths[typeof WAREHOUSE_TRANSFERS_ROUTES.BY_ID]['delete'];
+export type WarehouseTransfersListResponse = OpResponseBody<OpForPath<typeof WAREHOUSE_TRANSFERS_ROUTES.LIST, 'get'>>;
+export type WarehouseTransfer = OpResponseBody<OpForPath<typeof WAREHOUSE_TRANSFERS_ROUTES.BY_ID, 'get'>>;
+export type CreateWarehouseTransferBody = OpRequestBody<OpForPath<typeof WAREHOUSE_TRANSFERS_ROUTES.LIST, 'post'>>;
+export type EditWarehouseTransferBody = OpRequestBody<OpForPath<typeof WAREHOUSE_TRANSFERS_ROUTES.BY_ID, 'put'>>;
+export type GetWarehouseTransfersQuery = OpQueryParams<OpForPath<typeof WAREHOUSE_TRANSFERS_ROUTES.LIST, 'get'>>;
 
-type GetWarehouseTransfers200 = GetWarehouseTransfers['responses'][200];
-type GetWarehouseTransfer200 = GetWarehouseTransfer['responses'][200];
-export type WarehouseTransfersListResponse = GetWarehouseTransfers200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type WarehouseTransfer = GetWarehouseTransfer200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type CreateBody = CreateWarehouseTransfer extends { requestBody: { content: { 'application/json': infer J } } } ? J : Record<string, unknown>;
-type EditBody = EditWarehouseTransfer extends { requestBody: { content: { 'application/json': infer J } } } ? J : Record<string, unknown>;
-export type CreateWarehouseTransferBody = CreateBody;
-export type EditWarehouseTransferBody = EditBody;
-
-export async function fetchWarehouseTransfers(fetcher: ApiFetcher): Promise<WarehouseTransfersListResponse> {
+export async function fetchWarehouseTransfers(
+  fetcher: ApiFetcher,
+  query?: GetWarehouseTransfersQuery
+): Promise<WarehouseTransfersListResponse> {
   const get = fetcher.path(WAREHOUSE_TRANSFERS_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await (get as (params: GetWarehouseTransfersQuery) => Promise<{ data: WarehouseTransfersListResponse }>)(
+    query ?? {}
+  );
   return data;
 }
 
@@ -49,7 +46,7 @@ export async function editWarehouseTransfer(
   values: EditWarehouseTransferBody
 ): Promise<void> {
   const put = fetcher.path(WAREHOUSE_TRANSFERS_ROUTES.BY_ID).method('put').create();
-  await (put as unknown as (params: { id: number } & EditWarehouseTransferBody) => Promise<void>)({ id, ...values });
+  await put({ id, ...(values as object) } as never);
 }
 
 export async function deleteWarehouseTransfer(fetcher: ApiFetcher, id: number): Promise<void> {

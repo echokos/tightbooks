@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const BILL_PAYMENTS_ROUTES = {
   LIST: '/api/bill-payments',
@@ -9,18 +10,10 @@ export const BILL_PAYMENTS_ROUTES = {
   EDIT_PAGE: '/api/bill-payments/{billPaymentId}/edit-page',
 } as const satisfies Record<string, keyof paths>;
 
-type GetBillPayments = paths[typeof BILL_PAYMENTS_ROUTES.LIST]['get'];
-type GetBillPayment = paths[typeof BILL_PAYMENTS_ROUTES.BY_ID]['get'];
-type CreateBillPayment = paths[typeof BILL_PAYMENTS_ROUTES.LIST]['post'];
-type EditBillPayment = paths[typeof BILL_PAYMENTS_ROUTES.BY_ID]['put'];
-type DeleteBillPayment = paths[typeof BILL_PAYMENTS_ROUTES.BY_ID]['delete'];
-
-type GetBillPayments200 = GetBillPayments['responses'][200];
-type GetBillPayment200 = GetBillPayment['responses'][200];
-export type BillPaymentsListResponse = GetBillPayments200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type BillPayment = GetBillPayment200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type CreateBillPaymentBody = CreateBillPayment['requestBody']['content']['application/json'];
-export type EditBillPaymentBody = EditBillPayment['requestBody']['content']['application/json'];
+export type BillPaymentsListResponse = OpResponseBody<OpForPath<typeof BILL_PAYMENTS_ROUTES.LIST, 'get'>>;
+export type BillPayment = OpResponseBody<OpForPath<typeof BILL_PAYMENTS_ROUTES.BY_ID, 'get'>>;
+export type CreateBillPaymentBody = OpRequestBody<OpForPath<typeof BILL_PAYMENTS_ROUTES.LIST, 'post'>>;
+export type EditBillPaymentBody = OpRequestBody<OpForPath<typeof BILL_PAYMENTS_ROUTES.BY_ID, 'put'>>;
 
 export async function fetchBillPayments(fetcher: ApiFetcher): Promise<BillPaymentsListResponse> {
   const get = fetcher.path(BILL_PAYMENTS_ROUTES.LIST).method('get').create();

@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const TAX_RATES_ROUTES = {
   LIST: '/api/tax-rates',
@@ -8,18 +9,10 @@ export const TAX_RATES_ROUTES = {
   INACTIVATE: '/api/tax-rates/{id}/inactivate',
 } as const satisfies Record<string, keyof paths>;
 
-type GetTaxRates = paths[typeof TAX_RATES_ROUTES.LIST]['get'];
-type GetTaxRate = paths[typeof TAX_RATES_ROUTES.BY_ID]['get'];
-type CreateTaxRate = paths[typeof TAX_RATES_ROUTES.LIST]['post'];
-type EditTaxRate = paths[typeof TAX_RATES_ROUTES.BY_ID]['put'];
-type DeleteTaxRate = paths[typeof TAX_RATES_ROUTES.BY_ID]['delete'];
-
-type GetTaxRates200 = GetTaxRates['responses'][200];
-type GetTaxRate200 = GetTaxRate['responses'][200];
-export type TaxRatesListResponse = GetTaxRates200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type TaxRate = GetTaxRate200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type CreateTaxRateBody = CreateTaxRate extends { requestBody: { content: { 'application/json': infer J } } } ? J : Record<string, unknown>;
-export type EditTaxRateBody = EditTaxRate extends { requestBody: { content: { 'application/json': infer J } } } ? J : Record<string, unknown>;
+export type TaxRatesListResponse = OpResponseBody<OpForPath<typeof TAX_RATES_ROUTES.LIST, 'get'>>;
+export type TaxRate = OpResponseBody<OpForPath<typeof TAX_RATES_ROUTES.BY_ID, 'get'>>;
+export type CreateTaxRateBody = OpRequestBody<OpForPath<typeof TAX_RATES_ROUTES.LIST, 'post'>>;
+export type EditTaxRateBody = OpRequestBody<OpForPath<typeof TAX_RATES_ROUTES.BY_ID, 'put'>>;
 
 export async function fetchTaxRates(fetcher: ApiFetcher): Promise<TaxRatesListResponse> {
   const get = fetcher.path(TAX_RATES_ROUTES.LIST).method('get').create();

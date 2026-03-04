@@ -1,11 +1,14 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const BANK_RULES_ROUTES = {
   RULES: '/api/banking/rules',
   RULE_BY_ID: '/api/banking/rules/{id}',
   ACCOUNTS_DISCONNECT: '/api/banking/accounts/{id}/disconnect',
   ACCOUNTS_REFRESH: '/api/banking/accounts/{id}/refresh',
+  ACCOUNTS_PAUSE: '/api/banking/accounts/{id}/pause',
+  ACCOUNTS_RESUME: '/api/banking/accounts/{id}/resume',
   MATCHING_MATCHED: '/api/banking/matching/matched',
   MATCHING_MATCH: '/api/banking/matching/match',
   MATCHING_UNMATCH: '/api/banking/matching/unmatch/{uncategorizedTransactionId}',
@@ -18,33 +21,15 @@ export const BANK_RULES_ROUTES = {
   UNCATEGORIZED_AUTOFILL: '/api/banking/uncategorized/autofill',
 } as const satisfies Record<string, keyof paths>;
 
-type GetBankRules = paths[typeof BANK_RULES_ROUTES.RULES]['get'];
-type GetBankRule = paths[typeof BANK_RULES_ROUTES.RULE_BY_ID]['get'];
-type CreateBankRule = paths[typeof BANK_RULES_ROUTES.RULES]['post'];
-type EditBankRule = paths[typeof BANK_RULES_ROUTES.RULE_BY_ID]['put'];
-type DeleteBankRule = paths[typeof BANK_RULES_ROUTES.RULE_BY_ID]['delete'];
+export type BankRulesListResponse = OpResponseBody<OpForPath<typeof BANK_RULES_ROUTES.RULES, 'get'>>;
+export type BankRuleResponse = OpResponseBody<OpForPath<typeof BANK_RULES_ROUTES.RULE_BY_ID, 'get'>>;
+export type CreateBankRuleBody = OpRequestBody<OpForPath<typeof BANK_RULES_ROUTES.RULES, 'post'>>;
+export type EditBankRuleBody = OpRequestBody<OpForPath<typeof BANK_RULES_ROUTES.RULE_BY_ID, 'put'>>;
+export type CreateBankRuleResponse = OpResponseBody<OpForPath<typeof BANK_RULES_ROUTES.RULES, 'post'>>;
 
-type GetBankRules200 = GetBankRules['responses'][200];
-type GetBankRule200 = GetBankRule['responses'][200];
-type CreateBankRule201 = CreateBankRule['responses'][201];
-
-export type BankRulesListResponse = GetBankRules200 extends {
-  content?: { 'application/json': infer J };
-}
-  ? J
-  : unknown;
-export type BankRuleResponse = GetBankRule200 extends {
-  content?: { 'application/json': infer J };
-}
-  ? J
-  : unknown;
-export type CreateBankRuleBody = CreateBankRule['requestBody']['content']['application/json'];
-export type EditBankRuleBody = EditBankRule['requestBody']['content']['application/json'];
-export type CreateBankRuleResponse = CreateBankRule201 extends {
-  content?: { 'application/json': infer J };
-}
-  ? J
-  : unknown;
+/** Path params for pause/resume bank account (id = bankAccountId). */
+export type PauseBankAccountParams = OpForPath<typeof BANK_RULES_ROUTES.ACCOUNTS_PAUSE, 'post'> extends { parameters: { path: infer P } } ? P : never;
+export type ResumeBankAccountParams = OpForPath<typeof BANK_RULES_ROUTES.ACCOUNTS_RESUME, 'post'> extends { parameters: { path: infer P } } ? P : never;
 
 export async function fetchBankRules(fetcher: ApiFetcher): Promise<BankRulesListResponse> {
   const get = fetcher.path(BANK_RULES_ROUTES.RULES).method('get').create();
@@ -101,6 +86,28 @@ export async function refreshBankAccount(
 ): Promise<void> {
   const post = fetcher
     .path(BANK_RULES_ROUTES.ACCOUNTS_REFRESH)
+    .method('post')
+    .create();
+  await post({ id });
+}
+
+export async function pauseBankAccount(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<void> {
+  const post = fetcher
+    .path(BANK_RULES_ROUTES.ACCOUNTS_PAUSE)
+    .method('post')
+    .create();
+  await post({ id });
+}
+
+export async function resumeBankAccount(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<void> {
+  const post = fetcher
+    .path(BANK_RULES_ROUTES.ACCOUNTS_RESUME)
     .method('post')
     .create();
   await post({ id });

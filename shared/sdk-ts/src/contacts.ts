@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpResponseBody } from './utils';
 
 export const CONTACTS_ROUTES = {
   AUTO_COMPLETE: '/api/contacts/auto-complete',
@@ -7,10 +8,7 @@ export const CONTACTS_ROUTES = {
   INACTIVATE: '/api/contacts/{id}/inactivate',
 } as const satisfies Record<string, keyof paths>;
 
-type AutoComplete = paths[typeof CONTACTS_ROUTES.AUTO_COMPLETE]['get'];
-
-type AutoComplete200 = AutoComplete['responses'][200];
-export type ContactsAutoCompleteResponse = AutoComplete200 extends { content?: { 'application/json': infer J } } ? J : unknown;
+export type ContactsAutoCompleteResponse = OpResponseBody<OpForPath<typeof CONTACTS_ROUTES.AUTO_COMPLETE, 'get'>>;
 
 export async function fetchContactsAutoComplete(fetcher: ApiFetcher): Promise<ContactsAutoCompleteResponse> {
   const get = fetcher.path(CONTACTS_ROUTES.AUTO_COMPLETE).method('get').create();

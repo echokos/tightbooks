@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const BRANCHES_ROUTES = {
   LIST: '/api/branches',
@@ -8,16 +9,10 @@ export const BRANCHES_ROUTES = {
   MARK_AS_PRIMARY: '/api/branches/{id}/mark-as-primary',
 } as const satisfies Record<string, keyof paths>;
 
-type GetBranches = paths[typeof BRANCHES_ROUTES.LIST]['get'];
-type GetBranch = paths[typeof BRANCHES_ROUTES.BY_ID]['get'];
-type CreateBranch = paths[typeof BRANCHES_ROUTES.LIST]['post'];
-type EditBranch = paths[typeof BRANCHES_ROUTES.BY_ID]['put'];
-type DeleteBranch = paths[typeof BRANCHES_ROUTES.BY_ID]['delete'];
-
-export type BranchesListResponse = GetBranches['responses'][200]['content']['application/json'];
-export type Branch = GetBranch['responses'][200]['content']['application/json'];
-export type CreateBranchBody = CreateBranch['requestBody']['content']['application/json'];
-export type EditBranchBody = EditBranch['requestBody']['content']['application/json'];
+export type BranchesListResponse = OpResponseBody<OpForPath<typeof BRANCHES_ROUTES.LIST, 'get'>>;
+export type Branch = OpResponseBody<OpForPath<typeof BRANCHES_ROUTES.BY_ID, 'get'>>;
+export type CreateBranchBody = OpRequestBody<OpForPath<typeof BRANCHES_ROUTES.LIST, 'post'>>;
+export type EditBranchBody = OpRequestBody<OpForPath<typeof BRANCHES_ROUTES.BY_ID, 'put'>>;
 
 export async function fetchBranches(fetcher: ApiFetcher): Promise<BranchesListResponse> {
   const get = fetcher.path(BRANCHES_ROUTES.LIST).method('get').create();

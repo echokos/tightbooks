@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpResponseBody } from './utils';
 
 export const SUBSCRIPTION_ROUTES = {
   LIST: '/api/subscription',
@@ -9,10 +10,7 @@ export const SUBSCRIPTION_ROUTES = {
   CHANGE: '/api/subscription/change',
 } as const satisfies Record<string, keyof paths>;
 
-type GetSubscriptions = paths[typeof SUBSCRIPTION_ROUTES.LIST]['get'];
-
-type GetSubscriptions200 = GetSubscriptions['responses'][200];
-export type SubscriptionsListResponse = GetSubscriptions200 extends { content?: { 'application/json': infer J } } ? J : unknown;
+export type SubscriptionsListResponse = OpResponseBody<OpForPath<typeof SUBSCRIPTION_ROUTES.LIST, 'get'>>;
 
 export async function fetchSubscriptions(fetcher: ApiFetcher): Promise<SubscriptionsListResponse> {
   const get = fetcher.path(SUBSCRIPTION_ROUTES.LIST).method('get').create();

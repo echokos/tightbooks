@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const VENDOR_CREDITS_ROUTES = {
   LIST: '/api/vendor-credits',
@@ -9,18 +10,10 @@ export const VENDOR_CREDITS_ROUTES = {
   BULK_DELETE: '/api/vendor-credits/bulk-delete',
 } as const satisfies Record<string, keyof paths>;
 
-type GetVendorCredits = paths[typeof VENDOR_CREDITS_ROUTES.LIST]['get'];
-type GetVendorCredit = paths[typeof VENDOR_CREDITS_ROUTES.BY_ID]['get'];
-type CreateVendorCredit = paths[typeof VENDOR_CREDITS_ROUTES.LIST]['post'];
-type EditVendorCredit = paths[typeof VENDOR_CREDITS_ROUTES.BY_ID]['put'];
-type DeleteVendorCredit = paths[typeof VENDOR_CREDITS_ROUTES.BY_ID]['delete'];
-
-type GetVendorCredits200 = GetVendorCredits['responses'][200];
-type GetVendorCredit200 = GetVendorCredit['responses'][200];
-export type VendorCreditsListResponse = GetVendorCredits200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type VendorCredit = GetVendorCredit200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type CreateVendorCreditBody = CreateVendorCredit['requestBody']['content']['application/json'];
-export type EditVendorCreditBody = EditVendorCredit['requestBody']['content']['application/json'];
+export type VendorCreditsListResponse = OpResponseBody<OpForPath<typeof VENDOR_CREDITS_ROUTES.LIST, 'get'>>;
+export type VendorCredit = OpResponseBody<OpForPath<typeof VENDOR_CREDITS_ROUTES.BY_ID, 'get'>>;
+export type CreateVendorCreditBody = OpRequestBody<OpForPath<typeof VENDOR_CREDITS_ROUTES.LIST, 'post'>>;
+export type EditVendorCreditBody = OpRequestBody<OpForPath<typeof VENDOR_CREDITS_ROUTES.BY_ID, 'put'>>;
 
 export async function fetchVendorCredits(fetcher: ApiFetcher): Promise<VendorCreditsListResponse> {
   const get = fetcher.path(VENDOR_CREDITS_ROUTES.LIST).method('get').create();

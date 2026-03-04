@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const WAREHOUSES_ROUTES = {
   LIST: '/api/warehouses',
@@ -8,16 +9,10 @@ export const WAREHOUSES_ROUTES = {
   MARK_PRIMARY: '/api/warehouses/{id}/mark-primary',
 } as const satisfies Record<string, keyof paths>;
 
-type GetWarehouses = paths[typeof WAREHOUSES_ROUTES.LIST]['get'];
-type GetWarehouse = paths[typeof WAREHOUSES_ROUTES.BY_ID]['get'];
-type CreateWarehouse = paths[typeof WAREHOUSES_ROUTES.LIST]['post'];
-type EditWarehouse = paths[typeof WAREHOUSES_ROUTES.BY_ID]['put'];
-type DeleteWarehouse = paths[typeof WAREHOUSES_ROUTES.BY_ID]['delete'];
-
-export type WarehousesListResponse = GetWarehouses['responses'][200]['content']['application/json'];
-export type Warehouse = GetWarehouse['responses'][200]['content']['application/json'];
-export type CreateWarehouseBody = CreateWarehouse['requestBody']['content']['application/json'];
-export type EditWarehouseBody = EditWarehouse['requestBody']['content']['application/json'];
+export type WarehousesListResponse = OpResponseBody<OpForPath<typeof WAREHOUSES_ROUTES.LIST, 'get'>>;
+export type Warehouse = OpResponseBody<OpForPath<typeof WAREHOUSES_ROUTES.BY_ID, 'get'>>;
+export type CreateWarehouseBody = OpRequestBody<OpForPath<typeof WAREHOUSES_ROUTES.LIST, 'post'>>;
+export type EditWarehouseBody = OpRequestBody<OpForPath<typeof WAREHOUSES_ROUTES.BY_ID, 'put'>>;
 
 export async function fetchWarehouses(fetcher: ApiFetcher): Promise<WarehousesListResponse> {
   const get = fetcher.path(WAREHOUSES_ROUTES.LIST).method('get').create();

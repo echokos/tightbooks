@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const ORGANIZATION_ROUTES = {
   CURRENT: '/api/organization/current',
@@ -9,12 +10,8 @@ export const ORGANIZATION_ROUTES = {
   UPDATE: '/api/organization',
 } as const satisfies Record<string, keyof paths>;
 
-type GetCurrent = paths[typeof ORGANIZATION_ROUTES.CURRENT]['get'];
-type UpdateOrganization = paths[typeof ORGANIZATION_ROUTES.UPDATE]['put'];
-
-type GetCurrent200 = GetCurrent['responses'][200];
-export type OrganizationCurrent = GetCurrent200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type UpdateOrganizationBody = UpdateOrganization['requestBody']['content']['application/json'];
+export type OrganizationCurrent = OpResponseBody<OpForPath<typeof ORGANIZATION_ROUTES.CURRENT, 'get'>>;
+export type UpdateOrganizationBody = OpRequestBody<OpForPath<typeof ORGANIZATION_ROUTES.UPDATE, 'put'>>;
 
 export async function fetchOrganizationCurrent(fetcher: ApiFetcher): Promise<OrganizationCurrent> {
   const get = fetcher.path(ORGANIZATION_ROUTES.CURRENT).method('get').create();

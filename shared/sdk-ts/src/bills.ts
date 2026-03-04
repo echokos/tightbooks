@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const BILLS_ROUTES = {
   LIST: '/api/bills',
@@ -11,22 +12,20 @@ export const BILLS_ROUTES = {
   BULK_DELETE: '/api/bills/bulk-delete',
 } as const satisfies Record<string, keyof paths>;
 
-type GetBills = paths[typeof BILLS_ROUTES.LIST]['get'];
-type GetBill = paths[typeof BILLS_ROUTES.BY_ID]['get'];
-type CreateBill = paths[typeof BILLS_ROUTES.LIST]['post'];
-type EditBill = paths[typeof BILLS_ROUTES.BY_ID]['put'];
-type DeleteBill = paths[typeof BILLS_ROUTES.BY_ID]['delete'];
+export type BillsListResponse = OpResponseBody<OpForPath<typeof BILLS_ROUTES.LIST, 'get'>>;
+export type Bill = OpResponseBody<OpForPath<typeof BILLS_ROUTES.BY_ID, 'get'>>;
+export type CreateBillBody = OpRequestBody<OpForPath<typeof BILLS_ROUTES.LIST, 'post'>>;
+export type EditBillBody = OpRequestBody<OpForPath<typeof BILLS_ROUTES.BY_ID, 'put'>>;
+export type GetBillsQuery = OpQueryParams<OpForPath<typeof BILLS_ROUTES.LIST, 'get'>>;
 
-export type BillsListResponse = GetBills['responses'][200]['content']['application/json'];
-export type Bill = GetBill['responses'][200]['content']['application/json'];
-export type CreateBillBody = CreateBill['requestBody']['content']['application/json'];
-export type EditBillBody = EditBill['requestBody']['content']['application/json'];
-
-export async function fetchBills(fetcher: ApiFetcher): Promise<BillsListResponse> {
+export async function fetchBills(
+  fetcher: ApiFetcher,
+  query?: GetBillsQuery
+): Promise<BillsListResponse> {
   const get = fetcher.path(BILLS_ROUTES.LIST).method('get').create();
-  // Schema incorrectly marks path.id on list endpoint; route has no {id}
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data } = await (get as (params?: any) => Promise<{ data: BillsListResponse }>)({});
+  const { data } = await (
+    get as unknown as (params?: GetBillsQuery) => Promise<{ data: BillsListResponse }>
+  )(query ?? {});
   return data;
 }
 

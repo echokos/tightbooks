@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const ROLES_ROUTES = {
   LIST: '/api/roles',
@@ -7,21 +8,11 @@ export const ROLES_ROUTES = {
   PERMISSIONS_SCHEMA: '/api/roles/permissions/schema',
 } as const satisfies Record<string, keyof paths>;
 
-type GetRoles = paths[typeof ROLES_ROUTES.LIST]['get'];
-type GetRole = paths[typeof ROLES_ROUTES.BY_ID]['get'];
-type CreateRole = paths[typeof ROLES_ROUTES.LIST]['post'];
-type EditRole = paths[typeof ROLES_ROUTES.BY_ID]['put'];
-type DeleteRole = paths[typeof ROLES_ROUTES.BY_ID]['delete'];
-type GetPermissionsSchema = paths[typeof ROLES_ROUTES.PERMISSIONS_SCHEMA]['get'];
-
-type GetRoles200 = GetRoles['responses'][200];
-type GetRole200 = GetRole['responses'][200];
-type GetPermissionsSchema200 = GetPermissionsSchema['responses'][200];
-export type RolesListResponse = GetRoles200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type Role = GetRole200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type CreateRoleBody = CreateRole['requestBody']['content']['application/json'];
-export type EditRoleBody = EditRole['requestBody']['content']['application/json'];
-export type RolePermissionsSchema = GetPermissionsSchema200 extends { content?: { 'application/json': infer J } } ? J : unknown;
+export type RolesListResponse = OpResponseBody<OpForPath<typeof ROLES_ROUTES.LIST, 'get'>>;
+export type Role = OpResponseBody<OpForPath<typeof ROLES_ROUTES.BY_ID, 'get'>>;
+export type CreateRoleBody = OpRequestBody<OpForPath<typeof ROLES_ROUTES.LIST, 'post'>>;
+export type EditRoleBody = OpRequestBody<OpForPath<typeof ROLES_ROUTES.BY_ID, 'put'>>;
+export type RolePermissionsSchema = OpResponseBody<OpForPath<typeof ROLES_ROUTES.PERMISSIONS_SCHEMA, 'get'>>;
 
 export async function fetchRoles(fetcher: ApiFetcher): Promise<RolesListResponse> {
   const get = fetcher.path(ROLES_ROUTES.LIST).method('get').create();

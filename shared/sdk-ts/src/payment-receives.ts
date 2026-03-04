@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const PAYMENTS_RECEIVED_ROUTES = {
   LIST: '/api/payments-received',
@@ -11,18 +12,10 @@ export const PAYMENTS_RECEIVED_ROUTES = {
   MAIL: '/api/payments-received/{id}/mail',
 } as const satisfies Record<string, keyof paths>;
 
-type GetPaymentsReceived = paths[typeof PAYMENTS_RECEIVED_ROUTES.LIST]['get'];
-type GetPaymentReceived = paths[typeof PAYMENTS_RECEIVED_ROUTES.BY_ID]['get'];
-type CreatePaymentReceived = paths[typeof PAYMENTS_RECEIVED_ROUTES.LIST]['post'];
-type EditPaymentReceived = paths[typeof PAYMENTS_RECEIVED_ROUTES.BY_ID]['put'];
-type DeletePaymentReceived = paths[typeof PAYMENTS_RECEIVED_ROUTES.BY_ID]['delete'];
-
-type GetPaymentsReceived200 = GetPaymentsReceived['responses'][200];
-type GetPaymentReceived200 = GetPaymentReceived['responses'][200];
-export type PaymentsReceivedListResponse = GetPaymentsReceived200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type PaymentReceived = GetPaymentReceived200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type CreatePaymentReceivedBody = CreatePaymentReceived['requestBody']['content']['application/json'];
-export type EditPaymentReceivedBody = EditPaymentReceived['requestBody']['content']['application/json'];
+export type PaymentsReceivedListResponse = OpResponseBody<OpForPath<typeof PAYMENTS_RECEIVED_ROUTES.LIST, 'get'>>;
+export type PaymentReceived = OpResponseBody<OpForPath<typeof PAYMENTS_RECEIVED_ROUTES.BY_ID, 'get'>>;
+export type CreatePaymentReceivedBody = OpRequestBody<OpForPath<typeof PAYMENTS_RECEIVED_ROUTES.LIST, 'post'>>;
+export type EditPaymentReceivedBody = OpRequestBody<OpForPath<typeof PAYMENTS_RECEIVED_ROUTES.BY_ID, 'put'>>;
 
 export async function fetchPaymentsReceived(fetcher: ApiFetcher): Promise<PaymentsReceivedListResponse> {
   const get = fetcher.path(PAYMENTS_RECEIVED_ROUTES.LIST).method('get').create();
