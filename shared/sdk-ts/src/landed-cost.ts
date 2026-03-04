@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpResponseBody } from './utils';
 
 export const LANDED_COST_ROUTES = {
   TRANSACTIONS: '/api/landed-cost/transactions',
@@ -8,13 +9,16 @@ export const LANDED_COST_ROUTES = {
   BILL_TRANSACTIONS: '/api/landed-cost/bills/{billId}/transactions',
 } as const satisfies Record<string, keyof paths>;
 
-type GetLandedCostTransactions = paths[typeof LANDED_COST_ROUTES.TRANSACTIONS]['get'];
+export type LandedCostTransactionsResponse = OpResponseBody<OpForPath<typeof LANDED_COST_ROUTES.TRANSACTIONS, 'get'>>;
+export type GetLandedCostTransactionsQuery = OpQueryParams<OpForPath<typeof LANDED_COST_ROUTES.TRANSACTIONS, 'get'>>;
 
-type GetLandedCostTransactions200 = GetLandedCostTransactions['responses'][200];
-export type LandedCostTransactionsResponse = GetLandedCostTransactions200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-
-export async function fetchLandedCostTransactions(fetcher: ApiFetcher): Promise<LandedCostTransactionsResponse> {
+export async function fetchLandedCostTransactions(
+  fetcher: ApiFetcher,
+  query?: GetLandedCostTransactionsQuery
+): Promise<LandedCostTransactionsResponse> {
   const get = fetcher.path(LANDED_COST_ROUTES.TRANSACTIONS).method('get').create();
-  const { data } = await get({});
+  const { data } = await (
+    get as (params?: GetLandedCostTransactionsQuery) => Promise<{ data: LandedCostTransactionsResponse }>
+  )(query ?? {});
   return data;
 }

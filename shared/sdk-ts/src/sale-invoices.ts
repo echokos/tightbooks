@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const SALE_INVOICES_ROUTES = {
   LIST: '/api/sale-invoices',
@@ -17,20 +18,23 @@ export const SALE_INVOICES_ROUTES = {
   BULK_DELETE: '/api/sale-invoices/bulk-delete',
 } as const satisfies Record<string, keyof paths>;
 
-type GetSaleInvoices = paths[typeof SALE_INVOICES_ROUTES.LIST]['get'];
-type GetSaleInvoice = paths[typeof SALE_INVOICES_ROUTES.BY_ID]['get'];
-type CreateSaleInvoice = paths[typeof SALE_INVOICES_ROUTES.LIST]['post'];
-type EditSaleInvoice = paths[typeof SALE_INVOICES_ROUTES.BY_ID]['put'];
-type DeleteSaleInvoice = paths[typeof SALE_INVOICES_ROUTES.BY_ID]['delete'];
+export type SaleInvoicesListResponse = OpResponseBody<OpForPath<typeof SALE_INVOICES_ROUTES.LIST, 'get'>>;
+export type SaleInvoice = OpResponseBody<OpForPath<typeof SALE_INVOICES_ROUTES.BY_ID, 'get'>>;
+export type CreateSaleInvoiceBody = OpRequestBody<OpForPath<typeof SALE_INVOICES_ROUTES.LIST, 'post'>>;
+export type EditSaleInvoiceBody = OpRequestBody<OpForPath<typeof SALE_INVOICES_ROUTES.BY_ID, 'put'>>;
+export type BulkDeleteSaleInvoicesBody = OpRequestBody<OpForPath<typeof SALE_INVOICES_ROUTES.BULK_DELETE, 'post'>>;
+export type ValidateBulkDeleteSaleInvoicesResponse = OpResponseBody<OpForPath<typeof SALE_INVOICES_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
+export type SaleInvoiceStateResponse = OpResponseBody<OpForPath<typeof SALE_INVOICES_ROUTES.STATE, 'get'>>;
+export type GetSaleInvoicesQuery = OpQueryParams<OpForPath<typeof SALE_INVOICES_ROUTES.LIST, 'get'>>;
 
-export type SaleInvoicesListResponse = GetSaleInvoices['responses'][200]['content']['application/json'];
-export type SaleInvoice = GetSaleInvoice['responses'][200]['content']['application/json'];
-export type CreateSaleInvoiceBody = CreateSaleInvoice['requestBody']['content']['application/json'];
-export type EditSaleInvoiceBody = EditSaleInvoice['requestBody']['content']['application/json'];
-
-export async function fetchSaleInvoices(fetcher: ApiFetcher): Promise<SaleInvoicesListResponse> {
+export async function fetchSaleInvoices(
+  fetcher: ApiFetcher,
+  query?: GetSaleInvoicesQuery
+): Promise<SaleInvoicesListResponse> {
   const get = fetcher.path(SALE_INVOICES_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await (
+    get as (params?: GetSaleInvoicesQuery) => Promise<{ data: SaleInvoicesListResponse }>
+  )(query ?? {});
   return data;
 }
 
@@ -60,4 +64,104 @@ export async function editSaleInvoice(
 export async function deleteSaleInvoice(fetcher: ApiFetcher, id: number): Promise<void> {
   const del = fetcher.path(SALE_INVOICES_ROUTES.BY_ID).method('delete').create();
   await del({ id });
+}
+
+export async function bulkDeleteSaleInvoices(
+  fetcher: ApiFetcher,
+  body: BulkDeleteSaleInvoicesBody
+): Promise<void> {
+  const post = fetcher.path(SALE_INVOICES_ROUTES.BULK_DELETE).method('post').create();
+  await post({ ids: body.ids, skipUndeletable: body.skipUndeletable ?? false } as never);
+}
+
+export async function validateBulkDeleteSaleInvoices(
+  fetcher: ApiFetcher,
+  ids: number[]
+): Promise<ValidateBulkDeleteSaleInvoicesResponse> {
+  const post = fetcher.path(SALE_INVOICES_ROUTES.VALIDATE_BULK_DELETE).method('post').create();
+  const { data } = await post({ ids, skipUndeletable: false } as never);
+  return data as ValidateBulkDeleteSaleInvoicesResponse;
+}
+
+export async function deliverSaleInvoice(fetcher: ApiFetcher, id: number): Promise<void> {
+  const put = fetcher.path(SALE_INVOICES_ROUTES.DELIVER).method('put').create();
+  await put({ id });
+}
+
+export async function writeOffSaleInvoice(
+  fetcher: ApiFetcher,
+  id: number,
+  body?: Record<string, unknown>
+): Promise<void> {
+  const post = fetcher.path(SALE_INVOICES_ROUTES.WRITEOFF).method('post').create();
+  await post({ id, ...(body ?? {}) } as never);
+}
+
+export async function cancelWrittenOffSaleInvoice(fetcher: ApiFetcher, id: number): Promise<void> {
+  const post = fetcher.path(SALE_INVOICES_ROUTES.CANCEL_WRITEOFF).method('post').create();
+  await post({ id });
+}
+
+export async function fetchReceivableSaleInvoices(
+  fetcher: ApiFetcher,
+  customerId?: number
+): Promise<unknown> {
+  const get = fetcher.path(SALE_INVOICES_ROUTES.RECEIVABLE).method('get').create();
+  const { data } = await (get as (params?: { customerId?: number }) => Promise<{ data: unknown }>)(
+    customerId != null ? { customerId } : {}
+  );
+  return data;
+}
+
+export async function fetchSaleInvoiceMailState(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<unknown> {
+  const get = fetcher.path(SALE_INVOICES_ROUTES.MAIL).method('get').create();
+  const { data } = await get({ id });
+  return data;
+}
+
+export async function sendSaleInvoiceMail(
+  fetcher: ApiFetcher,
+  id: number,
+  body?: Record<string, unknown>
+): Promise<void> {
+  const post = fetcher.path(SALE_INVOICES_ROUTES.MAIL).method('post').create();
+  await post({ id, ...(body ?? {}) } as never);
+}
+
+export async function fetchSaleInvoiceState(
+  fetcher: ApiFetcher
+): Promise<SaleInvoiceStateResponse> {
+  const get = fetcher.path(SALE_INVOICES_ROUTES.STATE).method('get').create();
+  const { data } = await (get as (params?: object) => Promise<{ data: SaleInvoiceStateResponse }>)({});
+  return data;
+}
+
+export async function fetchInvoicePayments(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<unknown> {
+  const get = fetcher.path(SALE_INVOICES_ROUTES.PAYMENTS).method('get').create();
+  const { data } = await get({ id });
+  return data;
+}
+
+export async function fetchSaleInvoiceHtml(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<{ htmlContent: string }> {
+  const get = fetcher.path(SALE_INVOICES_ROUTES.HTML).method('get').create();
+  const { data } = await (get as (params: { id: number }) => Promise<{ data: { htmlContent: string } }>)({ id });
+  return data as { htmlContent: string };
+}
+
+export async function generateSaleInvoiceSharableLink(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<{ link: string }> {
+  const post = fetcher.path(SALE_INVOICES_ROUTES.GENERATE_LINK).method('post').create();
+  const { data } = await (post as (params: { id: number }) => Promise<{ data: { link: string } }>)({ id });
+  return data as { link: string };
 }

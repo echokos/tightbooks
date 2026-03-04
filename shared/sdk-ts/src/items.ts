@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const ITEMS_ROUTES = {
   LIST: '/api/items',
@@ -15,24 +16,22 @@ export const ITEMS_ROUTES = {
   WAREHOUSES: '/api/items/{id}/warehouses',
 } as const satisfies Record<string, keyof paths>;
 
-type GetItems = paths[typeof ITEMS_ROUTES.LIST]['get'];
-type GetItem = paths[typeof ITEMS_ROUTES.BY_ID]['get'];
-type CreateItem = paths[typeof ITEMS_ROUTES.LIST]['post'];
-type EditItem = paths[typeof ITEMS_ROUTES.BY_ID]['put'];
-type DeleteItem = paths[typeof ITEMS_ROUTES.BY_ID]['delete'];
-type BulkDelete = paths[typeof ITEMS_ROUTES.BULK_DELETE]['post'];
-type ValidateBulkDelete = paths[typeof ITEMS_ROUTES.VALIDATE_BULK_DELETE]['post'];
+export type ItemsListResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.LIST, 'get'>>;
+export type Item = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.BY_ID, 'get'>>;
+export type CreateItemBody = OpRequestBody<OpForPath<typeof ITEMS_ROUTES.LIST, 'post'>>;
+export type EditItemBody = OpRequestBody<OpForPath<typeof ITEMS_ROUTES.BY_ID, 'put'>>;
+export type BulkDeleteItemsBody = OpRequestBody<OpForPath<typeof ITEMS_ROUTES.BULK_DELETE, 'post'>>;
+export type ValidateBulkDeleteItemsResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
+export type GetItemsQuery = OpQueryParams<OpForPath<typeof ITEMS_ROUTES.LIST, 'get'>>;
 
-export type ItemsListResponse = GetItems['responses'][200]['content']['application/json'];
-export type Item = GetItem['responses'][200]['content']['application/json'];
-export type CreateItemBody = CreateItem['requestBody']['content']['application/json'];
-export type EditItemBody = EditItem['requestBody']['content']['application/json'];
-export type BulkDeleteItemsBody = BulkDelete['requestBody']['content']['application/json'];
-export type ValidateBulkDeleteItemsResponse = ValidateBulkDelete['responses'][200]['content']['application/json'];
-
-export async function fetchItems(fetcher: ApiFetcher): Promise<ItemsListResponse> {
+export async function fetchItems(
+  fetcher: ApiFetcher,
+  query?: GetItemsQuery
+): Promise<ItemsListResponse> {
   const get = fetcher.path(ITEMS_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await (get as (params?: GetItemsQuery) => Promise<{ data: ItemsListResponse }>)(
+    query ?? {}
+  );
   return data;
 }
 
@@ -89,4 +88,34 @@ export async function bulkDeleteItems(
 ): Promise<void> {
   const post = fetcher.path(ITEMS_ROUTES.BULK_DELETE).method('post').create();
   await post(body);
+}
+
+export async function fetchItemInvoices(fetcher: ApiFetcher, id: number): Promise<unknown[]> {
+  const get = fetcher.path(ITEMS_ROUTES.INVOICES).method('get').create();
+  const { data } = await get({ id });
+  return (data as { data?: unknown[] })?.data ?? [];
+}
+
+export async function fetchItemBills(fetcher: ApiFetcher, id: number): Promise<unknown[]> {
+  const get = fetcher.path(ITEMS_ROUTES.BILLS).method('get').create();
+  const { data } = await get({ id });
+  return (data as { data?: unknown[] })?.data ?? [];
+}
+
+export async function fetchItemEstimates(fetcher: ApiFetcher, id: number): Promise<unknown[]> {
+  const get = fetcher.path(ITEMS_ROUTES.ESTIMATES).method('get').create();
+  const { data } = await get({ id });
+  return (data as { data?: unknown[] })?.data ?? [];
+}
+
+export async function fetchItemReceipts(fetcher: ApiFetcher, id: number): Promise<unknown[]> {
+  const get = fetcher.path(ITEMS_ROUTES.RECEIPTS).method('get').create();
+  const { data } = await get({ id });
+  return (data as { data?: unknown[] })?.data ?? [];
+}
+
+export async function fetchItemWarehouses(fetcher: ApiFetcher, id: number): Promise<unknown[]> {
+  const get = fetcher.path(ITEMS_ROUTES.WAREHOUSES).method('get').create();
+  const { data } = await get({ id });
+  return (data as { item_warehouses?: unknown[] })?.item_warehouses ?? [];
 }

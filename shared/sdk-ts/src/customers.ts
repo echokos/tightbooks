@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const CUSTOMERS_ROUTES = {
   LIST: '/api/customers',
@@ -9,24 +10,22 @@ export const CUSTOMERS_ROUTES = {
   BULK_DELETE: '/api/customers/bulk-delete',
 } as const satisfies Record<string, keyof paths>;
 
-type GetCustomers = paths[typeof CUSTOMERS_ROUTES.LIST]['get'];
-type GetCustomer = paths[typeof CUSTOMERS_ROUTES.BY_ID]['get'];
-type CreateCustomer = paths[typeof CUSTOMERS_ROUTES.LIST]['post'];
-type EditCustomer = paths[typeof CUSTOMERS_ROUTES.BY_ID]['put'];
-type DeleteCustomer = paths[typeof CUSTOMERS_ROUTES.BY_ID]['delete'];
-type ValidateBulkDelete = paths[typeof CUSTOMERS_ROUTES.VALIDATE_BULK_DELETE]['post'];
-type BulkDelete = paths[typeof CUSTOMERS_ROUTES.BULK_DELETE]['post'];
+export type CustomersListResponse = OpResponseBody<OpForPath<typeof CUSTOMERS_ROUTES.LIST, 'get'>>;
+export type Customer = OpResponseBody<OpForPath<typeof CUSTOMERS_ROUTES.BY_ID, 'get'>>;
+export type CreateCustomerBody = OpRequestBody<OpForPath<typeof CUSTOMERS_ROUTES.LIST, 'post'>>;
+export type EditCustomerBody = OpRequestBody<OpForPath<typeof CUSTOMERS_ROUTES.BY_ID, 'put'>>;
+export type ValidateBulkDeleteCustomersResponse = OpResponseBody<OpForPath<typeof CUSTOMERS_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
+export type BulkDeleteCustomersBody = OpRequestBody<OpForPath<typeof CUSTOMERS_ROUTES.BULK_DELETE, 'post'>>;
+export type GetCustomersQuery = OpQueryParams<OpForPath<typeof CUSTOMERS_ROUTES.LIST, 'get'>>;
 
-export type CustomersListResponse = GetCustomers['responses'][200]['content']['application/json'];
-export type Customer = GetCustomer['responses'][200]['content']['application/json'];
-export type CreateCustomerBody = CreateCustomer['requestBody']['content']['application/json'];
-export type EditCustomerBody = EditCustomer['requestBody']['content']['application/json'];
-export type ValidateBulkDeleteCustomersResponse = ValidateBulkDelete['responses'][200]['content']['application/json'];
-export type BulkDeleteCustomersBody = BulkDelete['requestBody']['content']['application/json'];
-
-export async function fetchCustomers(fetcher: ApiFetcher): Promise<CustomersListResponse> {
+export async function fetchCustomers(
+  fetcher: ApiFetcher,
+  query?: GetCustomersQuery
+): Promise<CustomersListResponse> {
   const get = fetcher.path(CUSTOMERS_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await (get as (params: GetCustomersQuery) => Promise<{ data: CustomersListResponse }>)(
+    query ?? {}
+  );
   return data;
 }
 

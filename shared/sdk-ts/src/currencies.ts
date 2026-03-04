@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const CURRENCIES_ROUTES = {
   LIST: '/api/currencies',
@@ -8,13 +9,10 @@ export const CURRENCIES_ROUTES = {
   BY_CURRENCY_CODE: '/api/currencies/{currencyCode}',
 } as const satisfies Record<string, keyof paths>;
 
-type GetCurrencies = paths[typeof CURRENCIES_ROUTES.LIST]['get'];
-type GetCurrencyByCode = paths[typeof CURRENCIES_ROUTES.BY_CURRENCY_CODE]['get'];
-
-type GetCurrencies200 = GetCurrencies['responses'][200];
-type GetCurrencyByCode200 = GetCurrencyByCode['responses'][200];
-export type CurrenciesListResponse = GetCurrencies200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type Currency = GetCurrencyByCode200 extends { content?: { 'application/json': infer J } } ? J : unknown;
+export type CurrenciesListResponse = OpResponseBody<OpForPath<typeof CURRENCIES_ROUTES.LIST, 'get'>>;
+export type Currency = OpResponseBody<OpForPath<typeof CURRENCIES_ROUTES.BY_CURRENCY_CODE, 'get'>>;
+export type CreateCurrencyBody = OpRequestBody<OpForPath<typeof CURRENCIES_ROUTES.LIST, 'post'>>;
+export type EditCurrencyBody = OpRequestBody<OpForPath<typeof CURRENCIES_ROUTES.BY_ID, 'put'>>;
 
 export async function fetchCurrencies(fetcher: ApiFetcher): Promise<CurrenciesListResponse> {
   const get = fetcher.path(CURRENCIES_ROUTES.LIST).method('get').create();
@@ -31,4 +29,26 @@ export async function fetchCurrencyByCode(fetcher: ApiFetcher, currencyCode: str
 /** @deprecated Use fetchCurrencyByCode - schema has no get by id */
 export async function fetchCurrency(fetcher: ApiFetcher, id: number): Promise<Currency> {
   return fetchCurrencyByCode(fetcher, String(id));
+}
+
+export async function createCurrency(
+  fetcher: ApiFetcher,
+  values: CreateCurrencyBody
+): Promise<void> {
+  const post = fetcher.path(CURRENCIES_ROUTES.LIST).method('post').create();
+  await post(values as never);
+}
+
+export async function editCurrency(
+  fetcher: ApiFetcher,
+  id: number,
+  values: EditCurrencyBody
+): Promise<void> {
+  const put = fetcher.path(CURRENCIES_ROUTES.BY_ID).method('put').create();
+  await put({ id, ...values } as never);
+}
+
+export async function deleteCurrency(fetcher: ApiFetcher, code: string): Promise<void> {
+  const del = fetcher.path(CURRENCIES_ROUTES.BY_CODE).method('delete').create();
+  await del({ code });
 }

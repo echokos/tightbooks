@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const ACCOUNTS_ROUTES = {
   LIST: '/api/accounts',
@@ -12,24 +13,15 @@ export const ACCOUNTS_ROUTES = {
   INACTIVATE: '/api/accounts/{id}/inactivate',
 } as const satisfies Record<string, keyof paths>;
 
-type GetAccounts = paths[typeof ACCOUNTS_ROUTES.LIST]['get'];
-type GetAccount = paths[typeof ACCOUNTS_ROUTES.BY_ID]['get'];
-type GetAccountTypes = paths[typeof ACCOUNTS_ROUTES.TYPES]['get'];
-type GetAccountTransactions = paths[typeof ACCOUNTS_ROUTES.TRANSACTIONS]['get'];
-type CreateAccount = paths[typeof ACCOUNTS_ROUTES.LIST]['post'];
-type EditAccount = paths[typeof ACCOUNTS_ROUTES.BY_ID]['put'];
-type BulkDeleteAccounts = paths[typeof ACCOUNTS_ROUTES.BULK_DELETE]['post'];
-type ValidateBulkDelete = paths[typeof ACCOUNTS_ROUTES.VALIDATE_BULK_DELETE]['post'];
-
-export type AccountsList = GetAccounts['responses'][200]['content']['application/json'];
-export type Account = GetAccount['responses'][200]['content']['application/json'];
-export type AccountTypesList = GetAccountTypes['responses'][200]['content']['application/json'];
-export type AccountTransactionsList = GetAccountTransactions['responses'][200]['content']['application/json'];
-export type CreateAccountBody = CreateAccount['requestBody']['content']['application/json'];
-export type EditAccountBody = EditAccount['requestBody']['content']['application/json'];
-export type BulkDeleteBody = BulkDeleteAccounts['requestBody']['content']['application/json'];
-export type ValidateBulkDeleteResponse = ValidateBulkDelete['responses'][200]['content']['application/json'];
-export type GetAccountsQuery = NonNullable<GetAccounts['parameters']['query']>;
+export type AccountsList = OpResponseBody<OpForPath<typeof ACCOUNTS_ROUTES.LIST, 'get'>>;
+export type Account = OpResponseBody<OpForPath<typeof ACCOUNTS_ROUTES.BY_ID, 'get'>>;
+export type AccountTypesList = OpResponseBody<OpForPath<typeof ACCOUNTS_ROUTES.TYPES, 'get'>>;
+export type AccountTransactionsList = OpResponseBody<OpForPath<typeof ACCOUNTS_ROUTES.TRANSACTIONS, 'get'>>;
+export type CreateAccountBody = OpRequestBody<OpForPath<typeof ACCOUNTS_ROUTES.LIST, 'post'>>;
+export type EditAccountBody = OpRequestBody<OpForPath<typeof ACCOUNTS_ROUTES.BY_ID, 'put'>>;
+export type BulkDeleteBody = OpRequestBody<OpForPath<typeof ACCOUNTS_ROUTES.BULK_DELETE, 'post'>>;
+export type ValidateBulkDeleteResponse = OpResponseBody<OpForPath<typeof ACCOUNTS_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
+export type GetAccountsQuery = OpQueryParams<OpForPath<typeof ACCOUNTS_ROUTES.LIST, 'get'>>;
 
 function normalizeAccountsResponse(
   data: AccountsList | { accounts: AccountsList }

@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const MANUAL_JOURNALS_ROUTES = {
   LIST: '/api/manual-journals',
@@ -9,22 +10,22 @@ export const MANUAL_JOURNALS_ROUTES = {
   BULK_DELETE: '/api/manual-journals/bulk-delete',
 } as const satisfies Record<string, keyof paths>;
 
-type GetManualJournals = paths[typeof MANUAL_JOURNALS_ROUTES.LIST]['get'];
-type GetManualJournal = paths[typeof MANUAL_JOURNALS_ROUTES.BY_ID]['get'];
-type CreateManualJournal = paths[typeof MANUAL_JOURNALS_ROUTES.LIST]['post'];
-type EditManualJournal = paths[typeof MANUAL_JOURNALS_ROUTES.BY_ID]['put'];
-type DeleteManualJournal = paths[typeof MANUAL_JOURNALS_ROUTES.BY_ID]['delete'];
+export type ManualJournalsListResponse = OpResponseBody<OpForPath<typeof MANUAL_JOURNALS_ROUTES.LIST, 'get'>>;
+export type ManualJournal = OpResponseBody<OpForPath<typeof MANUAL_JOURNALS_ROUTES.BY_ID, 'get'>>;
+export type CreateManualJournalBody = OpRequestBody<OpForPath<typeof MANUAL_JOURNALS_ROUTES.LIST, 'post'>>;
+export type EditManualJournalBody = OpRequestBody<OpForPath<typeof MANUAL_JOURNALS_ROUTES.BY_ID, 'put'>>;
+export type BulkDeleteManualJournalsBody = OpRequestBody<OpForPath<typeof MANUAL_JOURNALS_ROUTES.BULK_DELETE, 'post'>>;
+export type ValidateBulkDeleteManualJournalsResponse = OpResponseBody<OpForPath<typeof MANUAL_JOURNALS_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
+export type ManualJournalsListQuery = OpQueryParams<OpForPath<typeof MANUAL_JOURNALS_ROUTES.LIST, 'get'>>;
 
-type GetManualJournals200 = GetManualJournals['responses'][200];
-type GetManualJournal200 = GetManualJournal['responses'][200];
-export type ManualJournalsListResponse = GetManualJournals200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type ManualJournal = GetManualJournal200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type CreateManualJournalBody = CreateManualJournal['requestBody']['content']['application/json'];
-export type EditManualJournalBody = EditManualJournal['requestBody']['content']['application/json'];
-
-export async function fetchManualJournals(fetcher: ApiFetcher): Promise<ManualJournalsListResponse> {
+export async function fetchManualJournals(
+  fetcher: ApiFetcher,
+  query?: ManualJournalsListQuery
+): Promise<ManualJournalsListResponse> {
   const get = fetcher.path(MANUAL_JOURNALS_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await (
+    get as unknown as (params?: ManualJournalsListQuery) => Promise<{ data: ManualJournalsListResponse }>
+  )(query ?? {});
   return data;
 }
 
@@ -59,4 +60,21 @@ export async function deleteManualJournal(fetcher: ApiFetcher, id: number): Prom
 export async function publishManualJournal(fetcher: ApiFetcher, id: number): Promise<void> {
   const patch = fetcher.path(MANUAL_JOURNALS_ROUTES.PUBLISH).method('patch').create();
   await patch({ id });
+}
+
+export async function bulkDeleteManualJournals(
+  fetcher: ApiFetcher,
+  body: BulkDeleteManualJournalsBody
+): Promise<void> {
+  const post = fetcher.path(MANUAL_JOURNALS_ROUTES.BULK_DELETE).method('post').create();
+  await post({ ids: body.ids, skipUndeletable: body.skipUndeletable ?? false });
+}
+
+export async function validateBulkDeleteManualJournals(
+  fetcher: ApiFetcher,
+  body: { ids: number[] }
+): Promise<ValidateBulkDeleteManualJournalsResponse> {
+  const post = fetcher.path(MANUAL_JOURNALS_ROUTES.VALIDATE_BULK_DELETE).method('post').create();
+  const { data } = await post({ ids: body.ids, skipUndeletable: false });
+  return data;
 }

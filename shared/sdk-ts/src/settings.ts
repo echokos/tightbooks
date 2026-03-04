@@ -1,21 +1,23 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const SETTINGS_ROUTES = {
   GET_SAVE: '/api/settings',
 } as const satisfies Record<string, keyof paths>;
 
-type GetSettings = paths[typeof SETTINGS_ROUTES.GET_SAVE]['get'];
-type SaveSettings = paths[typeof SETTINGS_ROUTES.GET_SAVE]['put'];
+export type SettingsResponse = OpResponseBody<OpForPath<typeof SETTINGS_ROUTES.GET_SAVE, 'get'>>;
+export type SaveSettingsBody = OpRequestBody<OpForPath<typeof SETTINGS_ROUTES.GET_SAVE, 'put'>>;
+export type GetSettingsQuery = OpQueryParams<OpForPath<typeof SETTINGS_ROUTES.GET_SAVE, 'get'>>;
 
-type GetSettings200 = GetSettings['responses'][200];
-type SaveSettingsRequestBody = SaveSettings extends { requestBody: { content: { 'application/json': infer J } } } ? J : Record<string, unknown>;
-export type SettingsResponse = GetSettings200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type SaveSettingsBody = SaveSettingsRequestBody;
-
-export async function fetchSettings(fetcher: ApiFetcher): Promise<SettingsResponse> {
+export async function fetchSettings(
+  fetcher: ApiFetcher,
+  query?: GetSettingsQuery
+): Promise<SettingsResponse> {
   const get = fetcher.path(SETTINGS_ROUTES.GET_SAVE).method('get').create();
-  const { data } = await get({});
+  const { data } = await (get as (params?: GetSettingsQuery) => Promise<{ data: SettingsResponse }>)(
+    query ?? {}
+  );
   return data;
 }
 

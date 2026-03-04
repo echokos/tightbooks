@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpRequestBody } from './utils';
 
 export const INVITE_ROUTES = {
   INVITE: '/api/invite',
@@ -8,10 +9,24 @@ export const INVITE_ROUTES = {
   CHECK: '/api/invite/check/{token}',
 } as const satisfies Record<string, keyof paths>;
 
-type InviteUser = paths[typeof INVITE_ROUTES.INVITE]['patch'];
-type ResendInvite = paths[typeof INVITE_ROUTES.RESEND]['post'];
+export type InviteUserBody = OpRequestBody<OpForPath<typeof INVITE_ROUTES.INVITE, 'patch'>>;
+export type AcceptInviteBody = OpRequestBody<OpForPath<typeof INVITE_ROUTES.ACCEPT, 'post'>>;
 
-export type InviteUserBody = InviteUser['requestBody']['content']['application/json'];
+export async function acceptInvite(
+  fetcher: ApiFetcher,
+  token: string,
+  values: AcceptInviteBody
+): Promise<unknown> {
+  const post = fetcher.path(INVITE_ROUTES.ACCEPT).method('post').create();
+  const { data } = await post({ token, ...values } as never);
+  return data;
+}
+
+export async function fetchInviteCheck(fetcher: ApiFetcher, token: string): Promise<unknown> {
+  const get = fetcher.path(INVITE_ROUTES.CHECK).method('get').create();
+  const { data } = await get({ token });
+  return data;
+}
 
 export async function inviteUser(
   fetcher: ApiFetcher,

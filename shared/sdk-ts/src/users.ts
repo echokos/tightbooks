@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const USERS_ROUTES = {
   LIST: '/api/users',
@@ -8,17 +9,10 @@ export const USERS_ROUTES = {
   INACTIVATE: '/api/users/{id}/inactivate',
 } as const satisfies Record<string, keyof paths>;
 
-type GetUsers = paths[typeof USERS_ROUTES.LIST]['get'];
-type GetUser = paths[typeof USERS_ROUTES.BY_ID]['get'];
-type EditUser = paths[typeof USERS_ROUTES.BY_ID]['put'];
-
-type GetUsers200 = GetUsers['responses'][200];
-type GetUser200 = GetUser['responses'][200];
-export type UsersListResponse = GetUsers200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type User = GetUser200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type EditUserBody = EditUser['requestBody']['content']['application/json'];
-
-export type GetUsersQuery = GetUsers['parameters']['query'];
+export type UsersListResponse = OpResponseBody<OpForPath<typeof USERS_ROUTES.LIST, 'get'>>;
+export type User = OpResponseBody<OpForPath<typeof USERS_ROUTES.BY_ID, 'get'>>;
+export type EditUserBody = OpRequestBody<OpForPath<typeof USERS_ROUTES.BY_ID, 'put'>>;
+export type GetUsersQuery = OpQueryParams<OpForPath<typeof USERS_ROUTES.LIST, 'get'>>;
 
 export async function fetchUsers(
   fetcher: ApiFetcher,

@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import type { paths } from './schema';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const VENDORS_ROUTES = {
   LIST: '/api/vendors',
@@ -9,25 +10,22 @@ export const VENDORS_ROUTES = {
   BULK_DELETE: '/api/vendors/bulk-delete',
 } as const satisfies Record<string, keyof paths>;
 
-type GetVendors = paths[typeof VENDORS_ROUTES.LIST]['get'];
-type GetVendor = paths[typeof VENDORS_ROUTES.BY_ID]['get'];
-type CreateVendor = paths[typeof VENDORS_ROUTES.LIST]['post'];
-type EditVendor = paths[typeof VENDORS_ROUTES.BY_ID]['put'];
-type ValidateBulkDelete = paths[typeof VENDORS_ROUTES.VALIDATE_BULK_DELETE]['post'];
-type BulkDelete = paths[typeof VENDORS_ROUTES.BULK_DELETE]['post'];
+export type VendorsListResponse = OpResponseBody<OpForPath<typeof VENDORS_ROUTES.LIST, 'get'>>;
+export type Vendor = OpResponseBody<OpForPath<typeof VENDORS_ROUTES.BY_ID, 'get'>>;
+export type CreateVendorBody = OpRequestBody<OpForPath<typeof VENDORS_ROUTES.LIST, 'post'>>;
+export type EditVendorBody = OpRequestBody<OpForPath<typeof VENDORS_ROUTES.BY_ID, 'put'>>;
+export type ValidateBulkDeleteVendorsResponse = OpResponseBody<OpForPath<typeof VENDORS_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
+export type BulkDeleteVendorsBody = OpRequestBody<OpForPath<typeof VENDORS_ROUTES.BULK_DELETE, 'post'>>;
+export type GetVendorsQuery = OpQueryParams<OpForPath<typeof VENDORS_ROUTES.LIST, 'get'>>;
 
-type GetVendors200 = GetVendors['responses'][200];
-type GetVendor200 = GetVendor['responses'][200];
-export type VendorsListResponse = GetVendors200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type Vendor = GetVendor200 extends { content?: { 'application/json': infer J } } ? J : unknown;
-export type CreateVendorBody = CreateVendor['requestBody']['content']['application/json'];
-export type EditVendorBody = EditVendor['requestBody']['content']['application/json'];
-export type ValidateBulkDeleteVendorsResponse = ValidateBulkDelete['responses'][200]['content']['application/json'];
-export type BulkDeleteVendorsBody = BulkDelete['requestBody']['content']['application/json'];
-
-export async function fetchVendors(fetcher: ApiFetcher): Promise<VendorsListResponse> {
+export async function fetchVendors(
+  fetcher: ApiFetcher,
+  query?: GetVendorsQuery
+): Promise<VendorsListResponse> {
   const get = fetcher.path(VENDORS_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await (get as (params: GetVendorsQuery) => Promise<{ data: VendorsListResponse }>)(
+    query ?? {}
+  );
   return data;
 }
 
