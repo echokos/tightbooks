@@ -59,6 +59,15 @@ export type AutofillCategorizeTransactionResponse = OpResponseBody<OpForPath<typ
 /** Response for GET /api/banking/recognized (single). */
 export type RecognizedTransactionResponse = OpResponseBody<OpForPath<typeof BANK_RULES_ROUTES.RECOGNIZED, 'get'>>;
 
+/** Paginated list response for GET /api/banking/recognized (from OpenAPI schema). */
+export type BankTransactionsListPage = OpResponseBody<OpForPath<typeof BANK_RULES_ROUTES.RECOGNIZED_LIST, 'get'>>;
+
+/** Paginated list response for GET /api/banking/exclude (from OpenAPI schema). */
+export type ExcludedBankTransactionsListPage = OpResponseBody<OpForPath<typeof BANK_RULES_ROUTES.EXCLUDED_LIST, 'get'>>;
+
+/** Paginated list response for GET /api/banking/pending (from OpenAPI schema). */
+export type PendingBankTransactionsListPage = OpResponseBody<OpForPath<typeof BANK_RULES_ROUTES.PENDING, 'get'>>;
+
 export async function fetchBankRules(fetcher: ApiFetcher): Promise<BankRulesListResponse> {
   const get = fetcher.path(BANK_RULES_ROUTES.RULES).method('get').create();
   const { data } = await get({});
@@ -195,7 +204,7 @@ export async function excludeBankTransactionsBulk(
   body: ExcludeBankTransactionsBulkBody
 ): Promise<void> {
   const put = fetcher.path(BANK_RULES_ROUTES.EXCLUDE_BULK).method('put').create();
-  await put(body);
+  await (put as (params: ExcludeBankTransactionsBulkBody) => Promise<unknown>)(body);
 }
 
 export async function unexcludeBankTransactionsBulk(
@@ -203,7 +212,7 @@ export async function unexcludeBankTransactionsBulk(
   body: ExcludeBankTransactionsBulkBody
 ): Promise<void> {
   const del = fetcher.path(BANK_RULES_ROUTES.EXCLUDE_BULK).method('delete').create();
-  await del(body);
+  await (del as (params: ExcludeBankTransactionsBulkBody) => Promise<unknown>)(body);
 }
 
 export async function fetchRecognizedTransaction(
@@ -218,7 +227,7 @@ export async function fetchRecognizedTransaction(
 export async function fetchRecognizedTransactions(
   fetcher: ApiFetcher,
   params?: Record<string, unknown>
-): Promise<unknown> {
+): Promise<BankTransactionsListPage> {
   const get = fetcher.path(BANK_RULES_ROUTES.RECOGNIZED_LIST).method('get').create();
   const { data } = await get(params ?? {});
   return data;
@@ -227,7 +236,7 @@ export async function fetchRecognizedTransactions(
 export async function fetchExcludedBankTransactions(
   fetcher: ApiFetcher,
   params?: GetExcludedBankTransactionsQuery
-): Promise<unknown> {
+): Promise<ExcludedBankTransactionsListPage> {
   const get = fetcher.path(BANK_RULES_ROUTES.EXCLUDED_LIST).method('get').create();
   const { data } = await get(params ?? {});
   return data;
@@ -236,7 +245,7 @@ export async function fetchExcludedBankTransactions(
 export async function fetchPendingTransactions(
   fetcher: ApiFetcher,
   params?: GetPendingTransactionsQuery
-): Promise<unknown> {
+): Promise<PendingBankTransactionsListPage> {
   const get = fetcher.path(BANK_RULES_ROUTES.PENDING).method('get').create();
   const { data } = await get(params ?? {});
   return data;

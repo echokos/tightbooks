@@ -28,6 +28,22 @@ export class VendorCreditsRefundController {
   ) { }
 
   /**
+   * Retrieve a single refund vendor credit transaction by id.
+   * @param {number} refundCreditId
+   * @returns {Promise<IRefundVendorCreditPOJO>}
+   */
+  @Get('refunds/:refundCreditId')
+  @RequirePermission(VendorCreditAction.View, AbilitySubject.VendorCredit)
+  @ApiOperation({ summary: 'Retrieve a refund vendor credit transaction by id.' })
+  public getRefundVendorCreditTransaction(
+    @Param('refundCreditId') refundCreditId: string,
+  ) {
+    return this.vendorCreditsRefundApplication.getRefundVendorCreditTransaction(
+      Number(refundCreditId),
+    );
+  }
+
+  /**
    * Retrieve the vendor credit refunds graph.
    * @param {number} vendorCreditId - Vendor credit id.
    * @returns {Promise<IRefundVendorCreditPOJO[]>}
