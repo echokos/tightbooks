@@ -3,7 +3,9 @@ import { castArray, omit } from 'lodash';
 import { BankingCategorizeApplication } from './BankingCategorize.application';
 import { CategorizeBankTransactionRouteDto } from './dtos/CategorizeBankTransaction.dto';
 import {
+  ApiBody,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiResponse,
   ApiTags,
@@ -20,6 +22,7 @@ export class BankingCategorizeController {
 
   @Post()
   @ApiOperation({ summary: 'Categorize bank transactions.' })
+  @ApiBody({ type: CategorizeBankTransactionRouteDto })
   @ApiResponse({
     status: 200,
     description: 'The bank transactions have been categorized successfully.',
@@ -60,6 +63,12 @@ export class BankingCategorizeController {
 
   @Delete('/:id')
   @ApiOperation({ summary: 'Uncategorize a bank transaction.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'Uncategorized transaction ID to uncategorize',
+  })
   @ApiResponse({
     status: 200,
     description: 'The bank transaction has been uncategorized successfully.',

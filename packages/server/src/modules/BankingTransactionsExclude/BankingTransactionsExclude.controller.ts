@@ -15,14 +15,15 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { GetExcludedBankTransactionResponseDto } from './dtos/GetExcludedBankTransactionResponse.dto';
 import { ExcludeBankTransactionsBulkDto } from './dtos/ExcludeBankTransactionsBulk.dto';
 import { GetExcludedBankTransactionsQueryDto } from './dtos/GetExcludedBankTransactionsQuery.dto';
-import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('banking/exclude')
 @ApiTags('Banking Transactions')
-@ApiExtraModels(GetExcludedBankTransactionResponseDto, ExcludeBankTransactionsBulkDto)
+@ApiExtraModels(GetExcludedBankTransactionResponseDto, ExcludeBankTransactionsBulkDto, PaginatedResponseDto)
 @ApiCommonHeaders()
 export class BankingTransactionsExcludeController {
   constructor(
@@ -54,10 +55,17 @@ export class BankingTransactionsExcludeController {
     description:
       'The excluded bank transactions has been retrieved successfully.',
     schema: {
-      type: 'array',
-      items: {
-        $ref: getSchemaPath(GetExcludedBankTransactionResponseDto),
-      },
+      allOf: [
+        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(GetExcludedBankTransactionResponseDto) },
+            },
+          },
+        },
+      ],
     },
   })
   public getExcludedBankTransactions(
