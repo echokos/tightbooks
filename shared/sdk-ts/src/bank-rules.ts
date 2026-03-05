@@ -1,6 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
 import { paths } from './schema';
-import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const BANK_RULES_ROUTES = {
   RULES: '/api/banking/rules',
@@ -19,6 +19,7 @@ export const BANK_RULES_ROUTES = {
   RECOGNIZED_LIST: '/api/banking/recognized',
   PENDING: '/api/banking/pending',
   UNCATEGORIZED_AUTOFILL: '/api/banking/uncategorized/autofill',
+  CATEGORIZE_BULK: '/api/banking/categorize/bulk',
 } as const satisfies Record<string, keyof paths>;
 
 export type BankRulesListResponse = OpResponseBody<OpForPath<typeof BANK_RULES_ROUTES.RULES, 'get'>>;
@@ -27,9 +28,36 @@ export type CreateBankRuleBody = OpRequestBody<OpForPath<typeof BANK_RULES_ROUTE
 export type EditBankRuleBody = OpRequestBody<OpForPath<typeof BANK_RULES_ROUTES.RULE_BY_ID, 'put'>>;
 export type CreateBankRuleResponse = OpResponseBody<OpForPath<typeof BANK_RULES_ROUTES.RULES, 'post'>>;
 
-/** Path params for pause/resume bank account (id = bankAccountId). */
+/** Path params for pause/resume/disconnect/refresh bank account (id = bankAccountId). */
 export type PauseBankAccountParams = OpForPath<typeof BANK_RULES_ROUTES.ACCOUNTS_PAUSE, 'post'> extends { parameters: { path: infer P } } ? P : never;
 export type ResumeBankAccountParams = OpForPath<typeof BANK_RULES_ROUTES.ACCOUNTS_RESUME, 'post'> extends { parameters: { path: infer P } } ? P : never;
+export type DisconnectBankAccountParams = OpForPath<typeof BANK_RULES_ROUTES.ACCOUNTS_DISCONNECT, 'post'> extends { parameters: { path: infer P } } ? P : never;
+export type RefreshBankAccountParams = OpForPath<typeof BANK_RULES_ROUTES.ACCOUNTS_REFRESH, 'post'> extends { parameters: { path: infer P } } ? P : never;
+export type UnmatchMatchedTransactionParams = OpForPath<typeof BANK_RULES_ROUTES.MATCHING_UNMATCH, 'patch'> extends { parameters: { path: infer P } } ? P : never;
+
+/** Response for GET /api/banking/matching/matched (from server GetMatchedTransactionsResponseDto). */
+export type MatchedTransactionsResponse = OpResponseBody<OpForPath<typeof BANK_RULES_ROUTES.MATCHING_MATCHED, 'get'>>;
+
+/** Query params for GET /api/banking/matching/matched. */
+export type GetMatchedTransactionsQuery = OpQueryParams<OpForPath<typeof BANK_RULES_ROUTES.MATCHING_MATCHED, 'get'>>;
+
+/** Body for POST /api/banking/matching/match (use referenceType, referenceId - camelCase). */
+export type MatchTransactionBody = OpRequestBody<OpForPath<typeof BANK_RULES_ROUTES.MATCHING_MATCH, 'post'>>;
+
+/** Body for PUT/DELETE /api/banking/exclude/bulk (from server ExcludeBankTransactionsBulkDto). */
+export type ExcludeBankTransactionsBulkBody = OpRequestBody<OpForPath<typeof BANK_RULES_ROUTES.EXCLUDE_BULK, 'put'>>;
+
+/** Query params for GET /api/banking/exclude. */
+export type GetExcludedBankTransactionsQuery = OpQueryParams<OpForPath<typeof BANK_RULES_ROUTES.EXCLUDED_LIST, 'get'>>;
+
+/** Query params for GET /api/banking/pending. */
+export type GetPendingTransactionsQuery = OpQueryParams<OpForPath<typeof BANK_RULES_ROUTES.PENDING, 'get'>>;
+
+/** Response for GET /api/banking/uncategorized/autofill (from server GetAutofillCategorizeTransactionResponseDto). */
+export type AutofillCategorizeTransactionResponse = OpResponseBody<OpForPath<typeof BANK_RULES_ROUTES.UNCATEGORIZED_AUTOFILL, 'get'>>;
+
+/** Response for GET /api/banking/recognized (single). */
+export type RecognizedTransactionResponse = OpResponseBody<OpForPath<typeof BANK_RULES_ROUTES.RECOGNIZED, 'get'>>;
 
 export async function fetchBankRules(fetcher: ApiFetcher): Promise<BankRulesListResponse> {
   const get = fetcher.path(BANK_RULES_ROUTES.RULES).method('get').create();
@@ -115,28 +143,24 @@ export async function resumeBankAccount(
 
 export async function fetchMatchedTransactions(
   fetcher: ApiFetcher,
-  uncategorizedTransactionIds: number[]
-): Promise<unknown> {
+  uncategorizedTransactionIds: number[],
+  query?: GetMatchedTransactionsQuery
+): Promise<MatchedTransactionsResponse> {
   const get = fetcher
     .path(BANK_RULES_ROUTES.MATCHING_MATCHED)
     .method('get')
     .create();
   const ids = uncategorizedTransactionIds.map(String);
-  const { data } = await get({ uncategorizedTransactionIds: ids });
+  const { data } = await get({ uncategorizedTransactionIds: ids, ...query });
   return data;
 }
-
-export type MatchTransactionBody = {
-  uncategorizedTransactions: number[];
-  matchedTransactions: Array<{ reference_type: string; reference_id: number }>;
-};
 
 export async function matchTransaction(
   fetcher: ApiFetcher,
   body: MatchTransactionBody
 ): Promise<void> {
   const post = fetcher.path(BANK_RULES_ROUTES.MATCHING_MATCH).method('post').create();
-  await (post as (body: unknown) => Promise<unknown>)(body);
+  await post(body);
 }
 
 export async function unmatchMatchedTransaction(
@@ -168,24 +192,24 @@ export async function unexcludeBankTransaction(
 
 export async function excludeBankTransactionsBulk(
   fetcher: ApiFetcher,
-  ids: Array<number | string>
+  body: ExcludeBankTransactionsBulkBody
 ): Promise<void> {
   const put = fetcher.path(BANK_RULES_ROUTES.EXCLUDE_BULK).method('put').create();
-  await (put as (body?: { ids?: unknown[] }) => Promise<unknown>)({ ids });
+  await put(body);
 }
 
 export async function unexcludeBankTransactionsBulk(
   fetcher: ApiFetcher,
-  ids: Array<number | string>
+  body: ExcludeBankTransactionsBulkBody
 ): Promise<void> {
   const del = fetcher.path(BANK_RULES_ROUTES.EXCLUDE_BULK).method('delete').create();
-  await (del as (body?: { ids?: unknown[] }) => Promise<unknown>)({ ids });
+  await del(body);
 }
 
 export async function fetchRecognizedTransaction(
   fetcher: ApiFetcher,
   recognizedTransactionId: number
-): Promise<unknown> {
+): Promise<RecognizedTransactionResponse> {
   const get = fetcher.path(BANK_RULES_ROUTES.RECOGNIZED).method('get').create();
   const { data } = await get({ recognizedTransactionId });
   return data;
@@ -196,44 +220,57 @@ export async function fetchRecognizedTransactions(
   params?: Record<string, unknown>
 ): Promise<unknown> {
   const get = fetcher.path(BANK_RULES_ROUTES.RECOGNIZED_LIST).method('get').create();
-  const { data } = await (get as (q?: Record<string, unknown>) => Promise<{ data: unknown }>)(
-    params ?? {}
-  );
+  const { data } = await get(params ?? {});
   return data;
 }
 
 export async function fetchExcludedBankTransactions(
   fetcher: ApiFetcher,
-  params?: Record<string, unknown>
+  params?: GetExcludedBankTransactionsQuery
 ): Promise<unknown> {
   const get = fetcher.path(BANK_RULES_ROUTES.EXCLUDED_LIST).method('get').create();
-  const { data } = await (get as (q?: Record<string, unknown>) => Promise<{ data: unknown }>)(
-    params ?? {}
-  );
+  const { data } = await get(params ?? {});
   return data;
 }
 
 export async function fetchPendingTransactions(
   fetcher: ApiFetcher,
-  params?: Record<string, unknown>
+  params?: GetPendingTransactionsQuery
 ): Promise<unknown> {
   const get = fetcher.path(BANK_RULES_ROUTES.PENDING).method('get').create();
-  const { data } = await (get as (q?: Record<string, unknown>) => Promise<{ data: unknown }>)(
-    params ?? {}
-  );
+  const { data } = await get(params ?? {});
   return data;
 }
 
 export async function fetchAutofillCategorizeTransaction(
   fetcher: ApiFetcher,
   uncategorizedTransactionIds: number[]
-): Promise<unknown> {
+): Promise<AutofillCategorizeTransactionResponse> {
   const get = fetcher
     .path(BANK_RULES_ROUTES.UNCATEGORIZED_AUTOFILL)
     .method('get')
     .create();
-  const { data } = await (get as (q: unknown) => Promise<{ data: unknown }>)({
+  // Server expects uncategorizedTransactionIds (array). Schema types update after openapi regen.
+  const { data } = await get({
     uncategorizedTransactionIds,
+  } as never);
+  return data as AutofillCategorizeTransactionResponse;
+}
+
+/**
+ * Uncategorize bank transactions in bulk (DELETE /api/banking/categorize/bulk with query uncategorizedTransactionIds).
+ */
+export async function uncategorizeTransactionsBulk(
+  fetcher: ApiFetcher,
+  uncategorizedTransactionIds: number[],
+): Promise<void> {
+  const del = fetcher
+    .path(BANK_RULES_ROUTES.CATEGORIZE_BULK)
+    .method('delete')
+    .create();
+  await (del as (params: {
+    query?: { uncategorizedTransactionIds: number[] };
+  }) => Promise<unknown>)({
+    query: { uncategorizedTransactionIds },
   });
-  return data;
 }

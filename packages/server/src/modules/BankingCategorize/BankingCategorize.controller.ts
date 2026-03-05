@@ -2,7 +2,12 @@ import { Body, Controller, Delete, Param, Post, Query } from '@nestjs/common';
 import { castArray, omit } from 'lodash';
 import { BankingCategorizeApplication } from './BankingCategorize.application';
 import { CategorizeBankTransactionRouteDto } from './dtos/CategorizeBankTransaction.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('banking/categorize')
@@ -29,16 +34,27 @@ export class BankingCategorizeController {
   }
 
   @Delete('/bulk')
-  @ApiOperation({ summary: 'Uncategorize bank transactions.' })
+  @ApiOperation({ summary: 'Uncategorize bank transactions in bulk.' })
+  @ApiQuery({
+    name: 'uncategorizedTransactionIds',
+    required: true,
+    type: [Number],
+    isArray: true,
+    description: 'Array of uncategorized transaction IDs to uncategorize',
+  })
   @ApiResponse({
     status: 200,
     description: 'The bank transactions have been uncategorized successfully.',
   })
   public uncategorizeTransactionsBulk(
-    @Query() uncategorizedTransactionIds: number[] | number,
+    @Query('uncategorizedTransactionIds')
+    uncategorizedTransactionIds: number[] | number,
   ) {
+    const ids = castArray(uncategorizedTransactionIds).map((id) =>
+      Number(id),
+    );
     return this.bankingCategorizeApplication.uncategorizeTransactionsBulk(
-      castArray(uncategorizedTransactionIds),
+      ids,
     );
   }
 

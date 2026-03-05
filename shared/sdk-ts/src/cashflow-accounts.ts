@@ -9,6 +9,13 @@ export const BANKING_ACCOUNTS_ROUTES = {
 
 export type BankingAccountsListResponse = OpResponseBody<OpForPath<typeof BANKING_ACCOUNTS_ROUTES.LIST, 'get'>>;
 
+/** Bank account summary response (schema does not define response body). */
+export interface BankingAccountSummaryResponse {
+  name: string;
+  totalUncategorizedTransactions: number;
+  totalRecognizedTransactions: number;
+}
+
 export async function fetchBankingAccounts(fetcher: ApiFetcher): Promise<BankingAccountsListResponse> {
   const get = fetcher.path(BANKING_ACCOUNTS_ROUTES.LIST).method('get').create();
   const { data } = await get({});
@@ -18,8 +25,8 @@ export async function fetchBankingAccounts(fetcher: ApiFetcher): Promise<Banking
 export async function fetchBankingAccountSummary(
   fetcher: ApiFetcher,
   bankAccountId: number
-): Promise<unknown> {
+): Promise<BankingAccountSummaryResponse> {
   const get = fetcher.path(BANKING_ACCOUNTS_ROUTES.SUMMARY).method('get').create();
   const { data } = await get({ bankAccountId });
-  return data;
+  return data as BankingAccountSummaryResponse;
 }

@@ -4517,6 +4517,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/contacts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get contact by ID (customer or vendor) */
+        get: operations["ContactsController_getContact"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/contacts/auto-complete": {
         parameters: {
             query?: never;
@@ -40029,6 +40046,27 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ContactsController_getContact: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Contact ID */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Contact details (under "customer" key for form/duplicate use) */
             200: {
                 headers: {
                     [name: string]: unknown;

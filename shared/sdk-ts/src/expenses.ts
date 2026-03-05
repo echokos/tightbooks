@@ -15,6 +15,12 @@ export type Expense = OpResponseBody<OpForPath<typeof EXPENSES_ROUTES.BY_ID, 'ge
 export type CreateExpenseBody = OpRequestBody<OpForPath<typeof EXPENSES_ROUTES.LIST, 'post'>>;
 export type EditExpenseBody = OpRequestBody<OpForPath<typeof EXPENSES_ROUTES.BY_ID, 'put'>>;
 export type GetExpensesQuery = OpQueryParams<OpForPath<typeof EXPENSES_ROUTES.LIST, 'get'>>;
+export type BulkDeleteExpensesBody = OpRequestBody<
+  OpForPath<typeof EXPENSES_ROUTES.BULK_DELETE, 'post'>
+>;
+export type ValidateBulkDeleteExpensesResponse = OpResponseBody<
+  OpForPath<typeof EXPENSES_ROUTES.VALIDATE_BULK_DELETE, 'post'>
+>;
 
 export async function fetchExpenses(
   fetcher: ApiFetcher,
@@ -58,4 +64,24 @@ export async function deleteExpense(fetcher: ApiFetcher, id: number): Promise<vo
 export async function publishExpense(fetcher: ApiFetcher, id: number): Promise<void> {
   const post = fetcher.path(EXPENSES_ROUTES.PUBLISH).method('post').create();
   await post({ id });
+}
+
+export async function bulkDeleteExpenses(
+  fetcher: ApiFetcher,
+  body: BulkDeleteExpensesBody
+): Promise<void> {
+  const post = fetcher.path(EXPENSES_ROUTES.BULK_DELETE).method('post').create();
+  await post(body);
+}
+
+export async function validateBulkDeleteExpenses(
+  fetcher: ApiFetcher,
+  body: BulkDeleteExpensesBody
+): Promise<ValidateBulkDeleteExpensesResponse> {
+  const post = fetcher
+    .path(EXPENSES_ROUTES.VALIDATE_BULK_DELETE)
+    .method('post')
+    .create();
+  const { data } = await post(body);
+  return data;
 }
