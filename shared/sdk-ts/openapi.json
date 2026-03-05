@@ -11329,6 +11329,47 @@
       }
     },
     "/api/vendor-credits/refunds/{refundCreditId}": {
+      "get": {
+        "operationId": "VendorCreditsRefundController_getRefundVendorCreditTransaction",
+        "summary": "Retrieve a refund vendor credit transaction by id.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "refundCreditId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Vendor Credits Refunds"
+        ]
+      },
       "delete": {
         "operationId": "VendorCreditsRefundController_deleteRefundVendorCredit",
         "summary": "Delete a refund for the given vendor credit.",
@@ -12492,7 +12533,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetPendingTransactionResponseDto"
+                  "allOf": [
+                    { "$ref": "#/components/schemas/PaginatedResponseDto" },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": { "$ref": "#/components/schemas/GetPendingTransactionResponseDto" }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -12832,10 +12883,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetRecognizedTransactionResponseDto"
-                  }
+                  "allOf": [
+                    { "$ref": "#/components/schemas/PaginatedResponseDto" },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": { "$ref": "#/components/schemas/GetRecognizedTransactionResponseDto" }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -12871,6 +12929,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExcludeBankTransactionsBulkDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -12904,6 +12972,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExcludeBankTransactionsBulkDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -12945,10 +13023,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetExcludedBankTransactionResponseDto"
-                  }
+                  "allOf": [
+                    { "$ref": "#/components/schemas/PaginatedResponseDto" },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": { "$ref": "#/components/schemas/GetExcludedBankTransactionResponseDto" }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -45119,6 +45204,18 @@
           "bankRuleId",
           "bankRuleName"
         ]
+      },
+      "ExcludeBankTransactionsBulkDto": {
+        "type": "object",
+        "required": ["ids"],
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": { "type": "number" },
+            "description": "IDs of uncategorized bank transactions to exclude or unexclude",
+            "example": [1, 2, 3]
+          }
+        }
       },
       "GetExcludedBankTransactionResponseDto": {
         "type": "object",

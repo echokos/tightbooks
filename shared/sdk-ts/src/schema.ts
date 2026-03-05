@@ -3018,7 +3018,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Retrieve a refund vendor credit transaction by id. */
+        get: operations["VendorCreditsRefundController_getRefundVendorCreditTransaction"];
         put?: never;
         post?: never;
         /** Delete a refund for the given vendor credit. */
@@ -11258,6 +11259,17 @@ export interface components {
              */
             bankRuleName: string;
         };
+        ExcludeBankTransactionsBulkDto: {
+            /**
+             * @description IDs of uncategorized bank transactions to exclude or unexclude
+             * @example [
+             *       1,
+             *       2,
+             *       3
+             *     ]
+             */
+            ids: number[];
+        };
         GetExcludedBankTransactionResponseDto: {
             /** @description Transaction amount (positive for deposit, negative for withdrawal) */
             amount: number;
@@ -18847,6 +18859,30 @@ export interface operations {
             };
         };
     };
+    VendorCreditsRefundController_getRefundVendorCreditTransaction: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                refundCreditId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     VendorCreditsRefundController_deleteRefundVendorCredit: {
         parameters: {
             query?: never;
@@ -19447,7 +19483,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GetPendingTransactionResponseDto"];
+                    "application/json": components["schemas"]["PaginatedResponseDto"] & {
+                        data?: components["schemas"]["GetPendingTransactionResponseDto"][];
+                    };
                 };
             };
         };
@@ -19644,7 +19682,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GetRecognizedTransactionResponseDto"][];
+                    "application/json": components["schemas"]["PaginatedResponseDto"] & {
+                        data?: components["schemas"]["GetRecognizedTransactionResponseDto"][];
+                    };
                 };
             };
         };
@@ -19661,7 +19701,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExcludeBankTransactionsBulkDto"];
+            };
+        };
         responses: {
             200: {
                 headers: {
@@ -19683,7 +19727,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExcludeBankTransactionsBulkDto"];
+            };
+        };
         responses: {
             200: {
                 headers: {
@@ -19713,7 +19761,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GetExcludedBankTransactionResponseDto"][];
+                    "application/json": components["schemas"]["PaginatedResponseDto"] & {
+                        data?: components["schemas"]["GetExcludedBankTransactionResponseDto"][];
+                    };
                 };
             };
         };
