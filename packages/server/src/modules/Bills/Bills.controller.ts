@@ -2,6 +2,7 @@ import {
   ApiExtraModels,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -155,6 +156,10 @@ export class BillsController {
     type: Number,
     description: 'The bill id',
   })
+  @ApiResponse({
+    status: 200,
+    description: 'List of payment transactions for the bill.',
+  })
   getBillPaymentTransactions(@Param('id') billId: number) {
     return this.billsApplication.getBillPaymentTransactions(billId);
   }
@@ -195,7 +200,17 @@ export class BillsController {
   @Get('due')
   @RequirePermission(BillAction.View, AbilitySubject.Bill)
   @ApiOperation({ summary: 'Retrieves the due bills.' })
-  getDueBills(@Body('vendorId') vendorId?: number) {
+  @ApiQuery({
+    name: 'vendor_id',
+    required: false,
+    type: Number,
+    description: 'Filter due bills by vendor ID.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of due bills (optionally filtered by vendor).',
+  })
+  getDueBills(@Query('vendor_id') vendorId?: number) {
     return this.billsApplication.getDueBills(vendorId);
   }
 }

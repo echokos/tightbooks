@@ -35933,6 +35933,31 @@
         ]
       }
     },
+    "/api/contacts/{id}": {
+      "get": {
+        "operationId": "ContactsController_getContact",
+        "summary": "Get contact by ID (customer or vendor)",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Contact ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contact details (under \"customer\" key for form/duplicate use)"
+          }
+        },
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
     "/api/contacts/auto-complete": {
       "get": {
         "operationId": "ContactsController_getAutoComplete",
