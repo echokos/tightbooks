@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
 
@@ -32,7 +32,10 @@ function BillNumberDialogContent({
   setBillNumberChanged,
 }) {
   const queryClient = useQueryClient();
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
+  const fetchSettings = useQuery({
+    queryKey: ['settings'],
+    queryFn: () => requestFetchOptions({}),
+  });
 
   const handleSubmitForm = (values, { setSubmitting }) => {
     const options = optionsMapToArray(values).map((option) => {
@@ -46,7 +49,7 @@ function BillNumberDialogContent({
         setBillNumberChanged(true);
 
         setTimeout(() => {
-          queryClient.invalidateQueries('settings');
+          queryClient.invalidateQueries({ queryKey: ['settings'] });
         }, 250);
       })
       .catch(() => {

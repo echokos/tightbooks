@@ -1,10 +1,11 @@
 // @ts-nocheck
-import { useMutation, useQueryClient } from 'react-query';
+import { useEffect } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { fetchSettings } from '@bigcapital/sdk-ts';
 import { useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import useApiRequest, { useApiFetcher } from '../useRequest';
 import { useSetSettings } from '@/hooks/state';
 import t from './types';
-import { useEffect } from 'react';
 
 /**
  * Saves the settings.
@@ -13,9 +14,10 @@ export function useSaveSettings(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((settings) => apiRequest.put('settings', settings), {
+  return useMutation({
+    mutationFn: (settings) => apiRequest.put('settings', settings),
     onSuccess: () => {
-      queryClient.invalidateQueries(t.SETTING);
+      queryClient.invalidateQueries({ queryKey: [t.SETTING] });
     },
     ...props,
   });
@@ -23,18 +25,14 @@ export function useSaveSettings(props) {
 
 function useSettingsQuery(key, query, props) {
   const setSettings = useSetSettings();
+  const fetcher = useApiFetcher();
 
-  const settingsQuery = useRequestQuery(
-    key,
-    { method: 'get', url: 'settings', params: query },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
+  const settingsQuery = useQuery({
+    queryKey: key,
+    queryFn: () => fetchSettings(fetcher, query),
+    ...props,
+  });
   useEffect(() => {
-    // Sync to Redux state if the reqeust success and is not fetching.
     if (!settingsQuery.isFetching && settingsQuery.isSuccess) {
       setSettings(settingsQuery.data);
     }
@@ -204,16 +202,14 @@ export function useSettingEditSMSNotification(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post(`settings/sms-notification`, values),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([t.SETTING_SMS_NOTIFICATIONS]);
+  return useMutation({ mutationFn: (values) => apiRequest.post(`settings/sms-notification`, values),
+          onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [t.SETTING_SMS_NOTIFICATIONS] });
 
-        queryClient.invalidateQueries(t.SALE_INVOICE_SMS_DETAIL);
-        queryClient.invalidateQueries(t.SALE_RECEIPT_SMS_DETAIL);
-        queryClient.invalidateQueries(t.PAYMENT_RECEIVE_SMS_DETAIL);
-        queryClient.invalidateQueries(t.SALE_ESTIMATE_SMS_DETAIL);
+        queryClient.invalidateQueries({ queryKey: [t.SALE_INVOICE_SMS_DETAIL] });
+        queryClient.invalidateQueries({ queryKey: [t.SALE_RECEIPT_SMS_DETAIL] });
+        queryClient.invalidateQueries({ queryKey: [t.PAYMENT_RECEIVE_SMS_DETAIL] });
+        queryClient.invalidateQueries({ queryKey: [t.SALE_ESTIMATE_SMS_DETAIL] });
       },
       ...props,
     },

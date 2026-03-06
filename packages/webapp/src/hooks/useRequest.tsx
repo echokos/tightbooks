@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import axios from 'axios';
+import { createApiFetcher } from '@bigcapital/sdk-ts';
 import {
   useAuthActions,
   useAuthOrganizationId,
@@ -118,6 +119,42 @@ export default function useApiRequest() {
     }),
     [http],
   );
+}
+
+/**
+ * Returns an ApiFetcher configured with baseUrl and auth headers for use with sdk-ts fetch functions.
+ * Use this in query hooks that call fetchAccounts, fetchCreditNotes, etc.
+ */
+export function useApiFetcher() {
+  const token = useAuthToken();
+  const organizationId = useAuthOrganizationId();
+  const currentLocale = getCookie('locale');
+
+  return React.useMemo(() => {
+    const headers: Record<string, string> = {
+      accept: 'application/json',
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    if (organizationId) {
+      headers['organization-id'] = organizationId;
+    }
+    if (currentLocale) {
+      headers['Accept-Language'] = currentLocale;
+    }
+    return createApiFetcher({
+      baseUrl: '',
+      init: { headers },
+    });
+  }, [token, organizationId]);
+}
+
+/**
+ * Returns an unauthenticated ApiFetcher for auth flows (signin, signup, reset password, etc.).
+ */
+export function useAuthApiFetcher() {
+  return React.useMemo(() => createApiFetcher({ baseUrl: '' }), []);
 }
 
 export function useAuthApiRequest() {

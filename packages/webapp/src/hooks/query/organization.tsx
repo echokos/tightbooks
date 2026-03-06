@@ -1,9 +1,11 @@
 // @ts-nocheck
-import { useMutation, useQueryClient } from 'react-query';
+import { useEffect } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { batch } from 'react-redux';
 import { omit } from 'lodash';
+import { fetchOrganizationCurrent } from '@bigcapital/sdk-ts';
 import t from './types';
-import useApiRequest from '../useRequest';
+import useApiRequest, { useApiFetcher } from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
 import { useSetOrganizations, useSetSubscriptions } from '../state';
 
@@ -38,27 +40,26 @@ export function useOrganizations(props) {
 export function useCurrentOrganization(props) {
   const setOrganizations = useSetOrganizations();
   const setSubscriptions = useSetSubscriptions();
+  const fetcher = useApiFetcher();
 
-  return useRequestQuery(
-    [t.ORGANIZATION_CURRENT],
-    { method: 'get', url: OrganizationRoute.Current },
-    {
-      select: (res) => res.data,
-      defaultData: {},
-      onSuccess: (data) => {
-        const organization = omit(data, ['subscriptions']);
+  const result = useQuery({
+    queryKey: [t.ORGANIZATION_CURRENT],
+    queryFn: () => fetchOrganizationCurrent(fetcher),
+    ...props,
+  });
 
-        batch(() => {
-          // Sets subscriptions.
-          setSubscriptions(data.subscriptions);
+  useEffect(() => {
+    if (result.isSuccess && result.data) {
+      const data = result.data as { subscriptions?: unknown; [k: string]: unknown };
+      const organization = omit(data, ['subscriptions']);
+      batch(() => {
+        setSubscriptions(data.subscriptions);
+        setOrganizations([organization]);
+      });
+    }
+  }, [result.isSuccess, result.data, setSubscriptions, setOrganizations]);
 
-          // Sets organizations.
-          setOrganizations([organization]);
-        });
-      },
-      ...props,
-    },
-  );
+  return result;
 }
 
 /**
@@ -68,12 +69,10 @@ export function useOrganizationSetup() {
   const apiRequest = useApiRequest();
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (values) => apiRequest.post(OrganizationRoute.Build, values),
-    {
-      onSuccess: (res) => {
-        queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);
-        queryClient.invalidateQueries(t.ORGANIZATIONS);
+  return useMutation({ mutationFn: (values) => apiRequest.post(OrganizationRoute.Build, values),
+          onSuccess: (res) => {
+        queryClient.invalidateQueries({ queryKey: [t.ORGANIZATION_CURRENT] });
+        queryClient.invalidateQueries({ queryKey: [t.ORGANIZATIONS] });
       },
     },
   );
@@ -86,12 +85,10 @@ export function useUpdateOrganization(props = {}) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (information: any) => apiRequest.put('organization', information),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);
-        queryClient.invalidateQueries(t.ORGANIZATIONS);
+  return useMutation({ mutationFn: (information: any) => apiRequest.put('organization', information),
+          onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [t.ORGANIZATION_CURRENT] });
+        queryClient.invalidateQueries({ queryKey: [t.ORGANIZATIONS] });
       },
       ...props,
     },

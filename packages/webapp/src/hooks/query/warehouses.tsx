@@ -1,34 +1,48 @@
-// @ts-nocheck
-import { useQueryClient, useMutation } from 'react-query';
-import { transformPagination } from '@/utils';
-import { useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import {
+  useQueryClient,
+  useMutation,
+  useQuery,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
+import type {
+  Warehouse,
+  WarehousesListResponse,
+  CreateWarehouseBody,
+  EditWarehouseBody,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchWarehouses,
+  fetchWarehouse,
+  createWarehouse,
+  editWarehouse,
+  deleteWarehouse,
+  activateWarehouses,
+  markWarehousePrimary,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 import t from './types';
 
-// Common invalidate queries.
-const commonInvalidateQueries = (queryClient) => {
-  // Invalidate warehouses.
-  queryClient.invalidateQueries(t.WAREHOUSES);
-  queryClient.invalidateQueries(t.WAREHOUSE);
-
-  // Invalidate warehouses transfers.
-  queryClient.invalidateQueries(t.WAREHOUSE_TRANSFERS);
-
-  queryClient.invalidateQueries(t.DASHBOARD_META);
+const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
+  queryClient.invalidateQueries({ queryKey: [t.WAREHOUSES] });
+  queryClient.invalidateQueries({ queryKey: [t.WAREHOUSE] });
+  queryClient.invalidateQueries({ queryKey: [t.WAREHOUSE_TRANSFERS] });
+  queryClient.invalidateQueries({ queryKey: [t.DASHBOARD_META] });
 };
 
 /**
  * Create a new warehouse.
  */
-export function useCreateWarehouse(props) {
+export function useCreateWarehouse(
+  props?: UseMutationOptions<void, Error, CreateWarehouseBody>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation((values) => apiRequest.post('warehouses', values), {
-    onSuccess: (res, values) => {
-      // Common invalidate queries.
-      commonInvalidateQueries(queryClient);
-    },
+  return useMutation({
+    mutationFn: (values: CreateWarehouseBody) =>
+      createWarehouse(fetcher, values),
+    onSuccess: () => commonInvalidateQueries(queryClient),
     ...props,
   });
 }
@@ -36,38 +50,36 @@ export function useCreateWarehouse(props) {
 /**
  * Edits the given warehouse.
  */
-export function useEditWarehouse(props) {
+export function useEditWarehouse(
+  props?: UseMutationOptions<void, Error, [number, EditWarehouseBody]>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation(
-    ([id, values]) => apiRequest.put(`warehouses/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific sale invoice.
-        queryClient.invalidateQueries([t.WAREHOUSE, id]);
-
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation({
+    mutationFn: ([id, values]: [number, EditWarehouseBody]) =>
+      editWarehouse(fetcher, String(id), values),
+    onSuccess: (_data, [id]) => {
+      queryClient.invalidateQueries({ queryKey: [t.WAREHOUSE, id] });
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
  * Deletes the given warehouse.
  */
-export function useDeleteWarehouse(props) {
+export function useDeleteWarehouse(
+  props?: UseMutationOptions<void, Error, number>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation((id) => apiRequest.delete(`warehouses/${id}`), {
-    onSuccess: (res, id) => {
-      // Invalidate specific warehoue.
-      queryClient.invalidateQueries([t.WAREHOUSE, id]);
-
-      // Common invalidate queries.
+  return useMutation({
+    mutationFn: (id: number) => deleteWarehouse(fetcher, String(id)),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: [t.WAREHOUSE, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,
@@ -75,64 +87,67 @@ export function useDeleteWarehouse(props) {
 }
 
 /**
- * Retrieve Warehoues list.
+ * Retrieve warehouses list.
  */
-export function useWarehouses(query, props) {
-  return useRequestQuery(
-    [t.WAREHOUSES, query],
-    { method: 'get', url: 'warehouses', params: query },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
+export function useWarehouses(
+  query?: Record<string, unknown>,
+  props?: Omit<UseQueryOptions<WarehousesListResponse>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.WAREHOUSES, query],
+    queryFn: () => fetchWarehouses(fetcher),
+    ...props,
+  });
 }
 
 /**
  * Retrieve the warehouse details.
- * @param {number}
  */
-export function useWarehouse(id, props, requestProps) {
-  return useRequestQuery(
-    [t.WAREHOUSE, id],
-    { method: 'get', url: `warehouses/${id}`, ...requestProps },
-    {
-      select: (res) => res.data,
-      defaultData: {},
-      ...props,
-    },
-  );
+export function useWarehouse(
+  id: number | string | null | undefined,
+  props?: Omit<UseQueryOptions<Warehouse>, 'queryKey' | 'queryFn'>,
+  _requestProps?: Record<string, unknown>
+) {
+  const fetcher = useApiFetcher();
+  const idStr = id != null ? String(id) : '';
+  return useQuery({
+    queryKey: [t.WAREHOUSE, id],
+    queryFn: () => fetchWarehouse(fetcher, idStr),
+    enabled: id != null && idStr !== '',
+    ...props,
+  });
 }
 
 /**
  * Activate the given warehouse.
  */
-export function useActivateWarehouses(props) {
+export function useActivateWarehouses(
+  props?: UseMutationOptions<void, Error, number>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation((id) => apiRequest.post(`warehouses/activate`), {
-    onSuccess: (res, id) => {
-      // Common invalidate queries.
-      commonInvalidateQueries(queryClient);
-    },
+  return useMutation({
+    mutationFn: (_id: number) => activateWarehouses(fetcher),
+    onSuccess: () => commonInvalidateQueries(queryClient),
     ...props,
   });
 }
 
 /**
- * Mark primary the given branch.
+ * Mark the given warehouse as primary.
  */
-export function useMarkWarehouseAsPrimary(props) {
+export function useMarkWarehouseAsPrimary(
+  props?: UseMutationOptions<void, Error, number>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation((id) => apiRequest.put(`warehouses/${id}/mark-primary`), {
-    onSuccess: (res, id) => {
-      // Invalidate specific inventory adjustment.
-      queryClient.invalidateQueries([t.WAREHOUSE, id]);
-
+  return useMutation({
+    mutationFn: (id: number) => markWarehousePrimary(fetcher, String(id)),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: [t.WAREHOUSE, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,

@@ -1,8 +1,28 @@
-// @ts-nocheck
-import { useMutation, useQueryClient } from 'react-query';
-import { useRequestQuery } from '../useQueryRequest';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
+import type {
+  Customer,
+  CreateCustomerBody,
+  EditCustomerBody,
+  ValidateBulkDeleteCustomersResponse,
+} from '@bigcapital/sdk-ts';
+import type { CustomersListResponse } from '@bigcapital/sdk-ts';
+import {
+  fetchCustomers,
+  fetchCustomer,
+  createCustomer,
+  editCustomer,
+  deleteCustomer,
+  validateBulkDeleteCustomers,
+  bulkDeleteCustomers,
+} from '@bigcapital/sdk-ts';
+import useApiRequest, { useApiFetcher } from '../useRequest';
 import { transformPagination, transformToCamelCase } from '@/utils';
-import useApiRequest from '../useRequest';
 import t from './types';
 
 const defaultPagination = {
@@ -11,195 +31,165 @@ const defaultPagination = {
   pagesCount: 0,
 };
 
-const commonInvalidateQueries = (queryClient) => {
-  // Invalidate customers.
-  queryClient.invalidateQueries(t.CUSTOMERS);
-
-  // Invalidate the financial reports.
-  queryClient.invalidateQueries(t.ACCOUNTS);
-  queryClient.invalidateQueries(t.ACCOUNT);
-
-  // Invalidate the financial reports.
-  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
-
-  // Invalidate SMS details.
-  queryClient.invalidateQueries(t.SALE_ESTIMATE_SMS_DETAIL);
-  queryClient.invalidateQueries(t.SALE_INVOICE_SMS_DETAIL);
-  queryClient.invalidateQueries(t.SALE_RECEIPT_SMS_DETAIL);
-  queryClient.invalidateQueries(t.PAYMENT_RECEIVE_SMS_DETAIL);
-
-  // Invalidate mutate base currency abilities.
-  queryClient.invalidateQueries(t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES);
+const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
+  queryClient.invalidateQueries({ queryKey: [t.CUSTOMERS] });
+  queryClient.invalidateQueries({ queryKey: [t.ACCOUNTS] });
+  queryClient.invalidateQueries({ queryKey: [t.ACCOUNT] });
+  queryClient.invalidateQueries({ queryKey: [t.FINANCIAL_REPORT] });
+  queryClient.invalidateQueries({ queryKey: [t.SALE_ESTIMATE_SMS_DETAIL] });
+  queryClient.invalidateQueries({ queryKey: [t.SALE_INVOICE_SMS_DETAIL] });
+  queryClient.invalidateQueries({ queryKey: [t.SALE_RECEIPT_SMS_DETAIL] });
+  queryClient.invalidateQueries({ queryKey: [t.PAYMENT_RECEIVE_SMS_DETAIL] });
+  queryClient.invalidateQueries({ queryKey: [t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES] });
 };
 
-// Customers response selector.
-const customersSelector = (response) => ({
-  customers: response.data.customers,
-  pagination: transformPagination(response.data.pagination),
-  filterMeta: response.data.filter_meta,
-});
+export type CustomersSelectorResult = {
+  customers: unknown[];
+  pagination: typeof defaultPagination;
+  filterMeta: Record<string, unknown>;
+};
 
-/**
- * Retrieve customers list with pagination meta.
- */
-export function useCustomers(query, props) {
-  return useRequestQuery(
-    [t.CUSTOMERS, query],
-    { method: 'get', url: `customers`, params: query },
-    {
-      select: customersSelector,
-      defaultData: {
-        customers: [],
-        pagination: defaultPagination,
-        filterMeta: {},
-      },
-      ...props,
-    },
-  );
+function transformCustomersList(res: CustomersListResponse): CustomersSelectorResult {
+  const data = res as { customers?: unknown[]; pagination?: unknown; filter_meta?: Record<string, unknown> };
+  return {
+    customers: data?.customers ?? [],
+    pagination: transformPagination(data?.pagination ?? {}) as typeof defaultPagination,
+    filterMeta: data?.filter_meta ?? {},
+  };
 }
 
-/**
- * Edits the given customer details.
- * @param {*} props
- */
-export function useEditCustomer(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation(
-    ([id, values]) => apiRequest.put(`customers/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific customer.
-        queryClient.invalidateQueries([t.CUSTOMER, id]);
-
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
-    },
-  );
+export function useCustomers(
+  query?: Record<string, unknown>,
+  props?: Omit<UseQueryOptions<CustomersSelectorResult>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.CUSTOMERS, query],
+    queryFn: () =>
+      (fetchCustomers as (f: ReturnType<typeof useApiFetcher>, q?: Record<string, unknown>) => Promise<CustomersListResponse>)(
+        fetcher,
+        query
+      ).then(transformCustomersList),
+    ...props,
+  });
 }
 
-/**
- * Deletes the given customer.
- */
-export function useDeleteCustomer(props) {
+export function useEditCustomer(
+  props?: UseMutationOptions<void, Error, [number, EditCustomerBody]>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation((id) => apiRequest.delete(`customers/${id}`), {
-    onSuccess: (res, id) => {
-      // Invalidate specific customer.
-      queryClient.invalidateQueries([t.CUSTOMER, id]);
-
-      // Common invalidate queries.
+  return useMutation({
+    mutationFn: ([id, values]: [number, EditCustomerBody]) =>
+      editCustomer(fetcher, id, values),
+    onSuccess: (_data, [id]) => {
+      queryClient.invalidateQueries({ queryKey: [t.CUSTOMER, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,
   });
 }
 
-/**
- * Deletes multiple customers in bulk.
- */
-export function useBulkDeleteCustomers(props) {
+export function useDeleteCustomer(
+  props?: UseMutationOptions<void, Error, number>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation(
-    ({
+  return useMutation({
+    mutationFn: (id: number) => deleteCustomer(fetcher, id),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: [t.CUSTOMER, id] });
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
+}
+
+export function useBulkDeleteCustomers(
+  props?: UseMutationOptions<void, Error, { ids: number[]; skipUndeletable?: boolean }>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: ({
       ids,
       skipUndeletable = false,
     }: {
       ids: number[];
       skipUndeletable?: boolean;
     }) =>
-      apiRequest.post('customers/bulk-delete', {
+      bulkDeleteCustomers(fetcher, {
         ids,
-        skip_undeletable: skipUndeletable,
-      }).then((res) => transformToCamelCase(res.data)),
-    {
-      onSuccess: () => {
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
-    },
-  );
+        skipUndeletable,
+      }),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...props,
+  });
 }
 
-/**
- * Validates which customers can be deleted in bulk.
- */
-export function useValidateBulkDeleteCustomers(props) {
-  const apiRequest = useApiRequest();
+export function useValidateBulkDeleteCustomers(
+  props?: UseMutationOptions<ValidateBulkDeleteCustomersResponse, Error, number[]>
+) {
+  const fetcher = useApiFetcher();
 
-  return useMutation(
-    (ids: number[]) =>
-      apiRequest.post('customers/validate-bulk-delete', { ids }).then((res) => transformToCamelCase(res.data)),
-    {
-      ...props,
-    },
-  );
+  return useMutation({
+    mutationFn: (ids: number[]) =>
+      validateBulkDeleteCustomers(fetcher, { ids, skipUndeletable: false }).then(
+        (res) => transformToCamelCase(res as Record<string, unknown>) as ValidateBulkDeleteCustomersResponse
+      ),
+    ...props,
+  });
 }
 
-/**
- * Creates a new customer.
- */
-export function useCreateCustomer(props) {
+export function useCreateCustomer(
+  props?: UseMutationOptions<void, Error, CreateCustomerBody>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: (values: CreateCustomerBody) => createCustomer(fetcher, values),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...props,
+  });
+}
+
+export function useCustomer(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<Customer>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.CUSTOMER, id],
+    queryFn: () => fetchCustomer(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
+}
+
+export function useEditCustomerOpeningBalance(
+  props?: UseMutationOptions<unknown, Error, [number, Record<string, unknown>]>
+) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post('customers', values), {
-    onSuccess: () => {
-      // Common invalidate queries.
+  return useMutation({
+    mutationFn: ([id, values]: [number, Record<string, unknown>]) =>
+      apiRequest.put(`customers/${id}/opening-balance`, values),
+    onSuccess: (_data, [id]) => {
+      queryClient.invalidateQueries({ queryKey: [t.CUSTOMER, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,
   });
 }
 
-/**
- * Retrieve the customer details.
- */
-export function useCustomer(id, props) {
-  return useRequestQuery(
-    [t.CUSTOMER, id],
-    { method: 'get', url: `customers/${id}` },
-    {
-      select: (res) => res.data,
-      defaultData: {},
-      ...props,
-    },
-  );
-}
-
-export function useEditCustomerOpeningBalance(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation(
-    ([id, values]) =>
-      apiRequest.put(`customers/${id}/opening-balance`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific customer.
-        queryClient.invalidateQueries([t.CUSTOMER, id]);
-
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
-    },
-  );
-}
-
 export function useRefreshCustomers() {
   const queryClient = useQueryClient();
-
   return {
-    refresh: () => {
-      queryClient.invalidateQueries(t.CUSTOMERS);
-    },
+    refresh: () => queryClient.invalidateQueries({ queryKey: [t.CUSTOMERS] }),
   };
 }

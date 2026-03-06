@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { DrawerLoading } from '@/components';
-import { useTaxRate } from '@/hooks/query/taxRates';
+import { useTaxRate } from '@/hooks/query/tax-rates';
 
 const TaxRateDetailsContext = createContext();
 

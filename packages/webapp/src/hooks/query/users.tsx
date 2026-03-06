@@ -1,15 +1,16 @@
 // @ts-nocheck
 import { useEffect } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { fetchUsers, fetchUser } from '@bigcapital/sdk-ts';
 import { useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import useApiRequest, { useApiFetcher } from '../useRequest';
 import { useSetFeatureDashboardMeta } from '../state/feature';
 import t from './types';
 import { useSetAuthEmailConfirmed } from '../state';
 
 // Common invalidate queries.
 const commonInvalidateQueries = (queryClient) => {
-  queryClient.invalidateQueries(t.USERS);
+  queryClient.invalidateQueries({ queryKey: [t.USERS] });
 };
 
 /**
@@ -19,8 +20,8 @@ export function useCreateInviteUser(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.patch('invite', values), {
-    onSuccess: () => {
+  return useMutation({ mutationFn: (values) => apiRequest.patch('invite', values),
+        onSuccess: () => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
     },
@@ -35,9 +36,9 @@ export function useEditUser(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(([id, values]) => apiRequest.put(`users/${id}`, values), {
-    onSuccess: (res, [id, values]) => {
-      queryClient.invalidateQueries([t.USER, id]);
+  return useMutation({ mutationFn: ([id, values]) => apiRequest.put(`users/${id}`, values),
+        onSuccess: (res, [id, values]) => {
+      queryClient.invalidateQueries({ queryKey: [t.USER, id] });
 
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -50,9 +51,9 @@ export function useInactivateUser(props) {
   const apiRequest = useApiRequest();
   const queryClient = useQueryClient();
 
-  return useMutation((userId) => apiRequest.put(`users/${userId}/inactivate`), {
-    onSuccess: (res, userId) => {
-      queryClient.invalidateQueries([t.USER, userId]);
+  return useMutation({ mutationFn: (userId) => apiRequest.put(`users/${userId}/inactivate`),
+        onSuccess: (res, userId) => {
+      queryClient.invalidateQueries({ queryKey: [t.USER, userId] });
 
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -65,9 +66,9 @@ export function useActivateUser(props) {
   const apiRequest = useApiRequest();
   const queryClient = useQueryClient();
 
-  return useMutation((userId) => apiRequest.put(`users/${userId}/activate`), {
-    onSuccess: (res, userId) => {
-      queryClient.invalidateQueries([t.USER, userId]);
+  return useMutation({ mutationFn: (userId) => apiRequest.put(`users/${userId}/activate`),
+        onSuccess: (res, userId) => {
+      queryClient.invalidateQueries({ queryKey: [t.USER, userId] });
 
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -83,9 +84,9 @@ export function useDeleteUser(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`users/${id}`), {
-    onSuccess: (res, id) => {
-      queryClient.invalidateQueries([t.USER, id]);
+  return useMutation({ mutationFn: (id) => apiRequest.delete(`users/${id}`),
+        onSuccess: (res, id) => {
+      queryClient.invalidateQueries({ queryKey: [t.USER, id] });
 
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -98,36 +99,25 @@ export function useDeleteUser(props) {
  * Retrieves users list.
  */
 export function useUsers(props) {
-  return useRequestQuery(
-    [t.USERS],
-    {
-      method: 'get',
-      url: 'users',
-    },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.USERS],
+    queryFn: () => fetchUsers(fetcher),
+    ...props,
+  });
 }
 
 /**
  * Retrieve details of the given user.
  */
 export function useUser(id, props) {
-  return useRequestQuery(
-    [t.USER, id],
-    {
-      method: 'get',
-      url: `users/${id}`,
-    },
-    {
-      select: (response) => response.data,
-      defaultData: {},
-      ...props,
-    },
-  );
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.USER, id],
+    queryFn: () => fetchUser(fetcher, id),
+    enabled: id != null,
+    ...props,
+  });
 }
 
 export function useAuthenticatedAccount(props) {
@@ -167,6 +157,7 @@ export const useDashboardMeta = (props) => {
   );
   useEffect(() => {
     if (state.isSuccess) {
+      debugger;
       setFeatureDashboardMeta(state.data);
     }
   }, [state.isSuccess, state.data, setFeatureDashboardMeta]);

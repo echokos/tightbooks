@@ -11,9 +11,9 @@ export const transformToReq = (
   const matchedTransactions = Object.entries(values.matched)
     .filter(([key, value]) => value)
     .map(([key]) => {
-      const [reference_type, reference_id] = key.split('-');
+      const [referenceType, referenceId] = key.split('-');
 
-      return { reference_type, reference_id: parseInt(reference_id, 10) };
+      return { referenceType, referenceId: parseInt(referenceId, 10) };
     });
   return { matchedTransactions, uncategorizedTransactions };
 };

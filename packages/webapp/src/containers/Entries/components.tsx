@@ -143,8 +143,7 @@ export function useEditableItemsEntriesColumns() {
             },
           ]
         : []),
-      {
-        Header: intl.get('discount'),
+            Header: intl.get('discount'),
         accessor: 'discount',
         Cell: PercentFieldCell,
         disableSortBy: true,
@@ -186,8 +185,7 @@ export function useEditableItemsEntriesColumns() {
             },
           ]
         : []),
-      {
-        Header: '',
+            Header: '',
         accessor: 'action',
         Cell: ActionsCellRenderer,
         disableSortBy: true,

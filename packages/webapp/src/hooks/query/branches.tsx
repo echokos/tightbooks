@@ -1,135 +1,130 @@
-// @ts-nocheck
-import { useQueryClient, useMutation } from 'react-query';
-import { useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
+import type {
+  Branch,
+  BranchesListResponse,
+  CreateBranchBody,
+  EditBranchBody,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchBranches,
+  fetchBranch,
+  createBranch,
+  editBranch,
+  deleteBranch,
+  activateBranches,
+  markBranchAsPrimary,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 import t from './types';
 
-// Common invalidate queries.
-const commonInvalidateQueries = (queryClient) => {
-  // Invalidate warehouses.
-  queryClient.invalidateQueries(t.BRANCHES);
-  queryClient.invalidateQueries(t.BRANCH);
-
-  queryClient.invalidateQueries(t.DASHBOARD_META);
-
+const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
+  queryClient.invalidateQueries({ queryKey: [t.BRANCHES] });
+  queryClient.invalidateQueries({ queryKey: [t.BRANCH] });
+  queryClient.invalidateQueries({ queryKey: [t.DASHBOARD_META] });
 };
 
-/**
- * Create a new branch.
- */
-export function useCreateBranch(props) {
+export function useCreateBranch(
+  props?: UseMutationOptions<void, Error, CreateBranchBody>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation((values) => apiRequest.post('branches', values), {
-    onSuccess: (res, values) => {
-      // Common invalidate queries.
+  return useMutation({
+    mutationFn: (values: CreateBranchBody) => createBranch(fetcher, values),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...props,
+  });
+}
+
+export function useEditBranch(
+  props?: UseMutationOptions<void, Error, [number | string, EditBranchBody]>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: ([id, values]: [number | string, EditBranchBody]) =>
+      editBranch(fetcher, String(id), values),
+    onSuccess: (_data, [id]) => {
+      queryClient.invalidateQueries({ queryKey: [t.BRANCH, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,
   });
 }
 
-/**
- * Edits the given branch.
- */
-export function useEditBranch(props) {
+export function useDeleteBranch(
+  props?: UseMutationOptions<void, Error, number | string>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation(
-    ([id, values]) => apiRequest.put(`branches/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific branch.
-        queryClient.invalidateQueries([t.BRANCH, id]);
-
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
-    },
-  );
-}
-
-/**
- * Deletes the given branch.
- */
-export function useDeleteBranch(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation((id) => apiRequest.delete(`branches/${id}`), {
-    onSuccess: (res, id) => {
-      // Invalidate specific branch.
-      queryClient.invalidateQueries([t.BRANCH, id]);
-
-      // Common invalidate queries.
+  return useMutation({
+    mutationFn: (id: number | string) => deleteBranch(fetcher, String(id)),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: [t.BRANCH, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,
   });
 }
 
-/**
- * Retrieve Branches list.
- */
-export function useBranches(query, props) {
-  return useRequestQuery(
-    [t.BRANCHES, query],
-    { method: 'get', url: 'branches', params: query },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
-}
-
-/**
- * Retrieve the branch details.
- * @param {number}
- */
-export function useBranch(id, props, requestProps) {
-  return useRequestQuery(
-    [t.BRANCH, id],
-    { method: 'get', url: `branches/${id}`, ...requestProps },
-    {
-      select: (res) => res.data,
-      defaultData: {},
-      ...props,
-    },
-  );
-}
-
-/**
- * Activate the given branches.
- */
-export function useActivateBranches(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation((id) => apiRequest.post(`branches/activate`), {
-    onSuccess: (res, id) => {
-      // Common invalidate queries.
-      commonInvalidateQueries(queryClient);
-    },
+export function useBranches(
+  query?: Record<string, unknown>,
+  props?: Omit<UseQueryOptions<BranchesListResponse>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.BRANCHES, query],
+    queryFn: () => fetchBranches(fetcher),
+    select: (data: BranchesListResponse) => data,
     ...props,
   });
 }
 
-/**
- * Mark primary the given branch.
- */
-export function useMarkBranchAsPrimary(props) {
+export function useBranch(
+  id: number | string | null | undefined,
+  props?: Omit<UseQueryOptions<Branch>, 'queryKey' | 'queryFn'>,
+  _requestProps?: Record<string, unknown>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.BRANCH, id],
+    queryFn: () => fetchBranch(fetcher, String(id!)),
+    enabled: id != null,
+    ...props,
+  });
+}
+
+export function useActivateBranches(
+  props?: UseMutationOptions<void, Error, number | string>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation((id) => apiRequest.post(`branches/${id}/mark-primary`), {
-    onSuccess: (res, id) => {
-      // Invalidate specific inventory adjustment.
-      queryClient.invalidateQueries([t.BRANCH, id]);
+  return useMutation({
+    mutationFn: () => activateBranches(fetcher),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...props,
+  });
+}
 
+export function useMarkBranchAsPrimary(
+  props?: UseMutationOptions<void, Error, number | string>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: (id: number | string) => markBranchAsPrimary(fetcher, String(id)),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: [t.BRANCH, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,

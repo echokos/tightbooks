@@ -20,7 +20,7 @@ import {
   GetSaleInvoiceStateResponse,
 } from '@/hooks/query';
 import { useProjects } from '@/containers/Projects/hooks';
-import { useTaxRates } from '@/hooks/query/taxRates';
+import { useTaxRates } from '@/hooks/query/tax-rates';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 import { useGetPaymentServices } from '@/hooks/query/payment-services';
 

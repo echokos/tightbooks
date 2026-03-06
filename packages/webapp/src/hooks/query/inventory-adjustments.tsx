@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from '@/utils';
 import useApiRequest from '../useRequest';
@@ -7,22 +7,22 @@ import t from './types';
 
 const commonInvalidateQueries = (queryClient) => {
   // Invalidate inventory adjustments.
-  queryClient.invalidateQueries(t.INVENTORY_ADJUSTMENTS);
-  queryClient.invalidateQueries(t.INVENTORY_ADJUSTMENT);
+  queryClient.invalidateQueries({ queryKey: [t.INVENTORY_ADJUSTMENTS] });
+  queryClient.invalidateQueries({ queryKey: [t.INVENTORY_ADJUSTMENT] });
 
   // Invalidate items.
-  queryClient.invalidateQueries(t.ITEMS);
-  queryClient.invalidateQueries(t.ITEM);
+  queryClient.invalidateQueries({ queryKey: [t.ITEMS] });
+  queryClient.invalidateQueries({ queryKey: [t.ITEM] });
 
   // Invalidate accounts.
-  queryClient.invalidateQueries(t.ACCOUNTS);
-  queryClient.invalidateQueries(t.ACCOUNT);
+  queryClient.invalidateQueries({ queryKey: [t.ACCOUNTS] });
+  queryClient.invalidateQueries({ queryKey: [t.ACCOUNT] });
 
   // Invalidate financial reports.
-  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
+  queryClient.invalidateQueries({ queryKey: [t.FINANCIAL_REPORT] });
 
   // Invalidate mutate base currency abilities.
-  queryClient.invalidateQueries(t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES);
+  queryClient.invalidateQueries({ queryKey: [t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES] });
 };
 
 /**
@@ -32,10 +32,8 @@ export function useCreateInventoryAdjustment(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post('inventory-adjustments/quick', values),
-    {
-      onSuccess: () => {
+  return useMutation({ mutationFn: (values) => apiRequest.post('inventory-adjustments/quick', values),
+          onSuccess: () => {
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);
       },
@@ -51,8 +49,8 @@ export function useDeleteInventoryAdjustment(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`inventory-adjustments/${id}`), {
-    onSuccess: (res, id) => {
+  return useMutation({ mutationFn: (id) => apiRequest.delete(`inventory-adjustments/${id}`),
+        onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
     },
@@ -97,12 +95,10 @@ export function usePublishInventoryAdjustment(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.post(`inventory-adjustments/${id}/publish`),
-    {
-      onSuccess: (res, id) => {
+  return useMutation({ mutationFn: (id) => apiRequest.post(`inventory-adjustments/${id}/publish`),
+          onSuccess: (res, id) => {
         // Invalidate specific inventory adjustment.
-        queryClient.invalidateQueries([t.INVENTORY_ADJUSTMENT, id]);
+        queryClient.invalidateQueries({ queryKey: [t.INVENTORY_ADJUSTMENT, id] });
 
         commonInvalidateQueries(queryClient);
       },

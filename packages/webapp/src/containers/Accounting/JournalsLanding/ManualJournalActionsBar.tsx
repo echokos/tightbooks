@@ -21,7 +21,7 @@ import {
   DashboardActionViewsList,
   DashboardActionsBar,
 } from '@/components';
-import { useRefreshJournals } from '@/hooks/query/manualJournals';
+import { useRefreshJournals } from '@/hooks/query/manual-journals';
 import { useManualJournalsContext } from './ManualJournalsListProvider';
 import { ManualJournalAction, AbilitySubject } from '@/constants/abilityOption';
 

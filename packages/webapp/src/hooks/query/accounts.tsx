@@ -1,215 +1,198 @@
-// @ts-nocheck
-import { useMutation, useQueryClient } from 'react-query';
-import { useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
+import type {
+  Account,
+  AccountsList,
+  CreateAccountBody,
+  EditAccountBody,
+  GetAccountsQuery,
+  ValidateBulkDeleteResponse,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchAccounts,
+  fetchAccount,
+  fetchAccountTypes,
+  fetchAccountTransactions,
+  createAccount,
+  editAccount,
+  deleteAccount,
+  activateAccount,
+  inactivateAccount,
+  bulkDeleteAccounts,
+  validateBulkDeleteAccounts,
+  AccountTypesList,
+  AccountTransactionsList
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 import t from './types';
 import { transformToCamelCase } from '@/utils';
 
-// Transform the account.
-const transformAccount = (response) => {
-  return response.data;
+const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
+  queryClient.invalidateQueries({ queryKey: [t.ACCOUNTS] });
+  queryClient.invalidateQueries({ queryKey: [t.ACCOUNT] });
+  queryClient.invalidateQueries({ queryKey: [t.CASH_FLOW_ACCOUNTS] });
+  queryClient.invalidateQueries({ queryKey: [t.FINANCIAL_REPORT] });
 };
 
-const commonInvalidateQueries = (query) => {
-  // Invalidate accounts.
-  query.invalidateQueries(t.ACCOUNTS);
-  query.invalidateQueries(t.ACCOUNT);
-
-  // Invalidate cashflow accounts.
-  query.invalidateQueries(t.CASH_FLOW_ACCOUNTS);
-
-  // Invalidate financial reports.
-  query.invalidateQueries(t.FINANCIAL_REPORT);
-};
-
-/**
- * Retrieve accounts list.
- */
-export function useAccounts(query, props) {
-  return useRequestQuery(
-    [t.ACCOUNTS, query],
-    { method: 'get', url: 'accounts', params: query },
-    {
-      select: (res) => res.data.accounts,
-      defaultData: [],
-      ...props,
-    },
-  );
-}
-
-/**
- * Retrieve the given account details.
- * @param {number} id - Account id.
- */
-export function useAccount(id, props) {
-  return useRequestQuery(
-    [t.ACCOUNT, id],
-    { method: 'get', url: `accounts/${id}` },
-    {
-      select: transformAccount,
-      defaultData: {},
-      ...props,
-    },
-  );
-}
-
-/**
- * Retrieve accounts types list.
- */
-export function useAccountsTypes(props) {
-  return useRequestQuery(
-    [t.ACCOUNTS_TYPES],
-    { method: 'get', url: 'accounts/types' },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
-}
-
-/**
- * Creates account.
- */
-export function useCreateAccount(props) {
-  const client = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation((values) => apiRequest.post('accounts', values), {
-    onSuccess: () => {
-      // Common invalidate queries.
-      commonInvalidateQueries(client);
-    },
+export function useAccounts(
+  query?: GetAccountsQuery | null,
+  props?: Omit<UseQueryOptions<AccountsList>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ACCOUNTS, query],
+    queryFn: () => fetchAccounts(fetcher, query ?? {}),
+    select: (data: AccountsList) => data,
     ...props,
   });
 }
 
-/**
- * Edits the given account.
- */
-export function useEditAccount(props) {
-  const client = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation(
-    ([id, values]) => apiRequest.put(`accounts/${id}`, values),
-    {
-      onSuccess: () => {
-        // Common invalidate queries.
-        commonInvalidateQueries(client);
-      },
-      ...props,
-    },
-  );
-}
-
-/**
- * Edits the given account.
- */
-export function useDeleteAccount(props) {
-  const client = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation((id) => apiRequest.delete(`accounts/${id}`), {
-    onSuccess: () => {
-      // Common invalidate queries.
-      commonInvalidateQueries(client);
-    },
+export function useAccount(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<Account>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ACCOUNT, id],
+    queryFn: () => fetchAccount(fetcher, id!),
+    enabled: id != null,
     ...props,
   });
 }
 
-/**
- * Activate the give account.
- */
-export function useActivateAccount(props) {
+export function useAccountsTypes(
+  props?: Omit<UseQueryOptions<AccountTypesList>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ACCOUNTS_TYPES],
+    queryFn: () => fetchAccountTypes(fetcher),
+    ...props,
+  });
+}
+
+export function useCreateAccount(
+  props?: UseMutationOptions<void, Error, CreateAccountBody>
+) {
   const client = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation((id) => apiRequest.post(`accounts/${id}/activate`), {
-    onSuccess: () => {
-      // Common invalidate queries.
-      commonInvalidateQueries(client);
-    },
+  return useMutation({
+    mutationFn: (values: CreateAccountBody) => createAccount(fetcher, values),
+    onSuccess: () => commonInvalidateQueries(client),
     ...props,
   });
 }
 
-/**
- * Inactivate the given account.
- */
-export function useInactivateAccount(props) {
-  const query = useQueryClient();
-  const apiRequest = useApiRequest();
+export function useEditAccount(
+  props?: UseMutationOptions<void, Error, [number, EditAccountBody]>
+) {
+  const client = useQueryClient();
+  const fetcher = useApiFetcher();
 
-  return useMutation((id) => apiRequest.post(`accounts/${id}/inactivate`), {
-    onSuccess: () => {
-      // Common invalidate queries.
-      commonInvalidateQueries(query);
-    },
+  return useMutation({
+    mutationFn: ([id, values]: [number, EditAccountBody]) =>
+      editAccount(fetcher, id, values),
+    onSuccess: () => commonInvalidateQueries(client),
     ...props,
   });
 }
 
-/**
- * Deletes multiple accounts in bulk.
- */
-export function useBulkDeleteAccounts(props) {
+export function useDeleteAccount(
+  props?: UseMutationOptions<void, Error, number>
+) {
+  const client = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: (id: number) => deleteAccount(fetcher, id),
+    onSuccess: () => commonInvalidateQueries(client),
+    ...props,
+  });
+}
+
+export function useActivateAccount(
+  props?: UseMutationOptions<void, Error, number>
+) {
+  const client = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: (id: number) => activateAccount(fetcher, id),
+    onSuccess: () => commonInvalidateQueries(client),
+    ...props,
+  });
+}
+
+export function useInactivateAccount(
+  props?: UseMutationOptions<void, Error, number>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation(
-    ({
+  return useMutation({
+    mutationFn: (id: number) => inactivateAccount(fetcher, id),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...props,
+  });
+}
+
+export function useBulkDeleteAccounts(
+  props?: UseMutationOptions<
+    void,
+    Error,
+    { ids: number[]; skipUndeletable?: boolean }
+  >
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: ({
       ids,
       skipUndeletable = false,
     }: {
       ids: number[];
       skipUndeletable?: boolean;
-    }) =>
-      apiRequest.post('accounts/bulk-delete', {
-        ids,
-        skip_undeletable: skipUndeletable,
-      }),
-    {
-      onSuccess: () => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
-    },
-  );
+    }) => bulkDeleteAccounts(fetcher, { ids, skipUndeletable }),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...props,
+  });
 }
 
-/**
- * Validates which accounts can be deleted in bulk.
- */
-export function useValidateBulkDeleteAccounts(props) {
-  const apiRequest = useApiRequest();
+export function useValidateBulkDeleteAccounts(
+  props?: UseMutationOptions<ValidateBulkDeleteResponse, Error, number[]>
+) {
+  const fetcher = useApiFetcher();
 
-  return useMutation(
-    (ids: number[]) =>
-      apiRequest
-        .post('accounts/validate-bulk-delete', { ids })
-        .then((res) => transformToCamelCase(res.data)),
-    {
-      ...props,
-    },
-  );
+  return useMutation({
+    mutationFn: (ids: number[]) =>
+      validateBulkDeleteAccounts(fetcher, ids).then((res: ValidateBulkDeleteResponse) =>
+        transformToCamelCase(res as unknown as Record<string, unknown>) as ValidateBulkDeleteResponse
+      ),
+    ...props,
+  });
 }
 
-/**
- * Retrieve account transactions.
- */
-export function useAccountTransactions(id, props) {
-  return useRequestQuery(
-    [t.ACCOUNT_TRANSACTION, id],
-    { method: 'get', url: `accounts/transactions?account_id=${id}` },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
+export function useAccountTransactions(
+  id: number | null | undefined,
+  props?: Omit<
+    UseQueryOptions<AccountTransactionsList>,
+    'queryKey' | 'queryFn'
+  >
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ACCOUNT_TRANSACTION, id],
+    queryFn: () => fetchAccountTransactions(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
 }
 
 export function useRefreshAccounts() {
@@ -217,7 +200,7 @@ export function useRefreshAccounts() {
 
   return {
     refresh: () => {
-      queryClient.invalidateQueries(t.ACCOUNTS);
+      queryClient.invalidateQueries({ queryKey: [t.ACCOUNTS] });
     },
   };
 }

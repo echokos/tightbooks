@@ -15,7 +15,7 @@ import {
   useCreateBill,
   useEditBill,
 } from '@/hooks/query';
-import { useTaxRates } from '@/hooks/query/taxRates';
+import { useTaxRates } from '@/hooks/query/tax-rates';
 
 const BillFormContext = createContext();
 

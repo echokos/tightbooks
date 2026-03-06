@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { io } from 'socket.io-client';
 import t from '@/hooks/query/types';
 import { AppToaster } from '@/components';
@@ -13,10 +13,10 @@ export function DashboardSockets() {
     socket.current = io('/', { path: '/socket' });
   
     socket.current.on('NEW_TRANSACTIONS_DATA', () => {
-      client.invalidateQueries(t.ACCOUNTS);
-      client.invalidateQueries(t.ACCOUNT_TRANSACTION);
-      client.invalidateQueries(t.CASH_FLOW_ACCOUNTS);
-      client.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
+      client.invalidateQueries({ queryKey: [t.ACCOUNTS] });
+      client.invalidateQueries({ queryKey: [t.ACCOUNT_TRANSACTION] });
+      client.invalidateQueries({ queryKey: [t.CASH_FLOW_ACCOUNTS] });
+      client.invalidateQueries({ queryKey: [t.CASH_FLOW_TRANSACTIONS] });
 
       AppToaster.show({
         message: 'The Plaid connected accounts have been updated.',
@@ -24,7 +24,7 @@ export function DashboardSockets() {
       });
     });
     socket.current.on('SUBSCRIPTION_CHANGED', () => {
-      client.invalidateQueries('GetSubscriptions');
+      client.invalidateQueries({ queryKey: ['GetSubscriptions'] });
     });
     return () => {
       socket.current.removeAllListeners();

@@ -1,6 +1,5 @@
-// @ts-nocheck
+import type { QueryClient } from '@tanstack/react-query';
 import {
-  QueryClient,
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
@@ -9,705 +8,459 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
-import useApiRequest from '../useRequest';
+} from '@tanstack/react-query';
+import type {
+  AutofillCategorizeTransactionResponse,
+  BankingAccountSummaryResponse,
+  BankTransactionsListPage,
+  CreateBankRuleBody,
+  DisconnectBankAccountParams,
+  EditBankRuleBody,
+  ExcludeBankTransactionsBulkBody,
+  MatchTransactionBody,
+  MatchedTransactionsResponse,
+  RefreshBankAccountParams,
+  UnmatchMatchedTransactionParams,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchBankRules,
+  fetchBankRule,
+  createBankRule,
+  editBankRule,
+  deleteBankRule,
+  disconnectBankAccount,
+  refreshBankAccount,
+  fetchMatchedTransactions,
+  matchTransaction,
+  unmatchMatchedTransaction,
+  excludeBankTransaction,
+  unexcludeBankTransaction,
+  excludeBankTransactionsBulk,
+  unexcludeBankTransactionsBulk,
+  fetchRecognizedTransaction,
+  fetchRecognizedTransactions,
+  fetchExcludedBankTransactions,
+  fetchPendingTransactions,
+  fetchBankingAccountSummary,
+  fetchAutofillCategorizeTransaction,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 import { transformToCamelCase } from '@/utils';
 import t from './types';
 import { BANK_QUERY_KEY } from '@/constants/query-keys/banking';
 
-// Common cache invalidator.
-const commonInvalidateQueries = (query: QueryClient) => {
-  query.invalidateQueries(BANK_QUERY_KEY.BANK_RULES);
-  query.invalidateQueries(BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY);
+/** @deprecated Use AutofillCategorizeTransactionResponse from @bigcapital/sdk-ts */
+export type GetAutofillCategorizeTransaction = AutofillCategorizeTransactionResponse;
+
+const commonInvalidateQueries = (queryClient: QueryClient) => {
+  queryClient.invalidateQueries({ queryKey: [BANK_QUERY_KEY.BANK_RULES] });
+  queryClient.invalidateQueries({
+    queryKey: [BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY],
+  });
 };
 
-interface CreateBankRuleValues {
-  value: any;
-}
-interface CreateBankRuleResponse { }
-
-/**
- * Creates a new bank rule.
- * @param {UseMutationOptions<CreateBankRuleValues, Error, CreateBankRuleValues>} options -
- * @returns {UseMutationResult<CreateBankRuleValues, Error, CreateBankRuleValues>}TCHES
- */
 export function useCreateBankRule(
-  options?: UseMutationOptions<
-    CreateBankRuleValues,
-    Error,
-    CreateBankRuleValues
-  >,
-): UseMutationResult<CreateBankRuleValues, Error, CreateBankRuleValues> {
+  options?: UseMutationOptions<unknown, Error, CreateBankRuleBody>
+): UseMutationResult<unknown, Error, CreateBankRuleBody> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<CreateBankRuleValues, Error, CreateBankRuleValues>(
-    (values) =>
-      apiRequest.post(`/banking/rules`, values).then((res) => res.data),
-    {
-      ...options,
-      onSuccess: () => {
-        commonInvalidateQueries(queryClient);
-      },
-    },
-  );
+  return useMutation({
+    mutationFn: (values: CreateBankRuleBody) => createBankRule(fetcher, values),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...options,
+  });
 }
 
-interface DisconnectBankAccountRes { }
-interface DisconnectBankAccountValues {
-  bankAccountId: number;
-}
+/** Mutation variables (UI uses bankAccountId; API path param is id). */
+type DisconnectBankAccountValues = { bankAccountId: DisconnectBankAccountParams['id'] };
 
-/**
- * Disconnects the given bank account.
- * @param {UseMutationOptions<DisconnectBankAccountRes, Error, DisconnectBankAccountValues>} options
- * @returns {UseMutationResult<DisconnectBankAccountRes, Error, DisconnectBankAccountValues>}
- */
 export function useDisconnectBankAccount(
-  options?: UseMutationOptions<
-    DisconnectBankAccountRes,
-    Error,
-    DisconnectBankAccountValues
-  >,
-): UseMutationResult<
-  DisconnectBankAccountRes,
-  Error,
-  DisconnectBankAccountValues
-> {
+  options?: UseMutationOptions<unknown, Error, DisconnectBankAccountValues>
+): UseMutationResult<unknown, Error, DisconnectBankAccountValues> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    DisconnectBankAccountRes,
-    Error,
-    DisconnectBankAccountValues
-  >(
-    ({ bankAccountId }) =>
-      apiRequest.post(`/banking/accounts/${bankAccountId}/disconnect`),
-    {
-      ...options,
-      onSuccess: (res, values) => {
-        queryClient.invalidateQueries([t.ACCOUNT, values.bankAccountId]);
-      },
+  return useMutation({
+    mutationFn: ({ bankAccountId }: DisconnectBankAccountValues) =>
+      disconnectBankAccount(fetcher, bankAccountId),
+    onSuccess: (_data, values) => {
+      queryClient.invalidateQueries({ queryKey: [t.ACCOUNT, values.bankAccountId] });
     },
-  );
+    ...options,
+  });
 }
 
-interface UpdateBankAccountRes { }
-interface UpdateBankAccountValues {
-  bankAccountId: number;
-}
+/** Mutation variables (UI uses bankAccountId; API path param is id). */
+type UpdateBankAccountValues = { bankAccountId: RefreshBankAccountParams['id'] };
 
-/**
- * Update the bank transactions of the bank account.
- * @param {UseMutationOptions<UpdateBankAccountRes, Error, UpdateBankAccountValues>}
- * @returns {UseMutationResult<UpdateBankAccountRes, Error, UpdateBankAccountValues>}
- */
 export function useUpdateBankAccount(
-  options?: UseMutationOptions<
-    UpdateBankAccountRes,
-    Error,
-    UpdateBankAccountValues
-  >,
-): UseMutationResult<UpdateBankAccountRes, Error, UpdateBankAccountValues> {
+  options?: UseMutationOptions<unknown, Error, UpdateBankAccountValues>
+): UseMutationResult<unknown, Error, UpdateBankAccountValues> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<DisconnectBankAccountRes, Error, UpdateBankAccountValues>(
-    ({ bankAccountId }) =>
-      apiRequest.post(`/banking/accounts/${bankAccountId}/refresh`),
-    {
-      ...options,
-      onSuccess: () => { },
-    },
-  );
+  return useMutation({
+    mutationFn: ({ bankAccountId }: UpdateBankAccountValues) =>
+      refreshBankAccount(fetcher, bankAccountId),
+    onSuccess: () => {},
+    ...options,
+  });
 }
 
-interface EditBankRuleValues {
-  id: number;
-  value: any;
-}
-interface EditBankRuleResponse { }
-
-/**
- * Edits the given bank rule.
- * @param {UseMutationOptions<EditBankRuleResponse, Error, EditBankRuleValues>} options -
- * @returns
- */
 export function useEditBankRule(
-  options?: UseMutationOptions<EditBankRuleResponse, Error, EditBankRuleValues>,
-): UseMutationResult<EditBankRuleResponse, Error, EditBankRuleValues> {
+  options?: UseMutationOptions<unknown, Error, { id: number; value: EditBankRuleBody }>
+): UseMutationResult<unknown, Error, { id: number; value: EditBankRuleBody }> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<EditBankRuleResponse, Error, EditBankRuleValues>(
-    ({ id, value }) => apiRequest.put(`/banking/rules/${id}`, value),
-    {
-      ...options,
-      onSuccess: () => {
-        commonInvalidateQueries(queryClient);
-      },
-    },
-  );
+  return useMutation({
+    mutationFn: ({ id, value }: { id: number; value: EditBankRuleBody }) =>
+      editBankRule(fetcher, id, value),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...options,
+  });
 }
 
-interface DeleteBankRuleResponse { }
-type DeleteBankRuleValue = number;
-
-/**
- * Deletes the given bank rule.
- * @param {UseMutationOptions<DeleteBankRuleResponse, Error, DeleteBankRuleValue>} options
- * @returns {UseMutationResult<DeleteBankRuleResponse, Error, DeleteBankRuleValue}
- */
 export function useDeleteBankRule(
-  options?: UseMutationOptions<
-    DeleteBankRuleResponse,
-    Error,
-    DeleteBankRuleValue
-  >,
-): UseMutationResult<DeleteBankRuleResponse, Error, DeleteBankRuleValue> {
+  options?: UseMutationOptions<unknown, Error, number>
+): UseMutationResult<unknown, Error, number> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation(
-    (id: number) => apiRequest.delete(`/banking/rules/${id}`),
-    {
-      onSuccess: (res, id) => {
-        commonInvalidateQueries(queryClient);
-
-        queryClient.invalidateQueries(
-          BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY,
-        );
-        queryClient.invalidateQueries([
-          t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
-        ]);
-      },
-      ...options,
+  return useMutation({
+    mutationFn: (id: number) => deleteBankRule(fetcher, id),
+    onSuccess: () => {
+      commonInvalidateQueries(queryClient);
+      queryClient.invalidateQueries({
+        queryKey: [BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY],
+      });
     },
-  );
+    ...options,
+  });
 }
 
-interface BankRulesResponse { }
-
-/**
- * Retrieves all bank rules.
- * @param {UseQueryOptions<BankRulesResponse, Error>} params -
- * @returns {UseQueryResult<BankRulesResponse, Error>}
- */
 export function useBankRules(
-  options?: UseQueryOptions<BankRulesResponse, Error>,
-): UseQueryResult<BankRulesResponse, Error> {
-  const apiRequest = useApiRequest();
+  options?: UseQueryOptions<unknown, Error>
+): UseQueryResult<unknown, Error> {
+  const fetcher = useApiFetcher();
 
-  return useQuery<BankRulesResponse, Error>(
-    [BANK_QUERY_KEY.BANK_RULES],
-    () => apiRequest.get('/banking/rules').then((res) => res.data),
-    { ...options },
-  );
+  return useQuery({
+    queryKey: [BANK_QUERY_KEY.BANK_RULES],
+    queryFn: () => fetchBankRules(fetcher),
+    ...options,
+  });
 }
 
-interface GetBankRuleRes { }
-
-/**
- * Retrieve the given bank rule.
- * @param {number} bankRuleId -
- * @param {UseQueryOptions<GetBankRuleRes, Error>} options -
- * @returns {UseQueryResult<GetBankRuleRes, Error>}
- */
 export function useBankRule(
   bankRuleId: number,
-  options?: UseQueryOptions<GetBankRuleRes, Error>,
-): UseQueryResult<GetBankRuleRes, Error> {
-  const apiRequest = useApiRequest();
+  options?: UseQueryOptions<unknown, Error>
+): UseQueryResult<unknown, Error> {
+  const fetcher = useApiFetcher();
 
-  return useQuery<GetBankRuleRes, Error>(
-    [BANK_QUERY_KEY.BANK_RULES, bankRuleId],
-    () =>
-      apiRequest.get(`/banking/rules/${bankRuleId}`).then((res) => res.data),
-    { ...options },
-  );
+  return useQuery({
+    queryKey: [BANK_QUERY_KEY.BANK_RULES, bankRuleId],
+    queryFn: () => fetchBankRule(fetcher, bankRuleId),
+    ...options,
+  });
 }
 
-interface GetBankTransactionsMatchesValue {
-  uncategorizeTransactionsIds: Array<number>;
-}
-interface GetBankTransactionsMatchesResponse {
-  perfectMatches: Array<any>;
-  possibleMatches: Array<any>;
-  totalPending: number;
-}
-
-/**
- * Retrieves the bank transactions matches.
- * @param {UseQueryOptions<GetBankTransactionsMatchesResponse, Error>} params -
- * @returns {UseQueryResult<GetBankTransactionsMatchesResponse, Error>}
- */
 export function useGetBankTransactionsMatches(
-  uncategorizedTransactionIds: Array<number>,
-  options?: UseQueryOptions<GetBankTransactionsMatchesResponse, Error>,
-): UseQueryResult<GetBankTransactionsMatchesResponse, Error> {
-  const apiRequest = useApiRequest();
+  uncategorizedTransactionIds: number[],
+  options?: UseQueryOptions<MatchedTransactionsResponse, Error>
+): UseQueryResult<MatchedTransactionsResponse, Error> {
+  const fetcher = useApiFetcher();
 
-  return useQuery<GetBankTransactionsMatchesResponse, Error>(
-    [BANK_QUERY_KEY.BANK_TRANSACTION_MATCHES, uncategorizedTransactionIds],
-    () =>
-      apiRequest
-        .get(`/banking/matching/matched`, {
-          params: { uncategorizedTransactionIds },
-        })
-        .then((res) => transformToCamelCase(res.data)),
-    options,
-  );
+  return useQuery({
+    queryKey: [BANK_QUERY_KEY.BANK_TRANSACTION_MATCHES, uncategorizedTransactionIds],
+    queryFn: () =>
+      fetchMatchedTransactions(fetcher, uncategorizedTransactionIds).then((data) =>
+        transformToCamelCase(data as unknown as Record<string, unknown>) as MatchedTransactionsResponse
+      ),
+    ...options,
+  });
 }
 
-const onValidateExcludeUncategorizedTransaction = (queryClient) => {
-  // Invalidate queries.
-  queryClient.invalidateQueries(
-    BANK_QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY,
-  );
-  queryClient.invalidateQueries(
-    t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
-  );
-  // Invalidate accounts.
-  queryClient.invalidateQueries(t.ACCOUNTS);
-  queryClient.invalidateQueries(t.ACCOUNT);
-
-  // invalidate bank account summary.
-  queryClient.invalidateQueries(BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
-
-  // Invalidate the recognized transactions.
-  queryClient.invalidateQueries([
-    BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY,
-  ]);
+const onValidateExcludeUncategorizedTransaction = (queryClient: QueryClient) => {
+  queryClient.invalidateQueries({
+    queryKey: [BANK_QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY],
+  });
+  queryClient.invalidateQueries({
+    queryKey: [t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY],
+  });
+  queryClient.invalidateQueries({ queryKey: [t.ACCOUNTS] });
+  queryClient.invalidateQueries({ queryKey: [t.ACCOUNT] });
+  queryClient.invalidateQueries({
+    queryKey: [BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META],
+  });
+  queryClient.invalidateQueries({
+    queryKey: [BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY],
+  });
 };
 
-type ExcludeUncategorizedTransactionValue = number;
-
-interface ExcludeUncategorizedTransactionRes { }
-/**
- * Excludes the given uncategorized transaction.
- * @param {UseMutationOptions<ExcludeUncategorizedTransactionRes, Error, ExcludeUncategorizedTransactionValue>}
- * @returns {UseMutationResult<ExcludeUncategorizedTransactionRes, Error, ExcludeUncategorizedTransactionValue> }
- */
 export function useExcludeUncategorizedTransaction(
-  options?: UseMutationOptions<
-    ExcludeUncategorizedTransactionRes,
-    Error,
-    ExcludeUncategorizedTransactionValue
-  >,
-): UseMutationResult<
-  ExcludeUncategorizedTransactionRes,
-  Error,
-  ExcludeUncategorizedTransactionValue
-> {
+  options?: UseMutationOptions<unknown, Error, number>
+): UseMutationResult<unknown, Error, number> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    ExcludeUncategorizedTransactionRes,
-    Error,
-    ExcludeUncategorizedTransactionValue
-  >(
-    (uncategorizedTransactionId: number) =>
-      apiRequest.put(`/banking/exclude/${uncategorizedTransactionId}`),
-    {
-      onSuccess: (res, id) => {
-        onValidateExcludeUncategorizedTransaction(queryClient);
-      },
-      ...options,
-    },
-  );
+  return useMutation({
+    mutationFn: (uncategorizedTransactionId: number) =>
+      excludeBankTransaction(fetcher, uncategorizedTransactionId),
+    onSuccess: () => onValidateExcludeUncategorizedTransaction(queryClient),
+    ...options,
+  });
 }
 
-type ExcludeBankTransactionValue = number;
-
-interface ExcludeBankTransactionResponse { }
-
-/**
- * Excludes the uncategorized bank transaction.
- * @param {UseMutationResult<ExcludeBankTransactionResponse, Error, ExcludeBankTransactionValue>} options
- * @returns {UseMutationResult<ExcludeBankTransactionResponse, Error, ExcludeBankTransactionValue>}
- */
 export function useUnexcludeUncategorizedTransaction(
-  options?: UseMutationOptions<
-    ExcludeBankTransactionResponse,
-    Error,
-    ExcludeBankTransactionValue
-  >,
-): UseMutationResult<
-  ExcludeBankTransactionResponse,
-  Error,
-  ExcludeBankTransactionValue
-> {
+  options?: UseMutationOptions<unknown, Error, number>
+): UseMutationResult<unknown, Error, number> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    ExcludeBankTransactionResponse,
-    Error,
-    ExcludeBankTransactionValue
-  >(
-    (uncategorizedTransactionId: number) =>
-      apiRequest.delete(`/banking/exclude/${uncategorizedTransactionId}`),
-    {
-      onSuccess: (res, id) => {
-        onValidateExcludeUncategorizedTransaction(queryClient);
-      },
-      ...options,
-    },
-  );
+  return useMutation({
+    mutationFn: (uncategorizedTransactionId: number) =>
+      unexcludeBankTransaction(fetcher, uncategorizedTransactionId),
+    onSuccess: () => onValidateExcludeUncategorizedTransaction(queryClient),
+    ...options,
+  });
 }
 
-type ExcludeBankTransactionsValue = { ids: Array<number | string> };
-interface ExcludeBankTransactionsResponse { }
-
-/**
- * Excludes the uncategorized bank transactions in bulk.
- * @param {UseMutationResult<ExcludeBankTransactionsResponse, Error, ExcludeBankTransactionValue>} options
- * @returns {UseMutationResult<ExcludeBankTransactionsResponse, Error, ExcludeBankTransactionValue>}
- */
 export function useExcludeUncategorizedTransactions(
-  options?: UseMutationOptions<
-    ExcludeBankTransactionsResponse,
-    Error,
-    ExcludeBankTransactionsValue
-  >,
-): UseMutationResult<
-  ExcludeBankTransactionsResponse,
-  Error,
-  ExcludeBankTransactionsValue
-> {
+  options?: UseMutationOptions<unknown, Error, ExcludeBankTransactionsBulkBody>
+): UseMutationResult<unknown, Error, ExcludeBankTransactionsBulkBody> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    ExcludeBankTransactionsResponse,
-    Error,
-    ExcludeBankTransactionsValue
-  >(
-    (value: { ids: Array<number | string> }) =>
-      apiRequest.put(`/banking/exclude/bulk`, { ids: value.ids }),
-    {
-      onSuccess: (res, id) => {
-        onValidateExcludeUncategorizedTransaction(queryClient);
-      },
-      ...options,
-    },
-  );
+  return useMutation({
+    mutationFn: (value: ExcludeBankTransactionsBulkBody) =>
+      excludeBankTransactionsBulk(fetcher, value),
+    onSuccess: () => onValidateExcludeUncategorizedTransaction(queryClient),
+    ...options,
+  });
 }
 
-type UnexcludeBankTransactionsValue = { ids: Array<number | string> };
-interface UnexcludeBankTransactionsResponse { }
-
-/**
- * Excludes the uncategorized bank transactions in bulk.
- * @param {UseMutationResult<UnexcludeBankTransactionsResponse, Error, ExcludeBankTransactionValue>} options
- * @returns {UseMutationResult<UnexcludeBankTransactionsResponse, Error, ExcludeBankTransactionValue>}
- */
 export function useUnexcludeUncategorizedTransactions(
-  options?: UseMutationOptions<
-    UnexcludeBankTransactionsResponse,
-    Error,
-    UnexcludeBankTransactionsValue
-  >,
-): UseMutationResult<
-  UnexcludeBankTransactionsResponse,
-  Error,
-  UnexcludeBankTransactionsValue
-> {
+  options?: UseMutationOptions<unknown, Error, ExcludeBankTransactionsBulkBody>
+): UseMutationResult<unknown, Error, ExcludeBankTransactionsBulkBody> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    UnexcludeBankTransactionsResponse,
-    Error,
-    UnexcludeBankTransactionsValue
-  >(
-    (value: { ids: Array<number | string> }) =>
-      apiRequest.delete(`/banking/exclude/bulk`, { data: { ids: value.ids } }),
-    {
-      onSuccess: (res, id) => {
-        onValidateExcludeUncategorizedTransaction(queryClient);
-      },
-      ...options,
-    },
-  );
+  return useMutation({
+    mutationFn: (value: ExcludeBankTransactionsBulkBody) =>
+      unexcludeBankTransactionsBulk(fetcher, value),
+    onSuccess: () => onValidateExcludeUncategorizedTransaction(queryClient),
+    ...options,
+  });
 }
 
-interface MatchUncategorizedTransactionValues {
-  uncategorizedTransactions: Array<number>;
-  matchedTransactions: Array<{ reference_type: string; reference_id: number }>;
-}
-interface MatchUncategorizedTransactionRes { }
-
-/**
- * Matchess the given uncateogrized transaction.
- * @param props
- * @returns
- */
 export function useMatchUncategorizedTransaction(
-  props?: UseMutationOptions<
-    MatchUncategorizedTransactionRes,
-    Error,
-    MatchUncategorizedTransactionValues
-  >,
-): UseMutationResult<
-  MatchUncategorizedTransactionRes,
-  Error,
-  MatchUncategorizedTransactionValues
-> {
+  props?: UseMutationOptions<unknown, Error, MatchTransactionBody>
+): UseMutationResult<unknown, Error, MatchTransactionBody> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    MatchUncategorizedTransactionRes,
-    Error,
-    MatchUncategorizedTransactionValues
-  >((value) => apiRequest.post('/banking/matching/match', value), {
-    onSuccess: (res, id) => {
-      queryClient.invalidateQueries(
-        t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
-      );
-      queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
-
-      // Invalidate accounts.
-      queryClient.invalidateQueries(t.ACCOUNTS);
-      queryClient.invalidateQueries(t.ACCOUNT);
-
-      // Invalidate bank account summary.
-      queryClient.invalidateQueries(BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
+  return useMutation({
+    mutationFn: (value: MatchTransactionBody) => matchTransaction(fetcher, value),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY],
+      });
+      queryClient.invalidateQueries({ queryKey: [t.ACCOUNTS] });
+      queryClient.invalidateQueries({ queryKey: [t.ACCOUNT] });
+      queryClient.invalidateQueries({
+        queryKey: [BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META],
+      });
     },
     ...props,
   });
 }
 
-interface UnmatchUncategorizedTransactionValues {
-  id: number;
-}
-interface UnmatchUncategorizedTransactionRes { }
+/** Mutation variables (UI uses id; API path param is uncategorizedTransactionId). */
+type UnmatchUncategorizedTransactionValues = {
+  id: UnmatchMatchedTransactionParams['uncategorizedTransactionId'];
+};
 
-/**
- * Unmatch the given matched uncategorized transaction.
- * @param {UseMutationOptions<UnmatchUncategorizedTransactionRes, Error, UnmatchUncategorizedTransactionValues>} props
- * @returns {UseMutationResult<UnmatchUncategorizedTransactionRes, Error, UnmatchUncategorizedTransactionValues>}
- */
 export function useUnmatchMatchedUncategorizedTransaction(
-  props?: UseMutationOptions<
-    UnmatchUncategorizedTransactionRes,
-    Error,
-    UnmatchUncategorizedTransactionValues
-  >,
-): UseMutationResult<
-  UnmatchUncategorizedTransactionRes,
-  Error,
-  UnmatchUncategorizedTransactionValues
-> {
+  props?: UseMutationOptions<unknown, Error, UnmatchUncategorizedTransactionValues>
+): UseMutationResult<unknown, Error, UnmatchUncategorizedTransactionValues> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    UnmatchUncategorizedTransactionRes,
-    Error,
-    UnmatchUncategorizedTransactionValues
-  >(({ id }) => apiRequest.patch(`/banking/matching/unmatch/${id}`), {
-    onSuccess: (res, id) => {
-      queryClient.invalidateQueries(
-        t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
-      );
-      queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
-
-      // Invalidate accounts.
-      queryClient.invalidateQueries(t.ACCOUNTS);
-      queryClient.invalidateQueries(t.ACCOUNT);
-
-      // Invalidate bank account summary.
-      queryClient.invalidateQueries(BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
+  return useMutation({
+    mutationFn: ({ id }: UnmatchUncategorizedTransactionValues) =>
+      unmatchMatchedTransaction(fetcher, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY],
+      });
+      queryClient.invalidateQueries({ queryKey: [t.ACCOUNTS] });
+      queryClient.invalidateQueries({ queryKey: [t.ACCOUNT] });
+      queryClient.invalidateQueries({
+        queryKey: [BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META],
+      });
     },
     ...props,
   });
 }
 
-interface GetRecognizedBankTransactionRes { }
-
-/**
- * REtrieves the given recognized bank transaction.
- * @param {number} uncategorizedTransactionId
- * @param {UseQueryOptions<GetRecognizedBankTransactionRes, Error>} options
- * @returns {UseQueryResult<GetRecognizedBankTransactionRes, Error>}
- */
 export function useGetRecognizedBankTransaction(
   uncategorizedTransactionId: number,
-  options?: UseQueryOptions<GetRecognizedBankTransactionRes, Error>,
-): UseQueryResult<GetRecognizedBankTransactionRes, Error> {
-  const apiRequest = useApiRequest();
+  options?: UseQueryOptions<unknown, Error>
+): UseQueryResult<unknown, Error> {
+  const fetcher = useApiFetcher();
 
-  return useQuery<GetRecognizedBankTransactionRes, Error>(
-    [BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTION, uncategorizedTransactionId],
-    () =>
-      apiRequest
-        .get(`/banking/recognized/transactions/${uncategorizedTransactionId}`)
-        .then((res) => transformToCamelCase(res.data)),
-    options,
-  );
+  return useQuery({
+    queryKey: [
+      BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTION,
+      uncategorizedTransactionId,
+    ],
+    queryFn: () =>
+      fetchRecognizedTransaction(fetcher, uncategorizedTransactionId).then(
+        (data: unknown) => transformToCamelCase(data as unknown as Record<string, unknown>)
+      ),
+    ...options,
+  });
 }
 
-interface GetBankAccountSummaryMetaRes {
-  name: string;
-  totalUncategorizedTransactions: number;
-  totalRecognizedTransactions: number;
-}
-
-/**
- * Get the given bank account meta summary.
- * @param {number} bankAccountId
- * @param {UseQueryOptions<GetBankAccountSummaryMetaRes, Error>} options
- * @returns {UseQueryResult<GetBankAccountSummaryMetaRes, Error>}
- */
 export function useGetBankAccountSummaryMeta(
   bankAccountId: number,
-  options?: UseQueryOptions<GetBankAccountSummaryMetaRes, Error>,
-): UseQueryResult<GetBankAccountSummaryMetaRes, Error> {
-  const apiRequest = useApiRequest();
+  options?: UseQueryOptions<BankingAccountSummaryResponse, Error>
+): UseQueryResult<BankingAccountSummaryResponse, Error> {
+  const fetcher = useApiFetcher();
 
-  return useQuery<GetBankAccountSummaryMetaRes, Error>(
-    [BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META, bankAccountId],
-    () =>
-      apiRequest
-        .get(`/banking/accounts/${bankAccountId}/summary`)
-        .then((res) => transformToCamelCase(res.data)),
-    { ...options },
-  );
-}
-
-export interface GetAutofillCategorizeTransaction {
-  accountId: number | null;
-  amount: number;
-  category: string | null;
-  date: Date;
-  formattedAmount: string;
-  formattedDate: string;
-  isRecognized: boolean;
-  recognizedByRuleId: number | null;
-  recognizedByRuleName: string | null;
-  referenceNo: null | string;
-  isDepositTransaction: boolean;
-  isWithdrawalTransaction: boolean;
+  return useQuery({
+    queryKey: [BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META, bankAccountId],
+    queryFn: () =>
+      fetchBankingAccountSummary(fetcher, bankAccountId).then(
+        (data) =>
+          transformToCamelCase(data as unknown as Record<string, unknown>) as BankingAccountSummaryResponse
+      ),
+    ...options,
+  });
 }
 
 export function useGetAutofillCategorizeTransaction(
   uncategorizedTransactionIds: number[],
-  options: any,
-) {
-  const apiRequest = useApiRequest();
+  options?: UseQueryOptions<AutofillCategorizeTransactionResponse, Error>
+): UseQueryResult<AutofillCategorizeTransactionResponse, Error> {
+  const fetcher = useApiFetcher();
 
-  return useQuery<GetAutofillCategorizeTransaction, Error>(
-    [
+  return useQuery({
+    queryKey: [
       BANK_QUERY_KEY.AUTOFILL_CATEGORIZE_BANK_TRANSACTION,
       uncategorizedTransactionIds,
     ],
-    () =>
-      apiRequest
-        .get(`/banking/uncategorized/autofill`, {
-          params: { uncategorizedTransactionIds },
-        })
-        .then((res) => transformToCamelCase(res.data)),
-    { ...options },
-  );
+    queryFn: () =>
+      fetchAutofillCategorizeTransaction(fetcher, uncategorizedTransactionIds).then(
+        (data) =>
+          transformToCamelCase(data as unknown as Record<string, unknown>) as AutofillCategorizeTransactionResponse
+      ),
+    ...options,
+  });
 }
 
-/**
- * @returns
- */
 export function useRecognizedBankTransactionsInfinity(
-  query,
-  infinityProps,
-  axios,
+  query: Record<string, unknown>,
+  infinityProps?: Record<string, unknown>
 ) {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useInfiniteQuery(
-    [BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY, query],
-    async ({ pageParam = 1 }) => {
-      const response = await apiRequest.http({
-        ...axios,
-        method: 'get',
-        url: `/api/banking/recognized`,
-        params: { page: pageParam, ...query },
+  return useInfiniteQuery({
+    queryKey: [BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY, query],
+    initialPageParam: 1,
+    queryFn: async ({
+      pageParam = 1,
+    }: {
+      pageParam?: number;
+    }): Promise<BankTransactionsListPage> => {
+      return fetchRecognizedTransactions(fetcher, {
+        page: pageParam,
+        ...query,
       });
-      return response.data;
     },
-    {
-      getPreviousPageParam: (firstPage) => firstPage.pagination.page - 1,
-      getNextPageParam: (lastPage) => {
-        const { pagination } = lastPage;
-        return pagination.total > pagination.page_size * pagination.page
-          ? lastPage.pagination.page + 1
-          : undefined;
-      },
-      ...infinityProps,
+    getPreviousPageParam: (firstPage: BankTransactionsListPage) =>
+      firstPage.pagination.page - 1,
+    getNextPageParam: (lastPage: BankTransactionsListPage) => {
+      const { pagination } = lastPage;
+      const pageSize = 'pageSize' in pagination ? (pagination as { pageSize: number }).pageSize : (pagination as { page_size: number }).page_size;
+      return pagination.total > pageSize * pagination.page
+        ? lastPage.pagination.page + 1
+        : undefined;
     },
-  );
+    ...infinityProps,
+  });
 }
 
 export function useExcludedBankTransactionsInfinity(
-  query,
-  infinityProps,
-  axios,
+  query: Record<string, unknown>,
+  infinityProps?: Record<string, unknown>
 ) {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useInfiniteQuery(
-    [BANK_QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY, query],
-    async ({ pageParam = 1 }) => {
-      const response = await apiRequest.http({
-        ...axios,
-        method: 'get',
-        url: `/api/banking/exclude`,
-        params: { page: pageParam, ...query },
+  return useInfiniteQuery({
+    queryKey: [BANK_QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY, query],
+    initialPageParam: 1,
+    queryFn: async ({
+      pageParam = 1,
+    }: {
+      pageParam?: number;
+    }): Promise<BankTransactionsListPage> => {
+      return fetchExcludedBankTransactions(fetcher, {
+        page: pageParam,
+        ...query,
       });
-      return response.data;
     },
-    {
-      getPreviousPageParam: (firstPage) => firstPage.pagination.page - 1,
-      getNextPageParam: (lastPage) => {
-        const { pagination } = lastPage;
-
-        return pagination.total > pagination.page_size * pagination.page
-          ? lastPage.pagination.page + 1
-          : undefined;
-      },
-      ...infinityProps,
+    getPreviousPageParam: (firstPage: BankTransactionsListPage) =>
+      firstPage.pagination.page - 1,
+    getNextPageParam: (lastPage: BankTransactionsListPage) => {
+      const { pagination } = lastPage;
+      const pageSize = 'pageSize' in pagination ? (pagination as { pageSize: number }).pageSize : (pagination as { page_size: number }).page_size;
+      return pagination.total > pageSize * pagination.page
+        ? lastPage.pagination.page + 1
+        : undefined;
     },
-  );
+    ...infinityProps,
+  });
 }
 
 export function usePendingBankTransactionsInfinity(
-  query,
-  infinityProps,
-  axios,
+  query: Record<string, unknown>,
+  infinityProps?: Record<string, unknown>
 ) {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useInfiniteQuery(
-    [BANK_QUERY_KEY.PENDING_BANK_ACCOUNT_TRANSACTIONS_INFINITY, query],
-    async ({ pageParam = 1 }) => {
-      const response = await apiRequest.http({
-        ...axios,
-        method: 'get',
-        url: `/api/banking/pending`,
-        params: { page: pageParam, ...query },
+  return useInfiniteQuery({
+    queryKey: [BANK_QUERY_KEY.PENDING_BANK_ACCOUNT_TRANSACTIONS_INFINITY, query],
+    initialPageParam: 1,
+    queryFn: async ({
+      pageParam = 1,
+    }: {
+      pageParam?: number;
+    }): Promise<BankTransactionsListPage> => {
+      return fetchPendingTransactions(fetcher, {
+        page: pageParam,
+        ...query,
       });
-      return response.data;
     },
-    {
-      getPreviousPageParam: (firstPage) => firstPage.pagination.page - 1,
-      getNextPageParam: (lastPage) => {
-        const { pagination } = lastPage;
-        return pagination.total > pagination.page_size * pagination.page
-          ? lastPage.pagination.page + 1
-          : undefined;
-      },
-      ...infinityProps,
+    getPreviousPageParam: (firstPage: BankTransactionsListPage) =>
+      firstPage.pagination.page - 1,
+    getNextPageParam: (lastPage: BankTransactionsListPage) => {
+      const { pagination } = lastPage;
+      const pageSize = 'pageSize' in pagination ? (pagination as { pageSize: number }).pageSize : (pagination as { page_size: number }).page_size;
+      return pagination.total > pageSize * pagination.page
+        ? lastPage.pagination.page + 1
+        : undefined;
     },
-  );
+    ...infinityProps,
+  });
 }

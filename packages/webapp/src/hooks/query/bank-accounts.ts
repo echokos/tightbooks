@@ -1,91 +1,58 @@
-// @ts-nocheck
 import {
   UseMutationOptions,
   UseMutationResult,
   useQueryClient,
   useMutation,
-} from 'react-query';
-import useApiRequest from '../useRequest';
+} from '@tanstack/react-query';
+import {
+  pauseBankAccount,
+  resumeBankAccount,
+  type PauseBankAccountParams,
+  type ResumeBankAccountParams,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 import t from './types';
 
-type PuaseFeedsBankAccountValues = { bankAccountId: number };
-
-interface PuaseFeedsBankAccountResponse {}
+/** Mutation variables for pause (hook uses bankAccountId for the API id). */
+type PauseFeedsBankAccountValues = { bankAccountId: PauseBankAccountParams['id'] };
 
 /**
- * Resumes the feeds syncing of the bank account.
- * @param {UseMutationResult<PuaseFeedsBankAccountResponse, Error, ExcludeBankTransactionValue>} options
- * @returns {UseMutationResult<PuaseFeedsBankAccountResponse, Error, ExcludeBankTransactionValue>}
+ * Pauses the feeds syncing of the bank account.
  */
 export function usePauseFeedsBankAccount(
-  options?: UseMutationOptions<
-    PuaseFeedsBankAccountResponse,
-    Error,
-    PuaseFeedsBankAccountValues
-  >,
-): UseMutationResult<
-  PuaseFeedsBankAccountResponse,
-  Error,
-  PuaseFeedsBankAccountValues
-> {
+  options?: UseMutationOptions<void, Error, PauseFeedsBankAccountValues>,
+): UseMutationResult<void, Error, PauseFeedsBankAccountValues> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    PuaseFeedsBankAccountResponse,
-    Error,
-    PuaseFeedsBankAccountValues
-  >(
-    (values) =>
-      apiRequest.post(
-        `/banking/accounts/${values.bankAccountId}/pause`,
-      ),
-    {
-      onSuccess: (res, values) => {
-        queryClient.invalidateQueries([t.ACCOUNT, values.bankAccountId]);
-      },
-      ...options,
+  return useMutation({
+    mutationFn: (values: PauseFeedsBankAccountValues) =>
+      pauseBankAccount(fetcher, values.bankAccountId),
+    onSuccess: (_res, values) => {
+      queryClient.invalidateQueries({ queryKey: [t.ACCOUNT, values.bankAccountId] });
     },
-  );
+    ...options,
+  });
 }
 
-type ResumeFeedsBankAccountValues = { bankAccountId: number };
-
-interface ResumeFeedsBankAccountResponse {}
+/** Mutation variables for resume (hook uses bankAccountId for the API id). */
+type ResumeFeedsBankAccountValues = { bankAccountId: ResumeBankAccountParams['id'] };
 
 /**
  * Resumes the feeds syncing of the bank account.
- * @param {UseMutationResult<ResumeFeedsBankAccountResponse, Error, ResumeFeedsBankAccountValues>} options
- * @returns {UseMutationResult<ResumeFeedsBankAccountResponse, Error, ResumeFeedsBankAccountValues>}
  */
 export function useResumeFeedsBankAccount(
-  options?: UseMutationOptions<
-    ResumeFeedsBankAccountResponse,
-    Error,
-    ResumeFeedsBankAccountValues
-  >,
-): UseMutationResult<
-  ResumeFeedsBankAccountResponse,
-  Error,
-  ResumeFeedsBankAccountValues
-> {
+  options?: UseMutationOptions<void, Error, ResumeFeedsBankAccountValues>,
+): UseMutationResult<void, Error, ResumeFeedsBankAccountValues> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    ResumeFeedsBankAccountResponse,
-    Error,
-    ResumeFeedsBankAccountValues
-  >(
-    (values) =>
-      apiRequest.post(
-        `/banking/bank_accounts/${values.bankAccountId}/resume_feeds`,
-      ),
-    {
-      onSuccess: (res, values) => {
-        queryClient.invalidateQueries([t.ACCOUNT, values.bankAccountId]);
-      },
-      ...options,
+  return useMutation({
+    mutationFn: (values: ResumeFeedsBankAccountValues) =>
+      resumeBankAccount(fetcher, values.bankAccountId),
+    onSuccess: (_res, values) => {
+      queryClient.invalidateQueries({ queryKey: [t.ACCOUNT, values.bankAccountId] });
     },
-  );
+    ...options,
+  });
 }

@@ -1,35 +1,38 @@
-// @ts-nocheck
-import { useRequestQuery } from '../useQueryRequest';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import type { ResourceViewResponse, ResourceMetaResponse } from '@bigcapital/sdk-ts';
+import { fetchResourceView, fetchResourceMeta } from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 
 /**
- * Retrieve the resource views.
- * @param {string} resourceSlug - Resource slug.
+ * Retrieve the resource views using sdk-ts.
  */
-export function useResourceViews(resourceSlug) {
-  return useRequestQuery(
-    ['RESOURCE_VIEW', resourceSlug],
-    { method: 'get', url: `views/resource/${resourceSlug}` },
-    {
-      select: (response) => response.data,
-      defaultData: [],
-    },
-  );
+export function useResourceViews(
+  resourceSlug: string | null | undefined,
+  props?: Omit<UseQueryOptions<ResourceViewResponse>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: ['RESOURCE_VIEW', resourceSlug],
+    queryFn: () => fetchResourceView(fetcher, resourceSlug!),
+    enabled: !!resourceSlug,
+    select: (data) => (Array.isArray(data) ? data : (data as { data?: unknown })?.data ?? data),
+    ...props,
+  });
 }
 
 /**
- * Retrieve the resource meta.
- * @param {string} resourceSlug - Resource slug.
+ * Retrieve the resource meta using sdk-ts.
  */
-export function useResourceMeta(resourceSlug, props) {
-  return useRequestQuery(
-    ['RESOURCE_META', resourceSlug],
-    { method: 'get', url: `resources/${resourceSlug}/meta` },
-    {
-      select: (res) => res.data.resource_meta,
-      defaultData: {
-        fields: {},
-      },
-    },
-    props,
-  );
+export function useResourceMeta(
+  resourceSlug: string | null | undefined,
+  props?: Omit<UseQueryOptions<ResourceMetaResponse>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: ['RESOURCE_META', resourceSlug],
+    queryFn: () => fetchResourceMeta(fetcher, resourceSlug!),
+    enabled: !!resourceSlug,
+    select: (data) => (data as { resource_meta?: unknown })?.resource_meta ?? data ?? { fields: {} },
+    ...props,
+  });
 }

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { DialogsName } from '@/constants/dialogs';
-import { useValidateBulkDeleteCreditNotes } from '@/hooks/query/creditNote';
+import { useValidateBulkDeleteCreditNotes } from '@/hooks/query/credit-note';
 import { useBulkDeleteDialog } from '@/hooks/dialogs/useBulkDeleteDialog';
 
 export const useBulkDeleteCreditNotesDialog = () => {

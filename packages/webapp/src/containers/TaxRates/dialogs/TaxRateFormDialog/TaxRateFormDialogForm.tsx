@@ -16,7 +16,7 @@ import {
   transformFormToReq,
   transformTaxRateToForm,
 } from './utils';
-import { useCreateTaxRate, useEditTaxRate } from '@/hooks/query/taxRates';
+import { useCreateTaxRate, useEditTaxRate } from '@/hooks/query/tax-rates';
 import { useTaxRateFormDialogContext } from './TaxRateFormDialogBoot';
 import { TaxRateFormDialogFormFooter } from './TaxRateFormDialogFormFooter';
 import { TaxRateFormDialogFormErrors } from './TaxRateFormDialogFormErrors';

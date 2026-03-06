@@ -34,10 +34,7 @@ function BillBulkDeleteDialog({
   };
 
   const handleConfirmBulkDelete = () => {
-    bulkDeleteBills({
-      ids,
-      skipUndeletable: true,
-    })
+    bulkDeleteBills({ ids, skipUndeletable: true })
       .then(() => {
         AppToaster.show({
           message: intl.get('the_bills_has_been_deleted_successfully'),

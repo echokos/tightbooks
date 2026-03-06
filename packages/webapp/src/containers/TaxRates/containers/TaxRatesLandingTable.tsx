@@ -26,7 +26,7 @@ import { DialogsName } from '@/constants/dialogs';
 import {
   useActivateTaxRate,
   useInactivateTaxRate,
-} from '@/hooks/query/taxRates';
+} from '@/hooks/query/tax-rates';
 
 /**
  * Invoices datatable.

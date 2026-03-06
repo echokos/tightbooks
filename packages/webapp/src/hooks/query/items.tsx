@@ -1,8 +1,37 @@
-// @ts-nocheck
-import { useMutation, useQueryClient } from 'react-query';
-import { transformPagination, transformResponse, transformToCamelCase } from '@/utils';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
+import type {
+  Item,
+  CreateItemBody,
+  EditItemBody,
+  BulkDeleteItemsBody,
+  ValidateBulkDeleteItemsResponse,
+  ItemsListResponse,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchItems,
+  fetchItem,
+  fetchItemInvoices,
+  fetchItemBills,
+  fetchItemEstimates,
+  fetchItemReceipts,
+  fetchItemWarehouses,
+  createItem,
+  editItem,
+  deleteItem,
+  inactivateItem,
+  activateItem,
+  validateBulkDeleteItems,
+  bulkDeleteItems,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import { transformPagination, transformResponse, transformToCamelCase } from '@/utils';
 import t from './types';
 
 const DEFAULT_PAGINATION = {
@@ -11,306 +40,255 @@ const DEFAULT_PAGINATION = {
   pagesCount: 0,
 };
 
-// Common invalidate queries.
-const commonInvalidateQueries = (queryClient) => {
-  // Invalidate items.
-  queryClient.invalidateQueries(t.ITEMS);
-
-  // Invalidate items categories.
-  queryClient.invalidateQueries(t.ITEMS_CATEGORIES);
+const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
+  queryClient.invalidateQueries({ queryKey: [t.ITEMS] });
+  queryClient.invalidateQueries({ queryKey: [t.ITEMS_CATEGORIES] });
 };
 
-/**
- * Creates a new item.
- */
-export function useCreateItem(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+export type ItemsListResult = {
+  items: unknown[];
+  pagination: typeof DEFAULT_PAGINATION;
+  filterMeta: Record<string, unknown>;
+};
 
-  return useMutation((values) => apiRequest.post('items', values), {
-    onSuccess: (res, values) => {
+export function useCreateItem(
+  props?: UseMutationOptions<void, Error, CreateItemBody>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: (values: CreateItemBody) => createItem(fetcher, values),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...props,
+  });
+}
+
+export function useEditItem(
+  props?: UseMutationOptions<void, Error, [number, EditItemBody]>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: ([id, values]: [number, EditItemBody]) =>
+      editItem(fetcher, id, values),
+    onSuccess: (_data, [id]) => {
+      queryClient.invalidateQueries({ queryKey: [t.ITEM, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,
   });
 }
 
-/**
- * Edits the given item.
- */
-export function useEditItem(props) {
+export function useDeleteItem(
+  props?: UseMutationOptions<void, Error, number>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation(([id, values]) => apiRequest.put(`items/${id}`, values), {
-    onSuccess: (res, [id, values]) => {
-      // Invalidate specific item.
-      queryClient.invalidateQueries([t.ITEM, id]);
-
-      // Common invalidate queries.
+  return useMutation({
+    mutationFn: (id: number) => deleteItem(fetcher, id),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: [t.ITEM, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,
   });
 }
 
-/**
- * Deletes the given item.
- */
-export function useDeleteItem(props) {
+export function useBulkDeleteItems(
+  props?: UseMutationOptions<void, Error, { ids: number[]; skipUndeletable?: boolean }>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation((id) => apiRequest.delete(`items/${id}`), {
-    onSuccess: (res, id) => {
-      // Invalidate specific item.
-      queryClient.invalidateQueries([t.ITEM, id]);
-
-      // Common invalidate queries.
-      commonInvalidateQueries(queryClient);
-    },
-    ...props,
-  });
-}
-
-/**
- * Deletes multiple items in bulk.
- */
-export function useBulkDeleteItems(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation(
-    ({
+  return useMutation({
+    mutationFn: ({
       ids,
       skipUndeletable = false,
     }: {
       ids: number[];
       skipUndeletable?: boolean;
-    }) =>
-      apiRequest.post('items/bulk-delete', {
-        ids,
-        skip_undeletable: skipUndeletable,
-      }),
-    {
-      onSuccess: () => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
-    },
-  );
+    }) => bulkDeleteItems(fetcher, { ids, skipUndeletable } as BulkDeleteItemsBody),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...props,
+  });
 }
 
-/**
- * Validates which items can be deleted in bulk.
- */
-export function useValidateBulkDeleteItems(props) {
-  const apiRequest = useApiRequest();
+export function useValidateBulkDeleteItems(
+  props?: UseMutationOptions<ValidateBulkDeleteItemsResponse, Error, number[]>
+) {
+  const fetcher = useApiFetcher();
 
-  return useMutation(
-    (ids: number[]) =>
-      apiRequest.post('items/validate-bulk-delete', { ids }).then((res) => transformToCamelCase(res.data)),
-    {
-      ...props,
-    },
-  );
+  return useMutation({
+    mutationFn: (ids: number[]) =>
+      validateBulkDeleteItems(fetcher, { ids, skipUndeletable: false } as BulkDeleteItemsBody).then(
+        (res) => transformToCamelCase(res as Record<string, unknown>) as ValidateBulkDeleteItemsResponse
+      ),
+    ...props,
+  });
 }
 
-/**
- * Activate the given item.
- */
-export function useActivateItem(props) {
+export function useActivateItem(
+  props?: UseMutationOptions<void, Error, number>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation((id) => apiRequest.post(`items/${id}/activate`), {
-    onSuccess: (res, id) => {
-      // Invalidate specific item.
-      queryClient.invalidateQueries([t.ITEM, id]);
-
-      // Common invalidate queries.
+  return useMutation({
+    mutationFn: (id: number) => activateItem(fetcher, id),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: [t.ITEM, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,
   });
 }
 
-/**
- * Inactivate the given item.
- */
-export function useInactivateItem(props) {
+export function useInactivateItem(
+  props?: UseMutationOptions<void, Error, number>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation((id) => apiRequest.post(`items/${id}/inactivate`), {
-    onSuccess: (res, id) => {
-      // Invalidate specific item.
-      queryClient.invalidateQueries([t.ITEM, id]);
-
-      // Common invalidate queries.
+  return useMutation({
+    mutationFn: (id: number) => inactivateItem(fetcher, id),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: [t.ITEM, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,
   });
 }
 
-// Transformes items response.
-const transformItemsResponse = (response) => {
-  return {
-    items: response.data.items,
-    pagination: transformPagination(
-      transformResponse(response.data.pagination),
-    ),
-    filterMeta: transformResponse(response.data.filter_meta),
+function transformItemsList(res: ItemsListResponse): ItemsListResult {
+  const data = res as {
+    items?: unknown[];
+    pagination?: unknown;
+    filter_meta?: Record<string, unknown>;
   };
-};
+  return {
+    items: data?.items ?? [],
+    pagination: transformPagination(
+      transformResponse(data?.pagination ?? {})
+    ) as typeof DEFAULT_PAGINATION,
+    filterMeta: transformResponse(data?.filter_meta ?? {}) as Record<string, unknown>,
+  };
+}
 
-/**
- * Retrieves items list.
- */
-export function useItems(query, props) {
-  return useRequestQuery(
-    [t.ITEMS, query],
-    {
-      method: 'get',
-      url: 'items',
-      params: { ...query },
-    },
-    {
-      select: transformItemsResponse,
-      defaultData: {
-        items: [],
-        pagination: DEFAULT_PAGINATION,
-        filterMeta: {},
-      },
-      ...props,
-    },
-  );
+export function useItems(
+  query?: Record<string, unknown>,
+  props?: Omit<UseQueryOptions<ItemsListResult>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ITEMS, query],
+    queryFn: () =>
+      (fetchItems as (f: ReturnType<typeof useApiFetcher>, q?: Record<string, unknown>) => Promise<ItemsListResponse>)(
+        fetcher,
+        query
+      ).then(transformItemsList),
+    ...props,
+  });
 }
 
 export function useRefreshItems() {
   const queryClient = useQueryClient();
-
   return {
-    refresh: () => {
-      queryClient.invalidateQueries(t.ITEMS);
-    },
+    refresh: () => queryClient.invalidateQueries({ queryKey: [t.ITEMS] }),
   };
 }
 
-/**
- * Retrieve details of the given item.
- * @param {number} id - Item id.
- */
-export function useItem(id, props) {
-  return useRequestQuery(
-    [t.ITEM, id],
-    {
-      method: 'get',
-      url: `items/${id}`,
-    },
-    {
-      select: (response) => response.data,
-      defaultData: {},
-      ...props,
-    },
-  );
+export function useItem(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<Item>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ITEM, id],
+    queryFn: () => fetchItem(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
 }
 
-export function useItemAssociatedInvoiceTransactions(id, props) {
-  return useRequestQuery(
-    [t.ITEM_ASSOCIATED_WITH_INVOICES, id],
-    {
-      method: 'get',
-      url: `items/${id}/invoices`,
-    },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
+export function useItemAssociatedInvoiceTransactions(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<unknown[]>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ITEM_ASSOCIATED_WITH_INVOICES, id],
+    queryFn: () => fetchItemInvoices(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
 }
 
-export function useItemAssociatedEstimateTransactions(id, props) {
-  return useRequestQuery(
-    [t.ITEM_ASSOCIATED_WITH_ESTIMATES, id],
-    {
-      method: 'get',
-      url: `items/${id}/estimates`,
-    },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
+export function useItemAssociatedEstimateTransactions(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<unknown[]>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ITEM_ASSOCIATED_WITH_ESTIMATES, id],
+    queryFn: () => fetchItemEstimates(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
 }
 
-export function useItemAssociatedReceiptTransactions(id, props) {
-  return useRequestQuery(
-    [t.ITEM_ASSOCIATED_WITH_RECEIPTS, id],
-    {
-      method: 'get',
-      url: `items/${id}/receipts`,
-    },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
-}
-export function useItemAssociatedBillTransactions(id, props) {
-  return useRequestQuery(
-    [t.ITEMS_ASSOCIATED_WITH_BILLS, id],
-    {
-      method: 'get',
-      url: `items/${id}/bills`,
-    },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
+export function useItemAssociatedReceiptTransactions(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<unknown[]>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ITEM_ASSOCIATED_WITH_RECEIPTS, id],
+    queryFn: () => fetchItemReceipts(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
 }
 
-export function useItemWarehouseLocation(id, props) {
-  return useRequestQuery(
-    [t.ITEM_WAREHOUSES_LOCATION, id],
-    {
-      method: 'get',
-      url: `items/${id}/warehouses`,
-    },
-    {
-      select: (res) => res.data.item_warehouses,
-      defaultData: [],
-      ...props,
-    },
-  );
+export function useItemAssociatedBillTransactions(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<unknown[]>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ITEMS_ASSOCIATED_WITH_BILLS, id],
+    queryFn: () => fetchItemBills(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
 }
 
-/**
- *
- * @param {*} id
- * @param {*} query
- * @param {*} props
- * @returns
- */
-export function useItemInventoryCost(query, props) {
+export function useItemWarehouseLocation(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<unknown[]>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ITEM_WAREHOUSES_LOCATION, id],
+    queryFn: () => fetchItemWarehouses(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
+}
+
+export function useItemInventoryCost(
+  query?: Record<string, unknown>,
+  props?: Omit<UseQueryOptions<unknown[]>, 'queryKey' | 'queryFn'>
+) {
   return useRequestQuery(
     [t.ITEM_INVENTORY_COST, query],
+    { method: 'get', url: 'inventory-cost/items', params: { ...query } },
     {
-      method: 'get',
-      url: `inventory-cost/items`,
-      params: { ...query },
-    },
-    {
-      select: (res) => res.data.costs,
+      select: (res: { data?: { costs?: unknown[] } }) => res.data?.costs ?? [],
       defaultData: [],
       ...props,
-    },
+    }
   );
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 const Authentication = {
   AUTH_METADATA_PAGE: 'AUTH_META_PAGE',
 };
@@ -56,6 +55,7 @@ const ITEMS = {
   ITEMS: 'ITEMS',
   ITEM: 'ITEM',
   ITEMS_CATEGORIES: 'ITEMS_CATEGORIES',
+  ITEM_CATEGORY: 'ITEM_CATEGORY',
   ITEM_ASSOCIATED_WITH_INVOICES: 'ITEM_ASSOCIATED_WITH_INVOICES',
   ITEM_ASSOCIATED_WITH_ESTIMATES: 'ITEM_ASSOCIATED_WITH_ESTIMATES',
   ITEM_ASSOCIATED_WITH_RECEIPTS: 'ITEM_ASSOCIATED_WITH_RECEIPTS',
@@ -245,7 +245,7 @@ export const API_KEYS = {
   API_KEYS: 'API_KEYS',
 };
 
-export default {
+const t = {
   ...Authentication,
   ...ACCOUNTS,
   ...BILLS,
@@ -281,4 +281,6 @@ export default {
   ...TAX_RATES,
   ...EXCHANGE_RATE,
   ...API_KEYS,
-};
+} as const;
+
+export default t;

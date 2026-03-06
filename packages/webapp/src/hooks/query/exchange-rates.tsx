@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import QUERY_TYPES from './types';
 import useApiRequest from '../useRequest';
 
@@ -18,9 +18,9 @@ export function useLatestExchangeRate(
 ) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
-    [QUERY_TYPES.EXCHANGE_RATE, toCurrency, fromCurrency],
-    () =>
+  return useQuery({
+    queryKey: [QUERY_TYPES.EXCHANGE_RATE, toCurrency, fromCurrency],
+    queryFn: () =>
       apiRequest
         .http({
           url: `/api/exchange_rates/latest`,
@@ -31,6 +31,6 @@ export function useLatestExchangeRate(
           },
         })
         .then((res) => res.data),
-    props,
-  );
+    ...props,
+  });
 }

@@ -4,7 +4,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 import useApiRequest from '../useRequest';
 import { transformToCamelCase } from '@/utils';
 import { downloadFile, useDownloadFile } from '../useDownloadFile';
@@ -22,8 +22,8 @@ export function useImportFileUpload(props = {}) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post(`import/file`, values), {
-    onSuccess: (res, id) => {
+  return useMutation({ mutationFn: (values) => apiRequest.post(`import/file`, values),
+        onSuccess: (res, id) => {
       // Invalidate queries.
     },
     ...props,
@@ -34,11 +34,9 @@ export function useImportFileMapping(props = {}) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([importId, values]) =>
+  return useMutation({ mutationFn: ([importId, values]) =>
       apiRequest.post(`import/${importId}/mapping`, values),
-    {
-      onSuccess: (res, id) => {
+          onSuccess: (res, id) => {
         // Invalidate queries.
         queryClient.invalidateQueries([QueryKeys.ImportPreview]);
         queryClient.invalidateQueries([QueryKeys.ImportFileMeta]);
@@ -52,22 +50,26 @@ export function useImportFilePreview(importId: string, props = {}) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useQuery([QueryKeys.ImportPreview, importId], () =>
-    apiRequest
-      .get(`import/${importId}/preview`)
-      .then((res) => transformToCamelCase(res.data)),
-  );
+  return useQuery({
+    queryKey: [QueryKeys.ImportPreview, importId],
+    queryFn: () =>
+      apiRequest
+        .get(`import/${importId}/preview`)
+        .then((res) => transformToCamelCase(res.data)),
+  });
 }
 
 export function useImportFileMeta(importId: string, props = {}) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useQuery([QueryKeys.ImportFileMeta, importId], () =>
-    apiRequest
-      .get(`import/${importId}`)
-      .then((res) => transformToCamelCase(res.data)),
-  );
+  return useQuery({
+    queryKey: [QueryKeys.ImportFileMeta, importId],
+    queryFn: () =>
+      apiRequest
+        .get(`import/${importId}`)
+        .then((res) => transformToCamelCase(res.data)),
+  });
 }
 
 /**
@@ -77,10 +79,8 @@ export function useImportFileProcess(props = {}) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (importId) => apiRequest.post(`import/${importId}/import`),
-    {
-      onSuccess: (res, id) => {
+  return useMutation({ mutationFn: (importId) => apiRequest.post(`import/${importId}/import`),
+          onSuccess: (res, id) => {
         // Invalidate queries.
         invalidateResourcesOnImport(queryClient, res.data.resource);
       },

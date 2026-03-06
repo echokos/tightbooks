@@ -31,7 +31,7 @@ export default function Login() {
     loginMutate({
       email: values.crediential,
       password: values.password,
-    }).catch(({ response }) => {
+    }).catch((response) => {
       const { data: error } = response;
       const toastMessages = transformLoginErrorsToToasts(error);
 

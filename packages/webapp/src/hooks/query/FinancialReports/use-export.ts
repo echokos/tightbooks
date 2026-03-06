@@ -2,7 +2,7 @@
 import { downloadFile } from '@/hooks/useDownloadFile';
 import useApiRequest from '@/hooks/useRequest';
 import { AxiosError } from 'axios';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 interface ResourceExportValues {
   resource: string;
