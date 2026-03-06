@@ -18,6 +18,7 @@ export * from './expenses';
 export * from './manual-journals';
 export * from './roles';
 export * from './users';
+export * from './dashboard';
 export * from './settings';
 export * from './organization';
 export * from './subscription';
@@ -42,6 +43,7 @@ export * from './landed-cost';
 export * from './generic-resource';
 export * from './cashflow-accounts';
 export * from './bank-rules';
+export * from './reports';
 
 /**
  * Utility types for request/response types from schema paths.

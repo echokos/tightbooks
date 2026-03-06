@@ -28,3 +28,10 @@ export type OpResponseBody<O> = O extends {
   : O extends { responses: { 201: { content: { 'application/json': infer R } } } }
     ? R
     : unknown;
+
+/** Response body for operations that return application/json+table (report table format). */
+export type OpResponseBodyTable<O> = O extends {
+  responses: { 200: { content: { 'application/json+table': infer R } } };
+}
+  ? R
+  : unknown;
