@@ -20,40 +20,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/auth/signup/verify/resend": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Resend the signup confirmation message */
-        post: operations["AuthedController_resendSignupConfirm"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/account": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Retrieve the authenticated account */
-        get: operations["AuthedController_getAuthedAcccount"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/auth/signin": {
         parameters: {
             query?: never;
@@ -148,6 +114,40 @@ export interface paths {
         };
         /** Get auth metadata (e.g. signup disabled) */
         get: operations["AuthController_meta"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signup/verify/resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resend the signup confirmation message */
+        post: operations["AuthedController_resendSignupConfirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve the authenticated account */
+        get: operations["AuthedController_getAuthedAcccount"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2848,6 +2848,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get bills that can be applied with this vendor credit. */
         get: operations["VendorCreditApplyBillsController_getVendorCreditToApplyBills"];
         put?: never;
         post?: never;
@@ -2866,6 +2867,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Apply vendor credit to the given bills. */
         post: operations["VendorCreditApplyBillsController_applyVendorCreditToBills"];
         delete?: never;
         options?: never;
@@ -2883,6 +2885,7 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
+        /** Remove an applied bill from the vendor credit. */
         delete: operations["VendorCreditApplyBillsController_deleteAppliedBillToVendorCredit"];
         options?: never;
         head?: never;
@@ -2896,6 +2899,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get bills already applied to this vendor credit. */
         get: operations["VendorCreditApplyBillsController_getAppliedBillsToVendorCredit"];
         put?: never;
         post?: never;
@@ -2993,24 +2997,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/vendor-credits/{vendorCreditId}/refund": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Retrieve the vendor credit refunds graph. */
-        get: operations["VendorCreditsRefundController_getVendorCreditRefunds"];
-        put?: never;
-        /** Create a refund for the given vendor credit. */
-        post: operations["VendorCreditsRefundController_createRefundVendorCredit"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/vendor-credits/refunds/{refundCreditId}": {
         parameters: {
             query?: never;
@@ -3024,6 +3010,24 @@ export interface paths {
         post?: never;
         /** Delete a refund for the given vendor credit. */
         delete: operations["VendorCreditsRefundController_deleteRefundVendorCredit"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/vendor-credits/{vendorCreditId}/refund": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve the vendor credit refunds graph. */
+        get: operations["VendorCreditsRefundController_getVendorCreditRefunds"];
+        put?: never;
+        /** Create a refund for the given vendor credit. */
+        post: operations["VendorCreditsRefundController_createRefundVendorCredit"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -3209,7 +3213,7 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Uncategorize bank transactions. */
+        /** Uncategorize bank transactions in bulk. */
         delete: operations["BankingCategorizeController_uncategorizeTransactionsBulk"];
         options?: never;
         head?: never;
@@ -4518,23 +4522,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/contacts/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get contact by ID (customer or vendor) */
-        get: operations["ContactsController_getContact"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/contacts/auto-complete": {
         parameters: {
             query?: never;
@@ -4544,6 +4531,23 @@ export interface paths {
         };
         /** Get the auto-complete contacts */
         get: operations["ContactsController_getAutoComplete"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/contacts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get contact by ID (customer or vendor) */
+        get: operations["ContactsController_getContact"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4590,6 +4594,80 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AuthSigninResponseDto: {
+            /** @description JWT access token */
+            accessToken: string;
+            /** @description Organization ID */
+            organizationId: string;
+            /** @description Tenant ID */
+            tenantId: number;
+            /** @description User ID */
+            userId: number;
+        };
+        AuthMetaResponseDto: {
+            /** @description Whether signup is disabled */
+            signupDisabled: boolean;
+        };
+        AuthSigninDto: {
+            /**
+             * @description User password
+             * @example password123
+             */
+            password: string;
+            /**
+             * @description User email address
+             * @example user@example.com
+             */
+            email: string;
+        };
+        AuthSignupDto: {
+            /**
+             * @description User first name
+             * @example John
+             */
+            firstName: string;
+            /**
+             * @description User last name
+             * @example Doe
+             */
+            lastName: string;
+            /**
+             * @description User email address
+             * @example john.doe@example.com
+             */
+            email: string;
+            /**
+             * @description User password
+             * @example password123
+             */
+            password: string;
+        };
+        AuthSignupVerifyDto: {
+            /**
+             * @description User email address
+             * @example user@example.com
+             */
+            email: string;
+            /**
+             * @description Signup confirmation token from email
+             * @example confirmation-token
+             */
+            token: string;
+        };
+        AuthSendResetPasswordDto: {
+            /**
+             * @description User email address to send reset link to
+             * @example user@example.com
+             */
+            email: string;
+        };
+        AuthResetPasswordDto: {
+            /**
+             * @description New password
+             * @example new-password
+             */
+            password: string;
+        };
         ApiKeyResponseDto: {
             /**
              * @description API key ID
@@ -10230,6 +10308,34 @@ export interface components {
              */
             adjustment: number;
         };
+        ApplyVendorCreditToBillEntryDto: {
+            /**
+             * @description Bill ID to apply vendor credit to
+             * @example 1
+             */
+            billId: number;
+            /**
+             * @description Amount to apply
+             * @example 100.5
+             */
+            amount: number;
+        };
+        ApplyVendorCreditToBillsDto: {
+            /**
+             * @description Entries of bill ID and amount to apply
+             * @example [
+             *       {
+             *         "billId": 1,
+             *         "amount": 100.5
+             *       },
+             *       {
+             *         "billId": 2,
+             *         "amount": 50
+             *       }
+             *     ]
+             */
+            entries: components["schemas"]["ApplyVendorCreditToBillEntryDto"][];
+        };
         BillPaymentEntryResponseDto: {
             /**
              * @description The payment amount formatted
@@ -10887,6 +10993,77 @@ export interface components {
              */
             uncategorizedTransactionId?: number;
         };
+        GetAutofillCategorizeTransactionResponseDto: {
+            /**
+             * @description Assigned credit/debit account ID from recognition
+             * @example 10
+             */
+            creditAccountId?: number;
+            /**
+             * @description Bank account ID (debit)
+             * @example 5
+             */
+            debitAccountId?: number;
+            /**
+             * @description Total amount of uncategorized transactions
+             * @example -150.5
+             */
+            amount: number;
+            /**
+             * @description Formatted amount
+             * @example $150.50
+             */
+            formattedAmount: string;
+            /**
+             * @description Transaction date
+             * @example 2024-01-15
+             */
+            date: string;
+            /**
+             * @description Formatted date
+             * @example Jan 15, 2024
+             */
+            formattedDate: string;
+            /**
+             * @description Whether the transaction is recognized by a rule
+             * @example true
+             */
+            isRecognized: boolean;
+            /**
+             * @description Bank rule ID that recognized the transaction
+             * @example 1
+             */
+            recognizedByRuleId?: number;
+            /**
+             * @description Bank rule name that recognized the transaction
+             * @example Salary Rule
+             */
+            recognizedByRuleName?: string;
+            /**
+             * @description Reference number
+             * @example REF-001
+             */
+            referenceNo?: string;
+            /**
+             * @description Transaction type (category)
+             * @example other_expense
+             */
+            transactionType: string;
+            /**
+             * @description Whether this is a deposit transaction
+             * @example false
+             */
+            isDepositTransaction: boolean;
+            /**
+             * @description Whether this is a withdrawal transaction
+             * @example true
+             */
+            isWithdrawalTransaction: boolean;
+            /** @description Assigned payee from recognition */
+            payee?: string;
+            /** @description Assigned memo from recognition */
+            memo?: string;
+        };
         GetPendingTransactionResponseDto: {
             /** @description Transaction amount */
             amount: number;
@@ -11259,17 +11436,6 @@ export interface components {
              */
             bankRuleName: string;
         };
-        ExcludeBankTransactionsBulkDto: {
-            /**
-             * @description IDs of uncategorized bank transactions to exclude or unexclude
-             * @example [
-             *       1,
-             *       2,
-             *       3
-             *     ]
-             */
-            ids: number[];
-        };
         GetExcludedBankTransactionResponseDto: {
             /** @description Transaction amount (positive for deposit, negative for withdrawal) */
             amount: number;
@@ -11330,7 +11496,79 @@ export interface components {
             /** @description Assigned formatted category from recognized transaction */
             assignedCategoryFormatted?: string;
         };
+        ExcludeBankTransactionsBulkDto: {
+            /**
+             * @description IDs of uncategorized bank transactions to exclude or unexclude
+             * @example [
+             *       1,
+             *       2,
+             *       3
+             *     ]
+             */
+            ids: number[];
+        };
+        MatchedTransactionItemDto: {
+            /**
+             * @description Transaction amount
+             * @example 100.5
+             */
+            amount: number;
+            /**
+             * @description Formatted amount
+             * @example $100.50
+             */
+            amountFormatted: string;
+            /**
+             * @description Transaction date
+             * @example 2024-01-15
+             */
+            date: string;
+            /**
+             * @description Formatted date
+             * @example Jan 15, 2024
+             */
+            dateFormatted: string;
+            /**
+             * @description Reference number
+             * @example REF-001
+             */
+            referenceNo: string;
+            /**
+             * @description Transaction number
+             * @example TXN-001
+             */
+            transactionNo: string;
+            /**
+             * @description Transaction ID
+             * @example 1
+             */
+            transactionId: number;
+            /**
+             * @description Transaction type
+             * @example SaleInvoice
+             */
+            transactionType: string;
+        };
+        GetMatchedTransactionsResponseDto: {
+            /** @description Perfect matches (amount and date match) */
+            perfectMatches: components["schemas"]["MatchedTransactionItemDto"][];
+            /** @description Possible matches (candidates) */
+            possibleMatches: components["schemas"]["MatchedTransactionItemDto"][];
+            /**
+             * @description Total pending amount
+             * @example 500
+             */
+            totalPending: number;
+        };
         MatchBankTransactionDto: {
+            /**
+             * @description Uncategorized transaction IDs to match
+             * @example [
+             *       1,
+             *       2
+             *     ]
+             */
+            uncategorizedTransactions: number[];
             /**
              * @description The entries to match
              * @example [
@@ -11391,6 +11629,1496 @@ export interface components {
         };
         TransactionsLockingDto: Record<string, never>;
         CancelTransactionsLockingDto: Record<string, never>;
+        NumberFormatQueryDto: {
+            /**
+             * @description Number of decimal places to display
+             * @example 2
+             */
+            precision?: number;
+            /**
+             * @description Whether to divide the number by 1000
+             * @example false
+             */
+            divideOn1000?: boolean;
+            /**
+             * @description Whether to show zero values
+             * @example true
+             */
+            showZero?: boolean;
+            /**
+             * @description How to format money values
+             * @example total
+             * @enum {string}
+             */
+            formatMoney?: "total" | "always" | "none";
+            /**
+             * @description How to format negative numbers
+             * @example parentheses
+             * @enum {string}
+             */
+            negativeFormat?: "parentheses" | "mines";
+        };
+        BalanceSheetQueryResponseDto: {
+            /**
+             * @description Column display type
+             * @enum {string}
+             */
+            displayColumnsType: "total" | "date_periods";
+            /**
+             * @description Column grouping
+             * @enum {string}
+             */
+            displayColumnsBy: "day" | "month" | "year" | "quarter";
+            /** @description Start date */
+            fromDate: string;
+            /** @description End date */
+            toDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Exclude zero balance accounts */
+            noneZero: boolean;
+            /** @description Exclude accounts with no transactions */
+            noneTransactions: boolean;
+            /**
+             * @description Accounting basis
+             * @enum {string}
+             */
+            basis: "cash" | "accrual";
+            /** @description Account IDs to include */
+            accountIds: number[];
+            /** @description Show percentage of column */
+            percentageOfColumn: boolean;
+            /** @description Show percentage of row */
+            percentageOfRow: boolean;
+            /** @description Include previous period */
+            previousPeriod: boolean;
+            /** @description Show previous period amount change */
+            previousPeriodAmountChange: boolean;
+            /** @description Show previous period percentage change */
+            previousPeriodPercentageChange: boolean;
+            /** @description Include previous year */
+            previousYear: boolean;
+            /** @description Show previous year amount change */
+            previousYearAmountChange: boolean;
+            /** @description Show previous year percentage change */
+            previousYearPercentageChange: boolean;
+        };
+        FinancialReportTotalDto: {
+            /** @description Numeric amount */
+            amount: number;
+            /** @description Formatted amount string */
+            formattedAmount: string;
+            /** @description Currency code */
+            currencyCode: string;
+            /** @description Date associated with the total */
+            date?: Record<string, never>;
+        };
+        FinancialReportPercentageDto: {
+            /** @description Percentage amount */
+            amount: number;
+            /** @description Formatted percentage string */
+            formattedAmount: string;
+        };
+        BalanceSheetDataNodeDto: {
+            /** @description Node identifier (string for aggregates, number for accounts) */
+            id: Record<string, never>;
+            /** @description Account or category name */
+            name: string;
+            /**
+             * @description Type of node
+             * @enum {string}
+             */
+            nodeType: "AGGREGATE" | "ACCOUNTS" | "ACCOUNT" | "NET_INCOME";
+            /** @description Node type alias */
+            type?: string;
+            /** @description Total amount information */
+            total: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Horizontal totals for date periods */
+            horizontalTotals?: components["schemas"]["FinancialReportTotalDto"][];
+            /** @description Percentage of row */
+            percentageRow?: components["schemas"]["FinancialReportPercentageDto"];
+            /** @description Percentage of column */
+            percentageColumn?: components["schemas"]["FinancialReportPercentageDto"];
+            /** @description Previous period total */
+            previousPeriod?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Previous period change */
+            previousPeriodChange?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Previous period percentage */
+            previousPeriodPercentage?: components["schemas"]["FinancialReportPercentageDto"];
+            /** @description Previous year total */
+            previousYear?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Previous year change */
+            previousYearChange?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Previous year percentage */
+            previousYearPercentage?: components["schemas"]["FinancialReportPercentageDto"];
+            /** @description Account code */
+            code?: string;
+            /** @description Display index */
+            index?: number;
+            /** @description Parent account ID */
+            parentAccountId?: number;
+            /** @description Child nodes */
+            children?: components["schemas"]["BalanceSheetDataNodeDto"][];
+        };
+        BalanceSheetMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted as-of date */
+            formattedAsDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        BalanceSheetResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["BalanceSheetQueryResponseDto"];
+            /** @description Hierarchical balance sheet data */
+            data: components["schemas"]["BalanceSheetDataNodeDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["BalanceSheetMetaDto"];
+        };
+        FinancialTableColumnDto: {
+            /** @description Column key */
+            key: string;
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        FinancialTableCellDto: {
+            /** @description Cell key */
+            key: string;
+            /** @description Cell value */
+            value: string;
+        };
+        FinancialTableRowDto: {
+            /** @description Cell data for this row */
+            cells: components["schemas"]["FinancialTableCellDto"][];
+            /** @description Row type classifications */
+            rowTypes: string[];
+            /** @description Row identifier */
+            id: Record<string, never>;
+            /** @description Child rows */
+            children?: components["schemas"]["FinancialTableRowDto"][];
+        };
+        FinancialTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["FinancialTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
+        BalanceSheetTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["BalanceSheetQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["BalanceSheetMetaDto"];
+        };
+        PurchasesByItemsQueryResponseDto: {
+            /** @description Start date */
+            fromDate: string;
+            /** @description End date */
+            toDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Item IDs to include */
+            itemsIds: number[];
+            /** @description Vendor IDs to include */
+            vendorsIds: number[];
+        };
+        PurchasesByItemDto: {
+            /** @description Item ID */
+            id: number;
+            /** @description Item name */
+            name: string;
+            /** @description Item code */
+            code: string;
+            /** @description Item type */
+            type: string;
+            /** @description Quantity purchased */
+            quantity: number;
+            /** @description Total purchases amount */
+            total: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Average cost */
+            averageCost?: number;
+        };
+        PurchasesByItemsMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        PurchasesByItemsResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["PurchasesByItemsQueryResponseDto"];
+            /** @description Purchases by items */
+            data: components["schemas"]["PurchasesByItemDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["PurchasesByItemsMetaDto"];
+        };
+        PurchasesByItemsTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["PurchasesByItemsQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["PurchasesByItemsMetaDto"];
+        };
+        CustomerBalanceSummaryQueryResponseDto: {
+            /** @description As-of date */
+            asDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Customer IDs to include */
+            customersIds: number[];
+            /** @description Exclude zero balance customers */
+            noneZero: boolean;
+            /** @description Exclude inactive customers */
+            noneInactive: boolean;
+        };
+        CustomerBalanceDto: {
+            /** @description Customer ID */
+            customerId: number;
+            /** @description Customer name */
+            customerName: string;
+            /** @description Opening balance */
+            openingBalance?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Closing balance */
+            closingBalance: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Total debit */
+            totalDebit?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Total credit */
+            totalCredit?: components["schemas"]["FinancialReportTotalDto"];
+        };
+        CustomerBalanceSummaryMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted as-of date */
+            formattedAsDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        CustomerBalanceSummaryResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["CustomerBalanceSummaryQueryResponseDto"];
+            /** @description Customer balances */
+            data: components["schemas"]["CustomerBalanceDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["CustomerBalanceSummaryMetaDto"];
+        };
+        CustomerBalanceSummaryTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["CustomerBalanceSummaryQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["CustomerBalanceSummaryMetaDto"];
+        };
+        VendorBalanceSummaryQueryResponseDto: {
+            /** @description As-of date */
+            asDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Vendor IDs to include */
+            vendorsIds: number[];
+            /** @description Exclude zero balance vendors */
+            noneZero: boolean;
+            /** @description Exclude inactive vendors */
+            noneInactive: boolean;
+        };
+        VendorBalanceDto: {
+            /** @description Vendor ID */
+            vendorId: number;
+            /** @description Vendor name */
+            vendorName: string;
+            /** @description Opening balance */
+            openingBalance?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Closing balance */
+            closingBalance: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Total debit */
+            totalDebit?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Total credit */
+            totalCredit?: components["schemas"]["FinancialReportTotalDto"];
+        };
+        VendorBalanceSummaryMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted as-of date */
+            formattedAsDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        VendorBalanceSummaryResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["VendorBalanceSummaryQueryResponseDto"];
+            /** @description Vendor balances */
+            data: components["schemas"]["VendorBalanceDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["VendorBalanceSummaryMetaDto"];
+        };
+        VendorBalanceSummaryTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["VendorBalanceSummaryQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["VendorBalanceSummaryMetaDto"];
+        };
+        SalesByItemsQueryResponseDto: {
+            /** @description Start date */
+            fromDate: string;
+            /** @description End date */
+            toDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Item IDs to include */
+            itemsIds: number[];
+            /** @description Customer IDs to include */
+            customersIds: number[];
+        };
+        SalesByItemDto: {
+            /** @description Item ID */
+            id: number;
+            /** @description Item name */
+            name: string;
+            /** @description Item code */
+            code: string;
+            /** @description Item type */
+            type: string;
+            /** @description Quantity sold */
+            quantity: number;
+            /** @description Total sales amount */
+            total: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Average price */
+            averagePrice?: number;
+            /** @description COGS */
+            cogs?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Profit */
+            profit?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Profit percentage */
+            profitPercentage?: number;
+        };
+        SalesByItemsMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        SalesByItemsResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["SalesByItemsQueryResponseDto"];
+            /** @description Sales by items */
+            data: components["schemas"]["SalesByItemDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["SalesByItemsMetaDto"];
+        };
+        SalesByItemsTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["SalesByItemsQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["SalesByItemsMetaDto"];
+        };
+        GeneralLedgerQueryResponseDto: {
+            /** @description Start date */
+            fromDate: string;
+            /** @description End date */
+            toDate: string;
+            /**
+             * @description Accounting basis
+             * @enum {string}
+             */
+            basis: "cash" | "accrual";
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Exclude zero balance accounts */
+            noneZero: boolean;
+            /** @description Account IDs to include */
+            accountsIds: number[];
+        };
+        GeneralLedgerTransactionDto: {
+            /** @description Transaction date */
+            date: string;
+            /** @description Formatted date */
+            dateFormatted: string;
+            /** @description Reference type */
+            referenceType: string;
+            /** @description Reference ID */
+            referenceId: number;
+            /** @description Transaction number */
+            transactionNumber?: string;
+            /** @description Formatted transaction type */
+            transactionTypeFormatted: string;
+            /** @description Contact name */
+            contactName: string;
+            /** @description Contact type */
+            contactType: string;
+            /** @description Transaction type */
+            transactionType: string;
+            /** @description Transaction index */
+            index: number;
+            /** @description Transaction note */
+            note?: string;
+            /** @description Credit amount */
+            credit: number;
+            /** @description Debit amount */
+            debit: number;
+            /** @description Transaction amount */
+            amount: number;
+            /** @description Running balance */
+            runningBalance: number;
+            /** @description Formatted amount */
+            formattedAmount: string;
+            /** @description Formatted credit */
+            formattedCredit: string;
+            /** @description Formatted debit */
+            formattedDebit: string;
+            /** @description Formatted running balance */
+            formattedRunningBalance: string;
+            /** @description Currency code */
+            currencyCode: string;
+        };
+        GeneralLedgerAccountDto: {
+            /** @description Account ID */
+            id: number;
+            /** @description Account name */
+            name: string;
+            /** @description Account code */
+            code: string;
+            /** @description Account index */
+            index: number;
+            /** @description Parent account ID */
+            parentAccountId?: number;
+            /** @description Opening balance */
+            openingBalance: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Account transactions */
+            transactions: components["schemas"]["GeneralLedgerTransactionDto"][];
+            /** @description Closing balance */
+            closingBalance: components["schemas"]["FinancialReportTotalDto"];
+        };
+        GeneralLedgerMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        GeneralLedgerResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["GeneralLedgerQueryResponseDto"];
+            /** @description General ledger data */
+            data: components["schemas"]["GeneralLedgerAccountDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["GeneralLedgerMetaDto"];
+        };
+        GeneralLedgerTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["GeneralLedgerQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["GeneralLedgerMetaDto"];
+        };
+        TrialBalanceSheetQueryResponseDto: {
+            /** @description Start date */
+            fromDate: string;
+            /** @description End date */
+            toDate: string;
+            /** @description Account IDs to include */
+            accountIds: number[];
+            /** @description Exclude zero balance accounts */
+            noneZero: boolean;
+            /** @description Exclude accounts with no transactions */
+            noneTransactions: boolean;
+            /**
+             * @description Accounting basis
+             * @enum {string}
+             */
+            basis: "cash" | "accrual";
+            /**
+             * @description Column display type
+             * @enum {string}
+             */
+            displayColumnsType: "total" | "date_periods";
+            /**
+             * @description Column grouping
+             * @enum {string}
+             */
+            displayColumnsBy: "day" | "month" | "year" | "quarter";
+        };
+        TrialBalanceSheetAccountDto: {
+            /** @description Account ID */
+            id: number;
+            /** @description Account name */
+            name: string;
+            /** @description Account code */
+            code: string;
+            /** @description Opening balance */
+            openingBalance?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Closing balance */
+            closingBalance?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Debit total */
+            debitTotal?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Credit total */
+            creditTotal?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Debit/change */
+            debit?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Credit/change */
+            credit?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Period balance */
+            periodBalance?: components["schemas"]["FinancialReportTotalDto"];
+            /**
+             * @description Account normal
+             * @enum {string}
+             */
+            accountNormal?: "debit" | "credit";
+            /** @description Account index */
+            index?: number;
+        };
+        TrialBalanceSheetMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+            /**
+             * Format: date-time
+             * @description Opening balance at
+             */
+            openingBalanceAt?: string;
+            /**
+             * Format: date-time
+             * @description Closing balance at
+             */
+            closingBalanceAt?: string;
+            /** @description Formatted opening balance date */
+            formattedOpeningBalanceDate?: string;
+            /** @description Formatted closing balance date */
+            formattedClosingBalanceDate?: string;
+        };
+        TrialBalanceSheetResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["TrialBalanceSheetQueryResponseDto"];
+            /** @description Trial balance sheet data */
+            data: components["schemas"]["TrialBalanceSheetAccountDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["TrialBalanceSheetMetaDto"];
+        };
+        TrialBalanceSheetTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["TrialBalanceSheetQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["TrialBalanceSheetMetaDto"];
+        };
+        TransactionsByVendorQueryResponseDto: {
+            /** @description Start date */
+            fromDate: string;
+            /** @description End date */
+            toDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Vendor IDs to include */
+            vendorsIds: number[];
+            /** @description Exclude zero balance vendors */
+            noneZero: boolean;
+        };
+        VendorTransactionDto: {
+            /** @description Transaction date */
+            date: string;
+            /** @description Formatted date */
+            dateFormatted: string;
+            /** @description Transaction type */
+            transactionType: string;
+            /** @description Transaction number */
+            transactionNumber: string;
+            /** @description Reference type */
+            referenceType?: string;
+            /** @description Reference ID */
+            referenceId?: number;
+            /** @description Transaction description */
+            description?: string;
+            /** @description Transaction amount */
+            amount: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Running balance */
+            runningBalance: components["schemas"]["FinancialReportTotalDto"];
+        };
+        VendorWithTransactionsDto: {
+            /** @description Vendor ID */
+            vendorId: number;
+            /** @description Vendor name */
+            vendorName: string;
+            /** @description Opening balance */
+            openingBalance?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Vendor transactions */
+            transactions: components["schemas"]["VendorTransactionDto"][];
+            /** @description Closing balance */
+            closingBalance: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Total debit */
+            totalDebit?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Total credit */
+            totalCredit?: components["schemas"]["FinancialReportTotalDto"];
+        };
+        TransactionsByVendorMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        TransactionsByVendorResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["TransactionsByVendorQueryResponseDto"];
+            /** @description Vendors with transactions */
+            data: components["schemas"]["VendorWithTransactionsDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["TransactionsByVendorMetaDto"];
+        };
+        TransactionsByVendorTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["TransactionsByVendorQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["TransactionsByVendorMetaDto"];
+        };
+        TransactionsByCustomerQueryResponseDto: {
+            /** @description Start date */
+            fromDate: string;
+            /** @description End date */
+            toDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Customer IDs to include */
+            customersIds: number[];
+            /** @description Exclude zero balance customers */
+            noneZero: boolean;
+        };
+        CustomerTransactionDto: {
+            /** @description Transaction date */
+            date: string;
+            /** @description Formatted date */
+            dateFormatted: string;
+            /** @description Transaction type */
+            transactionType: string;
+            /** @description Transaction number */
+            transactionNumber: string;
+            /** @description Reference type */
+            referenceType?: string;
+            /** @description Reference ID */
+            referenceId?: number;
+            /** @description Transaction description */
+            description?: string;
+            /** @description Transaction amount */
+            amount: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Running balance */
+            runningBalance: components["schemas"]["FinancialReportTotalDto"];
+        };
+        CustomerWithTransactionsDto: {
+            /** @description Customer ID */
+            customerId: number;
+            /** @description Customer name */
+            customerName: string;
+            /** @description Opening balance */
+            openingBalance?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Customer transactions */
+            transactions: components["schemas"]["CustomerTransactionDto"][];
+            /** @description Closing balance */
+            closingBalance: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Total debit */
+            totalDebit?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Total credit */
+            totalCredit?: components["schemas"]["FinancialReportTotalDto"];
+        };
+        TransactionsByCustomerMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        TransactionsByCustomerResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["TransactionsByCustomerQueryResponseDto"];
+            /** @description Customers with transactions */
+            data: components["schemas"]["CustomerWithTransactionsDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["TransactionsByCustomerMetaDto"];
+        };
+        TransactionsByCustomerTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["TransactionsByCustomerQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["TransactionsByCustomerMetaDto"];
+        };
+        ARAgingSummaryQueryResponseDto: {
+            /** @description As-of date */
+            asDate: string;
+            /** @description Aging days before */
+            agingDaysBefore: number;
+            /** @description Number of aging periods */
+            agingPeriods: number;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Customer IDs to include */
+            customersIds: number[];
+            /** @description Branch IDs to include */
+            branchesIds: number[];
+            /** @description Exclude zero balance accounts */
+            noneZero: boolean;
+        };
+        ARAgingPeriodDto: {
+            /** @description From period date */
+            fromPeriod: string;
+            /** @description To period date */
+            toPeriod?: string;
+            /** @description Before days */
+            beforeDays: number;
+            /** @description To days */
+            toDays?: number;
+        };
+        ARAgingPeriodTotalDto: {
+            /** @description From period date */
+            fromPeriod: string;
+            /** @description To period date */
+            toPeriod?: string;
+            /** @description Before days */
+            beforeDays: number;
+            /** @description To days */
+            toDays?: number;
+            /** @description Period total */
+            total: components["schemas"]["FinancialReportTotalDto"];
+        };
+        ARAgingCustomerDto: {
+            /** @description Customer name */
+            customerName: string;
+            /** @description Current balance */
+            current: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Aging periods */
+            aging: components["schemas"]["ARAgingPeriodTotalDto"][];
+            /** @description Customer total */
+            total: components["schemas"]["FinancialReportTotalDto"];
+        };
+        ARAgingSummaryDataDto: {
+            /** @description Customers aging data */
+            customers: components["schemas"]["ARAgingCustomerDto"][];
+            /** @description Current total */
+            current: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Aging totals */
+            aging: components["schemas"]["ARAgingPeriodTotalDto"][];
+            /** @description Grand total */
+            total: components["schemas"]["FinancialReportTotalDto"];
+        };
+        ARAgingSummaryMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted as-of date */
+            formattedAsDate: string;
+        };
+        ARAgingSummaryResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["ARAgingSummaryQueryResponseDto"];
+            /** @description Aging columns definitions */
+            columns: components["schemas"]["ARAgingPeriodDto"][];
+            /** @description Aging summary data */
+            data: components["schemas"]["ARAgingSummaryDataDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["ARAgingSummaryMetaDto"];
+        };
+        ARAgingSummaryTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["ARAgingSummaryQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["ARAgingSummaryMetaDto"];
+        };
+        APAgingPeriodTotalDto: {
+            /** @description From period date */
+            fromPeriod: string;
+            /** @description To period date */
+            toPeriod?: string;
+            /** @description Before days */
+            beforeDays: number;
+            /** @description To days */
+            toDays?: number;
+            /** @description Period total */
+            total: components["schemas"]["FinancialReportTotalDto"];
+        };
+        APAgingVendorDto: {
+            /** @description Vendor name */
+            vendorName: string;
+            /** @description Current balance */
+            current: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Aging periods */
+            aging: components["schemas"]["APAgingPeriodTotalDto"][];
+            /** @description Vendor total */
+            total: components["schemas"]["FinancialReportTotalDto"];
+        };
+        APAgingSummaryDataDto: {
+            /** @description Vendors aging data */
+            vendors: components["schemas"]["APAgingVendorDto"][];
+            /** @description Current total */
+            current: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Aging totals */
+            aging: components["schemas"]["APAgingPeriodTotalDto"][];
+            /** @description Grand total */
+            total: components["schemas"]["FinancialReportTotalDto"];
+        };
+        APAgingSummaryMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted as-of date */
+            formattedAsDate: string;
+        };
+        APAgingSummaryResponseDto: {
+            /** @description Aging summary data */
+            data: components["schemas"]["APAgingSummaryDataDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["APAgingSummaryMetaDto"];
+        };
+        APAgingSummaryQueryResponseDto: {
+            /** @description As-of date */
+            asDate: string;
+            /** @description Aging days before */
+            agingDaysBefore: number;
+            /** @description Number of aging periods */
+            agingPeriods: number;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Vendor IDs to include */
+            vendorsIds: number[];
+            /** @description Branch IDs to include */
+            branchesIds: number[];
+            /** @description Exclude zero balance accounts */
+            noneZero: boolean;
+        };
+        APAgingSummaryTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["APAgingSummaryQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["APAgingSummaryMetaDto"];
+        };
+        InventoryItemDetailsQueryResponseDto: {
+            /** @description Start date */
+            fromDate: string;
+            /** @description End date */
+            toDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Item IDs to include */
+            itemsIds: number[];
+        };
+        InventoryItemTransactionDto: {
+            /** @description Transaction date */
+            date: string;
+            /** @description Formatted date */
+            dateFormatted: string;
+            /** @description Transaction type */
+            transactionType: string;
+            /** @description Reference ID */
+            referenceId: number;
+            /** @description Transaction number */
+            transactionNumber: string;
+            /** @description Transaction description */
+            description?: string;
+            /** @description Quantity */
+            quantity: number;
+            /** @description Rate */
+            rate: number;
+            /** @description Total amount */
+            total: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Running quantity */
+            runningQuantity: number;
+        };
+        InventoryItemDetailDto: {
+            /** @description Item ID */
+            id: number;
+            /** @description Item name */
+            name: string;
+            /** @description Item code */
+            code: string;
+            /** @description Opening quantity */
+            openingQuantity: number;
+            /** @description Closing quantity */
+            closingQuantity: number;
+            /** @description Item transactions */
+            transactions: components["schemas"]["InventoryItemTransactionDto"][];
+        };
+        InventoryItemDetailsMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        InventoryItemDetailsResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["InventoryItemDetailsQueryResponseDto"];
+            /** @description Inventory items with details */
+            data: components["schemas"]["InventoryItemDetailDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["InventoryItemDetailsMetaDto"];
+        };
+        InventoryItemDetailsTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["InventoryItemDetailsQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["InventoryItemDetailsMetaDto"];
+        };
+        InventoryValuationQueryResponseDto: {
+            /** @description As-of date */
+            asDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Item IDs to include */
+            itemsIds: number[];
+            /** @description Exclude zero quantity items */
+            noneZero: boolean;
+        };
+        InventoryValuationItemDto: {
+            /** @description Item ID */
+            id: number;
+            /** @description Item name */
+            name: string;
+            /** @description Item code */
+            code: string;
+            /** @description Item type */
+            type: string;
+            /** @description Quantity on hand */
+            quantityOnHand?: number;
+            /** @description Average cost */
+            averageCost?: number;
+            /** @description Total value */
+            totalValue?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Asset account name */
+            assetAccountName?: string;
+            /** @description Asset account code */
+            assetAccountCode?: string;
+        };
+        InventoryValuationMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted as-of date */
+            formattedAsDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        InventoryValuationResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["InventoryValuationQueryResponseDto"];
+            /** @description Inventory items valuation */
+            data: components["schemas"]["InventoryValuationItemDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["InventoryValuationMetaDto"];
+        };
+        InventoryValuationTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["InventoryValuationQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["InventoryValuationMetaDto"];
+        };
+        SalesTaxLiabilitySummaryQueryResponseDto: {
+            /** @description Start date */
+            fromDate: string;
+            /** @description End date */
+            toDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+        };
+        TaxRateSummaryDto: {
+            /** @description Tax rate ID */
+            id: number;
+            /** @description Tax rate name */
+            name: string;
+            /** @description Tax rate percentage */
+            rate: number;
+            /** @description Taxable amount */
+            taxableAmount: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Tax amount collected */
+            taxAmount: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Total sales (including tax) */
+            totalSales: components["schemas"]["FinancialReportTotalDto"];
+        };
+        SalesTaxLiabilitySummaryMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        SalesTaxLiabilitySummaryResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["SalesTaxLiabilitySummaryQueryResponseDto"];
+            /** @description Tax rate summaries */
+            data: components["schemas"]["TaxRateSummaryDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["SalesTaxLiabilitySummaryMetaDto"];
+        };
+        SalesTaxLiabilitySummaryTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["SalesTaxLiabilitySummaryQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["SalesTaxLiabilitySummaryMetaDto"];
+        };
+        JournalSheetQueryResponseDto: {
+            /** @description Start date */
+            fromDate: string;
+            /** @description End date */
+            toDate: string;
+            /** @description From range */
+            fromRange?: number;
+            /** @description To range */
+            toRange?: number;
+            /** @description Account IDs to include */
+            accountsIds: number[];
+            /** @description Number format settings */
+            numberFormat: Record<string, never>;
+        };
+        JournalEntryDto: {
+            /** @description Entry index */
+            index: number;
+            /** @description Entry note */
+            note?: string;
+            /** @description Contact name */
+            contactName?: string;
+            /** @description Contact type */
+            contactType?: string;
+            /** @description Account name */
+            accountName: string;
+            /** @description Account code */
+            accountCode: string;
+            /** @description Transaction number */
+            transactionNumber?: string;
+            /** @description Formatted credit */
+            formattedCredit: string;
+            /** @description Formatted debit */
+            formattedDebit: string;
+            /** @description Credit amount */
+            credit: number;
+            /** @description Debit amount */
+            debit: number;
+        };
+        JournalTransactionDto: {
+            /** @description Transaction date */
+            date: string;
+            /** @description Formatted date */
+            dateFormatted: string;
+            /** @description Transaction type */
+            transactionType: string;
+            /** @description Reference ID */
+            referenceId: number;
+            /** @description Formatted reference type */
+            referenceTypeFormatted: string;
+            /** @description Journal entries */
+            entries: components["schemas"]["JournalEntryDto"][];
+            /** @description Total credit */
+            credit: number;
+            /** @description Total debit */
+            debit: number;
+            /** @description Formatted total credit */
+            formattedCredit: string;
+            /** @description Formatted total debit */
+            formattedDebit: string;
+        };
+        JournalSheetMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        JournalSheetResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["JournalSheetQueryResponseDto"];
+            /** @description Journal transactions */
+            data: components["schemas"]["JournalTransactionDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["JournalSheetMetaDto"];
+        };
+        JournalSheetTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["JournalSheetQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["JournalSheetMetaDto"];
+        };
+        ProfitLossSheetQueryResponseDto: {
+            /**
+             * @description Column display type
+             * @enum {string}
+             */
+            display_columns_type: "total" | "date_periods";
+            /**
+             * @description Column grouping
+             * @enum {string}
+             */
+            display_columns_by: "day" | "month" | "year" | "quarter";
+            /** @description Start date */
+            from_date: string;
+            /** @description End date */
+            to_date: string;
+            /** @description Number format settings */
+            number_format: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Exclude zero balance accounts */
+            none_zero: boolean;
+            /** @description Exclude accounts with no transactions */
+            none_transactions: boolean;
+            /**
+             * @description Accounting basis
+             * @enum {string}
+             */
+            basis: "cash" | "accrual";
+            /** @description Account IDs to include */
+            accounts_ids: number[];
+            /** @description Show percentage of column */
+            percentage_column: boolean;
+            /** @description Show percentage of row */
+            percentage_row: boolean;
+            /** @description Show percentage of income */
+            percentage_income: boolean;
+            /** @description Show percentage of expense */
+            percentage_expense: boolean;
+            /** @description Include previous period */
+            previous_period: boolean;
+            /** @description Show previous period amount change */
+            previous_period_amount_change: boolean;
+            /** @description Show previous period percentage change */
+            previous_period_percentage_change: boolean;
+            /** @description Include previous year */
+            previous_year: boolean;
+            /** @description Show previous year amount change */
+            previous_year_amount_change: boolean;
+            /** @description Show previous year percentage change */
+            previous_year_percentage_change: boolean;
+        };
+        ProfitLossSheetDataNodeDto: {
+            /** @description Node identifier (string for aggregates, number for accounts) */
+            id: Record<string, never>;
+            /** @description Account or category name */
+            name: string;
+            /**
+             * @description Type of node
+             * @enum {string}
+             */
+            node_type: "ACCOUNTS" | "ACCOUNT" | "EQUATION" | "TOTAL";
+            /** @description Node type alias */
+            type?: string;
+            /** @description Total amount information */
+            total: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Horizontal totals for date periods */
+            horizontal_totals?: components["schemas"]["FinancialReportTotalDto"][];
+            /** @description Percentage of income */
+            percentage_income?: components["schemas"]["FinancialReportPercentageDto"];
+            /** @description Percentage of expense */
+            percentage_expense?: components["schemas"]["FinancialReportPercentageDto"];
+            /** @description Percentage of row */
+            percentage_row?: components["schemas"]["FinancialReportPercentageDto"];
+            /** @description Percentage of column */
+            percentage_column?: components["schemas"]["FinancialReportPercentageDto"];
+            /** @description Previous period total */
+            previous_period?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Previous period change */
+            previous_period_change?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Previous period percentage */
+            previous_period_percentage?: components["schemas"]["FinancialReportPercentageDto"];
+            /** @description Previous year total */
+            previous_year?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Previous year change */
+            previous_year_change?: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Previous year percentage */
+            previous_year_percentage?: components["schemas"]["FinancialReportPercentageDto"];
+            /** @description Account code */
+            code?: string;
+            /** @description Display index */
+            index?: number;
+            /** @description Child nodes */
+            children?: components["schemas"]["ProfitLossSheetDataNodeDto"][];
+        };
+        ProfitLossSheetMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formatted_from_date: string;
+            /** @description Formatted to date */
+            formatted_to_date: string;
+            /** @description Formatted date range */
+            formatted_date_range: string;
+        };
+        ProfitLossSheetResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["ProfitLossSheetQueryResponseDto"];
+            /** @description Hierarchical profit/loss data */
+            data: components["schemas"]["ProfitLossSheetDataNodeDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["ProfitLossSheetMetaDto"];
+        };
+        ProfitLossSheetTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["ProfitLossSheetQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["ProfitLossSheetMetaDto"];
+        };
+        CashflowStatementQueryResponseDto: {
+            /**
+             * @description Column display type
+             * @enum {string}
+             */
+            displayColumnsType: "total" | "date_periods";
+            /**
+             * @description Column grouping
+             * @enum {string}
+             */
+            displayColumnsBy: "day" | "month" | "year" | "quarter";
+            /** @description Start date */
+            fromDate: string;
+            /** @description End date */
+            toDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Exclude zero balance accounts */
+            noneZero: boolean;
+            /** @description Exclude accounts with no transactions */
+            noneTransactions: boolean;
+            /**
+             * @description Accounting basis
+             * @enum {string}
+             */
+            basis: "cash" | "accrual";
+            /** @description Account IDs to include */
+            accountIds: number[];
+        };
+        CashflowStatementDataNodeDto: {
+            /** @description Node identifier (string for aggregates, number for accounts) */
+            id: Record<string, never>;
+            /** @description Account or category name */
+            name: string;
+            /**
+             * @description Type of node
+             * @enum {string}
+             */
+            nodeType: "AGGREGATE" | "ACCOUNT" | "NET_INCOME" | "TOTAL";
+            /** @description Node type alias */
+            type?: string;
+            /** @description Total amount information */
+            total: components["schemas"]["FinancialReportTotalDto"];
+            /** @description Horizontal totals for date periods */
+            horizontalTotals?: components["schemas"]["FinancialReportTotalDto"][];
+            /** @description Account code */
+            code?: string;
+            /** @description Display index */
+            index?: number;
+            /** @description Child nodes */
+            children?: components["schemas"]["CashflowStatementDataNodeDto"][];
+        };
+        CashflowStatementMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        CashflowStatementResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["CashflowStatementQueryResponseDto"];
+            /** @description Hierarchical cashflow data */
+            data: components["schemas"]["CashflowStatementDataNodeDto"][];
+            /** @description Report metadata */
+            meta: components["schemas"]["CashflowStatementMetaDto"];
+        };
+        CashflowStatementTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["FinancialTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["CashflowStatementQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["CashflowStatementMetaDto"];
+        };
         RoleAbilityResponseDto: {
             /**
              * @description The subject of the ability
@@ -12007,6 +13735,141 @@ export interface operations {
             };
         };
     };
+    AuthController_signin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthSigninDto"];
+            };
+        };
+        responses: {
+            /** @description Sign-in successful. Returns access token and tenant/organization IDs. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSigninResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthSignupDto"];
+            };
+        };
+        responses: {
+            /** @description Sign-up initiated. Check email for confirmation. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_signupConfirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthSignupVerifyDto"];
+            };
+        };
+        responses: {
+            /** @description Signup confirmed successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_sendResetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthSendResetPasswordDto"];
+            };
+        };
+        responses: {
+            /** @description Reset password email sent if the account exists. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_resetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Reset password token from email link */
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthResetPasswordDto"];
+            };
+        };
+        responses: {
+            /** @description Password reset successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_meta: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Auth metadata for the login/signup page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthMetaResponseDto"];
+                };
+            };
+        };
+    };
     AuthedController_resendSignupConfirm: {
         parameters: {
             query?: never;
@@ -12047,209 +13910,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-        };
-    };
-    AuthController_signin: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /**
-                     * @description User email address
-                     * @example user@example.com
-                     */
-                    email: string;
-                    /**
-                     * @description User password
-                     * @example password123
-                     */
-                    password: string;
-                };
-            };
-        };
-        responses: {
-            /** @description Sign-in successful */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @description JWT access token */
-                        accessToken?: string;
-                        /** @description Organization ID */
-                        organizationId?: string;
-                        /** @description Tenant ID */
-                        tenantId?: number;
-                        /** @description User ID */
-                        userId?: number;
-                    };
-                };
-            };
-        };
-    };
-    AuthController_signup: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /**
-                     * @description User first name
-                     * @example John
-                     */
-                    firstName: string;
-                    /**
-                     * @description User last name
-                     * @example Doe
-                     */
-                    lastName: string;
-                    /**
-                     * Format: email
-                     * @description User email address
-                     * @example john.doe@example.com
-                     */
-                    email: string;
-                    /**
-                     * @description User password
-                     * @example password123
-                     */
-                    password: string;
-                };
-            };
-        };
-        responses: {
-            /** @description Sign-up initiated. Check email for confirmation. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AuthController_signupConfirm: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /**
-                     * @description User email address
-                     * @example user@example.com
-                     */
-                    email: string;
-                    /**
-                     * @description Signup confirmation token from email
-                     * @example confirmation-token
-                     */
-                    token: string;
-                };
-            };
-        };
-        responses: {
-            /** @description Signup confirmed successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AuthController_sendResetPassword: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /**
-                     * @description User email address to send reset link to
-                     * @example user@example.com
-                     */
-                    email: string;
-                };
-            };
-        };
-        responses: {
-            /** @description Reset password email sent if the account exists. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AuthController_resetPassword: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Reset password token from email link */
-                token: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /**
-                     * @description New password
-                     * @example new-password
-                     */
-                    password: string;
-                };
-            };
-        };
-        responses: {
-            /** @description Password reset successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AuthController_meta: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Auth metadata for the login/signup page */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @description Whether signup is disabled */
-                        signupDisabled?: boolean;
-                    };
-                };
             };
         };
     };
@@ -17366,6 +19026,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description List of payment transactions for the bill. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -17401,7 +19062,10 @@ export interface operations {
     };
     BillsController_getDueBills: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Filter due bills by vendor ID. */
+                vendor_id?: number;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -17413,6 +19077,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description List of due bills (optionally filtered by vendor). */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -18539,7 +20204,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplyVendorCreditToBillsDto"];
+            };
+        };
         responses: {
             201: {
                 headers: {
@@ -18807,6 +20476,54 @@ export interface operations {
             };
         };
     };
+    VendorCreditsRefundController_getRefundVendorCreditTransaction: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                refundCreditId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    VendorCreditsRefundController_deleteRefundVendorCredit: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                refundCreditId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     VendorCreditsRefundController_getVendorCreditRefunds: {
         parameters: {
             query?: never;
@@ -18852,54 +20569,6 @@ export interface operations {
         };
         responses: {
             201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    VendorCreditsRefundController_getRefundVendorCreditTransaction: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
-                Authorization: string;
-                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
-                "organization-id": string;
-            };
-            path: {
-                refundCreditId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    VendorCreditsRefundController_deleteRefundVendorCredit: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
-                Authorization: string;
-                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
-                "organization-id": string;
-            };
-            path: {
-                refundCreditId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -19163,7 +20832,10 @@ export interface operations {
     };
     BankingCategorizeController_uncategorizeTransactionsBulk: {
         parameters: {
-            query?: never;
+            query: {
+                /** @description Array of uncategorized transaction IDs to uncategorize */
+                uncategorizedTransactionIds: unknown[];
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -19194,6 +20866,7 @@ export interface operations {
                 "organization-id": string;
             };
             path: {
+                /** @description Uncategorized transaction ID to uncategorize */
                 id: number;
             };
             cookie?: never;
@@ -19358,8 +21031,8 @@ export interface operations {
     BankingUncategorizedTransactionsController_getAutofillCategorizeTransaction: {
         parameters: {
             query: {
-                /** @description Uncategorize transactions ID */
-                uncategorizeTransactionsId: number;
+                /** @description Uncategorized transaction IDs to get autofill for */
+                uncategorizedTransactionIds: unknown[];
             };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
@@ -19367,10 +21040,7 @@ export interface operations {
                 /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
                 "organization-id": string;
             };
-            path: {
-                /** @description Bank account ID */
-                accountId: number;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -19380,7 +21050,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["GetAutofillCategorizeTransactionResponseDto"];
+                };
             };
         };
     };
@@ -19707,6 +21379,7 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Bank transactions excluded successfully. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -19733,6 +21406,7 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Bank transactions unexcluded successfully. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -19743,7 +21417,22 @@ export interface operations {
     };
     BankingTransactionsExcludeController_getExcludedBankTransactions: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Page size */
+                pageSize?: number;
+                /** @description Filter by bank account ID */
+                accountId?: number;
+                /** @description Minimum date (ISO) */
+                minDate?: string;
+                /** @description Maximum date (ISO) */
+                maxDate?: string;
+                /** @description Minimum amount */
+                minAmount?: number;
+                /** @description Maximum amount */
+                maxAmount?: number;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -19819,7 +21508,18 @@ export interface operations {
     BankingMatchingController_getMatchedTransactions: {
         parameters: {
             query: {
-                uncategorizedTransactionIds: string[];
+                /** @description Uncategorized transaction IDs to match */
+                uncategorizedTransactionIds: unknown[];
+                /** @description Filter from date */
+                fromDate?: string;
+                /** @description Filter to date */
+                toDate?: string;
+                /** @description Minimum amount */
+                minAmount?: number;
+                /** @description Maximum amount */
+                maxAmount?: number;
+                /** @description Transaction type filter */
+                transactionType?: string;
             };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
@@ -19832,11 +21532,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Matched transactions (perfect and possible matches). */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["GetMatchedTransactionsResponseDto"];
+                };
             };
         };
     };
@@ -20651,14 +22354,805 @@ export interface operations {
                      *       }
                      *     }
                      */
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BalanceSheetResponseDto"];
                     /**
                      * @example {
+                     *       "table": {
+                     *         "columns": [
+                     *           {
+                     *             "key": "name",
+                     *             "label": "Account name",
+                     *             "cell_index": 0
+                     *           },
+                     *           {
+                     *             "key": "total",
+                     *             "label": "Total",
+                     *             "children": [],
+                     *             "cell_index": 1
+                     *           }
+                     *         ],
+                     *         "rows": [
+                     *           {
+                     *             "cells": [
+                     *               {
+                     *                 "key": "name",
+                     *                 "value": "Assets"
+                     *               },
+                     *               {
+                     *                 "key": "total",
+                     *                 "value": "-$122,623.00"
+                     *               }
+                     *             ],
+                     *             "row_types": [
+                     *               "AGGREGATE"
+                     *             ],
+                     *             "id": "ASSETS",
+                     *             "children": [
+                     *               {
+                     *                 "cells": [
+                     *                   {
+                     *                     "key": "name",
+                     *                     "value": "Current Asset"
+                     *                   },
+                     *                   {
+                     *                     "key": "total",
+                     *                     "value": "-$122,623.00"
+                     *                   }
+                     *                 ],
+                     *                 "row_types": [
+                     *                   "AGGREGATE"
+                     *                 ],
+                     *                 "id": "CURRENT_ASSETS",
+                     *                 "children": [
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Cash and cash equivalents"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": "-$500.00"
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "AGGREGATE"
+                     *                     ],
+                     *                     "id": "CASH_EQUIVALENTS",
+                     *                     "children": [
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Undeposited Funds"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": ""
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1002
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Petty Cash"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": ""
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1003
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Bank Account"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": "-500.00"
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1000
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Saving Bank Account"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": ""
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1001
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Chase - Plaid Checking"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": ""
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1034
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Total Cash and cash equivalents"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": "-$500.00"
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "TOTAL"
+                     *                         ],
+                     *                         "id": "CASH_EQUIVALENTS"
+                     *                       }
+                     *                     ]
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Accounts Receivable"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": "$0.00"
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "AGGREGATE"
+                     *                     ],
+                     *                     "id": "ACCOUNTS_RECEIVABLE",
+                     *                     "children": [
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Accounts Receivable (A/R)"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": ""
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1006
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Total Accounts Receivable"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": "$0.00"
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "TOTAL"
+                     *                         ],
+                     *                         "id": "ACCOUNTS_RECEIVABLE"
+                     *                       }
+                     *                     ]
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Inventory"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": "$1,000.00"
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "AGGREGATE"
+                     *                     ],
+                     *                     "id": "INVENTORY",
+                     *                     "children": [
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Inventory Asset"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": "1,000.00"
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1007
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Total Inventory"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": "$1,000.00"
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "TOTAL"
+                     *                         ],
+                     *                         "id": "INVENTORY"
+                     *                       }
+                     *                     ]
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Other current assets"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": "-$123,123.00"
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "AGGREGATE"
+                     *                     ],
+                     *                     "id": "OTHER_CURRENT_ASSET",
+                     *                     "children": [
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Prepaid Expenses"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": "-123,123.00"
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1030
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Total Other current assets"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": "-$123,123.00"
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "TOTAL"
+                     *                         ],
+                     *                         "id": "OTHER_CURRENT_ASSET"
+                     *                       }
+                     *                     ]
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Total Current Asset"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": "-$122,623.00"
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "TOTAL"
+                     *                     ],
+                     *                     "id": "CURRENT_ASSETS"
+                     *                   }
+                     *                 ]
+                     *               },
+                     *               {
+                     *                 "cells": [
+                     *                   {
+                     *                     "key": "name",
+                     *                     "value": "Fixed Asset"
+                     *                   },
+                     *                   {
+                     *                     "key": "total",
+                     *                     "value": "$0.00"
+                     *                   }
+                     *                 ],
+                     *                 "row_types": [
+                     *                   "AGGREGATE"
+                     *                 ],
+                     *                 "id": "FIXED_ASSET",
+                     *                 "children": [
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Computer Equipment"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": ""
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "ACCOUNT"
+                     *                     ],
+                     *                     "id": 1004
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Office Equipment"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": ""
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "ACCOUNT"
+                     *                     ],
+                     *                     "id": 1005
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Total Fixed Asset"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": "$0.00"
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "TOTAL"
+                     *                     ],
+                     *                     "id": "FIXED_ASSET"
+                     *                   }
+                     *                 ]
+                     *               },
+                     *               {
+                     *                 "cells": [
+                     *                   {
+                     *                     "key": "name",
+                     *                     "value": "Non-Current Assets"
+                     *                   },
+                     *                   {
+                     *                     "key": "total",
+                     *                     "value": "$0.00"
+                     *                   }
+                     *                 ],
+                     *                 "row_types": [
+                     *                   "AGGREGATE"
+                     *                 ],
+                     *                 "id": "NON_CURRENT_ASSET"
+                     *               },
+                     *               {
+                     *                 "cells": [
+                     *                   {
+                     *                     "key": "name",
+                     *                     "value": "Total Assets"
+                     *                   },
+                     *                   {
+                     *                     "key": "total",
+                     *                     "value": "-$122,623.00"
+                     *                   }
+                     *                 ],
+                     *                 "row_types": [
+                     *                   "TOTAL"
+                     *                 ],
+                     *                 "id": "ASSETS"
+                     *               }
+                     *             ]
+                     *           },
+                     *           {
+                     *             "cells": [
+                     *               {
+                     *                 "key": "name",
+                     *                 "value": "Liabilities and Equity"
+                     *               },
+                     *               {
+                     *                 "key": "total",
+                     *                 "value": "-$122,623.00"
+                     *               }
+                     *             ],
+                     *             "row_types": [
+                     *               "AGGREGATE"
+                     *             ],
+                     *             "id": "LIABILITY_EQUITY",
+                     *             "children": [
+                     *               {
+                     *                 "cells": [
+                     *                   {
+                     *                     "key": "name",
+                     *                     "value": "Liabilities"
+                     *                   },
+                     *                   {
+                     *                     "key": "total",
+                     *                     "value": "-$8,700.00"
+                     *                   }
+                     *                 ],
+                     *                 "row_types": [
+                     *                   "AGGREGATE"
+                     *                 ],
+                     *                 "id": "LIABILITY",
+                     *                 "children": [
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Current Liabilties"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": "-$8,700.00"
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "AGGREGATE"
+                     *                     ],
+                     *                     "id": "CURRENT_LIABILITY",
+                     *                     "children": [
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Accounts Payable (A/P)"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": "1,300.00"
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1008
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Tax Payable"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": ""
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1013
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Owner A Drawings"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": ""
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1009
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Loan"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": "-10,000.00"
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1010
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Opening Balance Liabilities"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": ""
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1011
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Revenue Received in Advance"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": ""
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1012
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Unearned Revenue"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": ""
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "ACCOUNT"
+                     *                         ],
+                     *                         "id": 1029
+                     *                       },
+                     *                       {
+                     *                         "cells": [
+                     *                           {
+                     *                             "key": "name",
+                     *                             "value": "Total Current Liabilties"
+                     *                           },
+                     *                           {
+                     *                             "key": "total",
+                     *                             "value": "-$8,700.00"
+                     *                           }
+                     *                         ],
+                     *                         "row_types": [
+                     *                           "TOTAL"
+                     *                         ],
+                     *                         "id": "CURRENT_LIABILITY"
+                     *                       }
+                     *                     ]
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Long-Term Liabilities"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": "$0.00"
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "AGGREGATE"
+                     *                     ],
+                     *                     "id": "LOGN_TERM_LIABILITY"
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Non-Current Liabilities"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": "$0.00"
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "AGGREGATE"
+                     *                     ],
+                     *                     "id": "NON_CURRENT_LIABILITY"
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Total Liabilities"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": "-$8,700.00"
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "TOTAL"
+                     *                     ],
+                     *                     "id": "LIABILITY"
+                     *                   }
+                     *                 ]
+                     *               },
+                     *               {
+                     *                 "cells": [
+                     *                   {
+                     *                     "key": "name",
+                     *                     "value": "Equity"
+                     *                   },
+                     *                   {
+                     *                     "key": "total",
+                     *                     "value": "-$113,923.00"
+                     *                   }
+                     *                 ],
+                     *                 "row_types": [
+                     *                   "AGGREGATE"
+                     *                 ],
+                     *                 "id": "EQUITY",
+                     *                 "children": [
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Retained Earnings"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": ""
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "ACCOUNT"
+                     *                     ],
+                     *                     "id": 1014
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Opening Balance Equity"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": ""
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "ACCOUNT"
+                     *                     ],
+                     *                     "id": 1015
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Owner's Equity"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": ""
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "ACCOUNT"
+                     *                     ],
+                     *                     "id": 1016
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Drawings"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": ""
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "ACCOUNT"
+                     *                     ],
+                     *                     "id": 1017
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Net Income"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": "-$113,923.00"
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "NET_INCOME"
+                     *                     ],
+                     *                     "id": "NET_INCOME"
+                     *                   },
+                     *                   {
+                     *                     "cells": [
+                     *                       {
+                     *                         "key": "name",
+                     *                         "value": "Total Equity"
+                     *                       },
+                     *                       {
+                     *                         "key": "total",
+                     *                         "value": "-$113,923.00"
+                     *                       }
+                     *                     ],
+                     *                     "row_types": [
+                     *                       "TOTAL"
+                     *                     ],
+                     *                     "id": "EQUITY"
+                     *                   }
+                     *                 ]
+                     *               },
+                     *               {
+                     *                 "cells": [
+                     *                   {
+                     *                     "key": "name",
+                     *                     "value": "Total Liabilities and Equity"
+                     *                   },
+                     *                   {
+                     *                     "key": "total",
+                     *                     "value": "-$122,623.00"
+                     *                   }
+                     *                 ],
+                     *                 "row_types": [
+                     *                   "TOTAL"
+                     *                 ],
+                     *                 "id": "LIABILITY_EQUITY"
+                     *               }
+                     *             ]
+                     *           }
+                     *         ]
+                     *       },
                      *       "query": {
                      *         "display_columns_type": "total",
                      *         "display_columns_by": "year",
                      *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-16",
+                     *         "to_date": "2025-06-21",
                      *         "number_format": {
                      *           "precision": 2,
                      *           "divide_on1000": false,
@@ -20679,1995 +23173,18 @@ export interface operations {
                      *         "previous_year_amount_change": false,
                      *         "previous_year_percentage_change": false
                      *       },
-                     *       "data": [
-                     *         {
-                     *           "name": "Assets",
-                     *           "id": "ASSETS",
-                     *           "node_type": "AGGREGATE",
-                     *           "type": "AGGREGATE",
-                     *           "total": {
-                     *             "amount": -122623,
-                     *             "formatted_amount": "-$122,623.00",
-                     *             "currency_code": "USD"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "name": "Current Asset",
-                     *               "id": "CURRENT_ASSETS",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": -122623,
-                     *                 "formatted_amount": "-$122,623.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "name": "Cash and cash equivalents",
-                     *                   "id": "CASH_EQUIVALENTS",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": -500,
-                     *                     "formatted_amount": "-$500.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1002,
-                     *                       "index": 1,
-                     *                       "name": "Undeposited Funds",
-                     *                       "code": "10003",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1003,
-                     *                       "index": 1,
-                     *                       "name": "Petty Cash",
-                     *                       "code": "10004",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1000,
-                     *                       "index": 1,
-                     *                       "name": "Bank Account",
-                     *                       "code": "10001",
-                     *                       "total": {
-                     *                         "amount": -500,
-                     *                         "formatted_amount": "-500.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1001,
-                     *                       "index": 1,
-                     *                       "name": "Saving Bank Account",
-                     *                       "code": "10002",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1034,
-                     *                       "index": null,
-                     *                       "name": "Chase - Plaid Checking",
-                     *                       "code": "",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Accounts Receivable",
-                     *                   "id": "ACCOUNTS_RECEIVABLE",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "$0.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1006,
-                     *                       "index": 1,
-                     *                       "name": "Accounts Receivable (A/R)",
-                     *                       "code": "10007",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Inventory",
-                     *                   "id": "INVENTORY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 1000,
-                     *                     "formatted_amount": "$1,000.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1007,
-                     *                       "index": 1,
-                     *                       "name": "Inventory Asset",
-                     *                       "code": "10008",
-                     *                       "total": {
-                     *                         "amount": 1000,
-                     *                         "formatted_amount": "1,000.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Other current assets",
-                     *                   "id": "OTHER_CURRENT_ASSET",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": -123123,
-                     *                     "formatted_amount": "-$123,123.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1030,
-                     *                       "index": 1,
-                     *                       "name": "Prepaid Expenses",
-                     *                       "code": "100010",
-                     *                       "total": {
-                     *                         "amount": -123123,
-                     *                         "formatted_amount": "-123,123.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 }
-                     *               ]
-                     *             },
-                     *             {
-                     *               "name": "Fixed Asset",
-                     *               "id": "FIXED_ASSET",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "id": 1004,
-                     *                   "index": 1,
-                     *                   "name": "Computer Equipment",
-                     *                   "code": "10005",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1005,
-                     *                   "index": 1,
-                     *                   "name": "Office Equipment",
-                     *                   "code": "10006",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 }
-                     *               ]
-                     *             },
-                     *             {
-                     *               "name": "Non-Current Assets",
-                     *               "id": "NON_CURRENT_ASSET",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": []
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "name": "Liabilities and Equity",
-                     *           "id": "LIABILITY_EQUITY",
-                     *           "node_type": "AGGREGATE",
-                     *           "type": "AGGREGATE",
-                     *           "total": {
-                     *             "amount": -122623,
-                     *             "formatted_amount": "-$122,623.00",
-                     *             "currency_code": "USD"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "name": "Liabilities",
-                     *               "id": "LIABILITY",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": -8700,
-                     *                 "formatted_amount": "-$8,700.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "name": "Current Liabilties",
-                     *                   "id": "CURRENT_LIABILITY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": -8700,
-                     *                     "formatted_amount": "-$8,700.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1008,
-                     *                       "index": 1,
-                     *                       "name": "Accounts Payable (A/P)",
-                     *                       "code": "20001",
-                     *                       "total": {
-                     *                         "amount": 1300,
-                     *                         "formatted_amount": "1,300.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1013,
-                     *                       "index": 1,
-                     *                       "name": "Tax Payable",
-                     *                       "code": "20006",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1009,
-                     *                       "index": 1,
-                     *                       "name": "Owner A Drawings",
-                     *                       "code": "20002",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1010,
-                     *                       "index": 1,
-                     *                       "name": "Loan",
-                     *                       "code": "20003",
-                     *                       "total": {
-                     *                         "amount": -10000,
-                     *                         "formatted_amount": "-10,000.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1011,
-                     *                       "index": 1,
-                     *                       "name": "Opening Balance Liabilities",
-                     *                       "code": "20004",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1012,
-                     *                       "index": 1,
-                     *                       "name": "Revenue Received in Advance",
-                     *                       "code": "20005",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1029,
-                     *                       "index": 1,
-                     *                       "name": "Unearned Revenue",
-                     *                       "code": "50005",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Long-Term Liabilities",
-                     *                   "id": "LOGN_TERM_LIABILITY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "$0.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "name": "Non-Current Liabilities",
-                     *                   "id": "NON_CURRENT_LIABILITY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "$0.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": []
-                     *                 }
-                     *               ]
-                     *             },
-                     *             {
-                     *               "name": "Equity",
-                     *               "id": "EQUITY",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": -113923,
-                     *                 "formatted_amount": "-$113,923.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "id": 1014,
-                     *                   "index": 1,
-                     *                   "name": "Retained Earnings",
-                     *                   "code": "30001",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1015,
-                     *                   "index": 1,
-                     *                   "name": "Opening Balance Equity",
-                     *                   "code": "30002",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1016,
-                     *                   "index": 1,
-                     *                   "name": "Owner's Equity",
-                     *                   "code": "30003",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1017,
-                     *                   "index": 1,
-                     *                   "name": "Drawings",
-                     *                   "code": "30003",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": "NET_INCOME",
-                     *                   "name": "Net Income",
-                     *                   "node_type": "NET_INCOME",
-                     *                   "total": {
-                     *                     "amount": -113923,
-                     *                     "formatted_amount": "-$113,923.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": []
-                     *                 }
-                     *               ]
-                     *             }
-                     *           ]
-                     *         }
-                     *       ],
                      *       "meta": {
                      *         "organization_name": "BIGCAPITAL, INC",
                      *         "base_currency": "USD",
                      *         "date_format": "DD MMM yyyy",
                      *         "is_cost_compute_running": false,
                      *         "sheet_name": "Balance Sheet Statement",
-                     *         "formatted_as_date": "2025/06/16",
-                     *         "formatted_date_range": "As 2025/06/16"
+                     *         "formatted_as_date": "2025/06/21",
+                     *         "formatted_date_range": "As 2025/06/21"
                      *       }
                      *     }
                      */
-                    "application/json+table": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "display_columns_type": "total",
-                     *         "display_columns_by": "year",
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-16",
-                     *         "number_format": {
-                     *           "precision": 2,
-                     *           "divide_on1000": false,
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "negative_format": "mines"
-                     *         },
-                     *         "none_zero": false,
-                     *         "none_transactions": false,
-                     *         "basis": "cash",
-                     *         "account_ids": [],
-                     *         "percentage_of_column": false,
-                     *         "percentage_of_row": false,
-                     *         "previous_period": false,
-                     *         "previous_period_amount_change": false,
-                     *         "previous_period_percentage_change": false,
-                     *         "previous_year": false,
-                     *         "previous_year_amount_change": false,
-                     *         "previous_year_percentage_change": false
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "name": "Assets",
-                     *           "id": "ASSETS",
-                     *           "node_type": "AGGREGATE",
-                     *           "type": "AGGREGATE",
-                     *           "total": {
-                     *             "amount": -122623,
-                     *             "formatted_amount": "-$122,623.00",
-                     *             "currency_code": "USD"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "name": "Current Asset",
-                     *               "id": "CURRENT_ASSETS",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": -122623,
-                     *                 "formatted_amount": "-$122,623.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "name": "Cash and cash equivalents",
-                     *                   "id": "CASH_EQUIVALENTS",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": -500,
-                     *                     "formatted_amount": "-$500.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1002,
-                     *                       "index": 1,
-                     *                       "name": "Undeposited Funds",
-                     *                       "code": "10003",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1003,
-                     *                       "index": 1,
-                     *                       "name": "Petty Cash",
-                     *                       "code": "10004",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1000,
-                     *                       "index": 1,
-                     *                       "name": "Bank Account",
-                     *                       "code": "10001",
-                     *                       "total": {
-                     *                         "amount": -500,
-                     *                         "formatted_amount": "-500.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1001,
-                     *                       "index": 1,
-                     *                       "name": "Saving Bank Account",
-                     *                       "code": "10002",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1034,
-                     *                       "index": null,
-                     *                       "name": "Chase - Plaid Checking",
-                     *                       "code": "",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Accounts Receivable",
-                     *                   "id": "ACCOUNTS_RECEIVABLE",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "$0.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1006,
-                     *                       "index": 1,
-                     *                       "name": "Accounts Receivable (A/R)",
-                     *                       "code": "10007",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Inventory",
-                     *                   "id": "INVENTORY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 1000,
-                     *                     "formatted_amount": "$1,000.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1007,
-                     *                       "index": 1,
-                     *                       "name": "Inventory Asset",
-                     *                       "code": "10008",
-                     *                       "total": {
-                     *                         "amount": 1000,
-                     *                         "formatted_amount": "1,000.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Other current assets",
-                     *                   "id": "OTHER_CURRENT_ASSET",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": -123123,
-                     *                     "formatted_amount": "-$123,123.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1030,
-                     *                       "index": 1,
-                     *                       "name": "Prepaid Expenses",
-                     *                       "code": "100010",
-                     *                       "total": {
-                     *                         "amount": -123123,
-                     *                         "formatted_amount": "-123,123.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 }
-                     *               ]
-                     *             },
-                     *             {
-                     *               "name": "Fixed Asset",
-                     *               "id": "FIXED_ASSET",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "id": 1004,
-                     *                   "index": 1,
-                     *                   "name": "Computer Equipment",
-                     *                   "code": "10005",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1005,
-                     *                   "index": 1,
-                     *                   "name": "Office Equipment",
-                     *                   "code": "10006",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 }
-                     *               ]
-                     *             },
-                     *             {
-                     *               "name": "Non-Current Assets",
-                     *               "id": "NON_CURRENT_ASSET",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": []
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "name": "Liabilities and Equity",
-                     *           "id": "LIABILITY_EQUITY",
-                     *           "node_type": "AGGREGATE",
-                     *           "type": "AGGREGATE",
-                     *           "total": {
-                     *             "amount": -122623,
-                     *             "formatted_amount": "-$122,623.00",
-                     *             "currency_code": "USD"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "name": "Liabilities",
-                     *               "id": "LIABILITY",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": -8700,
-                     *                 "formatted_amount": "-$8,700.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "name": "Current Liabilties",
-                     *                   "id": "CURRENT_LIABILITY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": -8700,
-                     *                     "formatted_amount": "-$8,700.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1008,
-                     *                       "index": 1,
-                     *                       "name": "Accounts Payable (A/P)",
-                     *                       "code": "20001",
-                     *                       "total": {
-                     *                         "amount": 1300,
-                     *                         "formatted_amount": "1,300.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1013,
-                     *                       "index": 1,
-                     *                       "name": "Tax Payable",
-                     *                       "code": "20006",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1009,
-                     *                       "index": 1,
-                     *                       "name": "Owner A Drawings",
-                     *                       "code": "20002",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1010,
-                     *                       "index": 1,
-                     *                       "name": "Loan",
-                     *                       "code": "20003",
-                     *                       "total": {
-                     *                         "amount": -10000,
-                     *                         "formatted_amount": "-10,000.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1011,
-                     *                       "index": 1,
-                     *                       "name": "Opening Balance Liabilities",
-                     *                       "code": "20004",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1012,
-                     *                       "index": 1,
-                     *                       "name": "Revenue Received in Advance",
-                     *                       "code": "20005",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1029,
-                     *                       "index": 1,
-                     *                       "name": "Unearned Revenue",
-                     *                       "code": "50005",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Long-Term Liabilities",
-                     *                   "id": "LOGN_TERM_LIABILITY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "$0.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "name": "Non-Current Liabilities",
-                     *                   "id": "NON_CURRENT_LIABILITY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "$0.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": []
-                     *                 }
-                     *               ]
-                     *             },
-                     *             {
-                     *               "name": "Equity",
-                     *               "id": "EQUITY",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": -113923,
-                     *                 "formatted_amount": "-$113,923.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "id": 1014,
-                     *                   "index": 1,
-                     *                   "name": "Retained Earnings",
-                     *                   "code": "30001",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1015,
-                     *                   "index": 1,
-                     *                   "name": "Opening Balance Equity",
-                     *                   "code": "30002",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1016,
-                     *                   "index": 1,
-                     *                   "name": "Owner's Equity",
-                     *                   "code": "30003",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1017,
-                     *                   "index": 1,
-                     *                   "name": "Drawings",
-                     *                   "code": "30003",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": "NET_INCOME",
-                     *                   "name": "Net Income",
-                     *                   "node_type": "NET_INCOME",
-                     *                   "total": {
-                     *                     "amount": -113923,
-                     *                     "formatted_amount": "-$113,923.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": []
-                     *                 }
-                     *               ]
-                     *             }
-                     *           ]
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Balance Sheet Statement",
-                     *         "formatted_as_date": "2025/06/16",
-                     *         "formatted_date_range": "As 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/pdf": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "display_columns_type": "total",
-                     *         "display_columns_by": "year",
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-16",
-                     *         "number_format": {
-                     *           "precision": 2,
-                     *           "divide_on1000": false,
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "negative_format": "mines"
-                     *         },
-                     *         "none_zero": false,
-                     *         "none_transactions": false,
-                     *         "basis": "cash",
-                     *         "account_ids": [],
-                     *         "percentage_of_column": false,
-                     *         "percentage_of_row": false,
-                     *         "previous_period": false,
-                     *         "previous_period_amount_change": false,
-                     *         "previous_period_percentage_change": false,
-                     *         "previous_year": false,
-                     *         "previous_year_amount_change": false,
-                     *         "previous_year_percentage_change": false
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "name": "Assets",
-                     *           "id": "ASSETS",
-                     *           "node_type": "AGGREGATE",
-                     *           "type": "AGGREGATE",
-                     *           "total": {
-                     *             "amount": -122623,
-                     *             "formatted_amount": "-$122,623.00",
-                     *             "currency_code": "USD"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "name": "Current Asset",
-                     *               "id": "CURRENT_ASSETS",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": -122623,
-                     *                 "formatted_amount": "-$122,623.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "name": "Cash and cash equivalents",
-                     *                   "id": "CASH_EQUIVALENTS",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": -500,
-                     *                     "formatted_amount": "-$500.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1002,
-                     *                       "index": 1,
-                     *                       "name": "Undeposited Funds",
-                     *                       "code": "10003",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1003,
-                     *                       "index": 1,
-                     *                       "name": "Petty Cash",
-                     *                       "code": "10004",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1000,
-                     *                       "index": 1,
-                     *                       "name": "Bank Account",
-                     *                       "code": "10001",
-                     *                       "total": {
-                     *                         "amount": -500,
-                     *                         "formatted_amount": "-500.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1001,
-                     *                       "index": 1,
-                     *                       "name": "Saving Bank Account",
-                     *                       "code": "10002",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1034,
-                     *                       "index": null,
-                     *                       "name": "Chase - Plaid Checking",
-                     *                       "code": "",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Accounts Receivable",
-                     *                   "id": "ACCOUNTS_RECEIVABLE",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "$0.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1006,
-                     *                       "index": 1,
-                     *                       "name": "Accounts Receivable (A/R)",
-                     *                       "code": "10007",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Inventory",
-                     *                   "id": "INVENTORY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 1000,
-                     *                     "formatted_amount": "$1,000.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1007,
-                     *                       "index": 1,
-                     *                       "name": "Inventory Asset",
-                     *                       "code": "10008",
-                     *                       "total": {
-                     *                         "amount": 1000,
-                     *                         "formatted_amount": "1,000.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Other current assets",
-                     *                   "id": "OTHER_CURRENT_ASSET",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": -123123,
-                     *                     "formatted_amount": "-$123,123.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1030,
-                     *                       "index": 1,
-                     *                       "name": "Prepaid Expenses",
-                     *                       "code": "100010",
-                     *                       "total": {
-                     *                         "amount": -123123,
-                     *                         "formatted_amount": "-123,123.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 }
-                     *               ]
-                     *             },
-                     *             {
-                     *               "name": "Fixed Asset",
-                     *               "id": "FIXED_ASSET",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "id": 1004,
-                     *                   "index": 1,
-                     *                   "name": "Computer Equipment",
-                     *                   "code": "10005",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1005,
-                     *                   "index": 1,
-                     *                   "name": "Office Equipment",
-                     *                   "code": "10006",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 }
-                     *               ]
-                     *             },
-                     *             {
-                     *               "name": "Non-Current Assets",
-                     *               "id": "NON_CURRENT_ASSET",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": []
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "name": "Liabilities and Equity",
-                     *           "id": "LIABILITY_EQUITY",
-                     *           "node_type": "AGGREGATE",
-                     *           "type": "AGGREGATE",
-                     *           "total": {
-                     *             "amount": -122623,
-                     *             "formatted_amount": "-$122,623.00",
-                     *             "currency_code": "USD"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "name": "Liabilities",
-                     *               "id": "LIABILITY",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": -8700,
-                     *                 "formatted_amount": "-$8,700.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "name": "Current Liabilties",
-                     *                   "id": "CURRENT_LIABILITY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": -8700,
-                     *                     "formatted_amount": "-$8,700.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1008,
-                     *                       "index": 1,
-                     *                       "name": "Accounts Payable (A/P)",
-                     *                       "code": "20001",
-                     *                       "total": {
-                     *                         "amount": 1300,
-                     *                         "formatted_amount": "1,300.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1013,
-                     *                       "index": 1,
-                     *                       "name": "Tax Payable",
-                     *                       "code": "20006",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1009,
-                     *                       "index": 1,
-                     *                       "name": "Owner A Drawings",
-                     *                       "code": "20002",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1010,
-                     *                       "index": 1,
-                     *                       "name": "Loan",
-                     *                       "code": "20003",
-                     *                       "total": {
-                     *                         "amount": -10000,
-                     *                         "formatted_amount": "-10,000.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1011,
-                     *                       "index": 1,
-                     *                       "name": "Opening Balance Liabilities",
-                     *                       "code": "20004",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1012,
-                     *                       "index": 1,
-                     *                       "name": "Revenue Received in Advance",
-                     *                       "code": "20005",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1029,
-                     *                       "index": 1,
-                     *                       "name": "Unearned Revenue",
-                     *                       "code": "50005",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Long-Term Liabilities",
-                     *                   "id": "LOGN_TERM_LIABILITY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "$0.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "name": "Non-Current Liabilities",
-                     *                   "id": "NON_CURRENT_LIABILITY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "$0.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": []
-                     *                 }
-                     *               ]
-                     *             },
-                     *             {
-                     *               "name": "Equity",
-                     *               "id": "EQUITY",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": -113923,
-                     *                 "formatted_amount": "-$113,923.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "id": 1014,
-                     *                   "index": 1,
-                     *                   "name": "Retained Earnings",
-                     *                   "code": "30001",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1015,
-                     *                   "index": 1,
-                     *                   "name": "Opening Balance Equity",
-                     *                   "code": "30002",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1016,
-                     *                   "index": 1,
-                     *                   "name": "Owner's Equity",
-                     *                   "code": "30003",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1017,
-                     *                   "index": 1,
-                     *                   "name": "Drawings",
-                     *                   "code": "30003",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": "NET_INCOME",
-                     *                   "name": "Net Income",
-                     *                   "node_type": "NET_INCOME",
-                     *                   "total": {
-                     *                     "amount": -113923,
-                     *                     "formatted_amount": "-$113,923.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": []
-                     *                 }
-                     *               ]
-                     *             }
-                     *           ]
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Balance Sheet Statement",
-                     *         "formatted_as_date": "2025/06/16",
-                     *         "formatted_date_range": "As 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/xlsx": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "display_columns_type": "total",
-                     *         "display_columns_by": "year",
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-16",
-                     *         "number_format": {
-                     *           "precision": 2,
-                     *           "divide_on1000": false,
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "negative_format": "mines"
-                     *         },
-                     *         "none_zero": false,
-                     *         "none_transactions": false,
-                     *         "basis": "cash",
-                     *         "account_ids": [],
-                     *         "percentage_of_column": false,
-                     *         "percentage_of_row": false,
-                     *         "previous_period": false,
-                     *         "previous_period_amount_change": false,
-                     *         "previous_period_percentage_change": false,
-                     *         "previous_year": false,
-                     *         "previous_year_amount_change": false,
-                     *         "previous_year_percentage_change": false
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "name": "Assets",
-                     *           "id": "ASSETS",
-                     *           "node_type": "AGGREGATE",
-                     *           "type": "AGGREGATE",
-                     *           "total": {
-                     *             "amount": -122623,
-                     *             "formatted_amount": "-$122,623.00",
-                     *             "currency_code": "USD"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "name": "Current Asset",
-                     *               "id": "CURRENT_ASSETS",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": -122623,
-                     *                 "formatted_amount": "-$122,623.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "name": "Cash and cash equivalents",
-                     *                   "id": "CASH_EQUIVALENTS",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": -500,
-                     *                     "formatted_amount": "-$500.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1002,
-                     *                       "index": 1,
-                     *                       "name": "Undeposited Funds",
-                     *                       "code": "10003",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1003,
-                     *                       "index": 1,
-                     *                       "name": "Petty Cash",
-                     *                       "code": "10004",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1000,
-                     *                       "index": 1,
-                     *                       "name": "Bank Account",
-                     *                       "code": "10001",
-                     *                       "total": {
-                     *                         "amount": -500,
-                     *                         "formatted_amount": "-500.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1001,
-                     *                       "index": 1,
-                     *                       "name": "Saving Bank Account",
-                     *                       "code": "10002",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1034,
-                     *                       "index": null,
-                     *                       "name": "Chase - Plaid Checking",
-                     *                       "code": "",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Accounts Receivable",
-                     *                   "id": "ACCOUNTS_RECEIVABLE",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "$0.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1006,
-                     *                       "index": 1,
-                     *                       "name": "Accounts Receivable (A/R)",
-                     *                       "code": "10007",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Inventory",
-                     *                   "id": "INVENTORY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 1000,
-                     *                     "formatted_amount": "$1,000.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1007,
-                     *                       "index": 1,
-                     *                       "name": "Inventory Asset",
-                     *                       "code": "10008",
-                     *                       "total": {
-                     *                         "amount": 1000,
-                     *                         "formatted_amount": "1,000.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Other current assets",
-                     *                   "id": "OTHER_CURRENT_ASSET",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": -123123,
-                     *                     "formatted_amount": "-$123,123.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1030,
-                     *                       "index": 1,
-                     *                       "name": "Prepaid Expenses",
-                     *                       "code": "100010",
-                     *                       "total": {
-                     *                         "amount": -123123,
-                     *                         "formatted_amount": "-123,123.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 }
-                     *               ]
-                     *             },
-                     *             {
-                     *               "name": "Fixed Asset",
-                     *               "id": "FIXED_ASSET",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "id": 1004,
-                     *                   "index": 1,
-                     *                   "name": "Computer Equipment",
-                     *                   "code": "10005",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1005,
-                     *                   "index": 1,
-                     *                   "name": "Office Equipment",
-                     *                   "code": "10006",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 }
-                     *               ]
-                     *             },
-                     *             {
-                     *               "name": "Non-Current Assets",
-                     *               "id": "NON_CURRENT_ASSET",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": []
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "name": "Liabilities and Equity",
-                     *           "id": "LIABILITY_EQUITY",
-                     *           "node_type": "AGGREGATE",
-                     *           "type": "AGGREGATE",
-                     *           "total": {
-                     *             "amount": -122623,
-                     *             "formatted_amount": "-$122,623.00",
-                     *             "currency_code": "USD"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "name": "Liabilities",
-                     *               "id": "LIABILITY",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": -8700,
-                     *                 "formatted_amount": "-$8,700.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "name": "Current Liabilties",
-                     *                   "id": "CURRENT_LIABILITY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": -8700,
-                     *                     "formatted_amount": "-$8,700.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": [
-                     *                     {
-                     *                       "id": 1008,
-                     *                       "index": 1,
-                     *                       "name": "Accounts Payable (A/P)",
-                     *                       "code": "20001",
-                     *                       "total": {
-                     *                         "amount": 1300,
-                     *                         "formatted_amount": "1,300.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1013,
-                     *                       "index": 1,
-                     *                       "name": "Tax Payable",
-                     *                       "code": "20006",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1009,
-                     *                       "index": 1,
-                     *                       "name": "Owner A Drawings",
-                     *                       "code": "20002",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1010,
-                     *                       "index": 1,
-                     *                       "name": "Loan",
-                     *                       "code": "20003",
-                     *                       "total": {
-                     *                         "amount": -10000,
-                     *                         "formatted_amount": "-10,000.00",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1011,
-                     *                       "index": 1,
-                     *                       "name": "Opening Balance Liabilities",
-                     *                       "code": "20004",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1012,
-                     *                       "index": 1,
-                     *                       "name": "Revenue Received in Advance",
-                     *                       "code": "20005",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     },
-                     *                     {
-                     *                       "id": 1029,
-                     *                       "index": 1,
-                     *                       "name": "Unearned Revenue",
-                     *                       "code": "50005",
-                     *                       "total": {
-                     *                         "amount": 0,
-                     *                         "formatted_amount": "",
-                     *                         "currency_code": "USD"
-                     *                       },
-                     *                       "node_type": "ACCOUNT",
-                     *                       "children": []
-                     *                     }
-                     *                   ]
-                     *                 },
-                     *                 {
-                     *                   "name": "Long-Term Liabilities",
-                     *                   "id": "LOGN_TERM_LIABILITY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "$0.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "name": "Non-Current Liabilities",
-                     *                   "id": "NON_CURRENT_LIABILITY",
-                     *                   "node_type": "AGGREGATE",
-                     *                   "type": "AGGREGATE",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "$0.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": []
-                     *                 }
-                     *               ]
-                     *             },
-                     *             {
-                     *               "name": "Equity",
-                     *               "id": "EQUITY",
-                     *               "node_type": "AGGREGATE",
-                     *               "type": "AGGREGATE",
-                     *               "total": {
-                     *                 "amount": -113923,
-                     *                 "formatted_amount": "-$113,923.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "children": [
-                     *                 {
-                     *                   "id": 1014,
-                     *                   "index": 1,
-                     *                   "name": "Retained Earnings",
-                     *                   "code": "30001",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1015,
-                     *                   "index": 1,
-                     *                   "name": "Opening Balance Equity",
-                     *                   "code": "30002",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1016,
-                     *                   "index": 1,
-                     *                   "name": "Owner's Equity",
-                     *                   "code": "30003",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": 1017,
-                     *                   "index": 1,
-                     *                   "name": "Drawings",
-                     *                   "code": "30003",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "node_type": "ACCOUNT",
-                     *                   "children": []
-                     *                 },
-                     *                 {
-                     *                   "id": "NET_INCOME",
-                     *                   "name": "Net Income",
-                     *                   "node_type": "NET_INCOME",
-                     *                   "total": {
-                     *                     "amount": -113923,
-                     *                     "formatted_amount": "-$113,923.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "children": []
-                     *                 }
-                     *               ]
-                     *             }
-                     *           ]
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Balance Sheet Statement",
-                     *         "formatted_as_date": "2025/06/16",
-                     *         "formatted_date_range": "As 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/csv": unknown;
+                    "application/json+table": components["schemas"]["BalanceSheetTableResponseDto"];
                 };
             };
         };
@@ -22713,7 +23230,10 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["PurchasesByItemsResponseDto"];
+                    "application/json+table": components["schemas"]["PurchasesByItemsTableResponseDto"];
+                };
             };
         };
     };
@@ -22758,7 +23278,10 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["CustomerBalanceSummaryResponseDto"];
+                    "application/json+table": components["schemas"]["CustomerBalanceSummaryTableResponseDto"];
+                };
             };
         };
     };
@@ -22803,7 +23326,10 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["VendorBalanceSummaryResponseDto"];
+                    "application/json+table": components["schemas"]["VendorBalanceSummaryTableResponseDto"];
+                };
             };
         };
     };
@@ -22848,7 +23374,10 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["SalesByItemsResponseDto"];
+                    "application/json+table": components["schemas"]["SalesByItemsTableResponseDto"];
+                };
             };
         };
     };
@@ -24057,4679 +24586,8 @@ export interface operations {
                      *       }
                      *     }
                      */
-                    "application/json": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "from_date": "2025-06-01",
-                     *         "to_date": "2025-06-16",
-                     *         "basis": "cash",
-                     *         "number_format": {
-                     *           "no_cents": false,
-                     *           "divide_on1000": false
-                     *         },
-                     *         "none_zero": false,
-                     *         "accounts_ids": []
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "id": 1008,
-                     *           "name": "Accounts Payable (A/P)",
-                     *           "code": "20001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 4,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 1000,
-                     *               "debit": 0,
-                     *               "amount": 1000,
-                     *               "running_balance": 1000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "1,000.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 5,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 1000,
-                     *               "debit": 0,
-                     *               "amount": 1000,
-                     *               "running_balance": 2000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "2,000.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "BillPayment",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "",
-                     *               "transaction_type_formatted": "transaction_type.payment_made",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "BillPayment",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 500,
-                     *               "amount": -500,
-                     *               "running_balance": 1500,
-                     *               "formatted_amount": "-500.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "500.00",
-                     *               "formatted_running_balance": "1,500.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 100,
-                     *               "amount": -100,
-                     *               "running_balance": 1400,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "100.00",
-                     *               "formatted_running_balance": "1,400.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 4,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 100,
-                     *               "amount": -100,
-                     *               "running_balance": 1300,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "100.00",
-                     *               "formatted_running_balance": "1,300.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": 1300,
-                     *             "formatted_amount": "$1,300.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 1300,
-                     *             "formatted_amount": "$1,300.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1006,
-                     *           "name": "Accounts Receivable (A/R)",
-                     *           "code": "10007",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1000,
-                     *           "name": "Bank Account",
-                     *           "code": "10001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "BillPayment",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "",
-                     *               "transaction_type_formatted": "transaction_type.payment_made",
-                     *               "transaction_type": "BillPayment",
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "credit": 500,
-                     *               "debit": 0,
-                     *               "amount": -500,
-                     *               "running_balance": -500,
-                     *               "formatted_amount": "-500.00",
-                     *               "formatted_credit": "500.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "-500.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1023,
-                     *           "name": "Bank Fees and Charges",
-                     *           "code": "40006",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1034,
-                     *           "name": "Chase - Plaid Checking",
-                     *           "code": "",
-                     *           "index": null,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1004,
-                     *           "name": "Computer Equipment",
-                     *           "code": "10005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1019,
-                     *           "name": "Cost of Goods Sold",
-                     *           "code": "40002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 4,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 1000,
-                     *               "amount": 1000,
-                     *               "running_balance": 1000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "1,000.00",
-                     *               "formatted_running_balance": "1,000.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "credit": 100,
-                     *               "debit": 0,
-                     *               "amount": -100,
-                     *               "running_balance": 900,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "900.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 4,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "credit": 100,
-                     *               "debit": 0,
-                     *               "amount": -100,
-                     *               "running_balance": 800,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "800.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": 800,
-                     *             "formatted_amount": "$800.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 800,
-                     *             "formatted_amount": "$800.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1024,
-                     *           "name": "Depreciation Expense",
-                     *           "code": "40007",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-15T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 16",
-                     *               "reference_type": "Journal",
-                     *               "reference_id": 1017,
-                     *               "transaction_number": "REF",
-                     *               "transaction_type_formatted": "Manual journal",
-                     *               "transaction_type": "Journal",
-                     *               "index": 2,
-                     *               "note": "",
-                     *               "credit": 10000,
-                     *               "debit": 0,
-                     *               "amount": -10000,
-                     *               "running_balance": -10000,
-                     *               "formatted_amount": "-10,000.00",
-                     *               "formatted_credit": "10,000.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "-10,000.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1031,
-                     *           "name": "Discount",
-                     *           "code": "40008",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1017,
-                     *           "name": "Drawings",
-                     *           "code": "30003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1022,
-                     *           "name": "Exchange Gain or Loss",
-                     *           "code": "40005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 123123,
-                     *             "formatted_amount": "$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 123123,
-                     *             "formatted_amount": "$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 123123,
-                     *             "formatted_amount": "$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1007,
-                     *           "name": "Inventory Asset",
-                     *           "code": "10008",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 5,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 1000,
-                     *               "amount": 1000,
-                     *               "running_balance": 1000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "1,000.00",
-                     *               "formatted_running_balance": "1,000.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": 1000,
-                     *             "formatted_amount": "$1,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 1000,
-                     *             "formatted_amount": "$1,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1010,
-                     *           "name": "Loan",
-                     *           "code": "20003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-15T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 16",
-                     *               "reference_type": "Journal",
-                     *               "reference_id": 1017,
-                     *               "transaction_number": "REF",
-                     *               "transaction_type_formatted": "Manual journal",
-                     *               "transaction_type": "Journal",
-                     *               "index": 1,
-                     *               "note": "",
-                     *               "credit": 0,
-                     *               "debit": 10000,
-                     *               "amount": -10000,
-                     *               "running_balance": -10000,
-                     *               "formatted_amount": "-10,000.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "10,000.00",
-                     *               "formatted_running_balance": "-10,000.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1005,
-                     *           "name": "Office Equipment",
-                     *           "code": "10006",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1020,
-                     *           "name": "Office expenses",
-                     *           "code": "40003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1015,
-                     *           "name": "Opening Balance Equity",
-                     *           "code": "30002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1011,
-                     *           "name": "Opening Balance Liabilities",
-                     *           "code": "20004",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1033,
-                     *           "name": "Other Charges",
-                     *           "code": "40010",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1018,
-                     *           "name": "Other Expenses",
-                     *           "code": "40011",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1009,
-                     *           "name": "Owner A Drawings",
-                     *           "code": "20002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1016,
-                     *           "name": "Owner's Equity",
-                     *           "code": "30003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1003,
-                     *           "name": "Petty Cash",
-                     *           "code": "10004",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1030,
-                     *           "name": "Prepaid Expenses",
-                     *           "code": "100010",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": -123123,
-                     *             "formatted_amount": "-$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": -123123,
-                     *             "formatted_amount": "-$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -123123,
-                     *             "formatted_amount": "-$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1032,
-                     *           "name": "Purchase Discount",
-                     *           "code": "40009",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1021,
-                     *           "name": "Rent",
-                     *           "code": "40004",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1014,
-                     *           "name": "Retained Earnings",
-                     *           "code": "30001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1012,
-                     *           "name": "Revenue Received in Advance",
-                     *           "code": "20005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1025,
-                     *           "name": "Sales of Product Income",
-                     *           "code": "50001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1026,
-                     *           "name": "Sales of Service Income",
-                     *           "code": "50002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1001,
-                     *           "name": "Saving Bank Account",
-                     *           "code": "10002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1013,
-                     *           "name": "Tax Payable",
-                     *           "code": "20006",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1027,
-                     *           "name": "Uncategorized Income",
-                     *           "code": "50003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1002,
-                     *           "name": "Undeposited Funds",
-                     *           "code": "10003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1029,
-                     *           "name": "Unearned Revenue",
-                     *           "code": "50005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Balance Sheet",
-                     *         "formatted_from_date": "2025/06/01",
-                     *         "formatted_to_date": "2025/06/16",
-                     *         "formatted_date_range": "From 2025/06/01 | To 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/json+table": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "from_date": "2025-06-01",
-                     *         "to_date": "2025-06-16",
-                     *         "basis": "cash",
-                     *         "number_format": {
-                     *           "no_cents": false,
-                     *           "divide_on1000": false
-                     *         },
-                     *         "none_zero": false,
-                     *         "accounts_ids": []
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "id": 1008,
-                     *           "name": "Accounts Payable (A/P)",
-                     *           "code": "20001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 4,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 1000,
-                     *               "debit": 0,
-                     *               "amount": 1000,
-                     *               "running_balance": 1000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "1,000.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 5,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 1000,
-                     *               "debit": 0,
-                     *               "amount": 1000,
-                     *               "running_balance": 2000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "2,000.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "BillPayment",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "",
-                     *               "transaction_type_formatted": "transaction_type.payment_made",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "BillPayment",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 500,
-                     *               "amount": -500,
-                     *               "running_balance": 1500,
-                     *               "formatted_amount": "-500.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "500.00",
-                     *               "formatted_running_balance": "1,500.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 100,
-                     *               "amount": -100,
-                     *               "running_balance": 1400,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "100.00",
-                     *               "formatted_running_balance": "1,400.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 4,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 100,
-                     *               "amount": -100,
-                     *               "running_balance": 1300,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "100.00",
-                     *               "formatted_running_balance": "1,300.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": 1300,
-                     *             "formatted_amount": "$1,300.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 1300,
-                     *             "formatted_amount": "$1,300.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1006,
-                     *           "name": "Accounts Receivable (A/R)",
-                     *           "code": "10007",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1000,
-                     *           "name": "Bank Account",
-                     *           "code": "10001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "BillPayment",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "",
-                     *               "transaction_type_formatted": "transaction_type.payment_made",
-                     *               "transaction_type": "BillPayment",
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "credit": 500,
-                     *               "debit": 0,
-                     *               "amount": -500,
-                     *               "running_balance": -500,
-                     *               "formatted_amount": "-500.00",
-                     *               "formatted_credit": "500.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "-500.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1023,
-                     *           "name": "Bank Fees and Charges",
-                     *           "code": "40006",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1034,
-                     *           "name": "Chase - Plaid Checking",
-                     *           "code": "",
-                     *           "index": null,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1004,
-                     *           "name": "Computer Equipment",
-                     *           "code": "10005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1019,
-                     *           "name": "Cost of Goods Sold",
-                     *           "code": "40002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 4,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 1000,
-                     *               "amount": 1000,
-                     *               "running_balance": 1000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "1,000.00",
-                     *               "formatted_running_balance": "1,000.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "credit": 100,
-                     *               "debit": 0,
-                     *               "amount": -100,
-                     *               "running_balance": 900,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "900.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 4,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "credit": 100,
-                     *               "debit": 0,
-                     *               "amount": -100,
-                     *               "running_balance": 800,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "800.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": 800,
-                     *             "formatted_amount": "$800.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 800,
-                     *             "formatted_amount": "$800.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1024,
-                     *           "name": "Depreciation Expense",
-                     *           "code": "40007",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-15T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 16",
-                     *               "reference_type": "Journal",
-                     *               "reference_id": 1017,
-                     *               "transaction_number": "REF",
-                     *               "transaction_type_formatted": "Manual journal",
-                     *               "transaction_type": "Journal",
-                     *               "index": 2,
-                     *               "note": "",
-                     *               "credit": 10000,
-                     *               "debit": 0,
-                     *               "amount": -10000,
-                     *               "running_balance": -10000,
-                     *               "formatted_amount": "-10,000.00",
-                     *               "formatted_credit": "10,000.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "-10,000.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1031,
-                     *           "name": "Discount",
-                     *           "code": "40008",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1017,
-                     *           "name": "Drawings",
-                     *           "code": "30003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1022,
-                     *           "name": "Exchange Gain or Loss",
-                     *           "code": "40005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 123123,
-                     *             "formatted_amount": "$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 123123,
-                     *             "formatted_amount": "$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 123123,
-                     *             "formatted_amount": "$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1007,
-                     *           "name": "Inventory Asset",
-                     *           "code": "10008",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 5,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 1000,
-                     *               "amount": 1000,
-                     *               "running_balance": 1000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "1,000.00",
-                     *               "formatted_running_balance": "1,000.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": 1000,
-                     *             "formatted_amount": "$1,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 1000,
-                     *             "formatted_amount": "$1,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1010,
-                     *           "name": "Loan",
-                     *           "code": "20003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-15T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 16",
-                     *               "reference_type": "Journal",
-                     *               "reference_id": 1017,
-                     *               "transaction_number": "REF",
-                     *               "transaction_type_formatted": "Manual journal",
-                     *               "transaction_type": "Journal",
-                     *               "index": 1,
-                     *               "note": "",
-                     *               "credit": 0,
-                     *               "debit": 10000,
-                     *               "amount": -10000,
-                     *               "running_balance": -10000,
-                     *               "formatted_amount": "-10,000.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "10,000.00",
-                     *               "formatted_running_balance": "-10,000.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1005,
-                     *           "name": "Office Equipment",
-                     *           "code": "10006",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1020,
-                     *           "name": "Office expenses",
-                     *           "code": "40003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1015,
-                     *           "name": "Opening Balance Equity",
-                     *           "code": "30002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1011,
-                     *           "name": "Opening Balance Liabilities",
-                     *           "code": "20004",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1033,
-                     *           "name": "Other Charges",
-                     *           "code": "40010",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1018,
-                     *           "name": "Other Expenses",
-                     *           "code": "40011",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1009,
-                     *           "name": "Owner A Drawings",
-                     *           "code": "20002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1016,
-                     *           "name": "Owner's Equity",
-                     *           "code": "30003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1003,
-                     *           "name": "Petty Cash",
-                     *           "code": "10004",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1030,
-                     *           "name": "Prepaid Expenses",
-                     *           "code": "100010",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": -123123,
-                     *             "formatted_amount": "-$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": -123123,
-                     *             "formatted_amount": "-$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -123123,
-                     *             "formatted_amount": "-$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1032,
-                     *           "name": "Purchase Discount",
-                     *           "code": "40009",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1021,
-                     *           "name": "Rent",
-                     *           "code": "40004",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1014,
-                     *           "name": "Retained Earnings",
-                     *           "code": "30001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1012,
-                     *           "name": "Revenue Received in Advance",
-                     *           "code": "20005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1025,
-                     *           "name": "Sales of Product Income",
-                     *           "code": "50001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1026,
-                     *           "name": "Sales of Service Income",
-                     *           "code": "50002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1001,
-                     *           "name": "Saving Bank Account",
-                     *           "code": "10002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1013,
-                     *           "name": "Tax Payable",
-                     *           "code": "20006",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1027,
-                     *           "name": "Uncategorized Income",
-                     *           "code": "50003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1002,
-                     *           "name": "Undeposited Funds",
-                     *           "code": "10003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1029,
-                     *           "name": "Unearned Revenue",
-                     *           "code": "50005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Balance Sheet",
-                     *         "formatted_from_date": "2025/06/01",
-                     *         "formatted_to_date": "2025/06/16",
-                     *         "formatted_date_range": "From 2025/06/01 | To 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/pdf": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "from_date": "2025-06-01",
-                     *         "to_date": "2025-06-16",
-                     *         "basis": "cash",
-                     *         "number_format": {
-                     *           "no_cents": false,
-                     *           "divide_on1000": false
-                     *         },
-                     *         "none_zero": false,
-                     *         "accounts_ids": []
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "id": 1008,
-                     *           "name": "Accounts Payable (A/P)",
-                     *           "code": "20001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 4,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 1000,
-                     *               "debit": 0,
-                     *               "amount": 1000,
-                     *               "running_balance": 1000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "1,000.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 5,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 1000,
-                     *               "debit": 0,
-                     *               "amount": 1000,
-                     *               "running_balance": 2000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "2,000.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "BillPayment",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "",
-                     *               "transaction_type_formatted": "transaction_type.payment_made",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "BillPayment",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 500,
-                     *               "amount": -500,
-                     *               "running_balance": 1500,
-                     *               "formatted_amount": "-500.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "500.00",
-                     *               "formatted_running_balance": "1,500.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 100,
-                     *               "amount": -100,
-                     *               "running_balance": 1400,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "100.00",
-                     *               "formatted_running_balance": "1,400.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 4,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 100,
-                     *               "amount": -100,
-                     *               "running_balance": 1300,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "100.00",
-                     *               "formatted_running_balance": "1,300.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": 1300,
-                     *             "formatted_amount": "$1,300.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 1300,
-                     *             "formatted_amount": "$1,300.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1006,
-                     *           "name": "Accounts Receivable (A/R)",
-                     *           "code": "10007",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1000,
-                     *           "name": "Bank Account",
-                     *           "code": "10001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "BillPayment",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "",
-                     *               "transaction_type_formatted": "transaction_type.payment_made",
-                     *               "transaction_type": "BillPayment",
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "credit": 500,
-                     *               "debit": 0,
-                     *               "amount": -500,
-                     *               "running_balance": -500,
-                     *               "formatted_amount": "-500.00",
-                     *               "formatted_credit": "500.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "-500.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1023,
-                     *           "name": "Bank Fees and Charges",
-                     *           "code": "40006",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1034,
-                     *           "name": "Chase - Plaid Checking",
-                     *           "code": "",
-                     *           "index": null,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1004,
-                     *           "name": "Computer Equipment",
-                     *           "code": "10005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1019,
-                     *           "name": "Cost of Goods Sold",
-                     *           "code": "40002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 4,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 1000,
-                     *               "amount": 1000,
-                     *               "running_balance": 1000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "1,000.00",
-                     *               "formatted_running_balance": "1,000.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "credit": 100,
-                     *               "debit": 0,
-                     *               "amount": -100,
-                     *               "running_balance": 900,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "900.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 4,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "credit": 100,
-                     *               "debit": 0,
-                     *               "amount": -100,
-                     *               "running_balance": 800,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "800.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": 800,
-                     *             "formatted_amount": "$800.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 800,
-                     *             "formatted_amount": "$800.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1024,
-                     *           "name": "Depreciation Expense",
-                     *           "code": "40007",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-15T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 16",
-                     *               "reference_type": "Journal",
-                     *               "reference_id": 1017,
-                     *               "transaction_number": "REF",
-                     *               "transaction_type_formatted": "Manual journal",
-                     *               "transaction_type": "Journal",
-                     *               "index": 2,
-                     *               "note": "",
-                     *               "credit": 10000,
-                     *               "debit": 0,
-                     *               "amount": -10000,
-                     *               "running_balance": -10000,
-                     *               "formatted_amount": "-10,000.00",
-                     *               "formatted_credit": "10,000.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "-10,000.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1031,
-                     *           "name": "Discount",
-                     *           "code": "40008",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1017,
-                     *           "name": "Drawings",
-                     *           "code": "30003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1022,
-                     *           "name": "Exchange Gain or Loss",
-                     *           "code": "40005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 123123,
-                     *             "formatted_amount": "$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 123123,
-                     *             "formatted_amount": "$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 123123,
-                     *             "formatted_amount": "$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1007,
-                     *           "name": "Inventory Asset",
-                     *           "code": "10008",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 5,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 1000,
-                     *               "amount": 1000,
-                     *               "running_balance": 1000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "1,000.00",
-                     *               "formatted_running_balance": "1,000.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": 1000,
-                     *             "formatted_amount": "$1,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 1000,
-                     *             "formatted_amount": "$1,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1010,
-                     *           "name": "Loan",
-                     *           "code": "20003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-15T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 16",
-                     *               "reference_type": "Journal",
-                     *               "reference_id": 1017,
-                     *               "transaction_number": "REF",
-                     *               "transaction_type_formatted": "Manual journal",
-                     *               "transaction_type": "Journal",
-                     *               "index": 1,
-                     *               "note": "",
-                     *               "credit": 0,
-                     *               "debit": 10000,
-                     *               "amount": -10000,
-                     *               "running_balance": -10000,
-                     *               "formatted_amount": "-10,000.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "10,000.00",
-                     *               "formatted_running_balance": "-10,000.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1005,
-                     *           "name": "Office Equipment",
-                     *           "code": "10006",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1020,
-                     *           "name": "Office expenses",
-                     *           "code": "40003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1015,
-                     *           "name": "Opening Balance Equity",
-                     *           "code": "30002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1011,
-                     *           "name": "Opening Balance Liabilities",
-                     *           "code": "20004",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1033,
-                     *           "name": "Other Charges",
-                     *           "code": "40010",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1018,
-                     *           "name": "Other Expenses",
-                     *           "code": "40011",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1009,
-                     *           "name": "Owner A Drawings",
-                     *           "code": "20002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1016,
-                     *           "name": "Owner's Equity",
-                     *           "code": "30003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1003,
-                     *           "name": "Petty Cash",
-                     *           "code": "10004",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1030,
-                     *           "name": "Prepaid Expenses",
-                     *           "code": "100010",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": -123123,
-                     *             "formatted_amount": "-$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": -123123,
-                     *             "formatted_amount": "-$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -123123,
-                     *             "formatted_amount": "-$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1032,
-                     *           "name": "Purchase Discount",
-                     *           "code": "40009",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1021,
-                     *           "name": "Rent",
-                     *           "code": "40004",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1014,
-                     *           "name": "Retained Earnings",
-                     *           "code": "30001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1012,
-                     *           "name": "Revenue Received in Advance",
-                     *           "code": "20005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1025,
-                     *           "name": "Sales of Product Income",
-                     *           "code": "50001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1026,
-                     *           "name": "Sales of Service Income",
-                     *           "code": "50002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1001,
-                     *           "name": "Saving Bank Account",
-                     *           "code": "10002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1013,
-                     *           "name": "Tax Payable",
-                     *           "code": "20006",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1027,
-                     *           "name": "Uncategorized Income",
-                     *           "code": "50003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1002,
-                     *           "name": "Undeposited Funds",
-                     *           "code": "10003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1029,
-                     *           "name": "Unearned Revenue",
-                     *           "code": "50005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Balance Sheet",
-                     *         "formatted_from_date": "2025/06/01",
-                     *         "formatted_to_date": "2025/06/16",
-                     *         "formatted_date_range": "From 2025/06/01 | To 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/xlsx": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "from_date": "2025-06-01",
-                     *         "to_date": "2025-06-16",
-                     *         "basis": "cash",
-                     *         "number_format": {
-                     *           "no_cents": false,
-                     *           "divide_on1000": false
-                     *         },
-                     *         "none_zero": false,
-                     *         "accounts_ids": []
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "id": 1008,
-                     *           "name": "Accounts Payable (A/P)",
-                     *           "code": "20001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 4,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 1000,
-                     *               "debit": 0,
-                     *               "amount": 1000,
-                     *               "running_balance": 1000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "1,000.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 5,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 1000,
-                     *               "debit": 0,
-                     *               "amount": 1000,
-                     *               "running_balance": 2000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "2,000.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "BillPayment",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "",
-                     *               "transaction_type_formatted": "transaction_type.payment_made",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "BillPayment",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 500,
-                     *               "amount": -500,
-                     *               "running_balance": 1500,
-                     *               "formatted_amount": "-500.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "500.00",
-                     *               "formatted_running_balance": "1,500.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 100,
-                     *               "amount": -100,
-                     *               "running_balance": 1400,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "100.00",
-                     *               "formatted_running_balance": "1,400.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 4,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 100,
-                     *               "amount": -100,
-                     *               "running_balance": 1300,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "100.00",
-                     *               "formatted_running_balance": "1,300.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": 1300,
-                     *             "formatted_amount": "$1,300.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 1300,
-                     *             "formatted_amount": "$1,300.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1006,
-                     *           "name": "Accounts Receivable (A/R)",
-                     *           "code": "10007",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1000,
-                     *           "name": "Bank Account",
-                     *           "code": "10001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "BillPayment",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "",
-                     *               "transaction_type_formatted": "transaction_type.payment_made",
-                     *               "transaction_type": "BillPayment",
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "credit": 500,
-                     *               "debit": 0,
-                     *               "amount": -500,
-                     *               "running_balance": -500,
-                     *               "formatted_amount": "-500.00",
-                     *               "formatted_credit": "500.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "-500.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1023,
-                     *           "name": "Bank Fees and Charges",
-                     *           "code": "40006",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1034,
-                     *           "name": "Chase - Plaid Checking",
-                     *           "code": "",
-                     *           "index": null,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1004,
-                     *           "name": "Computer Equipment",
-                     *           "code": "10005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1019,
-                     *           "name": "Cost of Goods Sold",
-                     *           "code": "40002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 4,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 1000,
-                     *               "amount": 1000,
-                     *               "running_balance": 1000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "1,000.00",
-                     *               "formatted_running_balance": "1,000.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 3,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "credit": 100,
-                     *               "debit": 0,
-                     *               "amount": -100,
-                     *               "running_balance": 900,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "900.00",
-                     *               "currency_code": "USD"
-                     *             },
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "VendorCredit",
-                     *               "reference_id": 4,
-                     *               "transaction_number": "VC-00001",
-                     *               "transaction_type_formatted": "Vendor Credit",
-                     *               "transaction_type": "VendorCredit",
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "credit": 100,
-                     *               "debit": 0,
-                     *               "amount": -100,
-                     *               "running_balance": 800,
-                     *               "formatted_amount": "-100.00",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "800.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": 800,
-                     *             "formatted_amount": "$800.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 800,
-                     *             "formatted_amount": "$800.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1024,
-                     *           "name": "Depreciation Expense",
-                     *           "code": "40007",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-15T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 16",
-                     *               "reference_type": "Journal",
-                     *               "reference_id": 1017,
-                     *               "transaction_number": "REF",
-                     *               "transaction_type_formatted": "Manual journal",
-                     *               "transaction_type": "Journal",
-                     *               "index": 2,
-                     *               "note": "",
-                     *               "credit": 10000,
-                     *               "debit": 0,
-                     *               "amount": -10000,
-                     *               "running_balance": -10000,
-                     *               "formatted_amount": "-10,000.00",
-                     *               "formatted_credit": "10,000.00",
-                     *               "formatted_debit": "0.00",
-                     *               "formatted_running_balance": "-10,000.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1031,
-                     *           "name": "Discount",
-                     *           "code": "40008",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1017,
-                     *           "name": "Drawings",
-                     *           "code": "30003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1022,
-                     *           "name": "Exchange Gain or Loss",
-                     *           "code": "40005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 123123,
-                     *             "formatted_amount": "$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 123123,
-                     *             "formatted_amount": "$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 123123,
-                     *             "formatted_amount": "$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1007,
-                     *           "name": "Inventory Asset",
-                     *           "code": "10008",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-09T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 10",
-                     *               "reference_type": "Bill",
-                     *               "reference_id": 5,
-                     *               "transaction_number": null,
-                     *               "transaction_type_formatted": "Bill",
-                     *               "transaction_type": "Bill",
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "credit": 0,
-                     *               "debit": 1000,
-                     *               "amount": 1000,
-                     *               "running_balance": 1000,
-                     *               "formatted_amount": "1,000.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "1,000.00",
-                     *               "formatted_running_balance": "1,000.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": 1000,
-                     *             "formatted_amount": "$1,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 1000,
-                     *             "formatted_amount": "$1,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1010,
-                     *           "name": "Loan",
-                     *           "code": "20003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [
-                     *             {
-                     *               "date": "2025-06-15T22:00:00.000Z",
-                     *               "date_formatted": "2025 Jun 16",
-                     *               "reference_type": "Journal",
-                     *               "reference_id": 1017,
-                     *               "transaction_number": "REF",
-                     *               "transaction_type_formatted": "Manual journal",
-                     *               "transaction_type": "Journal",
-                     *               "index": 1,
-                     *               "note": "",
-                     *               "credit": 0,
-                     *               "debit": 10000,
-                     *               "amount": -10000,
-                     *               "running_balance": -10000,
-                     *               "formatted_amount": "-10,000.00",
-                     *               "formatted_credit": "0.00",
-                     *               "formatted_debit": "10,000.00",
-                     *               "formatted_running_balance": "-10,000.00",
-                     *               "currency_code": "USD"
-                     *             }
-                     *           ],
-                     *           "closing_balance": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -10000,
-                     *             "formatted_amount": "-$10,000.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1005,
-                     *           "name": "Office Equipment",
-                     *           "code": "10006",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1020,
-                     *           "name": "Office expenses",
-                     *           "code": "40003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1015,
-                     *           "name": "Opening Balance Equity",
-                     *           "code": "30002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1011,
-                     *           "name": "Opening Balance Liabilities",
-                     *           "code": "20004",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1033,
-                     *           "name": "Other Charges",
-                     *           "code": "40010",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1018,
-                     *           "name": "Other Expenses",
-                     *           "code": "40011",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1009,
-                     *           "name": "Owner A Drawings",
-                     *           "code": "20002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1016,
-                     *           "name": "Owner's Equity",
-                     *           "code": "30003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1003,
-                     *           "name": "Petty Cash",
-                     *           "code": "10004",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1030,
-                     *           "name": "Prepaid Expenses",
-                     *           "code": "100010",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": -123123,
-                     *             "formatted_amount": "-$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": -123123,
-                     *             "formatted_amount": "-$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": -123123,
-                     *             "formatted_amount": "-$123,123.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1032,
-                     *           "name": "Purchase Discount",
-                     *           "code": "40009",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1021,
-                     *           "name": "Rent",
-                     *           "code": "40004",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1014,
-                     *           "name": "Retained Earnings",
-                     *           "code": "30001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1012,
-                     *           "name": "Revenue Received in Advance",
-                     *           "code": "20005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1025,
-                     *           "name": "Sales of Product Income",
-                     *           "code": "50001",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1026,
-                     *           "name": "Sales of Service Income",
-                     *           "code": "50002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1001,
-                     *           "name": "Saving Bank Account",
-                     *           "code": "10002",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1013,
-                     *           "name": "Tax Payable",
-                     *           "code": "20006",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1027,
-                     *           "name": "Uncategorized Income",
-                     *           "code": "50003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1002,
-                     *           "name": "Undeposited Funds",
-                     *           "code": "10003",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": 1029,
-                     *           "name": "Unearned Revenue",
-                     *           "code": "50005",
-                     *           "index": 1,
-                     *           "parent_account_id": null,
-                     *           "opening_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-01"
-                     *           },
-                     *           "transactions": [],
-                     *           "closing_balance": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           },
-                     *           "closing_balance_subaccounts": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD",
-                     *             "date": "2025-06-16"
-                     *           }
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Balance Sheet",
-                     *         "formatted_from_date": "2025/06/01",
-                     *         "formatted_to_date": "2025/06/16",
-                     *         "formatted_date_range": "From 2025/06/01 | To 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/csv": unknown;
+                    "application/json": components["schemas"]["GeneralLedgerResponseDto"];
+                    "application/json+table": components["schemas"]["GeneralLedgerTableResponseDto"];
                 };
             };
         };
@@ -29369,2367 +25227,8 @@ export interface operations {
                      *       }
                      *     }
                      */
-                    "application/json": unknown;
-                    /**
-                     * @example {
-                     *       "data": {
-                     *         "accounts": [
-                     *           {
-                     *             "id": 1000,
-                     *             "parent_account_id": null,
-                     *             "name": "Bank Account",
-                     *             "formatted_name": "Bank Account - 10001",
-                     *             "code": "10001",
-                     *             "account_normal": "debit",
-                     *             "credit": 500,
-                     *             "debit": 0,
-                     *             "balance": -500,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "500.00",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "-500.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1001,
-                     *             "parent_account_id": null,
-                     *             "name": "Saving Bank Account",
-                     *             "formatted_name": "Saving Bank Account - 10002",
-                     *             "code": "10002",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1002,
-                     *             "parent_account_id": null,
-                     *             "name": "Undeposited Funds",
-                     *             "formatted_name": "Undeposited Funds - 10003",
-                     *             "code": "10003",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1003,
-                     *             "parent_account_id": null,
-                     *             "name": "Petty Cash",
-                     *             "formatted_name": "Petty Cash - 10004",
-                     *             "code": "10004",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1004,
-                     *             "parent_account_id": null,
-                     *             "name": "Computer Equipment",
-                     *             "formatted_name": "Computer Equipment - 10005",
-                     *             "code": "10005",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1005,
-                     *             "parent_account_id": null,
-                     *             "name": "Office Equipment",
-                     *             "formatted_name": "Office Equipment - 10006",
-                     *             "code": "10006",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1006,
-                     *             "parent_account_id": null,
-                     *             "name": "Accounts Receivable (A/R)",
-                     *             "formatted_name": "Accounts Receivable (A/R) - 10007",
-                     *             "code": "10007",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1007,
-                     *             "parent_account_id": null,
-                     *             "name": "Inventory Asset",
-                     *             "formatted_name": "Inventory Asset - 10008",
-                     *             "code": "10008",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 1000,
-                     *             "balance": 1000,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "1,000.00",
-                     *             "formatted_balance": "1,000.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1008,
-                     *             "parent_account_id": null,
-                     *             "name": "Accounts Payable (A/P)",
-                     *             "formatted_name": "Accounts Payable (A/P) - 20001",
-                     *             "code": "20001",
-                     *             "account_normal": "credit",
-                     *             "credit": 2000,
-                     *             "debit": 700,
-                     *             "balance": -1300,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "2,000.00",
-                     *             "formatted_debit": "700.00",
-                     *             "formatted_balance": "-1,300.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1009,
-                     *             "parent_account_id": null,
-                     *             "name": "Owner A Drawings",
-                     *             "formatted_name": "Owner A Drawings - 20002",
-                     *             "code": "20002",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1010,
-                     *             "parent_account_id": null,
-                     *             "name": "Loan",
-                     *             "formatted_name": "Loan - 20003",
-                     *             "code": "20003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 10000,
-                     *             "balance": 10000,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "10,000.00",
-                     *             "formatted_balance": "10,000.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1011,
-                     *             "parent_account_id": null,
-                     *             "name": "Opening Balance Liabilities",
-                     *             "formatted_name": "Opening Balance Liabilities - 20004",
-                     *             "code": "20004",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1012,
-                     *             "parent_account_id": null,
-                     *             "name": "Revenue Received in Advance",
-                     *             "formatted_name": "Revenue Received in Advance - 20005",
-                     *             "code": "20005",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1013,
-                     *             "parent_account_id": null,
-                     *             "name": "Tax Payable",
-                     *             "formatted_name": "Tax Payable - 20006",
-                     *             "code": "20006",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1014,
-                     *             "parent_account_id": null,
-                     *             "name": "Retained Earnings",
-                     *             "formatted_name": "Retained Earnings - 30001",
-                     *             "code": "30001",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1015,
-                     *             "parent_account_id": null,
-                     *             "name": "Opening Balance Equity",
-                     *             "formatted_name": "Opening Balance Equity - 30002",
-                     *             "code": "30002",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1016,
-                     *             "parent_account_id": null,
-                     *             "name": "Owner's Equity",
-                     *             "formatted_name": "Owner's Equity - 30003",
-                     *             "code": "30003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1017,
-                     *             "parent_account_id": null,
-                     *             "name": "Drawings",
-                     *             "formatted_name": "Drawings - 30003",
-                     *             "code": "30003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1018,
-                     *             "parent_account_id": null,
-                     *             "name": "Other Expenses",
-                     *             "formatted_name": "Other Expenses - 40011",
-                     *             "code": "40011",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1019,
-                     *             "parent_account_id": null,
-                     *             "name": "Cost of Goods Sold",
-                     *             "formatted_name": "Cost of Goods Sold - 40002",
-                     *             "code": "40002",
-                     *             "account_normal": "debit",
-                     *             "credit": 200,
-                     *             "debit": 1000,
-                     *             "balance": 800,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "200.00",
-                     *             "formatted_debit": "1,000.00",
-                     *             "formatted_balance": "800.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1020,
-                     *             "parent_account_id": null,
-                     *             "name": "Office expenses",
-                     *             "formatted_name": "Office expenses - 40003",
-                     *             "code": "40003",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1021,
-                     *             "parent_account_id": null,
-                     *             "name": "Rent",
-                     *             "formatted_name": "Rent - 40004",
-                     *             "code": "40004",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1022,
-                     *             "parent_account_id": null,
-                     *             "name": "Exchange Gain or Loss",
-                     *             "formatted_name": "Exchange Gain or Loss - 40005",
-                     *             "code": "40005",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 123123,
-                     *             "balance": 123123,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "123,123.00",
-                     *             "formatted_balance": "123,123.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1023,
-                     *             "parent_account_id": null,
-                     *             "name": "Bank Fees and Charges",
-                     *             "formatted_name": "Bank Fees and Charges - 40006",
-                     *             "code": "40006",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1024,
-                     *             "parent_account_id": null,
-                     *             "name": "Depreciation Expense",
-                     *             "formatted_name": "Depreciation Expense - 40007",
-                     *             "code": "40007",
-                     *             "account_normal": "debit",
-                     *             "credit": 10000,
-                     *             "debit": 0,
-                     *             "balance": -10000,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "10,000.00",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "-10,000.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1025,
-                     *             "parent_account_id": null,
-                     *             "name": "Sales of Product Income",
-                     *             "formatted_name": "Sales of Product Income - 50001",
-                     *             "code": "50001",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1026,
-                     *             "parent_account_id": null,
-                     *             "name": "Sales of Service Income",
-                     *             "formatted_name": "Sales of Service Income - 50002",
-                     *             "code": "50002",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1027,
-                     *             "parent_account_id": null,
-                     *             "name": "Uncategorized Income",
-                     *             "formatted_name": "Uncategorized Income - 50003",
-                     *             "code": "50003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1029,
-                     *             "parent_account_id": null,
-                     *             "name": "Unearned Revenue",
-                     *             "formatted_name": "Unearned Revenue - 50005",
-                     *             "code": "50005",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1030,
-                     *             "parent_account_id": null,
-                     *             "name": "Prepaid Expenses",
-                     *             "formatted_name": "Prepaid Expenses - 100010",
-                     *             "code": "100010",
-                     *             "account_normal": "debit",
-                     *             "credit": 123123,
-                     *             "debit": 0,
-                     *             "balance": -123123,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "123,123.00",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "-123,123.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1031,
-                     *             "parent_account_id": null,
-                     *             "name": "Discount",
-                     *             "formatted_name": "Discount - 40008",
-                     *             "code": "40008",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1032,
-                     *             "parent_account_id": null,
-                     *             "name": "Purchase Discount",
-                     *             "formatted_name": "Purchase Discount - 40009",
-                     *             "code": "40009",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1033,
-                     *             "parent_account_id": null,
-                     *             "name": "Other Charges",
-                     *             "formatted_name": "Other Charges - 40010",
-                     *             "code": "40010",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1034,
-                     *             "parent_account_id": null,
-                     *             "name": "Chase - Plaid Checking",
-                     *             "formatted_name": "Chase - Plaid Checking",
-                     *             "code": "",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           }
-                     *         ],
-                     *         "total": {
-                     *           "credit": 135823,
-                     *           "debit": 135823,
-                     *           "balance": 0,
-                     *           "currency_code": "USD",
-                     *           "formatted_credit": "$135,823.00",
-                     *           "formatted_debit": "$135,823.00",
-                     *           "formatted_balance": "$0.00"
-                     *         }
-                     *       },
-                     *       "query": {
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-16",
-                     *         "number_format": {
-                     *           "divide_on1000": false,
-                     *           "negative_format": "mines",
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "precision": 2
-                     *         },
-                     *         "basis": "accrual",
-                     *         "none_zero": false,
-                     *         "none_transactions": true,
-                     *         "only_active": false,
-                     *         "account_ids": [
-                     *           null
-                     *         ]
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Trial Balance Sheet",
-                     *         "formatted_from_date": "2025/01/01",
-                     *         "formatted_to_date": "2025/06/16",
-                     *         "formatted_date_range": "From 2025/01/01 to 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/json+table": unknown;
-                    /**
-                     * @example {
-                     *       "data": {
-                     *         "accounts": [
-                     *           {
-                     *             "id": 1000,
-                     *             "parent_account_id": null,
-                     *             "name": "Bank Account",
-                     *             "formatted_name": "Bank Account - 10001",
-                     *             "code": "10001",
-                     *             "account_normal": "debit",
-                     *             "credit": 500,
-                     *             "debit": 0,
-                     *             "balance": -500,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "500.00",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "-500.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1001,
-                     *             "parent_account_id": null,
-                     *             "name": "Saving Bank Account",
-                     *             "formatted_name": "Saving Bank Account - 10002",
-                     *             "code": "10002",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1002,
-                     *             "parent_account_id": null,
-                     *             "name": "Undeposited Funds",
-                     *             "formatted_name": "Undeposited Funds - 10003",
-                     *             "code": "10003",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1003,
-                     *             "parent_account_id": null,
-                     *             "name": "Petty Cash",
-                     *             "formatted_name": "Petty Cash - 10004",
-                     *             "code": "10004",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1004,
-                     *             "parent_account_id": null,
-                     *             "name": "Computer Equipment",
-                     *             "formatted_name": "Computer Equipment - 10005",
-                     *             "code": "10005",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1005,
-                     *             "parent_account_id": null,
-                     *             "name": "Office Equipment",
-                     *             "formatted_name": "Office Equipment - 10006",
-                     *             "code": "10006",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1006,
-                     *             "parent_account_id": null,
-                     *             "name": "Accounts Receivable (A/R)",
-                     *             "formatted_name": "Accounts Receivable (A/R) - 10007",
-                     *             "code": "10007",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1007,
-                     *             "parent_account_id": null,
-                     *             "name": "Inventory Asset",
-                     *             "formatted_name": "Inventory Asset - 10008",
-                     *             "code": "10008",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 1000,
-                     *             "balance": 1000,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "1,000.00",
-                     *             "formatted_balance": "1,000.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1008,
-                     *             "parent_account_id": null,
-                     *             "name": "Accounts Payable (A/P)",
-                     *             "formatted_name": "Accounts Payable (A/P) - 20001",
-                     *             "code": "20001",
-                     *             "account_normal": "credit",
-                     *             "credit": 2000,
-                     *             "debit": 700,
-                     *             "balance": -1300,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "2,000.00",
-                     *             "formatted_debit": "700.00",
-                     *             "formatted_balance": "-1,300.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1009,
-                     *             "parent_account_id": null,
-                     *             "name": "Owner A Drawings",
-                     *             "formatted_name": "Owner A Drawings - 20002",
-                     *             "code": "20002",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1010,
-                     *             "parent_account_id": null,
-                     *             "name": "Loan",
-                     *             "formatted_name": "Loan - 20003",
-                     *             "code": "20003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 10000,
-                     *             "balance": 10000,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "10,000.00",
-                     *             "formatted_balance": "10,000.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1011,
-                     *             "parent_account_id": null,
-                     *             "name": "Opening Balance Liabilities",
-                     *             "formatted_name": "Opening Balance Liabilities - 20004",
-                     *             "code": "20004",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1012,
-                     *             "parent_account_id": null,
-                     *             "name": "Revenue Received in Advance",
-                     *             "formatted_name": "Revenue Received in Advance - 20005",
-                     *             "code": "20005",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1013,
-                     *             "parent_account_id": null,
-                     *             "name": "Tax Payable",
-                     *             "formatted_name": "Tax Payable - 20006",
-                     *             "code": "20006",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1014,
-                     *             "parent_account_id": null,
-                     *             "name": "Retained Earnings",
-                     *             "formatted_name": "Retained Earnings - 30001",
-                     *             "code": "30001",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1015,
-                     *             "parent_account_id": null,
-                     *             "name": "Opening Balance Equity",
-                     *             "formatted_name": "Opening Balance Equity - 30002",
-                     *             "code": "30002",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1016,
-                     *             "parent_account_id": null,
-                     *             "name": "Owner's Equity",
-                     *             "formatted_name": "Owner's Equity - 30003",
-                     *             "code": "30003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1017,
-                     *             "parent_account_id": null,
-                     *             "name": "Drawings",
-                     *             "formatted_name": "Drawings - 30003",
-                     *             "code": "30003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1018,
-                     *             "parent_account_id": null,
-                     *             "name": "Other Expenses",
-                     *             "formatted_name": "Other Expenses - 40011",
-                     *             "code": "40011",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1019,
-                     *             "parent_account_id": null,
-                     *             "name": "Cost of Goods Sold",
-                     *             "formatted_name": "Cost of Goods Sold - 40002",
-                     *             "code": "40002",
-                     *             "account_normal": "debit",
-                     *             "credit": 200,
-                     *             "debit": 1000,
-                     *             "balance": 800,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "200.00",
-                     *             "formatted_debit": "1,000.00",
-                     *             "formatted_balance": "800.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1020,
-                     *             "parent_account_id": null,
-                     *             "name": "Office expenses",
-                     *             "formatted_name": "Office expenses - 40003",
-                     *             "code": "40003",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1021,
-                     *             "parent_account_id": null,
-                     *             "name": "Rent",
-                     *             "formatted_name": "Rent - 40004",
-                     *             "code": "40004",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1022,
-                     *             "parent_account_id": null,
-                     *             "name": "Exchange Gain or Loss",
-                     *             "formatted_name": "Exchange Gain or Loss - 40005",
-                     *             "code": "40005",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 123123,
-                     *             "balance": 123123,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "123,123.00",
-                     *             "formatted_balance": "123,123.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1023,
-                     *             "parent_account_id": null,
-                     *             "name": "Bank Fees and Charges",
-                     *             "formatted_name": "Bank Fees and Charges - 40006",
-                     *             "code": "40006",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1024,
-                     *             "parent_account_id": null,
-                     *             "name": "Depreciation Expense",
-                     *             "formatted_name": "Depreciation Expense - 40007",
-                     *             "code": "40007",
-                     *             "account_normal": "debit",
-                     *             "credit": 10000,
-                     *             "debit": 0,
-                     *             "balance": -10000,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "10,000.00",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "-10,000.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1025,
-                     *             "parent_account_id": null,
-                     *             "name": "Sales of Product Income",
-                     *             "formatted_name": "Sales of Product Income - 50001",
-                     *             "code": "50001",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1026,
-                     *             "parent_account_id": null,
-                     *             "name": "Sales of Service Income",
-                     *             "formatted_name": "Sales of Service Income - 50002",
-                     *             "code": "50002",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1027,
-                     *             "parent_account_id": null,
-                     *             "name": "Uncategorized Income",
-                     *             "formatted_name": "Uncategorized Income - 50003",
-                     *             "code": "50003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1029,
-                     *             "parent_account_id": null,
-                     *             "name": "Unearned Revenue",
-                     *             "formatted_name": "Unearned Revenue - 50005",
-                     *             "code": "50005",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1030,
-                     *             "parent_account_id": null,
-                     *             "name": "Prepaid Expenses",
-                     *             "formatted_name": "Prepaid Expenses - 100010",
-                     *             "code": "100010",
-                     *             "account_normal": "debit",
-                     *             "credit": 123123,
-                     *             "debit": 0,
-                     *             "balance": -123123,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "123,123.00",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "-123,123.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1031,
-                     *             "parent_account_id": null,
-                     *             "name": "Discount",
-                     *             "formatted_name": "Discount - 40008",
-                     *             "code": "40008",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1032,
-                     *             "parent_account_id": null,
-                     *             "name": "Purchase Discount",
-                     *             "formatted_name": "Purchase Discount - 40009",
-                     *             "code": "40009",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1033,
-                     *             "parent_account_id": null,
-                     *             "name": "Other Charges",
-                     *             "formatted_name": "Other Charges - 40010",
-                     *             "code": "40010",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1034,
-                     *             "parent_account_id": null,
-                     *             "name": "Chase - Plaid Checking",
-                     *             "formatted_name": "Chase - Plaid Checking",
-                     *             "code": "",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           }
-                     *         ],
-                     *         "total": {
-                     *           "credit": 135823,
-                     *           "debit": 135823,
-                     *           "balance": 0,
-                     *           "currency_code": "USD",
-                     *           "formatted_credit": "$135,823.00",
-                     *           "formatted_debit": "$135,823.00",
-                     *           "formatted_balance": "$0.00"
-                     *         }
-                     *       },
-                     *       "query": {
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-16",
-                     *         "number_format": {
-                     *           "divide_on1000": false,
-                     *           "negative_format": "mines",
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "precision": 2
-                     *         },
-                     *         "basis": "accrual",
-                     *         "none_zero": false,
-                     *         "none_transactions": true,
-                     *         "only_active": false,
-                     *         "account_ids": [
-                     *           null
-                     *         ]
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Trial Balance Sheet",
-                     *         "formatted_from_date": "2025/01/01",
-                     *         "formatted_to_date": "2025/06/16",
-                     *         "formatted_date_range": "From 2025/01/01 to 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/pdf": unknown;
-                    /**
-                     * @example {
-                     *       "data": {
-                     *         "accounts": [
-                     *           {
-                     *             "id": 1000,
-                     *             "parent_account_id": null,
-                     *             "name": "Bank Account",
-                     *             "formatted_name": "Bank Account - 10001",
-                     *             "code": "10001",
-                     *             "account_normal": "debit",
-                     *             "credit": 500,
-                     *             "debit": 0,
-                     *             "balance": -500,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "500.00",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "-500.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1001,
-                     *             "parent_account_id": null,
-                     *             "name": "Saving Bank Account",
-                     *             "formatted_name": "Saving Bank Account - 10002",
-                     *             "code": "10002",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1002,
-                     *             "parent_account_id": null,
-                     *             "name": "Undeposited Funds",
-                     *             "formatted_name": "Undeposited Funds - 10003",
-                     *             "code": "10003",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1003,
-                     *             "parent_account_id": null,
-                     *             "name": "Petty Cash",
-                     *             "formatted_name": "Petty Cash - 10004",
-                     *             "code": "10004",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1004,
-                     *             "parent_account_id": null,
-                     *             "name": "Computer Equipment",
-                     *             "formatted_name": "Computer Equipment - 10005",
-                     *             "code": "10005",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1005,
-                     *             "parent_account_id": null,
-                     *             "name": "Office Equipment",
-                     *             "formatted_name": "Office Equipment - 10006",
-                     *             "code": "10006",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1006,
-                     *             "parent_account_id": null,
-                     *             "name": "Accounts Receivable (A/R)",
-                     *             "formatted_name": "Accounts Receivable (A/R) - 10007",
-                     *             "code": "10007",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1007,
-                     *             "parent_account_id": null,
-                     *             "name": "Inventory Asset",
-                     *             "formatted_name": "Inventory Asset - 10008",
-                     *             "code": "10008",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 1000,
-                     *             "balance": 1000,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "1,000.00",
-                     *             "formatted_balance": "1,000.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1008,
-                     *             "parent_account_id": null,
-                     *             "name": "Accounts Payable (A/P)",
-                     *             "formatted_name": "Accounts Payable (A/P) - 20001",
-                     *             "code": "20001",
-                     *             "account_normal": "credit",
-                     *             "credit": 2000,
-                     *             "debit": 700,
-                     *             "balance": -1300,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "2,000.00",
-                     *             "formatted_debit": "700.00",
-                     *             "formatted_balance": "-1,300.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1009,
-                     *             "parent_account_id": null,
-                     *             "name": "Owner A Drawings",
-                     *             "formatted_name": "Owner A Drawings - 20002",
-                     *             "code": "20002",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1010,
-                     *             "parent_account_id": null,
-                     *             "name": "Loan",
-                     *             "formatted_name": "Loan - 20003",
-                     *             "code": "20003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 10000,
-                     *             "balance": 10000,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "10,000.00",
-                     *             "formatted_balance": "10,000.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1011,
-                     *             "parent_account_id": null,
-                     *             "name": "Opening Balance Liabilities",
-                     *             "formatted_name": "Opening Balance Liabilities - 20004",
-                     *             "code": "20004",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1012,
-                     *             "parent_account_id": null,
-                     *             "name": "Revenue Received in Advance",
-                     *             "formatted_name": "Revenue Received in Advance - 20005",
-                     *             "code": "20005",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1013,
-                     *             "parent_account_id": null,
-                     *             "name": "Tax Payable",
-                     *             "formatted_name": "Tax Payable - 20006",
-                     *             "code": "20006",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1014,
-                     *             "parent_account_id": null,
-                     *             "name": "Retained Earnings",
-                     *             "formatted_name": "Retained Earnings - 30001",
-                     *             "code": "30001",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1015,
-                     *             "parent_account_id": null,
-                     *             "name": "Opening Balance Equity",
-                     *             "formatted_name": "Opening Balance Equity - 30002",
-                     *             "code": "30002",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1016,
-                     *             "parent_account_id": null,
-                     *             "name": "Owner's Equity",
-                     *             "formatted_name": "Owner's Equity - 30003",
-                     *             "code": "30003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1017,
-                     *             "parent_account_id": null,
-                     *             "name": "Drawings",
-                     *             "formatted_name": "Drawings - 30003",
-                     *             "code": "30003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1018,
-                     *             "parent_account_id": null,
-                     *             "name": "Other Expenses",
-                     *             "formatted_name": "Other Expenses - 40011",
-                     *             "code": "40011",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1019,
-                     *             "parent_account_id": null,
-                     *             "name": "Cost of Goods Sold",
-                     *             "formatted_name": "Cost of Goods Sold - 40002",
-                     *             "code": "40002",
-                     *             "account_normal": "debit",
-                     *             "credit": 200,
-                     *             "debit": 1000,
-                     *             "balance": 800,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "200.00",
-                     *             "formatted_debit": "1,000.00",
-                     *             "formatted_balance": "800.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1020,
-                     *             "parent_account_id": null,
-                     *             "name": "Office expenses",
-                     *             "formatted_name": "Office expenses - 40003",
-                     *             "code": "40003",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1021,
-                     *             "parent_account_id": null,
-                     *             "name": "Rent",
-                     *             "formatted_name": "Rent - 40004",
-                     *             "code": "40004",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1022,
-                     *             "parent_account_id": null,
-                     *             "name": "Exchange Gain or Loss",
-                     *             "formatted_name": "Exchange Gain or Loss - 40005",
-                     *             "code": "40005",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 123123,
-                     *             "balance": 123123,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "123,123.00",
-                     *             "formatted_balance": "123,123.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1023,
-                     *             "parent_account_id": null,
-                     *             "name": "Bank Fees and Charges",
-                     *             "formatted_name": "Bank Fees and Charges - 40006",
-                     *             "code": "40006",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1024,
-                     *             "parent_account_id": null,
-                     *             "name": "Depreciation Expense",
-                     *             "formatted_name": "Depreciation Expense - 40007",
-                     *             "code": "40007",
-                     *             "account_normal": "debit",
-                     *             "credit": 10000,
-                     *             "debit": 0,
-                     *             "balance": -10000,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "10,000.00",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "-10,000.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1025,
-                     *             "parent_account_id": null,
-                     *             "name": "Sales of Product Income",
-                     *             "formatted_name": "Sales of Product Income - 50001",
-                     *             "code": "50001",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1026,
-                     *             "parent_account_id": null,
-                     *             "name": "Sales of Service Income",
-                     *             "formatted_name": "Sales of Service Income - 50002",
-                     *             "code": "50002",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1027,
-                     *             "parent_account_id": null,
-                     *             "name": "Uncategorized Income",
-                     *             "formatted_name": "Uncategorized Income - 50003",
-                     *             "code": "50003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1029,
-                     *             "parent_account_id": null,
-                     *             "name": "Unearned Revenue",
-                     *             "formatted_name": "Unearned Revenue - 50005",
-                     *             "code": "50005",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1030,
-                     *             "parent_account_id": null,
-                     *             "name": "Prepaid Expenses",
-                     *             "formatted_name": "Prepaid Expenses - 100010",
-                     *             "code": "100010",
-                     *             "account_normal": "debit",
-                     *             "credit": 123123,
-                     *             "debit": 0,
-                     *             "balance": -123123,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "123,123.00",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "-123,123.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1031,
-                     *             "parent_account_id": null,
-                     *             "name": "Discount",
-                     *             "formatted_name": "Discount - 40008",
-                     *             "code": "40008",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1032,
-                     *             "parent_account_id": null,
-                     *             "name": "Purchase Discount",
-                     *             "formatted_name": "Purchase Discount - 40009",
-                     *             "code": "40009",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1033,
-                     *             "parent_account_id": null,
-                     *             "name": "Other Charges",
-                     *             "formatted_name": "Other Charges - 40010",
-                     *             "code": "40010",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1034,
-                     *             "parent_account_id": null,
-                     *             "name": "Chase - Plaid Checking",
-                     *             "formatted_name": "Chase - Plaid Checking",
-                     *             "code": "",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           }
-                     *         ],
-                     *         "total": {
-                     *           "credit": 135823,
-                     *           "debit": 135823,
-                     *           "balance": 0,
-                     *           "currency_code": "USD",
-                     *           "formatted_credit": "$135,823.00",
-                     *           "formatted_debit": "$135,823.00",
-                     *           "formatted_balance": "$0.00"
-                     *         }
-                     *       },
-                     *       "query": {
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-16",
-                     *         "number_format": {
-                     *           "divide_on1000": false,
-                     *           "negative_format": "mines",
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "precision": 2
-                     *         },
-                     *         "basis": "accrual",
-                     *         "none_zero": false,
-                     *         "none_transactions": true,
-                     *         "only_active": false,
-                     *         "account_ids": [
-                     *           null
-                     *         ]
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Trial Balance Sheet",
-                     *         "formatted_from_date": "2025/01/01",
-                     *         "formatted_to_date": "2025/06/16",
-                     *         "formatted_date_range": "From 2025/01/01 to 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/xlsx": unknown;
-                    /**
-                     * @example {
-                     *       "data": {
-                     *         "accounts": [
-                     *           {
-                     *             "id": 1000,
-                     *             "parent_account_id": null,
-                     *             "name": "Bank Account",
-                     *             "formatted_name": "Bank Account - 10001",
-                     *             "code": "10001",
-                     *             "account_normal": "debit",
-                     *             "credit": 500,
-                     *             "debit": 0,
-                     *             "balance": -500,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "500.00",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "-500.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1001,
-                     *             "parent_account_id": null,
-                     *             "name": "Saving Bank Account",
-                     *             "formatted_name": "Saving Bank Account - 10002",
-                     *             "code": "10002",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1002,
-                     *             "parent_account_id": null,
-                     *             "name": "Undeposited Funds",
-                     *             "formatted_name": "Undeposited Funds - 10003",
-                     *             "code": "10003",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1003,
-                     *             "parent_account_id": null,
-                     *             "name": "Petty Cash",
-                     *             "formatted_name": "Petty Cash - 10004",
-                     *             "code": "10004",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1004,
-                     *             "parent_account_id": null,
-                     *             "name": "Computer Equipment",
-                     *             "formatted_name": "Computer Equipment - 10005",
-                     *             "code": "10005",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1005,
-                     *             "parent_account_id": null,
-                     *             "name": "Office Equipment",
-                     *             "formatted_name": "Office Equipment - 10006",
-                     *             "code": "10006",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1006,
-                     *             "parent_account_id": null,
-                     *             "name": "Accounts Receivable (A/R)",
-                     *             "formatted_name": "Accounts Receivable (A/R) - 10007",
-                     *             "code": "10007",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1007,
-                     *             "parent_account_id": null,
-                     *             "name": "Inventory Asset",
-                     *             "formatted_name": "Inventory Asset - 10008",
-                     *             "code": "10008",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 1000,
-                     *             "balance": 1000,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "1,000.00",
-                     *             "formatted_balance": "1,000.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1008,
-                     *             "parent_account_id": null,
-                     *             "name": "Accounts Payable (A/P)",
-                     *             "formatted_name": "Accounts Payable (A/P) - 20001",
-                     *             "code": "20001",
-                     *             "account_normal": "credit",
-                     *             "credit": 2000,
-                     *             "debit": 700,
-                     *             "balance": -1300,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "2,000.00",
-                     *             "formatted_debit": "700.00",
-                     *             "formatted_balance": "-1,300.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1009,
-                     *             "parent_account_id": null,
-                     *             "name": "Owner A Drawings",
-                     *             "formatted_name": "Owner A Drawings - 20002",
-                     *             "code": "20002",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1010,
-                     *             "parent_account_id": null,
-                     *             "name": "Loan",
-                     *             "formatted_name": "Loan - 20003",
-                     *             "code": "20003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 10000,
-                     *             "balance": 10000,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "10,000.00",
-                     *             "formatted_balance": "10,000.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1011,
-                     *             "parent_account_id": null,
-                     *             "name": "Opening Balance Liabilities",
-                     *             "formatted_name": "Opening Balance Liabilities - 20004",
-                     *             "code": "20004",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1012,
-                     *             "parent_account_id": null,
-                     *             "name": "Revenue Received in Advance",
-                     *             "formatted_name": "Revenue Received in Advance - 20005",
-                     *             "code": "20005",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1013,
-                     *             "parent_account_id": null,
-                     *             "name": "Tax Payable",
-                     *             "formatted_name": "Tax Payable - 20006",
-                     *             "code": "20006",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1014,
-                     *             "parent_account_id": null,
-                     *             "name": "Retained Earnings",
-                     *             "formatted_name": "Retained Earnings - 30001",
-                     *             "code": "30001",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1015,
-                     *             "parent_account_id": null,
-                     *             "name": "Opening Balance Equity",
-                     *             "formatted_name": "Opening Balance Equity - 30002",
-                     *             "code": "30002",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1016,
-                     *             "parent_account_id": null,
-                     *             "name": "Owner's Equity",
-                     *             "formatted_name": "Owner's Equity - 30003",
-                     *             "code": "30003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1017,
-                     *             "parent_account_id": null,
-                     *             "name": "Drawings",
-                     *             "formatted_name": "Drawings - 30003",
-                     *             "code": "30003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1018,
-                     *             "parent_account_id": null,
-                     *             "name": "Other Expenses",
-                     *             "formatted_name": "Other Expenses - 40011",
-                     *             "code": "40011",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1019,
-                     *             "parent_account_id": null,
-                     *             "name": "Cost of Goods Sold",
-                     *             "formatted_name": "Cost of Goods Sold - 40002",
-                     *             "code": "40002",
-                     *             "account_normal": "debit",
-                     *             "credit": 200,
-                     *             "debit": 1000,
-                     *             "balance": 800,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "200.00",
-                     *             "formatted_debit": "1,000.00",
-                     *             "formatted_balance": "800.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1020,
-                     *             "parent_account_id": null,
-                     *             "name": "Office expenses",
-                     *             "formatted_name": "Office expenses - 40003",
-                     *             "code": "40003",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1021,
-                     *             "parent_account_id": null,
-                     *             "name": "Rent",
-                     *             "formatted_name": "Rent - 40004",
-                     *             "code": "40004",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1022,
-                     *             "parent_account_id": null,
-                     *             "name": "Exchange Gain or Loss",
-                     *             "formatted_name": "Exchange Gain or Loss - 40005",
-                     *             "code": "40005",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 123123,
-                     *             "balance": 123123,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "123,123.00",
-                     *             "formatted_balance": "123,123.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1023,
-                     *             "parent_account_id": null,
-                     *             "name": "Bank Fees and Charges",
-                     *             "formatted_name": "Bank Fees and Charges - 40006",
-                     *             "code": "40006",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1024,
-                     *             "parent_account_id": null,
-                     *             "name": "Depreciation Expense",
-                     *             "formatted_name": "Depreciation Expense - 40007",
-                     *             "code": "40007",
-                     *             "account_normal": "debit",
-                     *             "credit": 10000,
-                     *             "debit": 0,
-                     *             "balance": -10000,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "10,000.00",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "-10,000.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1025,
-                     *             "parent_account_id": null,
-                     *             "name": "Sales of Product Income",
-                     *             "formatted_name": "Sales of Product Income - 50001",
-                     *             "code": "50001",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1026,
-                     *             "parent_account_id": null,
-                     *             "name": "Sales of Service Income",
-                     *             "formatted_name": "Sales of Service Income - 50002",
-                     *             "code": "50002",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1027,
-                     *             "parent_account_id": null,
-                     *             "name": "Uncategorized Income",
-                     *             "formatted_name": "Uncategorized Income - 50003",
-                     *             "code": "50003",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1029,
-                     *             "parent_account_id": null,
-                     *             "name": "Unearned Revenue",
-                     *             "formatted_name": "Unearned Revenue - 50005",
-                     *             "code": "50005",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1030,
-                     *             "parent_account_id": null,
-                     *             "name": "Prepaid Expenses",
-                     *             "formatted_name": "Prepaid Expenses - 100010",
-                     *             "code": "100010",
-                     *             "account_normal": "debit",
-                     *             "credit": 123123,
-                     *             "debit": 0,
-                     *             "balance": -123123,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "123,123.00",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "-123,123.00",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1031,
-                     *             "parent_account_id": null,
-                     *             "name": "Discount",
-                     *             "formatted_name": "Discount - 40008",
-                     *             "code": "40008",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1032,
-                     *             "parent_account_id": null,
-                     *             "name": "Purchase Discount",
-                     *             "formatted_name": "Purchase Discount - 40009",
-                     *             "code": "40009",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1033,
-                     *             "parent_account_id": null,
-                     *             "name": "Other Charges",
-                     *             "formatted_name": "Other Charges - 40010",
-                     *             "code": "40010",
-                     *             "account_normal": "credit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           },
-                     *           {
-                     *             "id": 1034,
-                     *             "parent_account_id": null,
-                     *             "name": "Chase - Plaid Checking",
-                     *             "formatted_name": "Chase - Plaid Checking",
-                     *             "code": "",
-                     *             "account_normal": "debit",
-                     *             "credit": 0,
-                     *             "debit": 0,
-                     *             "balance": 0,
-                     *             "currency_code": "USD",
-                     *             "formatted_credit": "",
-                     *             "formatted_debit": "",
-                     *             "formatted_balance": "",
-                     *             "children": []
-                     *           }
-                     *         ],
-                     *         "total": {
-                     *           "credit": 135823,
-                     *           "debit": 135823,
-                     *           "balance": 0,
-                     *           "currency_code": "USD",
-                     *           "formatted_credit": "$135,823.00",
-                     *           "formatted_debit": "$135,823.00",
-                     *           "formatted_balance": "$0.00"
-                     *         }
-                     *       },
-                     *       "query": {
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-16",
-                     *         "number_format": {
-                     *           "divide_on1000": false,
-                     *           "negative_format": "mines",
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "precision": 2
-                     *         },
-                     *         "basis": "accrual",
-                     *         "none_zero": false,
-                     *         "none_transactions": true,
-                     *         "only_active": false,
-                     *         "account_ids": [
-                     *           null
-                     *         ]
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Trial Balance Sheet",
-                     *         "formatted_from_date": "2025/01/01",
-                     *         "formatted_to_date": "2025/06/16",
-                     *         "formatted_date_range": "From 2025/01/01 to 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/csv": unknown;
+                    "application/json": components["schemas"]["TrialBalanceSheetResponseDto"];
+                    "application/json+table": components["schemas"]["TrialBalanceSheetTableResponseDto"];
                 };
             };
         };
@@ -31771,7 +25270,10 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["TransactionsByVendorResponseDto"];
+                    "application/json+table": components["schemas"]["TransactionsByVendorTableResponseDto"];
+                };
             };
         };
     };
@@ -31810,7 +25312,10 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["TransactionsByCustomerResponseDto"];
+                    "application/json+table": components["schemas"]["TransactionsByCustomerTableResponseDto"];
+                };
             };
         };
     };
@@ -32143,1075 +25648,8 @@ export interface operations {
                      *       }
                      *     }
                      */
-                    "application/json": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "as_date": "2025-06-30",
-                     *         "aging_days_before": 30,
-                     *         "aging_periods": 3,
-                     *         "number_format": {
-                     *           "divide_on1000": false,
-                     *           "negative_format": "mines",
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "precision": 2
-                     *         },
-                     *         "customers_ids": [],
-                     *         "branches_ids": [],
-                     *         "none_zero": false
-                     *       },
-                     *       "columns": [
-                     *         {
-                     *           "from_period": "2025-06-30",
-                     *           "to_period": "2025-05-31",
-                     *           "before_days": 0,
-                     *           "to_days": 30
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-31",
-                     *           "to_period": "2025-05-01",
-                     *           "before_days": 31,
-                     *           "to_days": 60
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-01",
-                     *           "to_period": null,
-                     *           "before_days": 61,
-                     *           "to_days": null
-                     *         }
-                     *       ],
-                     *       "data": {
-                     *         "customers": [
-                     *           {
-                     *             "customer_name": "business",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 5000,
-                     *                   "formatted_amount": "5,000.00"
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 5000,
-                     *               "formatted_amount": "$5,000.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "customer_name": "business",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 0,
-                     *               "formatted_amount": "$0.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "customer_name": "asdsadasd, asd",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 0,
-                     *               "formatted_amount": "$0.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "customer_name": "Ahmed Bouhuolia",
-                     *             "current": {
-                     *               "amount": 300000,
-                     *               "formatted_amount": "300,000.00"
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 300000,
-                     *               "formatted_amount": "$300,000.00"
-                     *             }
-                     *           }
-                     *         ],
-                     *         "total": {
-                     *           "current": {
-                     *             "amount": 300000,
-                     *             "formatted_amount": "$300,000.00"
-                     *           },
-                     *           "aging": [
-                     *             {
-                     *               "from_period": "2025-06-30",
-                     *               "to_period": "2025-05-31",
-                     *               "before_days": 0,
-                     *               "to_days": 30,
-                     *               "total": {
-                     *                 "amount": 5000,
-                     *                 "formatted_amount": "$5,000.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-31",
-                     *               "to_period": "2025-05-01",
-                     *               "before_days": 31,
-                     *               "to_days": 60,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-01",
-                     *               "to_period": null,
-                     *               "before_days": 61,
-                     *               "to_days": null,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 305000,
-                     *             "formatted_amount": "$305,000.00"
-                     *           }
-                     *         }
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "A/R Aging Summary",
-                     *         "formatted_as_date": "2025/06/30",
-                     *         "formatted_date_range": "As 2025/06/30"
-                     *       }
-                     *     }
-                     */
-                    "application/json+table": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "as_date": "2025-06-30",
-                     *         "aging_days_before": 30,
-                     *         "aging_periods": 3,
-                     *         "number_format": {
-                     *           "divide_on1000": false,
-                     *           "negative_format": "mines",
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "precision": 2
-                     *         },
-                     *         "customers_ids": [],
-                     *         "branches_ids": [],
-                     *         "none_zero": false
-                     *       },
-                     *       "columns": [
-                     *         {
-                     *           "from_period": "2025-06-30",
-                     *           "to_period": "2025-05-31",
-                     *           "before_days": 0,
-                     *           "to_days": 30
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-31",
-                     *           "to_period": "2025-05-01",
-                     *           "before_days": 31,
-                     *           "to_days": 60
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-01",
-                     *           "to_period": null,
-                     *           "before_days": 61,
-                     *           "to_days": null
-                     *         }
-                     *       ],
-                     *       "data": {
-                     *         "customers": [
-                     *           {
-                     *             "customer_name": "business",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 5000,
-                     *                   "formatted_amount": "5,000.00"
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 5000,
-                     *               "formatted_amount": "$5,000.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "customer_name": "business",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 0,
-                     *               "formatted_amount": "$0.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "customer_name": "asdsadasd, asd",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 0,
-                     *               "formatted_amount": "$0.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "customer_name": "Ahmed Bouhuolia",
-                     *             "current": {
-                     *               "amount": 300000,
-                     *               "formatted_amount": "300,000.00"
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 300000,
-                     *               "formatted_amount": "$300,000.00"
-                     *             }
-                     *           }
-                     *         ],
-                     *         "total": {
-                     *           "current": {
-                     *             "amount": 300000,
-                     *             "formatted_amount": "$300,000.00"
-                     *           },
-                     *           "aging": [
-                     *             {
-                     *               "from_period": "2025-06-30",
-                     *               "to_period": "2025-05-31",
-                     *               "before_days": 0,
-                     *               "to_days": 30,
-                     *               "total": {
-                     *                 "amount": 5000,
-                     *                 "formatted_amount": "$5,000.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-31",
-                     *               "to_period": "2025-05-01",
-                     *               "before_days": 31,
-                     *               "to_days": 60,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-01",
-                     *               "to_period": null,
-                     *               "before_days": 61,
-                     *               "to_days": null,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 305000,
-                     *             "formatted_amount": "$305,000.00"
-                     *           }
-                     *         }
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "A/R Aging Summary",
-                     *         "formatted_as_date": "2025/06/30",
-                     *         "formatted_date_range": "As 2025/06/30"
-                     *       }
-                     *     }
-                     */
-                    "application/pdf": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "as_date": "2025-06-30",
-                     *         "aging_days_before": 30,
-                     *         "aging_periods": 3,
-                     *         "number_format": {
-                     *           "divide_on1000": false,
-                     *           "negative_format": "mines",
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "precision": 2
-                     *         },
-                     *         "customers_ids": [],
-                     *         "branches_ids": [],
-                     *         "none_zero": false
-                     *       },
-                     *       "columns": [
-                     *         {
-                     *           "from_period": "2025-06-30",
-                     *           "to_period": "2025-05-31",
-                     *           "before_days": 0,
-                     *           "to_days": 30
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-31",
-                     *           "to_period": "2025-05-01",
-                     *           "before_days": 31,
-                     *           "to_days": 60
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-01",
-                     *           "to_period": null,
-                     *           "before_days": 61,
-                     *           "to_days": null
-                     *         }
-                     *       ],
-                     *       "data": {
-                     *         "customers": [
-                     *           {
-                     *             "customer_name": "business",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 5000,
-                     *                   "formatted_amount": "5,000.00"
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 5000,
-                     *               "formatted_amount": "$5,000.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "customer_name": "business",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 0,
-                     *               "formatted_amount": "$0.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "customer_name": "asdsadasd, asd",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 0,
-                     *               "formatted_amount": "$0.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "customer_name": "Ahmed Bouhuolia",
-                     *             "current": {
-                     *               "amount": 300000,
-                     *               "formatted_amount": "300,000.00"
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 300000,
-                     *               "formatted_amount": "$300,000.00"
-                     *             }
-                     *           }
-                     *         ],
-                     *         "total": {
-                     *           "current": {
-                     *             "amount": 300000,
-                     *             "formatted_amount": "$300,000.00"
-                     *           },
-                     *           "aging": [
-                     *             {
-                     *               "from_period": "2025-06-30",
-                     *               "to_period": "2025-05-31",
-                     *               "before_days": 0,
-                     *               "to_days": 30,
-                     *               "total": {
-                     *                 "amount": 5000,
-                     *                 "formatted_amount": "$5,000.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-31",
-                     *               "to_period": "2025-05-01",
-                     *               "before_days": 31,
-                     *               "to_days": 60,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-01",
-                     *               "to_period": null,
-                     *               "before_days": 61,
-                     *               "to_days": null,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 305000,
-                     *             "formatted_amount": "$305,000.00"
-                     *           }
-                     *         }
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "A/R Aging Summary",
-                     *         "formatted_as_date": "2025/06/30",
-                     *         "formatted_date_range": "As 2025/06/30"
-                     *       }
-                     *     }
-                     */
-                    "application/xlsx": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "as_date": "2025-06-30",
-                     *         "aging_days_before": 30,
-                     *         "aging_periods": 3,
-                     *         "number_format": {
-                     *           "divide_on1000": false,
-                     *           "negative_format": "mines",
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "precision": 2
-                     *         },
-                     *         "customers_ids": [],
-                     *         "branches_ids": [],
-                     *         "none_zero": false
-                     *       },
-                     *       "columns": [
-                     *         {
-                     *           "from_period": "2025-06-30",
-                     *           "to_period": "2025-05-31",
-                     *           "before_days": 0,
-                     *           "to_days": 30
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-31",
-                     *           "to_period": "2025-05-01",
-                     *           "before_days": 31,
-                     *           "to_days": 60
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-01",
-                     *           "to_period": null,
-                     *           "before_days": 61,
-                     *           "to_days": null
-                     *         }
-                     *       ],
-                     *       "data": {
-                     *         "customers": [
-                     *           {
-                     *             "customer_name": "business",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 5000,
-                     *                   "formatted_amount": "5,000.00"
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 5000,
-                     *               "formatted_amount": "$5,000.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "customer_name": "business",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 0,
-                     *               "formatted_amount": "$0.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "customer_name": "asdsadasd, asd",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 0,
-                     *               "formatted_amount": "$0.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "customer_name": "Ahmed Bouhuolia",
-                     *             "current": {
-                     *               "amount": 300000,
-                     *               "formatted_amount": "300,000.00"
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 300000,
-                     *               "formatted_amount": "$300,000.00"
-                     *             }
-                     *           }
-                     *         ],
-                     *         "total": {
-                     *           "current": {
-                     *             "amount": 300000,
-                     *             "formatted_amount": "$300,000.00"
-                     *           },
-                     *           "aging": [
-                     *             {
-                     *               "from_period": "2025-06-30",
-                     *               "to_period": "2025-05-31",
-                     *               "before_days": 0,
-                     *               "to_days": 30,
-                     *               "total": {
-                     *                 "amount": 5000,
-                     *                 "formatted_amount": "$5,000.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-31",
-                     *               "to_period": "2025-05-01",
-                     *               "before_days": 31,
-                     *               "to_days": 60,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-01",
-                     *               "to_period": null,
-                     *               "before_days": 61,
-                     *               "to_days": null,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 305000,
-                     *             "formatted_amount": "$305,000.00"
-                     *           }
-                     *         }
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "A/R Aging Summary",
-                     *         "formatted_as_date": "2025/06/30",
-                     *         "formatted_date_range": "As 2025/06/30"
-                     *       }
-                     *     }
-                     */
-                    "application/csv": unknown;
+                    "application/json": components["schemas"]["ARAgingSummaryResponseDto"];
+                    "application/json+table": components["schemas"]["ARAgingSummaryTableResponseDto"];
                 };
             };
         };
@@ -33436,731 +25874,8 @@ export interface operations {
                      *       }
                      *     }
                      */
-                    "application/json": unknown;
-                    /**
-                     * @example {
-                     *       "data": {
-                     *         "vendors": [
-                     *           {
-                     *             "vendor_name": "asdasd, asdasd",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 0,
-                     *               "formatted_amount": "$0.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "vendor_name": "Ahmed Bouhuolia",
-                     *             "current": {
-                     *               "amount": 32000,
-                     *               "formatted_amount": "32,000.00"
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 32000,
-                     *               "formatted_amount": "$32,000.00"
-                     *             }
-                     *           }
-                     *         ],
-                     *         "total": {
-                     *           "current": {
-                     *             "amount": 32000,
-                     *             "formatted_amount": "$32,000.00"
-                     *           },
-                     *           "aging": [
-                     *             {
-                     *               "from_period": "2025-06-30",
-                     *               "to_period": "2025-05-31",
-                     *               "before_days": 0,
-                     *               "to_days": 30,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-31",
-                     *               "to_period": "2025-05-01",
-                     *               "before_days": 31,
-                     *               "to_days": 60,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-01",
-                     *               "to_period": null,
-                     *               "before_days": 61,
-                     *               "to_days": null,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 32000,
-                     *             "formatted_amount": "$32,000.00"
-                     *           }
-                     *         }
-                     *       },
-                     *       "columns": [
-                     *         {
-                     *           "from_period": "2025-06-30",
-                     *           "to_period": "2025-05-31",
-                     *           "before_days": 0,
-                     *           "to_days": 30
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-31",
-                     *           "to_period": "2025-05-01",
-                     *           "before_days": 31,
-                     *           "to_days": 60
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-01",
-                     *           "to_period": null,
-                     *           "before_days": 61,
-                     *           "to_days": null
-                     *         }
-                     *       ],
-                     *       "query": {
-                     *         "as_date": "2025-06-30",
-                     *         "aging_days_before": 30,
-                     *         "aging_periods": 3,
-                     *         "number_format": {
-                     *           "precision": 2,
-                     *           "divide_on1000": false,
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "negative_format": "mines"
-                     *         },
-                     *         "vendors_ids": [],
-                     *         "branches_ids": [],
-                     *         "none_zero": false
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "A/P Aging Summary",
-                     *         "formatted_as_date": "2025/06/30",
-                     *         "formatted_date_range": "As 2025/06/30"
-                     *       }
-                     *     }
-                     */
-                    "application/json+table": unknown;
-                    /**
-                     * @example {
-                     *       "data": {
-                     *         "vendors": [
-                     *           {
-                     *             "vendor_name": "asdasd, asdasd",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 0,
-                     *               "formatted_amount": "$0.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "vendor_name": "Ahmed Bouhuolia",
-                     *             "current": {
-                     *               "amount": 32000,
-                     *               "formatted_amount": "32,000.00"
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 32000,
-                     *               "formatted_amount": "$32,000.00"
-                     *             }
-                     *           }
-                     *         ],
-                     *         "total": {
-                     *           "current": {
-                     *             "amount": 32000,
-                     *             "formatted_amount": "$32,000.00"
-                     *           },
-                     *           "aging": [
-                     *             {
-                     *               "from_period": "2025-06-30",
-                     *               "to_period": "2025-05-31",
-                     *               "before_days": 0,
-                     *               "to_days": 30,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-31",
-                     *               "to_period": "2025-05-01",
-                     *               "before_days": 31,
-                     *               "to_days": 60,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-01",
-                     *               "to_period": null,
-                     *               "before_days": 61,
-                     *               "to_days": null,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 32000,
-                     *             "formatted_amount": "$32,000.00"
-                     *           }
-                     *         }
-                     *       },
-                     *       "columns": [
-                     *         {
-                     *           "from_period": "2025-06-30",
-                     *           "to_period": "2025-05-31",
-                     *           "before_days": 0,
-                     *           "to_days": 30
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-31",
-                     *           "to_period": "2025-05-01",
-                     *           "before_days": 31,
-                     *           "to_days": 60
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-01",
-                     *           "to_period": null,
-                     *           "before_days": 61,
-                     *           "to_days": null
-                     *         }
-                     *       ],
-                     *       "query": {
-                     *         "as_date": "2025-06-30",
-                     *         "aging_days_before": 30,
-                     *         "aging_periods": 3,
-                     *         "number_format": {
-                     *           "precision": 2,
-                     *           "divide_on1000": false,
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "negative_format": "mines"
-                     *         },
-                     *         "vendors_ids": [],
-                     *         "branches_ids": [],
-                     *         "none_zero": false
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "A/P Aging Summary",
-                     *         "formatted_as_date": "2025/06/30",
-                     *         "formatted_date_range": "As 2025/06/30"
-                     *       }
-                     *     }
-                     */
-                    "application/pdf": unknown;
-                    /**
-                     * @example {
-                     *       "data": {
-                     *         "vendors": [
-                     *           {
-                     *             "vendor_name": "asdasd, asdasd",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 0,
-                     *               "formatted_amount": "$0.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "vendor_name": "Ahmed Bouhuolia",
-                     *             "current": {
-                     *               "amount": 32000,
-                     *               "formatted_amount": "32,000.00"
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 32000,
-                     *               "formatted_amount": "$32,000.00"
-                     *             }
-                     *           }
-                     *         ],
-                     *         "total": {
-                     *           "current": {
-                     *             "amount": 32000,
-                     *             "formatted_amount": "$32,000.00"
-                     *           },
-                     *           "aging": [
-                     *             {
-                     *               "from_period": "2025-06-30",
-                     *               "to_period": "2025-05-31",
-                     *               "before_days": 0,
-                     *               "to_days": 30,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-31",
-                     *               "to_period": "2025-05-01",
-                     *               "before_days": 31,
-                     *               "to_days": 60,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-01",
-                     *               "to_period": null,
-                     *               "before_days": 61,
-                     *               "to_days": null,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 32000,
-                     *             "formatted_amount": "$32,000.00"
-                     *           }
-                     *         }
-                     *       },
-                     *       "columns": [
-                     *         {
-                     *           "from_period": "2025-06-30",
-                     *           "to_period": "2025-05-31",
-                     *           "before_days": 0,
-                     *           "to_days": 30
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-31",
-                     *           "to_period": "2025-05-01",
-                     *           "before_days": 31,
-                     *           "to_days": 60
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-01",
-                     *           "to_period": null,
-                     *           "before_days": 61,
-                     *           "to_days": null
-                     *         }
-                     *       ],
-                     *       "query": {
-                     *         "as_date": "2025-06-30",
-                     *         "aging_days_before": 30,
-                     *         "aging_periods": 3,
-                     *         "number_format": {
-                     *           "precision": 2,
-                     *           "divide_on1000": false,
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "negative_format": "mines"
-                     *         },
-                     *         "vendors_ids": [],
-                     *         "branches_ids": [],
-                     *         "none_zero": false
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "A/P Aging Summary",
-                     *         "formatted_as_date": "2025/06/30",
-                     *         "formatted_date_range": "As 2025/06/30"
-                     *       }
-                     *     }
-                     */
-                    "application/xlsx": unknown;
-                    /**
-                     * @example {
-                     *       "data": {
-                     *         "vendors": [
-                     *           {
-                     *             "vendor_name": "asdasd, asdasd",
-                     *             "current": {
-                     *               "amount": 0,
-                     *               "formatted_amount": ""
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 0,
-                     *               "formatted_amount": "$0.00"
-                     *             }
-                     *           },
-                     *           {
-                     *             "vendor_name": "Ahmed Bouhuolia",
-                     *             "current": {
-                     *               "amount": 32000,
-                     *               "formatted_amount": "32,000.00"
-                     *             },
-                     *             "aging": [
-                     *               {
-                     *                 "from_period": "2025-06-30",
-                     *                 "to_period": "2025-05-31",
-                     *                 "before_days": 0,
-                     *                 "to_days": 30,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-31",
-                     *                 "to_period": "2025-05-01",
-                     *                 "before_days": 31,
-                     *                 "to_days": 60,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               },
-                     *               {
-                     *                 "from_period": "2025-05-01",
-                     *                 "to_period": null,
-                     *                 "before_days": 61,
-                     *                 "to_days": null,
-                     *                 "total": {
-                     *                   "amount": 0,
-                     *                   "formatted_amount": ""
-                     *                 }
-                     *               }
-                     *             ],
-                     *             "total": {
-                     *               "amount": 32000,
-                     *               "formatted_amount": "$32,000.00"
-                     *             }
-                     *           }
-                     *         ],
-                     *         "total": {
-                     *           "current": {
-                     *             "amount": 32000,
-                     *             "formatted_amount": "$32,000.00"
-                     *           },
-                     *           "aging": [
-                     *             {
-                     *               "from_period": "2025-06-30",
-                     *               "to_period": "2025-05-31",
-                     *               "before_days": 0,
-                     *               "to_days": 30,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-31",
-                     *               "to_period": "2025-05-01",
-                     *               "before_days": 31,
-                     *               "to_days": 60,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "from_period": "2025-05-01",
-                     *               "to_period": null,
-                     *               "before_days": 61,
-                     *               "to_days": null,
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "$0.00"
-                     *               }
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 32000,
-                     *             "formatted_amount": "$32,000.00"
-                     *           }
-                     *         }
-                     *       },
-                     *       "columns": [
-                     *         {
-                     *           "from_period": "2025-06-30",
-                     *           "to_period": "2025-05-31",
-                     *           "before_days": 0,
-                     *           "to_days": 30
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-31",
-                     *           "to_period": "2025-05-01",
-                     *           "before_days": 31,
-                     *           "to_days": 60
-                     *         },
-                     *         {
-                     *           "from_period": "2025-05-01",
-                     *           "to_period": null,
-                     *           "before_days": 61,
-                     *           "to_days": null
-                     *         }
-                     *       ],
-                     *       "query": {
-                     *         "as_date": "2025-06-30",
-                     *         "aging_days_before": 30,
-                     *         "aging_periods": 3,
-                     *         "number_format": {
-                     *           "precision": 2,
-                     *           "divide_on1000": false,
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "negative_format": "mines"
-                     *         },
-                     *         "vendors_ids": [],
-                     *         "branches_ids": [],
-                     *         "none_zero": false
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "A/P Aging Summary",
-                     *         "formatted_as_date": "2025/06/30",
-                     *         "formatted_date_range": "As 2025/06/30"
-                     *       }
-                     *     }
-                     */
-                    "application/csv": unknown;
+                    "application/json": components["schemas"]["APAgingSummaryResponseDto"];
+                    "application/json+table": components["schemas"]["APAgingSummaryTableResponseDto"];
                 };
             };
         };
@@ -34199,11 +25914,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Inventory item details report */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["InventoryItemDetailsResponseDto"];
+                    "application/json+table": components["schemas"]["InventoryItemDetailsTableResponseDto"];
+                };
             };
         };
     };
@@ -34252,7 +25971,10 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["InventoryValuationResponseDto"];
+                    "application/json+table": components["schemas"]["InventoryValuationTableResponseDto"];
+                };
             };
         };
     };
@@ -34283,7 +26005,10 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["SalesTaxLiabilitySummaryResponseDto"];
+                    "application/json+table": components["schemas"]["SalesTaxLiabilitySummaryTableResponseDto"];
+                };
             };
         };
     };
@@ -34603,1139 +26328,8 @@ export interface operations {
                      *       }
                      *     }
                      */
-                    "application/json": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "from_date": "2025-06-01",
-                     *         "to_date": "2025-06-21",
-                     *         "from_range": null,
-                     *         "to_range": null,
-                     *         "accounts_ids": [],
-                     *         "number_format": {
-                     *           "no_cents": false,
-                     *           "divide_on1000": false
-                     *         }
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "date": "2025-05-24T22:00:00.000Z",
-                     *           "date_formatted": "2025 May 25",
-                     *           "transaction_type": "Expense",
-                     *           "reference_id": 1000,
-                     *           "reference_type_formatted": "Expense",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "account_name": "Prepaid Expenses",
-                     *               "account_code": "100010",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "123,123.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 123123,
-                     *               "debit": 0
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": "",
-                     *               "account_name": "Exchange Gain or Loss",
-                     *               "account_code": "40005",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "123,123.00",
-                     *               "credit": 0,
-                     *               "debit": 123123
-                     *             }
-                     *           ],
-                     *           "credit": 123123,
-                     *           "debit": 123123,
-                     *           "formatted_credit": "$123,123.00",
-                     *           "formatted_debit": "$123,123.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "BillPayment",
-                     *           "reference_id": 3,
-                     *           "reference_type_formatted": "BillPayment",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": "",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "500.00",
-                     *               "credit": 0,
-                     *               "debit": 500
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "account_name": "Bank Account",
-                     *               "account_code": "10001",
-                     *               "transaction_number": "",
-                     *               "formatted_credit": "500.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 500,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 500,
-                     *           "debit": 500,
-                     *           "formatted_credit": "$500.00",
-                     *           "formatted_debit": "$500.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "VendorCredit",
-                     *           "reference_id": 3,
-                     *           "reference_type_formatted": "VendorCredit",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "100.00",
-                     *               "credit": 0,
-                     *               "debit": 100
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "account_name": "Cost of Goods Sold",
-                     *               "account_code": "40002",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 100,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 100,
-                     *           "debit": 100,
-                     *           "formatted_credit": "$100.00",
-                     *           "formatted_debit": "$100.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "VendorCredit",
-                     *           "reference_id": 4,
-                     *           "reference_type_formatted": "VendorCredit",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "100.00",
-                     *               "credit": 0,
-                     *               "debit": 100
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "account_name": "Cost of Goods Sold",
-                     *               "account_code": "40002",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 100,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 100,
-                     *           "debit": 100,
-                     *           "formatted_credit": "$100.00",
-                     *           "formatted_debit": "$100.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "Bill",
-                     *           "reference_id": 4,
-                     *           "reference_type_formatted": "Bill",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 1000,
-                     *               "debit": 0
-                     *             },
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "account_name": "Cost of Goods Sold",
-                     *               "account_code": "40002",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "1,000.00",
-                     *               "credit": 0,
-                     *               "debit": 1000
-                     *             }
-                     *           ],
-                     *           "credit": 1000,
-                     *           "debit": 1000,
-                     *           "formatted_credit": "$1,000.00",
-                     *           "formatted_debit": "$1,000.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "Bill",
-                     *           "reference_id": 5,
-                     *           "reference_type_formatted": "Bill",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 1000,
-                     *               "debit": 0
-                     *             },
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "account_name": "Inventory Asset",
-                     *               "account_code": "10008",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "1,000.00",
-                     *               "credit": 0,
-                     *               "debit": 1000
-                     *             }
-                     *           ],
-                     *           "credit": 1000,
-                     *           "debit": 1000,
-                     *           "formatted_credit": "$1,000.00",
-                     *           "formatted_debit": "$1,000.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-15T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 16",
-                     *           "transaction_type": "Journal",
-                     *           "reference_id": 1017,
-                     *           "reference_type_formatted": "Journal",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": "",
-                     *               "account_name": "Loan",
-                     *               "account_code": "20003",
-                     *               "transaction_number": "REF",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "10,000.00",
-                     *               "credit": 0,
-                     *               "debit": 10000
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": "",
-                     *               "account_name": "Depreciation Expense",
-                     *               "account_code": "40007",
-                     *               "transaction_number": "REF",
-                     *               "formatted_credit": "10,000.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 10000,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 10000,
-                     *           "debit": 10000,
-                     *           "formatted_credit": "$10,000.00",
-                     *           "formatted_debit": "$10,000.00"
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "",
-                     *         "formatted_date_range": "From 2025/06/01 | To 2025/06/21",
-                     *         "formatted_from_date": "2025/06/01",
-                     *         "formatted_to_date": "2025/06/21"
-                     *       }
-                     *     }
-                     */
-                    "application/json+table": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "from_date": "2025-06-01",
-                     *         "to_date": "2025-06-21",
-                     *         "from_range": null,
-                     *         "to_range": null,
-                     *         "accounts_ids": [],
-                     *         "number_format": {
-                     *           "no_cents": false,
-                     *           "divide_on1000": false
-                     *         }
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "date": "2025-05-24T22:00:00.000Z",
-                     *           "date_formatted": "2025 May 25",
-                     *           "transaction_type": "Expense",
-                     *           "reference_id": 1000,
-                     *           "reference_type_formatted": "Expense",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "account_name": "Prepaid Expenses",
-                     *               "account_code": "100010",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "123,123.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 123123,
-                     *               "debit": 0
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": "",
-                     *               "account_name": "Exchange Gain or Loss",
-                     *               "account_code": "40005",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "123,123.00",
-                     *               "credit": 0,
-                     *               "debit": 123123
-                     *             }
-                     *           ],
-                     *           "credit": 123123,
-                     *           "debit": 123123,
-                     *           "formatted_credit": "$123,123.00",
-                     *           "formatted_debit": "$123,123.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "BillPayment",
-                     *           "reference_id": 3,
-                     *           "reference_type_formatted": "BillPayment",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": "",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "500.00",
-                     *               "credit": 0,
-                     *               "debit": 500
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "account_name": "Bank Account",
-                     *               "account_code": "10001",
-                     *               "transaction_number": "",
-                     *               "formatted_credit": "500.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 500,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 500,
-                     *           "debit": 500,
-                     *           "formatted_credit": "$500.00",
-                     *           "formatted_debit": "$500.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "VendorCredit",
-                     *           "reference_id": 3,
-                     *           "reference_type_formatted": "VendorCredit",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "100.00",
-                     *               "credit": 0,
-                     *               "debit": 100
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "account_name": "Cost of Goods Sold",
-                     *               "account_code": "40002",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 100,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 100,
-                     *           "debit": 100,
-                     *           "formatted_credit": "$100.00",
-                     *           "formatted_debit": "$100.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "VendorCredit",
-                     *           "reference_id": 4,
-                     *           "reference_type_formatted": "VendorCredit",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "100.00",
-                     *               "credit": 0,
-                     *               "debit": 100
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "account_name": "Cost of Goods Sold",
-                     *               "account_code": "40002",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 100,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 100,
-                     *           "debit": 100,
-                     *           "formatted_credit": "$100.00",
-                     *           "formatted_debit": "$100.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "Bill",
-                     *           "reference_id": 4,
-                     *           "reference_type_formatted": "Bill",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 1000,
-                     *               "debit": 0
-                     *             },
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "account_name": "Cost of Goods Sold",
-                     *               "account_code": "40002",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "1,000.00",
-                     *               "credit": 0,
-                     *               "debit": 1000
-                     *             }
-                     *           ],
-                     *           "credit": 1000,
-                     *           "debit": 1000,
-                     *           "formatted_credit": "$1,000.00",
-                     *           "formatted_debit": "$1,000.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "Bill",
-                     *           "reference_id": 5,
-                     *           "reference_type_formatted": "Bill",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 1000,
-                     *               "debit": 0
-                     *             },
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "account_name": "Inventory Asset",
-                     *               "account_code": "10008",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "1,000.00",
-                     *               "credit": 0,
-                     *               "debit": 1000
-                     *             }
-                     *           ],
-                     *           "credit": 1000,
-                     *           "debit": 1000,
-                     *           "formatted_credit": "$1,000.00",
-                     *           "formatted_debit": "$1,000.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-15T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 16",
-                     *           "transaction_type": "Journal",
-                     *           "reference_id": 1017,
-                     *           "reference_type_formatted": "Journal",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": "",
-                     *               "account_name": "Loan",
-                     *               "account_code": "20003",
-                     *               "transaction_number": "REF",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "10,000.00",
-                     *               "credit": 0,
-                     *               "debit": 10000
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": "",
-                     *               "account_name": "Depreciation Expense",
-                     *               "account_code": "40007",
-                     *               "transaction_number": "REF",
-                     *               "formatted_credit": "10,000.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 10000,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 10000,
-                     *           "debit": 10000,
-                     *           "formatted_credit": "$10,000.00",
-                     *           "formatted_debit": "$10,000.00"
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "",
-                     *         "formatted_date_range": "From 2025/06/01 | To 2025/06/21",
-                     *         "formatted_from_date": "2025/06/01",
-                     *         "formatted_to_date": "2025/06/21"
-                     *       }
-                     *     }
-                     */
-                    "application/pdf": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "from_date": "2025-06-01",
-                     *         "to_date": "2025-06-21",
-                     *         "from_range": null,
-                     *         "to_range": null,
-                     *         "accounts_ids": [],
-                     *         "number_format": {
-                     *           "no_cents": false,
-                     *           "divide_on1000": false
-                     *         }
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "date": "2025-05-24T22:00:00.000Z",
-                     *           "date_formatted": "2025 May 25",
-                     *           "transaction_type": "Expense",
-                     *           "reference_id": 1000,
-                     *           "reference_type_formatted": "Expense",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "account_name": "Prepaid Expenses",
-                     *               "account_code": "100010",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "123,123.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 123123,
-                     *               "debit": 0
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": "",
-                     *               "account_name": "Exchange Gain or Loss",
-                     *               "account_code": "40005",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "123,123.00",
-                     *               "credit": 0,
-                     *               "debit": 123123
-                     *             }
-                     *           ],
-                     *           "credit": 123123,
-                     *           "debit": 123123,
-                     *           "formatted_credit": "$123,123.00",
-                     *           "formatted_debit": "$123,123.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "BillPayment",
-                     *           "reference_id": 3,
-                     *           "reference_type_formatted": "BillPayment",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": "",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "500.00",
-                     *               "credit": 0,
-                     *               "debit": 500
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "account_name": "Bank Account",
-                     *               "account_code": "10001",
-                     *               "transaction_number": "",
-                     *               "formatted_credit": "500.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 500,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 500,
-                     *           "debit": 500,
-                     *           "formatted_credit": "$500.00",
-                     *           "formatted_debit": "$500.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "VendorCredit",
-                     *           "reference_id": 3,
-                     *           "reference_type_formatted": "VendorCredit",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "100.00",
-                     *               "credit": 0,
-                     *               "debit": 100
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "account_name": "Cost of Goods Sold",
-                     *               "account_code": "40002",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 100,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 100,
-                     *           "debit": 100,
-                     *           "formatted_credit": "$100.00",
-                     *           "formatted_debit": "$100.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "VendorCredit",
-                     *           "reference_id": 4,
-                     *           "reference_type_formatted": "VendorCredit",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "100.00",
-                     *               "credit": 0,
-                     *               "debit": 100
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "account_name": "Cost of Goods Sold",
-                     *               "account_code": "40002",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 100,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 100,
-                     *           "debit": 100,
-                     *           "formatted_credit": "$100.00",
-                     *           "formatted_debit": "$100.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "Bill",
-                     *           "reference_id": 4,
-                     *           "reference_type_formatted": "Bill",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 1000,
-                     *               "debit": 0
-                     *             },
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "account_name": "Cost of Goods Sold",
-                     *               "account_code": "40002",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "1,000.00",
-                     *               "credit": 0,
-                     *               "debit": 1000
-                     *             }
-                     *           ],
-                     *           "credit": 1000,
-                     *           "debit": 1000,
-                     *           "formatted_credit": "$1,000.00",
-                     *           "formatted_debit": "$1,000.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "Bill",
-                     *           "reference_id": 5,
-                     *           "reference_type_formatted": "Bill",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 1000,
-                     *               "debit": 0
-                     *             },
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "account_name": "Inventory Asset",
-                     *               "account_code": "10008",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "1,000.00",
-                     *               "credit": 0,
-                     *               "debit": 1000
-                     *             }
-                     *           ],
-                     *           "credit": 1000,
-                     *           "debit": 1000,
-                     *           "formatted_credit": "$1,000.00",
-                     *           "formatted_debit": "$1,000.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-15T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 16",
-                     *           "transaction_type": "Journal",
-                     *           "reference_id": 1017,
-                     *           "reference_type_formatted": "Journal",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": "",
-                     *               "account_name": "Loan",
-                     *               "account_code": "20003",
-                     *               "transaction_number": "REF",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "10,000.00",
-                     *               "credit": 0,
-                     *               "debit": 10000
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": "",
-                     *               "account_name": "Depreciation Expense",
-                     *               "account_code": "40007",
-                     *               "transaction_number": "REF",
-                     *               "formatted_credit": "10,000.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 10000,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 10000,
-                     *           "debit": 10000,
-                     *           "formatted_credit": "$10,000.00",
-                     *           "formatted_debit": "$10,000.00"
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "",
-                     *         "formatted_date_range": "From 2025/06/01 | To 2025/06/21",
-                     *         "formatted_from_date": "2025/06/01",
-                     *         "formatted_to_date": "2025/06/21"
-                     *       }
-                     *     }
-                     */
-                    "application/xlsx": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "from_date": "2025-06-01",
-                     *         "to_date": "2025-06-21",
-                     *         "from_range": null,
-                     *         "to_range": null,
-                     *         "accounts_ids": [],
-                     *         "number_format": {
-                     *           "no_cents": false,
-                     *           "divide_on1000": false
-                     *         }
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "date": "2025-05-24T22:00:00.000Z",
-                     *           "date_formatted": "2025 May 25",
-                     *           "transaction_type": "Expense",
-                     *           "reference_id": 1000,
-                     *           "reference_type_formatted": "Expense",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "account_name": "Prepaid Expenses",
-                     *               "account_code": "100010",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "123,123.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 123123,
-                     *               "debit": 0
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": "",
-                     *               "account_name": "Exchange Gain or Loss",
-                     *               "account_code": "40005",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "123,123.00",
-                     *               "credit": 0,
-                     *               "debit": 123123
-                     *             }
-                     *           ],
-                     *           "credit": 123123,
-                     *           "debit": 123123,
-                     *           "formatted_credit": "$123,123.00",
-                     *           "formatted_debit": "$123,123.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "BillPayment",
-                     *           "reference_id": 3,
-                     *           "reference_type_formatted": "BillPayment",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": "",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "500.00",
-                     *               "credit": 0,
-                     *               "debit": 500
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "account_name": "Bank Account",
-                     *               "account_code": "10001",
-                     *               "transaction_number": "",
-                     *               "formatted_credit": "500.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 500,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 500,
-                     *           "debit": 500,
-                     *           "formatted_credit": "$500.00",
-                     *           "formatted_debit": "$500.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "VendorCredit",
-                     *           "reference_id": 3,
-                     *           "reference_type_formatted": "VendorCredit",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "100.00",
-                     *               "credit": 0,
-                     *               "debit": 100
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "account_name": "Cost of Goods Sold",
-                     *               "account_code": "40002",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 100,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 100,
-                     *           "debit": 100,
-                     *           "formatted_credit": "$100.00",
-                     *           "formatted_debit": "$100.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "VendorCredit",
-                     *           "reference_id": 4,
-                     *           "reference_type_formatted": "VendorCredit",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "100.00",
-                     *               "credit": 0,
-                     *               "debit": 100
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": null,
-                     *               "account_name": "Cost of Goods Sold",
-                     *               "account_code": "40002",
-                     *               "transaction_number": "VC-00001",
-                     *               "formatted_credit": "100.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 100,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 100,
-                     *           "debit": 100,
-                     *           "formatted_credit": "$100.00",
-                     *           "formatted_debit": "$100.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "Bill",
-                     *           "reference_id": 4,
-                     *           "reference_type_formatted": "Bill",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 1000,
-                     *               "debit": 0
-                     *             },
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "account_name": "Cost of Goods Sold",
-                     *               "account_code": "40002",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "1,000.00",
-                     *               "credit": 0,
-                     *               "debit": 1000
-                     *             }
-                     *           ],
-                     *           "credit": 1000,
-                     *           "debit": 1000,
-                     *           "formatted_credit": "$1,000.00",
-                     *           "formatted_debit": "$1,000.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-09T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 10",
-                     *           "transaction_type": "Bill",
-                     *           "reference_id": 5,
-                     *           "reference_type_formatted": "Bill",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "contact_name": "business",
-                     *               "contact_type": "customer",
-                     *               "account_name": "Accounts Payable (A/P)",
-                     *               "account_code": "20001",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "1,000.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 1000,
-                     *               "debit": 0
-                     *             },
-                     *             {
-                     *               "index": 1,
-                     *               "note": null,
-                     *               "account_name": "Inventory Asset",
-                     *               "account_code": "10008",
-                     *               "transaction_number": null,
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "1,000.00",
-                     *               "credit": 0,
-                     *               "debit": 1000
-                     *             }
-                     *           ],
-                     *           "credit": 1000,
-                     *           "debit": 1000,
-                     *           "formatted_credit": "$1,000.00",
-                     *           "formatted_debit": "$1,000.00"
-                     *         },
-                     *         {
-                     *           "date": "2025-06-15T22:00:00.000Z",
-                     *           "date_formatted": "2025 Jun 16",
-                     *           "transaction_type": "Journal",
-                     *           "reference_id": 1017,
-                     *           "reference_type_formatted": "Journal",
-                     *           "entries": [
-                     *             {
-                     *               "index": 1,
-                     *               "note": "",
-                     *               "account_name": "Loan",
-                     *               "account_code": "20003",
-                     *               "transaction_number": "REF",
-                     *               "formatted_credit": "",
-                     *               "formatted_debit": "10,000.00",
-                     *               "credit": 0,
-                     *               "debit": 10000
-                     *             },
-                     *             {
-                     *               "index": 2,
-                     *               "note": "",
-                     *               "account_name": "Depreciation Expense",
-                     *               "account_code": "40007",
-                     *               "transaction_number": "REF",
-                     *               "formatted_credit": "10,000.00",
-                     *               "formatted_debit": "",
-                     *               "credit": 10000,
-                     *               "debit": 0
-                     *             }
-                     *           ],
-                     *           "credit": 10000,
-                     *           "debit": 10000,
-                     *           "formatted_credit": "$10,000.00",
-                     *           "formatted_debit": "$10,000.00"
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "",
-                     *         "formatted_date_range": "From 2025/06/01 | To 2025/06/21",
-                     *         "formatted_from_date": "2025/06/01",
-                     *         "formatted_to_date": "2025/06/21"
-                     *       }
-                     *     }
-                     */
-                    "application/csv": unknown;
+                    "application/json": components["schemas"]["JournalSheetResponseDto"];
+                    "application/json+table": components["schemas"]["JournalSheetTableResponseDto"];
                 };
             };
         };
@@ -36046,979 +26640,8 @@ export interface operations {
                      *       }
                      *     }
                      */
-                    "application/json": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-22",
-                     *         "number_format": {
-                     *           "divide_on1000": false,
-                     *           "negative_format": "mines",
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "precision": 2
-                     *         },
-                     *         "basis": "accrual",
-                     *         "none_zero": false,
-                     *         "none_transactions": false,
-                     *         "display_columns_type": "total",
-                     *         "display_columns_by": "year",
-                     *         "accounts_ids": [],
-                     *         "percentage_column": false,
-                     *         "percentage_row": false,
-                     *         "percentage_income": false,
-                     *         "percentage_expense": false,
-                     *         "previous_period": false,
-                     *         "previous_period_amount_change": false,
-                     *         "previous_period_percentage_change": false,
-                     *         "previous_year": false,
-                     *         "previous_year_amount_change": false,
-                     *         "previous_year_percentage_change": false
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "id": "INCOME",
-                     *           "name": "Income",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 3931,
-                     *             "formatted_amount": "$3,931.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1025,
-                     *               "name": "Sales of Product Income",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 3931,
-                     *                 "formatted_amount": "3,931.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1026,
-                     *               "name": "Sales of Service Income",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1027,
-                     *               "name": "Uncategorized Income",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "COST_OF_SALES",
-                     *           "name": "Cost of sales",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 800,
-                     *             "formatted_amount": "$800.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1019,
-                     *               "name": "Cost of Goods Sold",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 800,
-                     *                 "formatted_amount": "800.00"
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "GROSS_PROFIT",
-                     *           "name": "GROSS PROFIT",
-                     *           "node_type": "EQUATION",
-                     *           "total": {
-                     *             "amount": 3131,
-                     *             "formatted_amount": "$3,131.00"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": "EXPENSES",
-                     *           "name": "Expenses",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": -111563,
-                     *             "formatted_amount": "-$111,563.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1020,
-                     *               "name": "Office expenses",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1021,
-                     *               "name": "Rent",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -92831,
-                     *                 "formatted_amount": "-92,831.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1023,
-                     *               "name": "Bank Fees and Charges",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -8732,
-                     *                 "formatted_amount": "-8,732.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1024,
-                     *               "name": "Depreciation Expense",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -10000,
-                     *                 "formatted_amount": "-10,000.00"
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "NET_OPERATING_INCOME",
-                     *           "name": "NET OPERATING INCOME",
-                     *           "node_type": "EQUATION",
-                     *           "total": {
-                     *             "amount": 114694,
-                     *             "formatted_amount": "$114,694.00"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": "OTHER_INCOME",
-                     *           "name": "Other income",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1031,
-                     *               "name": "Discount",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1033,
-                     *               "name": "Other Charges",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "OTHER_EXPENSES",
-                     *           "name": "Other expenses",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 119149,
-                     *             "formatted_amount": "$119,149.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1018,
-                     *               "name": "Other Expenses",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -1243,
-                     *                 "formatted_amount": "-1,243.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1022,
-                     *               "name": "Exchange Gain or Loss",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 123123,
-                     *                 "formatted_amount": "123,123.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1032,
-                     *               "name": "Purchase Discount",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -2731,
-                     *                 "formatted_amount": "-2,731.00"
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "NET_INCOME",
-                     *           "name": "NET INCOME",
-                     *           "node_type": "EQUATION",
-                     *           "total": {
-                     *             "amount": -4455,
-                     *             "formatted_amount": "-$4,455.00"
-                     *           }
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Cashflow Statement",
-                     *         "formatted_from_date": "2025/01/01",
-                     *         "formatted_to_date": "2025/06/22",
-                     *         "formatted_date_range": "From 2025/01/01 | To 2025/06/22"
-                     *       }
-                     *     }
-                     */
-                    "application/json+table": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-22",
-                     *         "number_format": {
-                     *           "divide_on1000": false,
-                     *           "negative_format": "mines",
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "precision": 2
-                     *         },
-                     *         "basis": "accrual",
-                     *         "none_zero": false,
-                     *         "none_transactions": false,
-                     *         "display_columns_type": "total",
-                     *         "display_columns_by": "year",
-                     *         "accounts_ids": [],
-                     *         "percentage_column": false,
-                     *         "percentage_row": false,
-                     *         "percentage_income": false,
-                     *         "percentage_expense": false,
-                     *         "previous_period": false,
-                     *         "previous_period_amount_change": false,
-                     *         "previous_period_percentage_change": false,
-                     *         "previous_year": false,
-                     *         "previous_year_amount_change": false,
-                     *         "previous_year_percentage_change": false
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "id": "INCOME",
-                     *           "name": "Income",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 3931,
-                     *             "formatted_amount": "$3,931.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1025,
-                     *               "name": "Sales of Product Income",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 3931,
-                     *                 "formatted_amount": "3,931.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1026,
-                     *               "name": "Sales of Service Income",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1027,
-                     *               "name": "Uncategorized Income",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "COST_OF_SALES",
-                     *           "name": "Cost of sales",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 800,
-                     *             "formatted_amount": "$800.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1019,
-                     *               "name": "Cost of Goods Sold",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 800,
-                     *                 "formatted_amount": "800.00"
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "GROSS_PROFIT",
-                     *           "name": "GROSS PROFIT",
-                     *           "node_type": "EQUATION",
-                     *           "total": {
-                     *             "amount": 3131,
-                     *             "formatted_amount": "$3,131.00"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": "EXPENSES",
-                     *           "name": "Expenses",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": -111563,
-                     *             "formatted_amount": "-$111,563.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1020,
-                     *               "name": "Office expenses",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1021,
-                     *               "name": "Rent",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -92831,
-                     *                 "formatted_amount": "-92,831.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1023,
-                     *               "name": "Bank Fees and Charges",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -8732,
-                     *                 "formatted_amount": "-8,732.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1024,
-                     *               "name": "Depreciation Expense",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -10000,
-                     *                 "formatted_amount": "-10,000.00"
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "NET_OPERATING_INCOME",
-                     *           "name": "NET OPERATING INCOME",
-                     *           "node_type": "EQUATION",
-                     *           "total": {
-                     *             "amount": 114694,
-                     *             "formatted_amount": "$114,694.00"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": "OTHER_INCOME",
-                     *           "name": "Other income",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1031,
-                     *               "name": "Discount",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1033,
-                     *               "name": "Other Charges",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "OTHER_EXPENSES",
-                     *           "name": "Other expenses",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 119149,
-                     *             "formatted_amount": "$119,149.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1018,
-                     *               "name": "Other Expenses",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -1243,
-                     *                 "formatted_amount": "-1,243.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1022,
-                     *               "name": "Exchange Gain or Loss",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 123123,
-                     *                 "formatted_amount": "123,123.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1032,
-                     *               "name": "Purchase Discount",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -2731,
-                     *                 "formatted_amount": "-2,731.00"
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "NET_INCOME",
-                     *           "name": "NET INCOME",
-                     *           "node_type": "EQUATION",
-                     *           "total": {
-                     *             "amount": -4455,
-                     *             "formatted_amount": "-$4,455.00"
-                     *           }
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Cashflow Statement",
-                     *         "formatted_from_date": "2025/01/01",
-                     *         "formatted_to_date": "2025/06/22",
-                     *         "formatted_date_range": "From 2025/01/01 | To 2025/06/22"
-                     *       }
-                     *     }
-                     */
-                    "application/pdf": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-22",
-                     *         "number_format": {
-                     *           "divide_on1000": false,
-                     *           "negative_format": "mines",
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "precision": 2
-                     *         },
-                     *         "basis": "accrual",
-                     *         "none_zero": false,
-                     *         "none_transactions": false,
-                     *         "display_columns_type": "total",
-                     *         "display_columns_by": "year",
-                     *         "accounts_ids": [],
-                     *         "percentage_column": false,
-                     *         "percentage_row": false,
-                     *         "percentage_income": false,
-                     *         "percentage_expense": false,
-                     *         "previous_period": false,
-                     *         "previous_period_amount_change": false,
-                     *         "previous_period_percentage_change": false,
-                     *         "previous_year": false,
-                     *         "previous_year_amount_change": false,
-                     *         "previous_year_percentage_change": false
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "id": "INCOME",
-                     *           "name": "Income",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 3931,
-                     *             "formatted_amount": "$3,931.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1025,
-                     *               "name": "Sales of Product Income",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 3931,
-                     *                 "formatted_amount": "3,931.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1026,
-                     *               "name": "Sales of Service Income",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1027,
-                     *               "name": "Uncategorized Income",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "COST_OF_SALES",
-                     *           "name": "Cost of sales",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 800,
-                     *             "formatted_amount": "$800.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1019,
-                     *               "name": "Cost of Goods Sold",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 800,
-                     *                 "formatted_amount": "800.00"
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "GROSS_PROFIT",
-                     *           "name": "GROSS PROFIT",
-                     *           "node_type": "EQUATION",
-                     *           "total": {
-                     *             "amount": 3131,
-                     *             "formatted_amount": "$3,131.00"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": "EXPENSES",
-                     *           "name": "Expenses",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": -111563,
-                     *             "formatted_amount": "-$111,563.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1020,
-                     *               "name": "Office expenses",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1021,
-                     *               "name": "Rent",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -92831,
-                     *                 "formatted_amount": "-92,831.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1023,
-                     *               "name": "Bank Fees and Charges",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -8732,
-                     *                 "formatted_amount": "-8,732.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1024,
-                     *               "name": "Depreciation Expense",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -10000,
-                     *                 "formatted_amount": "-10,000.00"
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "NET_OPERATING_INCOME",
-                     *           "name": "NET OPERATING INCOME",
-                     *           "node_type": "EQUATION",
-                     *           "total": {
-                     *             "amount": 114694,
-                     *             "formatted_amount": "$114,694.00"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": "OTHER_INCOME",
-                     *           "name": "Other income",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1031,
-                     *               "name": "Discount",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1033,
-                     *               "name": "Other Charges",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "OTHER_EXPENSES",
-                     *           "name": "Other expenses",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 119149,
-                     *             "formatted_amount": "$119,149.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1018,
-                     *               "name": "Other Expenses",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -1243,
-                     *                 "formatted_amount": "-1,243.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1022,
-                     *               "name": "Exchange Gain or Loss",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 123123,
-                     *                 "formatted_amount": "123,123.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1032,
-                     *               "name": "Purchase Discount",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -2731,
-                     *                 "formatted_amount": "-2,731.00"
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "NET_INCOME",
-                     *           "name": "NET INCOME",
-                     *           "node_type": "EQUATION",
-                     *           "total": {
-                     *             "amount": -4455,
-                     *             "formatted_amount": "-$4,455.00"
-                     *           }
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Cashflow Statement",
-                     *         "formatted_from_date": "2025/01/01",
-                     *         "formatted_to_date": "2025/06/22",
-                     *         "formatted_date_range": "From 2025/01/01 | To 2025/06/22"
-                     *       }
-                     *     }
-                     */
-                    "application/xlsx": unknown;
-                    /**
-                     * @example {
-                     *       "query": {
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-22",
-                     *         "number_format": {
-                     *           "divide_on1000": false,
-                     *           "negative_format": "mines",
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "precision": 2
-                     *         },
-                     *         "basis": "accrual",
-                     *         "none_zero": false,
-                     *         "none_transactions": false,
-                     *         "display_columns_type": "total",
-                     *         "display_columns_by": "year",
-                     *         "accounts_ids": [],
-                     *         "percentage_column": false,
-                     *         "percentage_row": false,
-                     *         "percentage_income": false,
-                     *         "percentage_expense": false,
-                     *         "previous_period": false,
-                     *         "previous_period_amount_change": false,
-                     *         "previous_period_percentage_change": false,
-                     *         "previous_year": false,
-                     *         "previous_year_amount_change": false,
-                     *         "previous_year_percentage_change": false
-                     *       },
-                     *       "data": [
-                     *         {
-                     *           "id": "INCOME",
-                     *           "name": "Income",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 3931,
-                     *             "formatted_amount": "$3,931.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1025,
-                     *               "name": "Sales of Product Income",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 3931,
-                     *                 "formatted_amount": "3,931.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1026,
-                     *               "name": "Sales of Service Income",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1027,
-                     *               "name": "Uncategorized Income",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "COST_OF_SALES",
-                     *           "name": "Cost of sales",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 800,
-                     *             "formatted_amount": "$800.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1019,
-                     *               "name": "Cost of Goods Sold",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 800,
-                     *                 "formatted_amount": "800.00"
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "GROSS_PROFIT",
-                     *           "name": "GROSS PROFIT",
-                     *           "node_type": "EQUATION",
-                     *           "total": {
-                     *             "amount": 3131,
-                     *             "formatted_amount": "$3,131.00"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": "EXPENSES",
-                     *           "name": "Expenses",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": -111563,
-                     *             "formatted_amount": "-$111,563.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1020,
-                     *               "name": "Office expenses",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1021,
-                     *               "name": "Rent",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -92831,
-                     *                 "formatted_amount": "-92,831.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1023,
-                     *               "name": "Bank Fees and Charges",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -8732,
-                     *                 "formatted_amount": "-8,732.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1024,
-                     *               "name": "Depreciation Expense",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -10000,
-                     *                 "formatted_amount": "-10,000.00"
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "NET_OPERATING_INCOME",
-                     *           "name": "NET OPERATING INCOME",
-                     *           "node_type": "EQUATION",
-                     *           "total": {
-                     *             "amount": 114694,
-                     *             "formatted_amount": "$114,694.00"
-                     *           }
-                     *         },
-                     *         {
-                     *           "id": "OTHER_INCOME",
-                     *           "name": "Other income",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1031,
-                     *               "name": "Discount",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1033,
-                     *               "name": "Other Charges",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": ""
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "OTHER_EXPENSES",
-                     *           "name": "Other expenses",
-                     *           "node_type": "ACCOUNTS",
-                     *           "total": {
-                     *             "amount": 119149,
-                     *             "formatted_amount": "$119,149.00"
-                     *           },
-                     *           "children": [
-                     *             {
-                     *               "id": 1018,
-                     *               "name": "Other Expenses",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -1243,
-                     *                 "formatted_amount": "-1,243.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1022,
-                     *               "name": "Exchange Gain or Loss",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": 123123,
-                     *                 "formatted_amount": "123,123.00"
-                     *               }
-                     *             },
-                     *             {
-                     *               "id": 1032,
-                     *               "name": "Purchase Discount",
-                     *               "node_type": "ACCOUNT",
-                     *               "total": {
-                     *                 "amount": -2731,
-                     *                 "formatted_amount": "-2,731.00"
-                     *               }
-                     *             }
-                     *           ]
-                     *         },
-                     *         {
-                     *           "id": "NET_INCOME",
-                     *           "name": "NET INCOME",
-                     *           "node_type": "EQUATION",
-                     *           "total": {
-                     *             "amount": -4455,
-                     *             "formatted_amount": "-$4,455.00"
-                     *           }
-                     *         }
-                     *       ],
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Cashflow Statement",
-                     *         "formatted_from_date": "2025/01/01",
-                     *         "formatted_to_date": "2025/06/22",
-                     *         "formatted_date_range": "From 2025/01/01 | To 2025/06/22"
-                     *       }
-                     *     }
-                     */
-                    "application/csv": unknown;
+                    "application/json": components["schemas"]["ProfitLossSheetResponseDto"];
+                    "application/json+table": components["schemas"]["ProfitLossSheetTableResponseDto"];
                 };
             };
         };
@@ -37468,1607 +27091,8 @@ export interface operations {
                      *       }
                      *     }
                      */
-                    "application/json": unknown;
-                    /**
-                     * @example {
-                     *       "data": [
-                     *         {
-                     *           "id": "OPERATING",
-                     *           "label": "OPERATING ACTIVITIES",
-                     *           "footer_label": "Net cash provided by operating activities",
-                     *           "section_type": "AGGREGATE",
-                     *           "children": [
-                     *             {
-                     *               "id": "NET_INCOME",
-                     *               "label": "Net income",
-                     *               "total": {
-                     *                 "amount": -113923,
-                     *                 "formatted_amount": "-113,923.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "NET_INCOME",
-                     *               "children": []
-                     *             },
-                     *             {
-                     *               "section_type": "ACCOUNTS",
-                     *               "id": "OPERATING_ACCOUNTS",
-                     *               "label": "Adjustments net income by operating activities.",
-                     *               "children": [
-                     *                 {
-                     *                   "id": 1006,
-                     *                   "code": "10007",
-                     *                   "label": "Accounts Receivable (A/R)",
-                     *                   "account_type": "accounts-receivable",
-                     *                   "adjustment_type": "mines",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1007,
-                     *                   "code": "10008",
-                     *                   "label": "Inventory Asset",
-                     *                   "account_type": "inventory",
-                     *                   "adjustment_type": "mines",
-                     *                   "total": {
-                     *                     "amount": -1000,
-                     *                     "formatted_amount": "-1,000.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1008,
-                     *                   "code": "20001",
-                     *                   "label": "Accounts Payable (A/P)",
-                     *                   "account_type": "accounts-payable",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 1300,
-                     *                     "formatted_amount": "1,300.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1013,
-                     *                   "code": "20006",
-                     *                   "label": "Tax Payable",
-                     *                   "account_type": "tax-payable",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1030,
-                     *                   "code": "100010",
-                     *                   "label": "Prepaid Expenses",
-                     *                   "account_type": "other-current-asset",
-                     *                   "adjustment_type": "mines",
-                     *                   "total": {
-                     *                     "amount": 123123,
-                     *                     "formatted_amount": "123,123.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1009,
-                     *                   "code": "20002",
-                     *                   "label": "Owner A Drawings",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1010,
-                     *                   "code": "20003",
-                     *                   "label": "Loan",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": -10000,
-                     *                     "formatted_amount": "-10,000.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1011,
-                     *                   "code": "20004",
-                     *                   "label": "Opening Balance Liabilities",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1012,
-                     *                   "code": "20005",
-                     *                   "label": "Revenue Received in Advance",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1029,
-                     *                   "code": "50005",
-                     *                   "label": "Unearned Revenue",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 }
-                     *               ],
-                     *               "total": {
-                     *                 "amount": 113423,
-                     *                 "formatted_amount": "$113,423.00",
-                     *                 "currency_code": "USD"
-                     *               }
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "ACCOUNTS",
-                     *           "id": "INVESTMENT",
-                     *           "label": "INVESTMENT ACTIVITIES",
-                     *           "footer_label": "cash_flow_statement.net_cash_investing",
-                     *           "children": [
-                     *             {
-                     *               "id": 1004,
-                     *               "code": "10005",
-                     *               "label": "Computer Equipment",
-                     *               "account_type": "fixed-asset",
-                     *               "adjustment_type": "mines",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1005,
-                     *               "code": "10006",
-                     *               "label": "Office Equipment",
-                     *               "account_type": "fixed-asset",
-                     *               "adjustment_type": "mines",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "ACCOUNTS",
-                     *           "id": "FINANCIAL",
-                     *           "label": "FINANCIAL ACTIVITIES",
-                     *           "footer_label": "cash_flow_statement.net_cash_financing",
-                     *           "children": [
-                     *             {
-                     *               "id": 1014,
-                     *               "code": "30001",
-                     *               "label": "Retained Earnings",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1015,
-                     *               "code": "30002",
-                     *               "label": "Opening Balance Equity",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1016,
-                     *               "code": "30003",
-                     *               "label": "Owner's Equity",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1017,
-                     *               "code": "30003",
-                     *               "label": "Drawings",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "CASH_AT_BEGINNING",
-                     *           "id": "CASH_BEGINNING_PERIOD",
-                     *           "label": "Cash at beginning of period",
-                     *           "children": [
-                     *             {
-                     *               "id": 1002,
-                     *               "code": "10003",
-                     *               "label": "Undeposited Funds",
-                     *               "account_type": "cash",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1003,
-                     *               "code": "10004",
-                     *               "label": "Petty Cash",
-                     *               "account_type": "cash",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1000,
-                     *               "code": "10001",
-                     *               "label": "Bank Account",
-                     *               "account_type": "bank",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1001,
-                     *               "code": "10002",
-                     *               "label": "Saving Bank Account",
-                     *               "account_type": "bank",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1034,
-                     *               "code": "",
-                     *               "label": "Chase - Plaid Checking",
-                     *               "account_type": "bank",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "TOTAL",
-                     *           "id": "NET_CASH_INCREASE",
-                     *           "label": "NET CASH INCREASE FOR PERIOD",
-                     *           "total": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "TOTAL",
-                     *           "id": "CASH_END_PERIOD",
-                     *           "label": "CASH AT END OF PERIOD",
-                     *           "total": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         }
-                     *       ],
-                     *       "query": {
-                     *         "display_columns_type": "total",
-                     *         "display_columns_by": "year",
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-16",
-                     *         "number_format": {
-                     *           "precision": 2,
-                     *           "divide_on1000": false,
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "negative_format": "mines"
-                     *         },
-                     *         "none_zero": false,
-                     *         "none_transactions": false,
-                     *         "basis": "cash"
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Statement of Cash Flow",
-                     *         "formatted_to_date": "2025/06/16",
-                     *         "formatted_from_date": "2025/01/01",
-                     *         "formatted_date_range": "From 2025/01/01 | To 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/json+table": unknown;
-                    /**
-                     * @example {
-                     *       "data": [
-                     *         {
-                     *           "id": "OPERATING",
-                     *           "label": "OPERATING ACTIVITIES",
-                     *           "footer_label": "Net cash provided by operating activities",
-                     *           "section_type": "AGGREGATE",
-                     *           "children": [
-                     *             {
-                     *               "id": "NET_INCOME",
-                     *               "label": "Net income",
-                     *               "total": {
-                     *                 "amount": -113923,
-                     *                 "formatted_amount": "-113,923.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "NET_INCOME",
-                     *               "children": []
-                     *             },
-                     *             {
-                     *               "section_type": "ACCOUNTS",
-                     *               "id": "OPERATING_ACCOUNTS",
-                     *               "label": "Adjustments net income by operating activities.",
-                     *               "children": [
-                     *                 {
-                     *                   "id": 1006,
-                     *                   "code": "10007",
-                     *                   "label": "Accounts Receivable (A/R)",
-                     *                   "account_type": "accounts-receivable",
-                     *                   "adjustment_type": "mines",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1007,
-                     *                   "code": "10008",
-                     *                   "label": "Inventory Asset",
-                     *                   "account_type": "inventory",
-                     *                   "adjustment_type": "mines",
-                     *                   "total": {
-                     *                     "amount": -1000,
-                     *                     "formatted_amount": "-1,000.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1008,
-                     *                   "code": "20001",
-                     *                   "label": "Accounts Payable (A/P)",
-                     *                   "account_type": "accounts-payable",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 1300,
-                     *                     "formatted_amount": "1,300.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1013,
-                     *                   "code": "20006",
-                     *                   "label": "Tax Payable",
-                     *                   "account_type": "tax-payable",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1030,
-                     *                   "code": "100010",
-                     *                   "label": "Prepaid Expenses",
-                     *                   "account_type": "other-current-asset",
-                     *                   "adjustment_type": "mines",
-                     *                   "total": {
-                     *                     "amount": 123123,
-                     *                     "formatted_amount": "123,123.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1009,
-                     *                   "code": "20002",
-                     *                   "label": "Owner A Drawings",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1010,
-                     *                   "code": "20003",
-                     *                   "label": "Loan",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": -10000,
-                     *                     "formatted_amount": "-10,000.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1011,
-                     *                   "code": "20004",
-                     *                   "label": "Opening Balance Liabilities",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1012,
-                     *                   "code": "20005",
-                     *                   "label": "Revenue Received in Advance",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1029,
-                     *                   "code": "50005",
-                     *                   "label": "Unearned Revenue",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 }
-                     *               ],
-                     *               "total": {
-                     *                 "amount": 113423,
-                     *                 "formatted_amount": "$113,423.00",
-                     *                 "currency_code": "USD"
-                     *               }
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "ACCOUNTS",
-                     *           "id": "INVESTMENT",
-                     *           "label": "INVESTMENT ACTIVITIES",
-                     *           "footer_label": "cash_flow_statement.net_cash_investing",
-                     *           "children": [
-                     *             {
-                     *               "id": 1004,
-                     *               "code": "10005",
-                     *               "label": "Computer Equipment",
-                     *               "account_type": "fixed-asset",
-                     *               "adjustment_type": "mines",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1005,
-                     *               "code": "10006",
-                     *               "label": "Office Equipment",
-                     *               "account_type": "fixed-asset",
-                     *               "adjustment_type": "mines",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "ACCOUNTS",
-                     *           "id": "FINANCIAL",
-                     *           "label": "FINANCIAL ACTIVITIES",
-                     *           "footer_label": "cash_flow_statement.net_cash_financing",
-                     *           "children": [
-                     *             {
-                     *               "id": 1014,
-                     *               "code": "30001",
-                     *               "label": "Retained Earnings",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1015,
-                     *               "code": "30002",
-                     *               "label": "Opening Balance Equity",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1016,
-                     *               "code": "30003",
-                     *               "label": "Owner's Equity",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1017,
-                     *               "code": "30003",
-                     *               "label": "Drawings",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "CASH_AT_BEGINNING",
-                     *           "id": "CASH_BEGINNING_PERIOD",
-                     *           "label": "Cash at beginning of period",
-                     *           "children": [
-                     *             {
-                     *               "id": 1002,
-                     *               "code": "10003",
-                     *               "label": "Undeposited Funds",
-                     *               "account_type": "cash",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1003,
-                     *               "code": "10004",
-                     *               "label": "Petty Cash",
-                     *               "account_type": "cash",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1000,
-                     *               "code": "10001",
-                     *               "label": "Bank Account",
-                     *               "account_type": "bank",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1001,
-                     *               "code": "10002",
-                     *               "label": "Saving Bank Account",
-                     *               "account_type": "bank",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1034,
-                     *               "code": "",
-                     *               "label": "Chase - Plaid Checking",
-                     *               "account_type": "bank",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "TOTAL",
-                     *           "id": "NET_CASH_INCREASE",
-                     *           "label": "NET CASH INCREASE FOR PERIOD",
-                     *           "total": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "TOTAL",
-                     *           "id": "CASH_END_PERIOD",
-                     *           "label": "CASH AT END OF PERIOD",
-                     *           "total": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         }
-                     *       ],
-                     *       "query": {
-                     *         "display_columns_type": "total",
-                     *         "display_columns_by": "year",
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-16",
-                     *         "number_format": {
-                     *           "precision": 2,
-                     *           "divide_on1000": false,
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "negative_format": "mines"
-                     *         },
-                     *         "none_zero": false,
-                     *         "none_transactions": false,
-                     *         "basis": "cash"
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Statement of Cash Flow",
-                     *         "formatted_to_date": "2025/06/16",
-                     *         "formatted_from_date": "2025/01/01",
-                     *         "formatted_date_range": "From 2025/01/01 | To 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/pdf": unknown;
-                    /**
-                     * @example {
-                     *       "data": [
-                     *         {
-                     *           "id": "OPERATING",
-                     *           "label": "OPERATING ACTIVITIES",
-                     *           "footer_label": "Net cash provided by operating activities",
-                     *           "section_type": "AGGREGATE",
-                     *           "children": [
-                     *             {
-                     *               "id": "NET_INCOME",
-                     *               "label": "Net income",
-                     *               "total": {
-                     *                 "amount": -113923,
-                     *                 "formatted_amount": "-113,923.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "NET_INCOME",
-                     *               "children": []
-                     *             },
-                     *             {
-                     *               "section_type": "ACCOUNTS",
-                     *               "id": "OPERATING_ACCOUNTS",
-                     *               "label": "Adjustments net income by operating activities.",
-                     *               "children": [
-                     *                 {
-                     *                   "id": 1006,
-                     *                   "code": "10007",
-                     *                   "label": "Accounts Receivable (A/R)",
-                     *                   "account_type": "accounts-receivable",
-                     *                   "adjustment_type": "mines",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1007,
-                     *                   "code": "10008",
-                     *                   "label": "Inventory Asset",
-                     *                   "account_type": "inventory",
-                     *                   "adjustment_type": "mines",
-                     *                   "total": {
-                     *                     "amount": -1000,
-                     *                     "formatted_amount": "-1,000.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1008,
-                     *                   "code": "20001",
-                     *                   "label": "Accounts Payable (A/P)",
-                     *                   "account_type": "accounts-payable",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 1300,
-                     *                     "formatted_amount": "1,300.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1013,
-                     *                   "code": "20006",
-                     *                   "label": "Tax Payable",
-                     *                   "account_type": "tax-payable",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1030,
-                     *                   "code": "100010",
-                     *                   "label": "Prepaid Expenses",
-                     *                   "account_type": "other-current-asset",
-                     *                   "adjustment_type": "mines",
-                     *                   "total": {
-                     *                     "amount": 123123,
-                     *                     "formatted_amount": "123,123.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1009,
-                     *                   "code": "20002",
-                     *                   "label": "Owner A Drawings",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1010,
-                     *                   "code": "20003",
-                     *                   "label": "Loan",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": -10000,
-                     *                     "formatted_amount": "-10,000.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1011,
-                     *                   "code": "20004",
-                     *                   "label": "Opening Balance Liabilities",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1012,
-                     *                   "code": "20005",
-                     *                   "label": "Revenue Received in Advance",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1029,
-                     *                   "code": "50005",
-                     *                   "label": "Unearned Revenue",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 }
-                     *               ],
-                     *               "total": {
-                     *                 "amount": 113423,
-                     *                 "formatted_amount": "$113,423.00",
-                     *                 "currency_code": "USD"
-                     *               }
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "ACCOUNTS",
-                     *           "id": "INVESTMENT",
-                     *           "label": "INVESTMENT ACTIVITIES",
-                     *           "footer_label": "cash_flow_statement.net_cash_investing",
-                     *           "children": [
-                     *             {
-                     *               "id": 1004,
-                     *               "code": "10005",
-                     *               "label": "Computer Equipment",
-                     *               "account_type": "fixed-asset",
-                     *               "adjustment_type": "mines",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1005,
-                     *               "code": "10006",
-                     *               "label": "Office Equipment",
-                     *               "account_type": "fixed-asset",
-                     *               "adjustment_type": "mines",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "ACCOUNTS",
-                     *           "id": "FINANCIAL",
-                     *           "label": "FINANCIAL ACTIVITIES",
-                     *           "footer_label": "cash_flow_statement.net_cash_financing",
-                     *           "children": [
-                     *             {
-                     *               "id": 1014,
-                     *               "code": "30001",
-                     *               "label": "Retained Earnings",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1015,
-                     *               "code": "30002",
-                     *               "label": "Opening Balance Equity",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1016,
-                     *               "code": "30003",
-                     *               "label": "Owner's Equity",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1017,
-                     *               "code": "30003",
-                     *               "label": "Drawings",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "CASH_AT_BEGINNING",
-                     *           "id": "CASH_BEGINNING_PERIOD",
-                     *           "label": "Cash at beginning of period",
-                     *           "children": [
-                     *             {
-                     *               "id": 1002,
-                     *               "code": "10003",
-                     *               "label": "Undeposited Funds",
-                     *               "account_type": "cash",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1003,
-                     *               "code": "10004",
-                     *               "label": "Petty Cash",
-                     *               "account_type": "cash",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1000,
-                     *               "code": "10001",
-                     *               "label": "Bank Account",
-                     *               "account_type": "bank",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1001,
-                     *               "code": "10002",
-                     *               "label": "Saving Bank Account",
-                     *               "account_type": "bank",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1034,
-                     *               "code": "",
-                     *               "label": "Chase - Plaid Checking",
-                     *               "account_type": "bank",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "TOTAL",
-                     *           "id": "NET_CASH_INCREASE",
-                     *           "label": "NET CASH INCREASE FOR PERIOD",
-                     *           "total": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "TOTAL",
-                     *           "id": "CASH_END_PERIOD",
-                     *           "label": "CASH AT END OF PERIOD",
-                     *           "total": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         }
-                     *       ],
-                     *       "query": {
-                     *         "display_columns_type": "total",
-                     *         "display_columns_by": "year",
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-16",
-                     *         "number_format": {
-                     *           "precision": 2,
-                     *           "divide_on1000": false,
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "negative_format": "mines"
-                     *         },
-                     *         "none_zero": false,
-                     *         "none_transactions": false,
-                     *         "basis": "cash"
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Statement of Cash Flow",
-                     *         "formatted_to_date": "2025/06/16",
-                     *         "formatted_from_date": "2025/01/01",
-                     *         "formatted_date_range": "From 2025/01/01 | To 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/xlsx": unknown;
-                    /**
-                     * @example {
-                     *       "data": [
-                     *         {
-                     *           "id": "OPERATING",
-                     *           "label": "OPERATING ACTIVITIES",
-                     *           "footer_label": "Net cash provided by operating activities",
-                     *           "section_type": "AGGREGATE",
-                     *           "children": [
-                     *             {
-                     *               "id": "NET_INCOME",
-                     *               "label": "Net income",
-                     *               "total": {
-                     *                 "amount": -113923,
-                     *                 "formatted_amount": "-113,923.00",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "NET_INCOME",
-                     *               "children": []
-                     *             },
-                     *             {
-                     *               "section_type": "ACCOUNTS",
-                     *               "id": "OPERATING_ACCOUNTS",
-                     *               "label": "Adjustments net income by operating activities.",
-                     *               "children": [
-                     *                 {
-                     *                   "id": 1006,
-                     *                   "code": "10007",
-                     *                   "label": "Accounts Receivable (A/R)",
-                     *                   "account_type": "accounts-receivable",
-                     *                   "adjustment_type": "mines",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1007,
-                     *                   "code": "10008",
-                     *                   "label": "Inventory Asset",
-                     *                   "account_type": "inventory",
-                     *                   "adjustment_type": "mines",
-                     *                   "total": {
-                     *                     "amount": -1000,
-                     *                     "formatted_amount": "-1,000.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1008,
-                     *                   "code": "20001",
-                     *                   "label": "Accounts Payable (A/P)",
-                     *                   "account_type": "accounts-payable",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 1300,
-                     *                     "formatted_amount": "1,300.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1013,
-                     *                   "code": "20006",
-                     *                   "label": "Tax Payable",
-                     *                   "account_type": "tax-payable",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1030,
-                     *                   "code": "100010",
-                     *                   "label": "Prepaid Expenses",
-                     *                   "account_type": "other-current-asset",
-                     *                   "adjustment_type": "mines",
-                     *                   "total": {
-                     *                     "amount": 123123,
-                     *                     "formatted_amount": "123,123.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1009,
-                     *                   "code": "20002",
-                     *                   "label": "Owner A Drawings",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1010,
-                     *                   "code": "20003",
-                     *                   "label": "Loan",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": -10000,
-                     *                     "formatted_amount": "-10,000.00",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1011,
-                     *                   "code": "20004",
-                     *                   "label": "Opening Balance Liabilities",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1012,
-                     *                   "code": "20005",
-                     *                   "label": "Revenue Received in Advance",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 },
-                     *                 {
-                     *                   "id": 1029,
-                     *                   "code": "50005",
-                     *                   "label": "Unearned Revenue",
-                     *                   "account_type": "other-current-liability",
-                     *                   "adjustment_type": "plus",
-                     *                   "total": {
-                     *                     "amount": 0,
-                     *                     "formatted_amount": "",
-                     *                     "currency_code": "USD"
-                     *                   },
-                     *                   "section_type": "ACCOUNT"
-                     *                 }
-                     *               ],
-                     *               "total": {
-                     *                 "amount": 113423,
-                     *                 "formatted_amount": "$113,423.00",
-                     *                 "currency_code": "USD"
-                     *               }
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "ACCOUNTS",
-                     *           "id": "INVESTMENT",
-                     *           "label": "INVESTMENT ACTIVITIES",
-                     *           "footer_label": "cash_flow_statement.net_cash_investing",
-                     *           "children": [
-                     *             {
-                     *               "id": 1004,
-                     *               "code": "10005",
-                     *               "label": "Computer Equipment",
-                     *               "account_type": "fixed-asset",
-                     *               "adjustment_type": "mines",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1005,
-                     *               "code": "10006",
-                     *               "label": "Office Equipment",
-                     *               "account_type": "fixed-asset",
-                     *               "adjustment_type": "mines",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "ACCOUNTS",
-                     *           "id": "FINANCIAL",
-                     *           "label": "FINANCIAL ACTIVITIES",
-                     *           "footer_label": "cash_flow_statement.net_cash_financing",
-                     *           "children": [
-                     *             {
-                     *               "id": 1014,
-                     *               "code": "30001",
-                     *               "label": "Retained Earnings",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1015,
-                     *               "code": "30002",
-                     *               "label": "Opening Balance Equity",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1016,
-                     *               "code": "30003",
-                     *               "label": "Owner's Equity",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1017,
-                     *               "code": "30003",
-                     *               "label": "Drawings",
-                     *               "account_type": "equity",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "CASH_AT_BEGINNING",
-                     *           "id": "CASH_BEGINNING_PERIOD",
-                     *           "label": "Cash at beginning of period",
-                     *           "children": [
-                     *             {
-                     *               "id": 1002,
-                     *               "code": "10003",
-                     *               "label": "Undeposited Funds",
-                     *               "account_type": "cash",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1003,
-                     *               "code": "10004",
-                     *               "label": "Petty Cash",
-                     *               "account_type": "cash",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1000,
-                     *               "code": "10001",
-                     *               "label": "Bank Account",
-                     *               "account_type": "bank",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1001,
-                     *               "code": "10002",
-                     *               "label": "Saving Bank Account",
-                     *               "account_type": "bank",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             },
-                     *             {
-                     *               "id": 1034,
-                     *               "code": "",
-                     *               "label": "Chase - Plaid Checking",
-                     *               "account_type": "bank",
-                     *               "adjustment_type": "plus",
-                     *               "total": {
-                     *                 "amount": 0,
-                     *                 "formatted_amount": "",
-                     *                 "currency_code": "USD"
-                     *               },
-                     *               "section_type": "ACCOUNT"
-                     *             }
-                     *           ],
-                     *           "total": {
-                     *             "amount": 0,
-                     *             "formatted_amount": "$0.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "TOTAL",
-                     *           "id": "NET_CASH_INCREASE",
-                     *           "label": "NET CASH INCREASE FOR PERIOD",
-                     *           "total": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         },
-                     *         {
-                     *           "section_type": "TOTAL",
-                     *           "id": "CASH_END_PERIOD",
-                     *           "label": "CASH AT END OF PERIOD",
-                     *           "total": {
-                     *             "amount": -500,
-                     *             "formatted_amount": "-$500.00",
-                     *             "currency_code": "USD"
-                     *           }
-                     *         }
-                     *       ],
-                     *       "query": {
-                     *         "display_columns_type": "total",
-                     *         "display_columns_by": "year",
-                     *         "from_date": "2025-01-01",
-                     *         "to_date": "2025-06-16",
-                     *         "number_format": {
-                     *           "precision": 2,
-                     *           "divide_on1000": false,
-                     *           "show_zero": false,
-                     *           "format_money": "total",
-                     *           "negative_format": "mines"
-                     *         },
-                     *         "none_zero": false,
-                     *         "none_transactions": false,
-                     *         "basis": "cash"
-                     *       },
-                     *       "meta": {
-                     *         "organization_name": "BIGCAPITAL, INC",
-                     *         "base_currency": "USD",
-                     *         "date_format": "DD MMM yyyy",
-                     *         "is_cost_compute_running": false,
-                     *         "sheet_name": "Statement of Cash Flow",
-                     *         "formatted_to_date": "2025/06/16",
-                     *         "formatted_from_date": "2025/01/01",
-                     *         "formatted_date_range": "From 2025/01/01 | To 2025/06/16"
-                     *       }
-                     *     }
-                     */
-                    "application/csv": unknown;
+                    "application/json": components["schemas"]["CashflowStatementResponseDto"];
+                    "application/json+table": components["schemas"]["CashflowStatementTableResponseDto"];
                 };
             };
         };
@@ -40104,6 +28128,23 @@ export interface operations {
             };
         };
     };
+    ContactsController_getAutoComplete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     ContactsController_getContact: {
         parameters: {
             query?: never;
@@ -40117,23 +28158,6 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description Contact details (under "customer" key for form/duplicate use) */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ContactsController_getAutoComplete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
             200: {
                 headers: {
                     [name: string]: unknown;
