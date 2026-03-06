@@ -3,13 +3,19 @@ import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common'
 import { APAgingSummaryApplication } from './APAgingSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
 import {
+  ApiExtraModels,
   ApiOperation,
   ApiProduces,
   ApiResponse,
   ApiTags,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 import { APAgingSummaryResponseExample } from './APAgingSummary.swagger';
+import {
+  APAgingSummaryResponseDto,
+  APAgingSummaryTableResponseDto,
+} from './APAgingSummaryResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
@@ -21,6 +27,7 @@ import { ReportsAction } from '../../types/Report.types';
 @ApiTags('Reports')
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
+@ApiExtraModels(APAgingSummaryResponseDto, APAgingSummaryTableResponseDto)
 export class APAgingSummaryController {
   constructor(private readonly APAgingSummaryApp: APAgingSummaryApplication) { }
 
@@ -30,7 +37,15 @@ export class APAgingSummaryController {
   @ApiResponse({
     status: 200,
     description: 'A/P aging summary response',
-    example: APAgingSummaryResponseExample,
+    content: {
+      [AcceptType.ApplicationJson]: {
+        schema: { $ref: getSchemaPath(APAgingSummaryResponseDto) },
+        example: APAgingSummaryResponseExample,
+      },
+      [AcceptType.ApplicationJsonTable]: {
+        schema: { $ref: getSchemaPath(APAgingSummaryTableResponseDto) },
+      },
+    },
   })
   @ApiProduces(
     AcceptType.ApplicationJson,
