@@ -1,5 +1,7 @@
 // @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
+import { useQuery } from '@tanstack/react-query';
+import { fetchPayableAgingSummaryTable } from '@bigcapital/sdk-ts';
+import { useReportsApiFetcher } from '../../useRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
 import t from '../types';
@@ -8,21 +10,12 @@ import t from '../types';
  * Retrieve A/P aging summary report.
  */
 export function useAPAgingSummaryReport(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.AP_AGING_SUMMARY, query],
-    {
-      method: 'get',
-      url: '/reports/payable-aging-summary',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+  const fetcher = useReportsApiFetcher();
+  return useQuery({
+    queryKey: [t.FINANCIAL_REPORT, t.AP_AGING_SUMMARY, query],
+    queryFn: () => fetchPayableAgingSummaryTable(fetcher, query ?? {}),
+    ...props,
+  });
 }
 
 export const useAPAgingSheetXlsxExport = (query, args) => {

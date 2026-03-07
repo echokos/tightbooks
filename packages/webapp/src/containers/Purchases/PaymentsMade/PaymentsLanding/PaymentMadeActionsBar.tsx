@@ -30,7 +30,7 @@ import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
-import { useRefreshPaymentMades } from '@/hooks/query/paymentMades';
+import { useRefreshPaymentMades } from '@/hooks/query/payment-mades';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import { DialogsName } from '@/constants/dialogs';

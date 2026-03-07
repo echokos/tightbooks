@@ -1,8 +1,23 @@
-// @ts-nocheck
-import { useMutation, useQueryClient } from 'react-query';
-import useApiRequest from '../useRequest';
-import { useRequestQuery } from '../useQueryRequest';
-import { transformPagination, transformToCamelCase } from '@/utils';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type {
+  ExpensesListResponse,
+  Expense,
+  CreateExpenseBody,
+  EditExpenseBody,
+  BulkDeleteExpensesBody,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchExpenses,
+  fetchExpense,
+  createExpense,
+  editExpense,
+  deleteExpense,
+  publishExpense,
+  bulkDeleteExpenses,
+  validateBulkDeleteExpenses,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
+import { transformPagination } from '@/utils';
 import t from './types';
 
 const defaultPagination = {
@@ -12,90 +27,83 @@ const defaultPagination = {
 };
 
 // Common invalidate queries.
-const commonInvalidateQueries = (queryClient) => {
+const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
   // Invalidate expenses.
-  queryClient.invalidateQueries(t.EXPENSES);
+  queryClient.invalidateQueries({ queryKey: [t.EXPENSES] });
 
   // Invalidate accounts.
-  queryClient.invalidateQueries(t.ACCOUNTS);
-  queryClient.invalidateQueries(t.ACCOUNT);
+  queryClient.invalidateQueries({ queryKey: [t.ACCOUNTS] });
+  queryClient.invalidateQueries({ queryKey: [t.ACCOUNT] });
 
   // Invalidate financial reports.
-  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
+  queryClient.invalidateQueries({ queryKey: [t.FINANCIAL_REPORT] });
 
   // Invalidate the cashflow transactions.
-  queryClient.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
-  queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+  queryClient.invalidateQueries({ queryKey: [t.CASH_FLOW_TRANSACTIONS] });
+  queryClient.invalidateQueries({ queryKey: [t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY] });
 
   // Invalidate landed cost.
-  queryClient.invalidateQueries(t.LANDED_COST);
-  queryClient.invalidateQueries(t.LANDED_COST_TRANSACTION);
+  queryClient.invalidateQueries({ queryKey: [t.LANDED_COST] });
+  queryClient.invalidateQueries({ queryKey: [t.LANDED_COST_TRANSACTION] });
 
   // Invalidate mutate base currency abilities.
-  queryClient.invalidateQueries(t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES);
+  queryClient.invalidateQueries({ queryKey: [t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES] });
 };
 
-const transformExpenses = (response) => ({
-  expenses: response.data.expenses,
-  pagination: transformPagination(response.data.pagination),
-  filterMeta: response.data.filter_meta,
-});
+function transformExpensesList(response: ExpensesListResponse) {
+  const data = response as { expenses?: unknown[]; pagination?: unknown; filter_meta?: Record<string, unknown> };
+  return {
+    expenses: data?.expenses ?? [],
+    pagination: transformPagination(data?.pagination ?? {}) as typeof defaultPagination,
+    filterMeta: data?.filter_meta ?? {},
+  };
+}
 
 /**
  * Retrieve the expenses list.
  */
-export function useExpenses(query, props) {
-  return useRequestQuery(
-    [t.EXPENSES, query],
-    {
-      method: 'get',
-      url: `expenses`,
-      params: { ...query },
-    },
-    {
-      select: transformExpenses,
-      defaultData: {
-        expenses: [],
-        pagination: defaultPagination,
-        filterMeta: {},
-      },
-      ...props,
-    },
-  );
+export function useExpenses(
+  query: Parameters<typeof fetchExpenses>[1],
+  props?: Omit<Parameters<typeof useQuery>[0], 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.EXPENSES, query],
+    queryFn: () => fetchExpenses(fetcher, query).then(transformExpensesList),
+    ...props,
+  });
 }
 
 /**
  * Retrieve the expense details.
- * @param {number} id - Expense id.
+ * @param id - Expense id.
  */
-export function useExpense(id, props) {
-  return useRequestQuery(
-    [t.EXPENSE, id],
-    {
-      method: 'get',
-      url: `expenses/${id}`,
-    },
-    {
-      select: (res) => res.data,
-      defaultData: {},
-      ...props,
-    },
-  );
+export function useExpense(
+  id: number | undefined | null,
+  props?: Omit<Parameters<typeof useQuery>[0], 'queryKey' | 'queryFn' | 'enabled'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.EXPENSE, id],
+    queryFn: () => fetchExpense(fetcher, id as number),
+    enabled: id != null,
+    ...props,
+  });
 }
 
 /**
  * Deletes the given expense.
  */
-export function useDeleteExpense(props) {
-  const apiRequest = useApiRequest();
+export function useDeleteExpense(
+  props?: Parameters<typeof useMutation<void, Error, number>>[0]
+) {
+  const fetcher = useApiFetcher();
   const queryClient = useQueryClient();
 
-  return useMutation((id) => apiRequest.delete(`expenses/${id}`), {
-    onSuccess: (res, id) => {
-      // Invalidate specific expense.
-      queryClient.invalidateQueries([t.EXPENSE, id]);
-
-      // Common invalidate queries.
+  return useMutation({
+    mutationFn: (id: number) => deleteExpense(fetcher, id),
+    onSuccess: (_res, id) => {
+      queryClient.invalidateQueries({ queryKey: [t.EXPENSE, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,
@@ -105,78 +113,65 @@ export function useDeleteExpense(props) {
 /**
  * Deletes multiple expenses in bulk.
  */
-export function useBulkDeleteExpenses(props) {
+export function useBulkDeleteExpenses(
+  props?: Parameters<typeof useMutation<void, Error, BulkDeleteExpensesBody>>[0]
+) {
+  const fetcher = useApiFetcher();
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
 
-  return useMutation(
-    ({
-      ids,
-      skipUndeletable = false,
-    }: {
-      ids: number[];
-      skipUndeletable?: boolean;
-    }) =>
-      apiRequest.post('expenses/bulk-delete', {
-        ids,
-        skip_undeletable: skipUndeletable,
-      }),
-    {
-      onSuccess: () => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation({
+    mutationFn: (body: BulkDeleteExpensesBody) => bulkDeleteExpenses(fetcher, body),
+    onSuccess: () => {
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
-export function useValidateBulkDeleteExpenses(props) {
-  const apiRequest = useApiRequest();
+export function useValidateBulkDeleteExpenses(
+  props?: Parameters<typeof useMutation<Awaited<ReturnType<typeof validateBulkDeleteExpenses>>, Error, number[]>>[0]
+) {
+  const fetcher = useApiFetcher();
 
-  return useMutation(
-    (ids: number[]) =>
-      apiRequest
-        .post('expenses/validate-bulk-delete', { ids })
-        .then((res) => transformToCamelCase(res.data)),
-    {
-      ...props,
-    },
-  );
+  return useMutation({
+    mutationFn: (ids: number[]) =>
+      validateBulkDeleteExpenses(fetcher, { ids }),
+    ...props,
+  });
 }
 
 /**
  * Edits the given expense.
  */
-export function useEditExpense(props) {
+export function useEditExpense(
+  props?: Parameters<typeof useMutation<void, Error, [number, EditExpenseBody]>>[0]
+) {
+  const fetcher = useApiFetcher();
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.put(`expenses/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific expense.
-        queryClient.invalidateQueries([t.EXPENSE, id]);
-
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation({
+    mutationFn: ([id, values]: [number, EditExpenseBody]) =>
+      editExpense(fetcher, id, values),
+    onSuccess: (_res, [id]) => {
+      queryClient.invalidateQueries({ queryKey: [t.EXPENSE, id] });
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
  * Creates the new expense.
  */
-export function useCreateExpense(props) {
+export function useCreateExpense(
+  props?: Parameters<typeof useMutation<void, Error, CreateExpenseBody>>[0]
+) {
+  const fetcher = useApiFetcher();
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post('expenses', values), {
+  return useMutation({
+    mutationFn: (values: CreateExpenseBody) => createExpense(fetcher, values),
     onSuccess: () => {
-      // Common invalidate queries.
       commonInvalidateQueries(queryClient);
     },
     ...props,
@@ -186,16 +181,16 @@ export function useCreateExpense(props) {
 /**
  * Publishes the given expense.
  */
-export function usePublishExpense(props) {
+export function usePublishExpense(
+  props?: Parameters<typeof useMutation<void, Error, number>>[0]
+) {
+  const fetcher = useApiFetcher();
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`expenses/${id}/publish`), {
-    onSuccess: (res, id) => {
-      // Invalidate specific expense.
-      queryClient.invalidateQueries([t.EXPENSE, id]);
-
-      // Common invalidate queries.
+  return useMutation({
+    mutationFn: (id: number) => publishExpense(fetcher, id),
+    onSuccess: (_res, id) => {
+      queryClient.invalidateQueries({ queryKey: [t.EXPENSE, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,
@@ -207,7 +202,7 @@ export function useRefreshExpenses() {
 
   return {
     refresh: () => {
-      queryClient.invalidateQueries(t.EXPENSES);
+      queryClient.invalidateQueries({ queryKey: [t.EXPENSES] });
     },
   };
 }

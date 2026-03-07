@@ -1,4 +1,7 @@
 // @ts-nocheck
+import { useQuery } from '@tanstack/react-query';
+import { fetchPurchasesByItemsTable } from '@bigcapital/sdk-ts';
+import { useReportsApiFetcher } from '../../useRequest';
 import { useRequestQuery } from '../../useQueryRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
@@ -23,21 +26,12 @@ export function usePurchasesByItems(query, props) {
 }
 
 export function usePurchasesByItemsTable(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.PURCHASES_BY_ITEMS, query],
-    {
-      method: 'get',
-      url: '/reports/purchases-by-items',
-      params: query,
-      headers: {
-        accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+  const fetcher = useReportsApiFetcher();
+  return useQuery({
+    queryKey: [t.FINANCIAL_REPORT, t.PURCHASES_BY_ITEMS, query],
+    queryFn: () => fetchPurchasesByItemsTable(fetcher, query ?? {}),
+    ...props,
+  });
 }
 
 export const usePurchasesByItemsCsvExport = (query, args) => {

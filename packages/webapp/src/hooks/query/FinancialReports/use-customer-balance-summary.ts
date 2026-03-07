@@ -1,5 +1,7 @@
 // @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
+import { useQuery } from '@tanstack/react-query';
+import { fetchCustomerBalanceSummaryTable } from '@bigcapital/sdk-ts';
+import { useReportsApiFetcher } from '../../useRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
 import t from '../types';
@@ -8,30 +10,19 @@ import t from '../types';
  * Retrieve customers balance summary report.
  */
 export function useCustomerBalanceSummaryReport(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.CUSTOMERS_BALANCE_SUMMARY, query],
-    {
-      method: 'get',
-      url: '/reports/customer-balance-summary',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => ({
-        query: res.data.query,
-        table: res.data.table,
-        meta: res.data.meta,
-      }),
-      defaultData: {
-        table: {},
-        query: {},
-        meta: {},
-      },
-      ...props,
-    },
-  );
+  const fetcher = useReportsApiFetcher();
+  const { defaultData, ...rest } = props ?? {};
+  return useQuery({
+    queryKey: [t.FINANCIAL_REPORT, t.CUSTOMERS_BALANCE_SUMMARY, query],
+    queryFn: () => fetchCustomerBalanceSummaryTable(fetcher, query ?? {}),
+    select: (data) => ({
+      query: data?.query,
+      table: data?.table,
+      meta: data?.meta,
+    }),
+    placeholderData: defaultData ?? { table: {}, query: {}, meta: {} },
+    ...rest,
+  });
 }
 
 export const useCustomerBalanceSummaryXlsxExport = (query, args) => {

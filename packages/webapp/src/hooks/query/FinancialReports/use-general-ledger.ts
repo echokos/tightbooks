@@ -1,5 +1,7 @@
 // @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
+import { useQuery } from '@tanstack/react-query';
+import { fetchGeneralLedgerTable } from '@bigcapital/sdk-ts';
+import { useReportsApiFetcher } from '../../useRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
 import t from '../types';
@@ -8,21 +10,12 @@ import t from '../types';
  * Retrieve general ledger (GL) sheet.
  */
 export function useGeneralLedgerSheet(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.GENERAL_LEDGER, query],
-    {
-      method: 'get',
-      url: '/reports/general-ledger',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+  const fetcher = useReportsApiFetcher();
+  return useQuery({
+    queryKey: [t.FINANCIAL_REPORT, t.GENERAL_LEDGER, query],
+    queryFn: () => fetchGeneralLedgerTable(fetcher, query ?? {}),
+    ...props,
+  });
 }
 export const useGeneralLedgerSheetXlsxExport = (query, args) => {
   return useDownloadFile({

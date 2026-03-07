@@ -1,28 +1,27 @@
-// @ts-nocheck
-import { useQuery, UseQueryOptions, UseQueryResult } from 'react-query';
-import useApiRequest from '../useRequest';
+import {
+  useQuery,
+  UseQueryOptions,
+  UseQueryResult,
+} from '@tanstack/react-query';
+import { fetchPendingTransactions } from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 import { BANK_QUERY_KEY } from '@/constants/query-keys/banking';
 
-interface GetBankRuleRes {}
+export type PendingBankAccountTransactionsResponse = Awaited<
+  ReturnType<typeof fetchPendingTransactions>
+>;
 
 /**
- * Retrieve the given bank rule.
- * @param {number} bankRuleId -
- * @param {UseQueryOptions<GetBankRuleRes, Error>} options -
- * @returns {UseQueryResult<GetBankRuleRes, Error>}
+ * Retrieve pending bank account transactions.
  */
 export function usePendingBankAccountTransactions(
-  bankRuleId: number,
-  options?: UseQueryOptions<GetBankRuleRes, Error>,
-): UseQueryResult<GetBankRuleRes, Error> {
-  const apiRequest = useApiRequest();
+  options?: UseQueryOptions<PendingBankAccountTransactionsResponse, Error>,
+): UseQueryResult<PendingBankAccountTransactionsResponse, Error> {
+  const fetcher = useApiFetcher();
 
-  return useQuery<GetBankRuleRes, Error>(
-    [BANK_QUERY_KEY.PENDING_BANK_ACCOUNT_TRANSACTIONS],
-    () =>
-      apiRequest
-        .get(`/banking/bank_account/pending_transactions`)
-        .then((res) => res.data),
-    { ...options },
-  );
+  return useQuery({
+    queryKey: [BANK_QUERY_KEY.PENDING_BANK_ACCOUNT_TRANSACTIONS],
+    queryFn: () => fetchPendingTransactions(fetcher),
+    ...options,
+  });
 }

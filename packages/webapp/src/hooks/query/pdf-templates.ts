@@ -1,236 +1,177 @@
-// @ts-nocheck
 import {
   useMutation,
   useQuery,
+  useQueryClient,
   UseMutationOptions,
   UseQueryOptions,
   UseMutationResult,
   UseQueryResult,
-  useQueryClient,
-} from 'react-query';
-import useApiRequest from '../useRequest';
-import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
+} from '@tanstack/react-query';
+import {
+  fetchPdfTemplates,
+  fetchPdfTemplate,
+  createPdfTemplate,
+  editPdfTemplate,
+  deletePdfTemplate,
+  assignPdfTemplateAsDefault,
+  fetchPdfTemplateBrandingState,
+} from '@bigcapital/sdk-ts';
+import type {
+  CreatePdfTemplateBody,
+  EditPdfTemplateBody,
+  PdfTemplateResponse,
+  PdfTemplatesListResponse,
+  PdfTemplateBrandingStateResponse,
+  GetPdfTemplatesQuery,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 
 const PdfTemplatesQueryKey = 'PdfTemplate';
 
-export interface CreatePdfTemplateValues {
-  templateName: string;
-  resource: string;
-  attributes: Record<string, any>;
-}
+// Re-export types for consumers (aliases for SDK types)
+export type CreatePdfTemplateValues = CreatePdfTemplateBody;
+export type CreatePdfTemplateResponse = void;
 
-export interface CreatePdfTemplateResponse {}
-
-export interface EditPdfTemplateValues {
-  templateName: string;
-  attributes: Record<string, any>;
-}
-
-export interface EditPdfTemplateResponse {}
+export type EditPdfTemplateValues = EditPdfTemplateBody;
+export type EditPdfTemplateResponse = void;
 
 export interface DeletePdfTemplateValues {
   templateId: number | string;
 }
+export type DeletePdfTemplateResponse = void;
 
-export interface DeletePdfTemplateResponse {}
+export type GetPdfTemplateResponse = PdfTemplateResponse;
 
-export interface GetPdfTemplateValues {}
+export type GetPdfTemplatesResponse = PdfTemplatesListResponse;
 
-export interface GetPdfTemplateResponse {
-  templateName: string;
-  companyLogoUri?: string | null;
-  attributes: Record<string, any>;
-  predefined: boolean;
-  default: boolean;
-  createdAt: string;
-  updatedAt: string | null;
+export type AssignPdfTemplateAsDefaultValues = { templateId: number };
+export type AssignPdfTemplateAsDefaultResponse = void;
+
+export type GetPdfTemplateBrandingStateResponse = PdfTemplateBrandingStateResponse;
+
+function invalidatePdfTemplateQueries(queryClient: ReturnType<typeof useQueryClient>) {
+  queryClient.invalidateQueries({ queryKey: [PdfTemplatesQueryKey] });
 }
 
-export interface GetPdfTemplatesValues {}
-
-export interface GetPdfTemplatesResponse {}
-
 // Hook for creating a PDF template
-export const useCreatePdfTemplate = (
-  options?: UseMutationOptions<
-    CreatePdfTemplateResponse,
-    Error,
-    CreatePdfTemplateValues
-  >,
-): UseMutationResult<
-  CreatePdfTemplateResponse,
-  Error,
-  CreatePdfTemplateValues
-> => {
-  const apiRequest = useApiRequest();
+export function useCreatePdfTemplate(
+  options?: UseMutationOptions<CreatePdfTemplateResponse, Error, CreatePdfTemplateValues>
+): UseMutationResult<CreatePdfTemplateResponse, Error, CreatePdfTemplateValues> {
   const queryClient = useQueryClient();
-  return useMutation<CreatePdfTemplateResponse, Error, CreatePdfTemplateValues>(
-    (values) =>
-      apiRequest
-        .post('/pdf-templates', transfromToSnakeCase(values))
-        .then((res) => res.data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([PdfTemplatesQueryKey]);
-      },
-      ...options,
-    },
-  );
-};
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: (values: CreatePdfTemplateValues) => createPdfTemplate(fetcher, values),
+    onSuccess: () => invalidatePdfTemplateQueries(queryClient),
+    ...options,
+  });
+}
 
 // Hook for editing a PDF template
-export const useEditPdfTemplate = (
+export function useEditPdfTemplate(
   options?: UseMutationOptions<
     EditPdfTemplateResponse,
     Error,
     { templateId: number; values: EditPdfTemplateValues }
-  >,
+  >
 ): UseMutationResult<
   EditPdfTemplateResponse,
   Error,
   { templateId: number; values: EditPdfTemplateValues }
-> => {
+> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-  return useMutation<
-    EditPdfTemplateResponse,
-    Error,
-    { templateId: number; values: EditPdfTemplateValues }
-  >(
-    ({ templateId, values }) =>
-      apiRequest
-        .put(`/pdf-templates/${templateId}`, transfromToSnakeCase(values))
-        .then((res) => res.data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([PdfTemplatesQueryKey]);
-      },
-      ...options,
-    },
-  );
-};
+  const fetcher = useApiFetcher();
 
-// Hook for deleting a PDF template
-export const useDeletePdfTemplate = (
-  options?: UseMutationOptions<
-    DeletePdfTemplateResponse,
-    Error,
-    { templateId: number }
-  >,
-): UseMutationResult<
-  DeletePdfTemplateResponse,
-  Error,
-  { templateId: number }
-> => {
-  const apiRequest = useApiRequest();
-  const queryClient = useQueryClient();
-  return useMutation<DeletePdfTemplateResponse, Error, { templateId: number }>(
-    ({ templateId }) =>
-      apiRequest.delete(`/pdf-templates/${templateId}`).then((res) => res.data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([PdfTemplatesQueryKey]);
-      },
-      ...options,
-    },
-  );
-};
-
-// Hook for getting a single PDF template
-export const useGetPdfTemplate = (
-  templateId: number,
-  options?: UseQueryOptions<GetPdfTemplateResponse, Error>,
-): UseQueryResult<GetPdfTemplateResponse, Error> => {
-  const apiRequest = useApiRequest();
-  return useQuery<GetPdfTemplateResponse, Error>(
-    [PdfTemplatesQueryKey, templateId],
-    () =>
-      apiRequest
-        .get(`/pdf-templates/${templateId}`)
-        .then((res) => transformToCamelCase(res.data)),
-    options,
-  );
-};
-
-// Hook for getting multiple PDF templates
-export const useGetPdfTemplates = (
-  query?: { resource: string },
-  options?: UseQueryOptions<GetPdfTemplatesResponse, Error>,
-): UseQueryResult<GetPdfTemplatesResponse, Error> => {
-  const apiRequest = useApiRequest();
-  return useQuery<GetPdfTemplatesResponse, Error>(
-    [PdfTemplatesQueryKey, query],
-    () =>
-      apiRequest
-        .get('/pdf-templates', { params: query })
-        .then((res) => res.data),
-    options,
-  );
-};
-
-export interface AssignPdfTemplateAsDefaultValues {
-  templateId: number;
+  return useMutation({
+    mutationFn: ({ templateId, values }: { templateId: number; values: EditPdfTemplateValues }) =>
+      editPdfTemplate(fetcher, templateId, values),
+    onSuccess: () => invalidatePdfTemplateQueries(queryClient),
+    ...options,
+  });
 }
 
-export interface AssignPdfTemplateAsDefaultResponse {}
+// Hook for deleting a PDF template
+export function useDeletePdfTemplate(
+  options?: UseMutationOptions<DeletePdfTemplateResponse, Error, { templateId: number }>
+): UseMutationResult<DeletePdfTemplateResponse, Error, { templateId: number }> {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
 
-export const useAssignPdfTemplateAsDefault = (
+  return useMutation({
+    mutationFn: ({ templateId }: { templateId: number }) =>
+      deletePdfTemplate(fetcher, templateId),
+    onSuccess: () => invalidatePdfTemplateQueries(queryClient),
+    ...options,
+  });
+}
+
+// Hook for getting a single PDF template
+export function useGetPdfTemplate(
+  templateId: number,
+  options?: UseQueryOptions<GetPdfTemplateResponse, Error>
+): UseQueryResult<GetPdfTemplateResponse, Error> {
+  const fetcher = useApiFetcher();
+
+  return useQuery({
+    queryKey: [PdfTemplatesQueryKey, templateId],
+    queryFn: () => fetchPdfTemplate(fetcher, templateId),
+    ...options,
+  });
+}
+
+// Hook for getting multiple PDF templates
+export function useGetPdfTemplates(
+  query?: GetPdfTemplatesQuery,
+  options?: UseQueryOptions<GetPdfTemplatesResponse, Error>
+): UseQueryResult<GetPdfTemplatesResponse, Error> {
+  const fetcher = useApiFetcher();
+
+  return useQuery({
+    queryKey: [PdfTemplatesQueryKey, query],
+    queryFn: () => fetchPdfTemplates(fetcher, query),
+    ...options,
+  });
+}
+
+// Hook for assigning a PDF template as default
+export function useAssignPdfTemplateAsDefault(
   options?: UseMutationOptions<
     AssignPdfTemplateAsDefaultResponse,
     Error,
     AssignPdfTemplateAsDefaultValues
-  >,
+  >
 ): UseMutationResult<
   AssignPdfTemplateAsDefaultResponse,
   Error,
   AssignPdfTemplateAsDefaultValues
-> => {
-  const apiRequest = useApiRequest();
+> {
   const queryClient = useQueryClient();
-  return useMutation<
-    AssignPdfTemplateAsDefaultResponse,
-    Error,
-    AssignPdfTemplateAsDefaultValues
-  >(
-    ({ templateId }) =>
-      apiRequest
-        .post(`/pdf-templates/${templateId}/assign_default`)
-        .then((res) => res.data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([PdfTemplatesQueryKey]);
-        queryClient.invalidateQueries(['SALE_INVOICE_STATE']);
-        queryClient.invalidateQueries(['SALE_ESTIMATE_STATE']);
-        queryClient.invalidateQueries(['SALE_RECEIPT_STATE']);
-        queryClient.invalidateQueries(['CREDIT_NOTE_STATE']);
-        queryClient.invalidateQueries(['PAYMENT_RECEIVED_STATE']);
-      },
-      ...options,
-    },
-  );
-};
+  const fetcher = useApiFetcher();
 
-// Retrieve organization branding state.
-// --------------------------------------------------
-export interface GetPdfTemplateBrandingStateResponse {
-  companyName: string;
-  companyAddress: string;
-  companyLogoUri: string;
-  companyLogoKey: string;
-  primaryColor: string;
+  return useMutation({
+    mutationFn: ({ templateId }: AssignPdfTemplateAsDefaultValues) =>
+      assignPdfTemplateAsDefault(fetcher, templateId),
+    onSuccess: () => {
+      invalidatePdfTemplateQueries(queryClient);
+      queryClient.invalidateQueries({ queryKey: ['SALE_INVOICE_STATE'] });
+      queryClient.invalidateQueries({ queryKey: ['SALE_ESTIMATE_STATE'] });
+      queryClient.invalidateQueries({ queryKey: ['SALE_RECEIPT_STATE'] });
+      queryClient.invalidateQueries({ queryKey: ['CREDIT_NOTE_STATE'] });
+      queryClient.invalidateQueries({ queryKey: ['PAYMENT_RECEIVED_STATE'] });
+    },
+    ...options,
+  });
 }
 
-export const useGetPdfTemplateBrandingState = (
-  options?: UseQueryOptions<GetPdfTemplateBrandingStateResponse, Error>,
-): UseQueryResult<GetPdfTemplateBrandingStateResponse, Error> => {
-  const apiRequest = useApiRequest();
+// Retrieve organization branding state.
+export function useGetPdfTemplateBrandingState(
+  options?: UseQueryOptions<GetPdfTemplateBrandingStateResponse, Error>
+): UseQueryResult<GetPdfTemplateBrandingStateResponse, Error> {
+  const fetcher = useApiFetcher();
 
-  return useQuery<GetPdfTemplateBrandingStateResponse, Error>(
-    [PdfTemplatesQueryKey, 'state'],
-    () =>
-      apiRequest
-        .get('/pdf-templates/state')
-        .then((res) => transformToCamelCase(res.data)),
-    options,
-  );
-};
+  return useQuery({
+    queryKey: [PdfTemplatesQueryKey, 'state'],
+    queryFn: () => fetchPdfTemplateBrandingState(fetcher),
+    ...options,
+  });
+}

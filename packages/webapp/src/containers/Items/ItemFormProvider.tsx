@@ -10,7 +10,7 @@ import {
   useAccounts,
 } from '@/hooks/query';
 import { useWatchItemError } from './utils';
-import { useTaxRates } from '@/hooks/query/taxRates';
+import { useTaxRates } from '@/hooks/query/tax-rates';
 
 const ItemFormContext = createContext();
 

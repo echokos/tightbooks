@@ -5,7 +5,7 @@ import {
   useQueryClient,
   UseQueryOptions,
   UseQueryResult,
-} from 'react-query';
+} from '@tanstack/react-query';
 import useApiRequest from '../useRequest';
 import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
 
@@ -36,8 +36,7 @@ export const useGetPaymentServices = (
               response.data?.payment_services,
             ) as GetPaymentServicesResponse,
         ),
-    {
-      ...options,
+          ...options,
     },
   );
 };
@@ -80,8 +79,7 @@ export const useGetPaymentServicesState = (
               response.data?.data,
             ) as GetPaymentServicesStateResponse,
         ),
-    {
-      ...options,
+          ...options,
     },
   );
 };
@@ -126,8 +124,7 @@ export const useUpdatePaymentMethod = (): UseMutationResult<
           transfromToSnakeCase(data.values),
         )
         .then((response) => response.data),
-    {
-      onSuccess: () => {
+          onSuccess: () => {
         queryClient.invalidateQueries(PaymentServicesStateQueryKey);
         queryClient.invalidateQueries(PaymentServicesQueryKey);
       },

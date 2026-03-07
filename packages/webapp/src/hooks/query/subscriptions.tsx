@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useEffect } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import { useSetSubscriptions } from '../state/subscriptions';
@@ -13,10 +13,8 @@ export const usePaymentByVoucher = (props) => {
   const apiRequest = useApiRequest();
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (values) => apiRequest.post('subscription/license/payment', values),
-    {
-      onSuccess: () => {
+  return useMutation({ mutationFn: (values) => apiRequest.post('subscription/license/payment', values),
+          onSuccess: () => {
         queryClient.invalidateQueries(T.SUBSCRIPTIONS);
         queryClient.invalidateQueries(T.ORGANIZATION_CURRENT);
         queryClient.invalidateQueries(T.ORGANIZATIONS);
@@ -50,13 +48,11 @@ export const useOrganizationSubscriptions = (props) => {
 export const useGetLemonSqueezyCheckout = (props = {}) => {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) =>
+  return useMutation({ mutationFn: (values) =>
       apiRequest
         .post('subscription/lemon/checkout_url', values)
         .then((res) => res.data),
-    {
-      ...props,
+          ...props,
     },
   );
 };

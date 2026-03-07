@@ -7,7 +7,7 @@ import {
   useQueryClient,
   UseQueryOptions,
   UseQueryResult,
-} from 'react-query';
+} from '@tanstack/react-query';
 import useApiRequest from '../useRequest';
 import { transformToCamelCase } from '@/utils';
 
@@ -44,8 +44,7 @@ export function useCancelMainSubscription(
   >(
     (values) =>
       apiRequest.post(`/subscription/cancel`, values).then((res) => res.data),
-    {
-      onSuccess: () => {
+          onSuccess: () => {
         queryClient.invalidateQueries(QueryKeys.Subscriptions);
       },
       ...options,
@@ -82,8 +81,7 @@ export function useResumeMainSubscription(
   >(
     (values) =>
       apiRequest.post(`/subscription/resume`, values).then((res) => res.data),
-    {
-      onSuccess: () => {
+          onSuccess: () => {
         queryClient.invalidateQueries(QueryKeys.Subscriptions);
       },
       ...options,
@@ -122,8 +120,7 @@ export function useChangeSubscriptionPlan(
   >(
     (values) =>
       apiRequest.post(`/subscription/change`, values).then((res) => res.data),
-    {
-      onSuccess: () => {
+          onSuccess: () => {
         queryClient.invalidateQueries(QueryKeys.Subscriptions);
       },
       ...options,
@@ -189,8 +186,7 @@ export function useGetSubscriptions(
       apiRequest
         .get(`/subscription`)
         .then((res) => transformToCamelCase(res.data)),
-    {
-      ...options,
+          ...options,
     },
   );
 }

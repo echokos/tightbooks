@@ -1,4 +1,7 @@
 // @ts-nocheck
+import { useQuery } from '@tanstack/react-query';
+import { fetchInventoryValuationTable } from '@bigcapital/sdk-ts';
+import { useReportsApiFetcher } from '../../useRequest';
 import { useRequestQuery } from '../../useQueryRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
@@ -24,24 +27,15 @@ export function useInventoryValuation(query, props) {
 }
 
 /**
- * Retrieve inventory valuation.
+ * Retrieve inventory valuation (table format).
  */
 export function useInventoryValuationTable(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.INVENTORY_VALUATION, query],
-    {
-      method: 'get',
-      url: '/reports/inventory-valuation',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+  const fetcher = useReportsApiFetcher();
+  return useQuery({
+    queryKey: [t.FINANCIAL_REPORT, t.INVENTORY_VALUATION, query],
+    queryFn: () => fetchInventoryValuationTable(fetcher, query ?? {}),
+    ...props,
+  });
 }
 
 export const useInventoryValuationXlsxExport = (query, args) => {

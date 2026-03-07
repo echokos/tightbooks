@@ -5,7 +5,7 @@ import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
 
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeleteVendorCredits } from '@/hooks/query/vendorCredit';
+import { useBulkDeleteVendorCredits } from '@/hooks/query/vendor-credit';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withVendorsCreditNotesActions } from '@/containers/Purchases/CreditNotes/CreditNotesLanding/withVendorsCreditNotesActions';

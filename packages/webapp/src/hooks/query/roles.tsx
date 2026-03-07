@@ -1,110 +1,106 @@
-// @ts-nocheck
-import { useMutation, useQueryClient } from 'react-query';
-import { useRequestQuery } from '../useQueryRequest';
-import useApiRequest from '../useRequest';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
+import type {
+  RolesListResponse,
+  Role,
+  RolePermissionsSchema,
+  CreateRoleBody,
+  EditRoleBody,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchRoles,
+  fetchRole,
+  fetchRolePermissionsSchema,
+  createRole,
+  editRole,
+  deleteRole,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 import t from './types';
 
-// Common invalidate queries.
-const commonInvalidateQueries = (queryClient) => {
-  queryClient.invalidateQueries(t.ROLE);
-  queryClient.invalidateQueries(t.ROLES);
-  queryClient.invalidateQueries(t.ROLES_PERMISSIONS_SCHEMA);
+const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
+  queryClient.invalidateQueries({ queryKey: [t.ROLE] });
+  queryClient.invalidateQueries({ queryKey: [t.ROLES] });
+  queryClient.invalidateQueries({ queryKey: [t.ROLES_PERMISSIONS_SCHEMA] });
 };
 
-/**
- * Edit role .
- */
-export function useEditRolePermissionSchema(props) {
+export function useEditRolePermissionSchema(
+  props?: UseMutationOptions<void, Error, [number, EditRoleBody]>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
+  return useMutation({
+    mutationFn: ([id, values]: [number, EditRoleBody]) => editRole(fetcher, id, values),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...props,
+  });
+}
 
-  return useMutation(([id, values]) => apiRequest.put(`roles/${id}`, values), {
-    onSuccess: () => {
-      // Common invalidate queries.
+export function useCreateRolePermissionSchema(
+  props?: UseMutationOptions<void, Error, CreateRoleBody>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+  return useMutation({
+    mutationFn: (values: CreateRoleBody) => createRole(fetcher, values),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...props,
+  });
+}
+
+export function useDeleteRole(props?: UseMutationOptions<void, Error, number>) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+  return useMutation({
+    mutationFn: (id: number) => deleteRole(fetcher, id),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: [t.ROLE, id] });
       commonInvalidateQueries(queryClient);
     },
     ...props,
   });
 }
 
-/**
- * Create a new roles
- */
-export function useCreateRolePermissionSchema(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation((values) => apiRequest.post(`roles`, values), {
-    onSuccess: () => {
-      // Common invalidate queries.
-      commonInvalidateQueries(queryClient);
-    },
+export function usePermissionsSchema(
+  query?: Record<string, unknown>,
+  props?: Omit<UseQueryOptions<RolePermissionsSchema>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ROLES_PERMISSIONS_SCHEMA, query],
+    queryFn: () => fetchRolePermissionsSchema(fetcher),
     ...props,
   });
 }
 
-/**
- * Delete the given role.
- */
-export function useDeleteRole(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation((id) => apiRequest.delete(`roles/${id}`), {
-    onSuccess: (res, id) => {
-      // Invalidate specific role.
-      queryClient.invalidateQueries(t.ROLE, id);
-
-      commonInvalidateQueries(queryClient);
-    },
+export function useRolePermission(
+  role_id: number | null | undefined,
+  props?: Omit<UseQueryOptions<Role>, 'queryKey' | 'queryFn'>,
+  _requestProps?: Record<string, unknown>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ROLE, role_id],
+    queryFn: () => fetchRole(fetcher, role_id!),
+    enabled: role_id != null,
     ...props,
   });
 }
 
-/**
- * Retrive the roles permissions schema.
- */
-export function usePermissionsSchema(query, props) {
-  return useRequestQuery(
-    [t.ROLES_PERMISSIONS_SCHEMA, query],
-    { method: 'get', url: 'roles/permissions/schema', params: query },
-    {
-      select: (res) => res.data,
-      defaultData: {
-        roles: [],
-      },
-      ...props,
-    },
-  );
-}
-
-/**
- * Retrieve the role permisstion schema.
- * @param {number} role_id - role id.
- */
-export function useRolePermission(role_id, props, requestProps) {
-  return useRequestQuery(
-    [t.ROLE, role_id],
-    { method: 'get', url: `roles/${role_id}`, ...requestProps },
-    {
-      select: (res) => res.data,
-      defaultData: {},
-      ...props,
-    },
-  );
-}
-
-/**
- * Retrieve the roles.
- */
-export function useRoles(props, query) {
-  return useRequestQuery(
-    [t.ROLES, query],
-    { method: 'get', url: `roles`, params: query },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
+export function useRoles(
+  query?: Record<string, unknown>,
+  props?: Omit<UseQueryOptions<RolesListResponse>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ROLES, query],
+    queryFn: () => fetchRoles(fetcher),
+    select: (data) => (Array.isArray(data) ? data : (data as { data?: unknown })?.data ?? data),
+    ...props,
+  });
 }

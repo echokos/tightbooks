@@ -4,7 +4,7 @@ import {
   UseMutationOptions,
   UseMutationResult,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 import useApiRequest from '../useRequest';
 import {
   useSetAuthToken,
@@ -40,8 +40,7 @@ export function useCreateOneClickDemo(
 
   return useMutation<CreateOneClickDemoRes, Error, CreateOneClickDemoValues>(
     () => apiRequest.post(`/demo/one_click`),
-    {
-      onSuccess: (res, id) => { },
+          onSuccess: (res, id) => { },
       ...props,
     },
   );
@@ -76,8 +75,7 @@ export function useOneClickDemoSignin(
   return useMutation<OneClickSigninDemoRes, Error, OneClickSigninDemoValues>(
     ({ demoId }) =>
       apiRequest.post(`/demo/one_click_signin`, { demo_id: demoId }),
-    {
-      onSuccess: (res, id) => {
+          onSuccess: (res, id) => {
         // Set authentication cookies.
         setAuthLoginCookies(res.data);
 

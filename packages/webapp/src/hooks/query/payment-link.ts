@@ -6,7 +6,7 @@ import {
   UseQueryResult,
   useMutation,
   useQuery,
-} from 'react-query';
+} from '@tanstack/react-query';
 import useApiRequest from '../useRequest';
 import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
 
@@ -50,8 +50,7 @@ export function useCreatePaymentLink(
           transfromToSnakeCase(values),
         )
         .then((res) => res.data),
-    {
-      ...options,
+          ...options,
     },
   );
 }
@@ -137,8 +136,7 @@ export function useGetInvoicePaymentLink(
       apiRequest
         .get(`/payment-links/${linkId}/invoice`)
         .then((res) => transformToCamelCase(res.data?.data)),
-    {
-      ...options,
+          ...options,
     },
   );
 }
@@ -166,8 +164,7 @@ export const useCreateStripeCheckoutSession = (
 > => {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values: CreateCheckoutSessionValues) => {
+  return useMutation({ mutationFn: (values: CreateCheckoutSessionValues) => {
       return apiRequest
         .post(`/payment-links/${values.linkId}/stripe_checkout_session`, values)
         .then(
@@ -232,8 +229,7 @@ export const useGetPaymentLinkInvoicePdf = (
           headers: { accept: 'application/pdf' },
         })
         .then((res) => res.data),
-    {
-      ...options,
+          ...options,
     },
   );
 };

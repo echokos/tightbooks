@@ -5,7 +5,7 @@ import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
 
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeletePaymentReceives } from '@/hooks/query/paymentReceives';
+import { useBulkDeletePaymentReceives } from '@/hooks/query/payment-receives';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withPaymentsReceivedActions } from '@/containers/Sales/PaymentsReceived/PaymentsLanding/withPaymentsReceivedActions';

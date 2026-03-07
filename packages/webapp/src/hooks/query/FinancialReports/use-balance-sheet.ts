@@ -1,6 +1,7 @@
 // @ts-nocheck
-
-import { useRequestQuery } from '../../useQueryRequest';
+import { useQuery } from '@tanstack/react-query';
+import { fetchBalanceSheetTable } from '@bigcapital/sdk-ts';
+import { useReportsApiFetcher } from '../../useRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
 import t from '../types';
@@ -9,24 +10,15 @@ import t from '../types';
  * Fetches balance sheet data.
  * @param {Object} query - The query parameters for the request.
  * @param {Object} props - Additional options for the request.
- * @returns {Object} The response object from the useRequestQuery hook.
+ * @returns {Object} The response object from the useQuery hook.
  */
 export function useBalanceSheet(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.BALANCE_SHEET, query],
-    {
-      method: 'get',
-      url: '/reports/balance-sheet',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+  const fetcher = useReportsApiFetcher();
+  return useQuery({
+    queryKey: [t.FINANCIAL_REPORT, t.BALANCE_SHEET, query],
+    queryFn: () => fetchBalanceSheetTable(fetcher, query ?? {}),
+    ...props,
+  });
 }
 
 /**

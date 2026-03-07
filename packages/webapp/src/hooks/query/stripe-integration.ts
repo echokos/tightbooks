@@ -3,7 +3,7 @@ import {
   useMutation,
   UseMutationOptions,
   UseMutationResult,
-} from 'react-query';
+} from '@tanstack/react-query';
 import useApiRequest from '../useRequest';
 import { transformToCamelCase } from '@/utils';
 
@@ -34,8 +34,7 @@ export const useCreateStripeAccountLink = (
 > => {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values: StripeAccountLinkValues) => {
+  return useMutation({ mutationFn: (values: StripeAccountLinkValues) => {
       return apiRequest
         .post('/stripe/account_link', {
           stripe_account_id: values?.stripeAccountId,
@@ -69,8 +68,7 @@ export const useCreateStripeAccountSession = (
 ): UseMutationResult<AccountSessionResponse, Error, AccountSessionValues> => {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values: AccountSessionValues) => {
+  return useMutation({ mutationFn: (values: AccountSessionValues) => {
       return apiRequest
         .post('/stripe/account_session', {
           account: values?.connectedAccountId,
@@ -97,8 +95,7 @@ export const useCreateStripeAccount = (
 ) => {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values: CreateStripeAccountValues) => {
+  return useMutation({ mutationFn: (values: CreateStripeAccountValues) => {
       return apiRequest
         .post('/stripe/account')
         .then((res) => res.data);
@@ -127,15 +124,14 @@ export const useGetStripeAccountLink = (
   options?: UseQueryOptions<StripeAccountLinkResponse, Error>,
 ): UseQueryResult<StripeAccountLinkResponse, Error> => {
   const apiRequest = useApiRequest();
-  return useQuery(
-    'getStripeAccountLink',
-    () => {
-      return apiRequest
+  return useQuery({
+    queryKey: ['getStripeAccountLink'],
+    queryFn: () =>
+      apiRequest
         .get('/stripe/link')
-        .then((res) => transformToCamelCase(res.data));
-    },
-    { ...options },
-  );
+        .then((res) => transformToCamelCase(res.data)),
+    ...options,
+  });
 };
 
 // Get Stripe Account OAuth Callback Mutation.
@@ -160,8 +156,7 @@ export const useSetStripeAccountCallback = (
   StripeAccountCallbackMutationValues
 > => {
   const apiRequest = useApiRequest();
-  return useMutation(
-    (values: StripeAccountCallbackMutationValues) => {
+  return useMutation({ mutationFn: (values: StripeAccountCallbackMutationValues) => {
       return apiRequest
         .post(`/stripe/callback`, values)
         .then(

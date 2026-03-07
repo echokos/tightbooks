@@ -1,55 +1,54 @@
-// @ts-nocheck
-import { useMutation } from 'react-query';
-import useApiRequest from '../useRequest';
-import { transformToCamelCase } from '@/utils';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { deleteAttachment, fetchAttachmentPresignedUrl, uploadAttachment } from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 
-interface UploadAttachmentResponse {
-  createdAt: string;
-  id: number;
-  key: string;
-  mimeType: string;
-  originName: string;
-  size: number;
+type UploadAttachmentResponse = Awaited<ReturnType<typeof uploadAttachment>>;
+
+function toFormData(values: FormData | Record<string, unknown>): FormData {
+  if (values instanceof FormData) {
+    return values;
+  }
+  const formData = new FormData();
+  const record = values as Record<string, unknown>;
+  if (record.file instanceof File) {
+    formData.append('file', record.file);
+  }
+  return formData;
 }
 
 /**
  * Uploads the given attachments.
  */
-export function useUploadAttachments(props) {
-  const apiRequest = useApiRequest();
-
-  return useMutation<UploadAttachmentResponse>(
-    (values) =>
-      apiRequest
-        .post('attachments', values)
-        .then((res) => transformToCamelCase(res.data?.data)),
-    props,
-  );
+export function useUploadAttachments(
+  props?: UseMutationOptions<UploadAttachmentResponse, Error, FormData | Record<string, unknown>>
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
+    mutationFn: (values) => uploadAttachment(fetcher, toFormData(values)),
+    ...props,
+  });
 }
 
 /**
  * Deletes the given attachment key.
  */
-export function useDeleteAttachment(props) {
-  const apiRequest = useApiRequest();
-
-  return useMutation(
-    (key: string) => apiRequest.delete(`attachments/${key}`),
-    props,
-  );
+export function useDeleteAttachment(props?: UseMutationOptions<void, Error, string>) {
+  const fetcher = useApiFetcher();
+  return useMutation({
+    mutationFn: (key: string) => deleteAttachment(fetcher, key),
+    ...props,
+  });
 }
 
 /**
  * Uploads the given attachments.
  */
-export function useGetPresignedUrlAttachment(props) {
-  const apiRequest = useApiRequest();
-
-  return useMutation(
-    (key: string) =>
-      apiRequest
-        .get(`attachments/${key}/presigned-url`)
-        .then((res) => res.data),
-    props,
-  );
+export function useGetPresignedUrlAttachment(
+  props?: UseMutationOptions<unknown, Error, string>
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
+    mutationFn: (key: string) => fetchAttachmentPresignedUrl(fetcher, key),
+    ...props,
+  });
 }

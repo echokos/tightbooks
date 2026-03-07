@@ -38,7 +38,7 @@ import {
 } from '@/constants/abilityOption';
 
 import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
-import { useRefreshPaymentReceive } from '@/hooks/query/paymentReceives';
+import { useRefreshPaymentReceive } from '@/hooks/query/payment-receives';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import { compose } from '@/utils';
@@ -189,7 +189,6 @@ function PaymentsReceivedActionsBar({
           text={<T id={'export'} />}
           onClick={handleExportBtnClick}
         />
-
         <NavbarDivider />
         <DashboardRowsHeightButton
           initialValue={paymentReceivesTableSize}

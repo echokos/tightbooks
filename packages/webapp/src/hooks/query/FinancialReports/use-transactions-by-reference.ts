@@ -1,23 +1,19 @@
 // @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTransactionsByReferenceTable } from '@bigcapital/sdk-ts';
+import { useReportsApiFetcher } from '../../useRequest';
 import t from '../types';
+
 /**
  * Retrieve transactions by reference report.
  */
 export function useTransactionsByReference(query, props) {
-  return useRequestQuery(
-    [t.TRANSACTIONS_BY_REFERENCE, query],
-    {
-      method: 'get',
-      url: `/reports/transactions-by-reference`,
-      params: query,
-    },
-    {
-      select: (res) => res.data,
-      defaultData: {
-        transactions: [],
-      },
-      ...props,
-    },
-  );
+  const fetcher = useReportsApiFetcher();
+  const { defaultData, ...rest } = props ?? {};
+  return useQuery({
+    queryKey: [t.TRANSACTIONS_BY_REFERENCE, query],
+    queryFn: () => fetchTransactionsByReferenceTable(fetcher, query ?? {}),
+    placeholderData: defaultData ?? { transactions: [] },
+    ...rest,
+  });
 }

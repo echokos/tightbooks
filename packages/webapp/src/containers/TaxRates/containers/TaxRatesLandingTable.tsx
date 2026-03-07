@@ -17,16 +17,16 @@ import { withSettings } from '@/containers/Settings/withSettings';
 
 import { useTaxRatesTableColumns } from './_utils';
 import { useTaxRatesLandingContext } from './TaxRatesLandingProvider';
+import {
+  useActivateTaxRate,
+  useInactivateTaxRate,
+} from '@/hooks/query/tax-rates';
 import { TaxRatesLandingEmptyState } from './TaxRatesLandingEmptyState';
 import { TaxRatesTableActionsMenu } from './_components';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
-import {
-  useActivateTaxRate,
-  useInactivateTaxRate,
-} from '@/hooks/query/taxRates';
 
 /**
  * Invoices datatable.

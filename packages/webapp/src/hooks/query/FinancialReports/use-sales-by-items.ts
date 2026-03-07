@@ -1,4 +1,7 @@
 // @ts-nocheck
+import { useQuery } from '@tanstack/react-query';
+import { fetchSalesByItemsTable } from '@bigcapital/sdk-ts';
+import { useReportsApiFetcher } from '../../useRequest';
 import { useRequestQuery } from '../../useQueryRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
@@ -25,21 +28,12 @@ export function useSalesByItems(query, props) {
  * Retrieves sales by items table format.
  */
 export function useSalesByItemsTable(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.SALES_BY_ITEMS, query],
-    {
-      method: 'get',
-      url: '/reports/sales-by-items',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+  const fetcher = useReportsApiFetcher();
+  return useQuery({
+    queryKey: [t.FINANCIAL_REPORT, t.SALES_BY_ITEMS, query],
+    queryFn: () => fetchSalesByItemsTable(fetcher, query ?? {}),
+    ...props,
+  });
 }
 
 export const useSalesByItemsCsvExport = (query, args) => {

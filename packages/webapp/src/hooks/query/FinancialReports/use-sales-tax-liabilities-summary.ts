@@ -1,5 +1,7 @@
 // @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
+import { useQuery } from '@tanstack/react-query';
+import { fetchSalesTaxLiabilitySummaryTable } from '@bigcapital/sdk-ts';
+import { useReportsApiFetcher } from '../../useRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
 import t from '../types';
@@ -8,21 +10,12 @@ import t from '../types';
  * Retrieves the sales tax liability summary report.
  */
 export function useSalesTaxLiabilitySummary(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.SALES_TAX_LIABILITY_SUMMARY, query],
-    {
-      method: 'get',
-      url: '/reports/sales-tax-liability-summary',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+  const fetcher = useReportsApiFetcher();
+  return useQuery({
+    queryKey: [t.FINANCIAL_REPORT, t.SALES_TAX_LIABILITY_SUMMARY, query],
+    queryFn: () => fetchSalesTaxLiabilitySummaryTable(fetcher, query ?? {}),
+    ...props,
+  });
 }
 
 export const useSalesTaxLiabilitySummaryXlsxExport = (query, args) => {

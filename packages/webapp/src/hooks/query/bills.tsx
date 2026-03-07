@@ -1,249 +1,245 @@
-// @ts-nocheck
-import { useQueryClient, useMutation } from 'react-query';
-import { useRequestQuery } from '../useQueryRequest';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
+import type {
+  Bill,
+  BillsListResponse,
+  CreateBillBody,
+  EditBillBody,
+  GetBillsQuery,
+  BulkDeleteBillsBody,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchBills,
+  fetchBill,
+  createBill,
+  editBill,
+  deleteBill,
+  openBill,
+  bulkDeleteBills,
+  validateBulkDeleteBills,
+  fetchDueBills,
+  fetchBillPaymentTransactions,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 import { transformPagination } from '@/utils';
-import useApiRequest from '../useRequest';
 import t from './types';
 
-const commonInvalidateQueries = (queryClient) => {
-  // Invalidate bills.
-  queryClient.invalidateQueries(t.BILLS);
-
-  // Invalidate items.
-  queryClient.invalidateQueries(t.ITEMS);
-  queryClient.invalidateQueries(t.ITEM);
-
-  // Invalidate vendors.
-  queryClient.invalidateQueries([t.VENDORS]);
-  queryClient.invalidateQueries(t.VENDOR);
-
-  // Invalidate accounts.
-  queryClient.invalidateQueries(t.ACCOUNTS);
-  queryClient.invalidateQueries(t.ACCOUNT);
-
-  // Invalidate landed cost.
-  queryClient.invalidateQueries(t.LANDED_COST);
-  queryClient.invalidateQueries(t.LANDED_COST_TRANSACTION);
-
-  // Invalidate reconcile.
-  queryClient.invalidateQueries(t.RECONCILE_VENDOR_CREDIT);
-  queryClient.invalidateQueries(t.RECONCILE_VENDOR_CREDITS);
-
-  // Invalidate financial reports.
-  queryClient.invalidateQueries(t.FINANCIAL_REPORT);
-
-  // Invalidate the transactions by reference.
-  queryClient.invalidateQueries(t.TRANSACTIONS_BY_REFERENCE);
-
-  // Invalidate items associated bills transactions.
-  queryClient.invalidateQueries(t.ITEMS_ASSOCIATED_WITH_BILLS);
-
-  // Invalidate item warehouses.
-  queryClient.invalidateQueries(t.ITEM_WAREHOUSES_LOCATION);
-
-  // Invalidate mutate base currency abilities.
-  queryClient.invalidateQueries(t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES);
+const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
+  queryClient.invalidateQueries({ queryKey: [t.BILLS] });
+  queryClient.invalidateQueries({ queryKey: [t.ITEMS] });
+  queryClient.invalidateQueries({ queryKey: [t.ITEM] });
+  queryClient.invalidateQueries({ queryKey: [t.VENDORS] });
+  queryClient.invalidateQueries({ queryKey: [t.VENDOR] });
+  queryClient.invalidateQueries({ queryKey: [t.ACCOUNTS] });
+  queryClient.invalidateQueries({ queryKey: [t.ACCOUNT] });
+  queryClient.invalidateQueries({ queryKey: [t.LANDED_COST] });
+  queryClient.invalidateQueries({ queryKey: [t.LANDED_COST_TRANSACTION] });
+  queryClient.invalidateQueries({ queryKey: [t.RECONCILE_VENDOR_CREDIT] });
+  queryClient.invalidateQueries({ queryKey: [t.RECONCILE_VENDOR_CREDITS] });
+  queryClient.invalidateQueries({ queryKey: [t.FINANCIAL_REPORT] });
+  queryClient.invalidateQueries({ queryKey: [t.TRANSACTIONS_BY_REFERENCE] });
+  queryClient.invalidateQueries({ queryKey: [t.ITEMS_ASSOCIATED_WITH_BILLS] });
+  queryClient.invalidateQueries({ queryKey: [t.ITEM_WAREHOUSES_LOCATION] });
+  queryClient.invalidateQueries({
+    queryKey: [t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES],
+  });
 };
 
-/**
- * Creates a new sale invoice.
- */
-export function useCreateBill(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+export type BillsListResult = {
+  bills: unknown[];
+  pagination: ReturnType<typeof transformPagination>;
+  filterMeta: Record<string, unknown>;
+};
 
-  return useMutation((values) => apiRequest.post('bills', values), {
-    onSuccess: (res, values) => {
-      // Common invalidate queries.
+export function useCreateBill(
+  props?: UseMutationOptions<void, Error, CreateBillBody>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: (values: CreateBillBody) => createBill(fetcher, values),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...props,
+  });
+}
+
+export function useEditBill(
+  props?: UseMutationOptions<void, Error, [number, EditBillBody]>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: ([id, values]: [number, EditBillBody]) =>
+      editBill(fetcher, id, values),
+    onSuccess: (_data, [id]) => {
       commonInvalidateQueries(queryClient);
+      queryClient.invalidateQueries({ queryKey: [t.BILL, id] });
     },
     ...props,
   });
 }
 
-/**
- * Edits the given sale invoice.
- */
-export function useEditBill(props) {
+export function useOpenBill(
+  props?: UseMutationOptions<void, Error, number>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation(
-    ([id, values]) => apiRequest.put(`bills/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-
-        // Invalidate bill query.
-        queryClient.invalidateQueries([t.BILL, id]);
-      },
-      ...props,
-    },
-  );
-}
-
-/**
- * Marks the given bill as open.
- */
-export function useOpenBill(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation((id) => apiRequest.patch(`bills/${id}/open`), {
-    onSuccess: (res, id) => {
-      // Common invalidate queries.
+  return useMutation({
+    mutationFn: (id: number) => openBill(fetcher, id),
+    onSuccess: (_data, id) => {
       commonInvalidateQueries(queryClient);
-
-      // Invalidate bill query.
-      queryClient.invalidateQueries([t.BILL, id]);
+      queryClient.invalidateQueries({ queryKey: [t.BILL, id] });
     },
     ...props,
   });
 }
 
-/**
- * Deletes the given sale invoice.
- */
-export function useDeleteBill(props) {
+export function useDeleteBill(
+  props?: UseMutationOptions<void, Error, number>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation((id) => apiRequest.delete(`bills/${id}`), {
-    onSuccess: (res, id) => {
-      // Common invalidate queries.
+  return useMutation({
+    mutationFn: (id: number) => deleteBill(fetcher, id),
+    onSuccess: (_data, id) => {
       commonInvalidateQueries(queryClient);
-
-      // Invalidate bill query.
-      queryClient.invalidateQueries([t.BILL, id]);
+      queryClient.invalidateQueries({ queryKey: [t.BILL, id] });
     },
     ...props,
   });
 }
 
-/**
- * Deletes multiple bills in bulk.
- */
-export function useBulkDeleteBills(props) {
+export type BulkDeleteBillsPayload = { ids: number[]; skipUndeletable?: boolean };
+
+function toBulkDeleteBody(payload: BulkDeleteBillsPayload): BulkDeleteBillsBody {
+  return {
+    ids: payload.ids,
+    skipUndeletable: payload.skipUndeletable ?? false,
+  };
+}
+
+export function useBulkDeleteBills(
+  props?: UseMutationOptions<void, Error, BulkDeleteBillsPayload>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation(
-    (ids: number[]) => apiRequest.post('bills/bulk-delete', { ids }),
-    {
-      onSuccess: () => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
-    },
-  );
+  return useMutation({
+    mutationFn: (payload: BulkDeleteBillsPayload) =>
+      bulkDeleteBills(fetcher, toBulkDeleteBody(payload)),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+    ...props,
+  });
 }
 
-export function useValidateBulkDeleteBills(props) {
-  const apiRequest = useApiRequest();
+/** Response shape from bills validate-bulk-delete endpoint (see ValidateBulkDeleteResponseDto) */
+export type ValidateBulkDeleteBillsResponse = {
+  deletableCount: number;
+  nonDeletableCount: number;
+  deletableIds: number[];
+  nonDeletableIds: number[];
+};
 
-  return useMutation(
-    (ids: number[]) =>
-      apiRequest
-        .post('bills/validate-bulk-delete', { ids })
-        .then((res) => transformToCamelCase(res.data)),
-    {
-      ...props,
-    },
-  );
+export function useValidateBulkDeleteBills(
+  props?: UseMutationOptions<ValidateBulkDeleteBillsResponse, Error, number[]>
+) {
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: (ids: number[]) =>
+      validateBulkDeleteBills(fetcher, { ids, skipUndeletable: false }),
+    ...props,
+  });
 }
 
-const transformBillsResponse = (response) => ({
-  bills: response.data.bills,
-  pagination: transformPagination(response.data.pagination),
-  filterMeta: response.data.filter_meta,
-});
+/** API may return bills/data, pagination, and filter_meta (snake_case). */
+type BillsListResponseShape = {
+  bills?: unknown[];
+  data?: unknown[];
+  pagination?: unknown;
+  filter_meta?: Record<string, unknown>;
+};
 
-/**
- * Retrieve sale invoices list with pagination meta.
- */
-export function useBills(query, props) {
-  return useRequestQuery(
-    [t.BILLS, query],
-    {
-      method: 'get',
-      url: 'bills',
-      params: query,
-    },
-    {
-      select: transformBillsResponse,
-      defaultData: {
-        bills: [],
-        pagination: {
-          page: 1,
-          page_size: 12,
-          total: 0,
-        },
-        filterMeta: {},
-      },
-      ...props,
-    },
-  );
+function isRecord(obj: unknown): obj is Record<string, unknown> {
+  return typeof obj === 'object' && obj !== null && !Array.isArray(obj);
 }
 
-/**
- * Retrieve bill details of the given bill id.
- * @param {number} id - Bill id.
- */
-export function useBill(id, props) {
-  return useRequestQuery(
-    [t.BILL, id],
-    { method: 'get', url: `/bills/${id}` },
-    {
-      select: (res) => res.data,
-      defaultData: {},
-      ...props,
-    },
-  );
+function transformBillsList(res: BillsListResponse & BillsListResponseShape): BillsListResult {
+  const bills = res.bills ?? res.data ?? [];
+  const pagination = res.pagination ?? {};
+  const filterMeta = res.filter_meta;
+  return {
+    bills: Array.isArray(bills) ? bills : [],
+    pagination: transformPagination(pagination),
+    filterMeta: isRecord(filterMeta) ? filterMeta : {},
+  };
+}
+export function useBills(
+  query?: GetBillsQuery,
+  props?: Omit<UseQueryOptions<BillsListResult>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.BILLS, query],
+    queryFn: () => fetchBills(fetcher, query).then(transformBillsList),
+    ...props,
+  });
 }
 
-/**
- * Retrieve the due bills of the given vendor id.
- * @param {number} vendorId -
- */
-export function useDueBills(vendorId, props) {
-  return useRequestQuery(
-    [t.BILLS, t.BILLS_DUE, vendorId],
-    {
-      method: 'get',
-      url: 'bills/due',
-      params: { vendor_id: vendorId },
-    },
-    {
-      select: (res) => res.data.bills,
-      defaultData: [],
-      ...props,
-    },
-  );
+export function useBill(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<Bill>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.BILL, id],
+    queryFn: () => fetchBill(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
+}
+
+export function useDueBills(
+  vendorId: number | null | undefined,
+  props?: Omit<UseQueryOptions<unknown[]>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.BILLS, t.BILLS_DUE, vendorId],
+    queryFn: () =>
+      fetchDueBills(fetcher, vendorId != null ? { vendor_id: vendorId } : undefined),
+    select: (data) => data ?? [],
+    enabled: true,
+    ...props,
+  });
 }
 
 export function useRefreshBills() {
   const queryClient = useQueryClient();
-
   return {
-    refresh: () => {
-      queryClient.invalidateQueries(t.BILLS);
-    },
+    refresh: () => queryClient.invalidateQueries({ queryKey: [t.BILLS] }),
   };
 }
 
-export function useBillPaymentTransactions(id, props) {
-  return useRequestQuery(
-    [t.BILLS_PAYMENT_TRANSACTIONS, id],
-    {
-      method: 'get',
-      url: `bills/${id}/payment-transactions`,
-    },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
+export function useBillPaymentTransactions(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<unknown[]>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.BILLS_PAYMENT_TRANSACTIONS, id],
+    queryFn: () => fetchBillPaymentTransactions(fetcher, id!),
+    select: (data) => data ?? [],
+    enabled: id != null,
+    ...props,
+  });
 }

@@ -1,5 +1,7 @@
 // @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
+import { useQuery } from '@tanstack/react-query';
+import { fetchCashflowStatementTable } from '@bigcapital/sdk-ts';
+import { useReportsApiFetcher } from '../../useRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
 import t from '../types';
@@ -8,32 +10,25 @@ import t from '../types';
  * Retrieve cash flow statement report.
  */
 export function useCashFlowStatementReport(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.CASH_FLOW_STATEMENT, query],
-    {
-      method: 'get',
-      url: '/reports/cashflow-statement',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
+  const fetcher = useReportsApiFetcher();
+  const { defaultData, ...rest } = props ?? {};
+  return useQuery({
+    queryKey: [t.FINANCIAL_REPORT, t.CASH_FLOW_STATEMENT, query],
+    queryFn: () => fetchCashflowStatementTable(fetcher, query ?? {}),
+    select: (data) => ({
+      columns: data?.table?.columns,
+      query: data?.query,
+      meta: data?.meta,
+      tableRows: data?.table?.rows,
+    }),
+    placeholderData: defaultData ?? {
+      tableRows: [],
+      columns: [],
+      query: {},
+      meta: {},
     },
-    {
-      select: (res) => ({
-        columns: res.data.table.columns,
-        query: res.data.query,
-        meta: res.data.meta,
-        tableRows: res.data.table.rows,
-      }),
-      defaultData: {
-        tableRows: [],
-        columns: [],
-        query: {},
-        meta: {},
-      },
-      ...props,
-    },
-  );
+    ...rest,
+  });
 }
 
 export const useCashFlowStatementXlsxExport = (query, args) => {

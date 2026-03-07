@@ -1,5 +1,7 @@
 // @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTrialBalanceSheetTable } from '@bigcapital/sdk-ts';
+import { useReportsApiFetcher } from '../../useRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
 import t from '../types';
@@ -8,21 +10,12 @@ import t from '../types';
  * Retrieve trial balance sheet.
  */
 export function useTrialBalanceSheet(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.TRIAL_BALANCE_SHEET, query],
-    {
-      method: 'get',
-      url: '/reports/trial-balance-sheet',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+  const fetcher = useReportsApiFetcher();
+  return useQuery({
+    queryKey: [t.FINANCIAL_REPORT, t.TRIAL_BALANCE_SHEET, query],
+    queryFn: () => fetchTrialBalanceSheetTable(fetcher, query ?? {}),
+    ...props,
+  });
 }
 
 export const useTrialBalanceSheetXlsxExport = (query, args) => {

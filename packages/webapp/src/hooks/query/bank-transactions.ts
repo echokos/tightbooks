@@ -1,65 +1,43 @@
-// @ts-nocheck
 import {
   useMutation,
   UseMutationOptions,
   UseMutationResult,
   useQueryClient,
-} from 'react-query';
-import useApiRequest from '../useRequest';
+} from '@tanstack/react-query';
+import { uncategorizeTransactionsBulk } from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 import { BANK_QUERY_KEY } from '@/constants/query-keys/banking';
 import t from './types';
 
-type UncategorizeTransactionsBulkValues = { ids: Array<number> };
-interface UncategorizeBankTransactionsBulkResponse {}
+export type UncategorizeTransactionsBulkValues = { ids: number[] };
 
 /**
- * Uncategorize the given categorized transactions in bulk.
- * @param {UseMutationResult<PuaseFeedsBankAccountResponse, Error, ExcludeBankTransactionValue>} options
- * @returns {UseMutationResult<PuaseFeedsBankAccountResponse, Error, ExcludeBankTransactionValue>}
+ * Uncategorize the given categorized bank transactions in bulk (via DELETE /api/banking/categorize/bulk).
  */
 export function useUncategorizeTransactionsBulkAction(
-  options?: UseMutationOptions<
-    UncategorizeBankTransactionsBulkResponse,
-    Error,
-    UncategorizeTransactionsBulkValues
-  >,
-): UseMutationResult<
-  UncategorizeBankTransactionsBulkResponse,
-  Error,
-  UncategorizeTransactionsBulkValues
-> {
+  options?: UseMutationOptions<void, Error, UncategorizeTransactionsBulkValues>,
+): UseMutationResult<void, Error, UncategorizeTransactionsBulkValues> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    UncategorizeBankTransactionsBulkResponse,
-    Error,
-    UncategorizeTransactionsBulkValues
-  >(
-    (value) =>
-      apiRequest.post(`/cashflow/transactions/uncategorize/bulk`, {
-        ids: value.ids,
-      }),
-    {
-      onSuccess: (res, values) => {
-        // Invalidate the account uncategorized transactions.
-        queryClient.invalidateQueries(
-          t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
-        );
-        // Invalidate the account transactions.
-        queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
-
-        // Invalidate bank account summary.
-        queryClient.invalidateQueries(BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
-
-        // Invalidate the recognized transactions.
-        queryClient.invalidateQueries([
-          BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY,
-        ]);
-        // Invalidate the account.
-        queryClient.invalidateQueries(t.ACCOUNT);
-      },
-      ...options,
+  return useMutation({
+    mutationFn: (values: UncategorizeTransactionsBulkValues) =>
+      uncategorizeTransactionsBulk(fetcher, values.ids),
+    onSuccess: (_res, _values) => {
+      queryClient.invalidateQueries({
+        queryKey: [t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY],
+      });
+      queryClient.invalidateQueries({ queryKey: [t.ACCOUNT] });
     },
-  );
+    ...options,
+  });
 }

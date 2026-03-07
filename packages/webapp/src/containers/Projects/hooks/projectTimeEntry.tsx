@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useQueryClient, useMutation } from 'react-query';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useRequestQuery } from '@/hooks/useQueryRequest';
 import useApiRequest from '@/hooks/useRequest';
 import t from './type';
@@ -7,24 +7,17 @@ import t from './type';
 // Common invalidate queries.
 const commonInvalidateQueries = (queryClient) => {
   // Invalidate projects.
-  queryClient.invalidateQueries(t.PROJECTS);
+  queryClient.invalidateQueries({ queryKey: [t.PROJECTS] });
   // Invalidate project entries.
-  queryClient.invalidateQueries(t.PROJECT_TIME_ENTRIES);
+  queryClient.invalidateQueries({ queryKey: [t.PROJECT_TIME_ENTRIES] });
 };
 
-/**
- * Create a new project time entry.
- * @param props
- * @returns
- */
 export function useCreateProjectTimeEntry(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`/projects/tasks/${id}/times`, values),
-    {
-      onSuccess: () => {
+  return useMutation({ mutationFn: ([id, values]) => apiRequest.post(`/projects/tasks/${id}/times`, values),
+          onSuccess: () => {
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);
       },
@@ -33,21 +26,14 @@ export function useCreateProjectTimeEntry(props) {
   );
 }
 
-/**
- * Edit the given project time entry.
- * @param props
- * @returns
- */
 export function useEditProjectTimeEntry(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.put(`projects/times/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
+  return useMutation({ mutationFn: ([id, values]) => apiRequest.put(`projects/times/${id}`, values),
+          onSuccess: (res, [id, values]) => {
         // Invalidate specific project time entry.
-        queryClient.invalidateQueries([t.PROJECT_TIME_ENTRY, id]);
+        queryClient.invalidateQueries({ queryKey: [t.PROJECT_TIME_ENTRY, id] });
 
         commonInvalidateQueries(queryClient);
       },
@@ -56,18 +42,14 @@ export function useEditProjectTimeEntry(props) {
   );
 }
 
-/**
- * Delete the given project time entry
- * @param props
- */
 export function useDeleteProjectTimeEntry(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`projects/times/${id}`), {
-    onSuccess: (res, id) => {
+  return useMutation({ mutationFn: (id) => apiRequest.delete(`projects/times/${id}`),
+        onSuccess: (res, id) => {
       // Invalidate specific project task.
-      queryClient.invalidateQueries([t.PROJECT_TASK, id]);
+      queryClient.invalidateQueries({ queryKey: [t.PROJECT_TASK, id] });
 
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -76,13 +58,6 @@ export function useDeleteProjectTimeEntry(props) {
   });
 }
 
-/**
- * Retrive the given project time entry.
- * @param timeId
- * @param props
- * @param requestProps
- * @returns
- */
 export function useProjectTimeEntry(timeId, props, requestProps) {
   return useRequestQuery(
     [t.PROJECT_TIME_ENTRY, timeId],
@@ -99,13 +74,6 @@ const transformProjectTimeEntries = (res) => ({
   projectTimeEntries: res.data.timeline,
 });
 
-/**
- *
- * @param taskId - Task id.
- * @param props
- * @param requestProps
- * @returns
- */
 export function useProjectTimeEntries(id, props, requestProps) {
   return useRequestQuery(
     [t.PROJECT_TIME_ENTRIES, id],

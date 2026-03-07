@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import useApiRequest from '../useRequest';
 
 /**
@@ -8,10 +8,8 @@ import useApiRequest from '../useRequest';
 export function useGetPlaidLinkToken(props = {}) {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    () => apiRequest.post('banking/plaid/link-token', {}, {}),
-    {
-      ...props,
+  return useMutation({ mutationFn: () => apiRequest.post('banking/plaid/link-token', {}, {}),
+          ...props,
     },
   );
 }
@@ -22,10 +20,8 @@ export function useGetPlaidLinkToken(props = {}) {
 export function usePlaidExchangeToken(props = {}) {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (data) => apiRequest.post('banking/plaid/exchange-token', data, {}),
-    {
-      ...props,
+  return useMutation({ mutationFn: (data) => apiRequest.post('banking/plaid/exchange-token', data, {}),
+          ...props,
     },
   );
 }

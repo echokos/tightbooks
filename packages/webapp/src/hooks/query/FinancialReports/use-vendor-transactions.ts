@@ -1,5 +1,7 @@
 // @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTransactionsByVendorsTable } from '@bigcapital/sdk-ts';
+import { useReportsApiFetcher } from '../../useRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
 import t from '../types';
@@ -8,21 +10,12 @@ import t from '../types';
  * Retrieve vendors transactions report.
  */
 export function useVendorsTransactionsReport(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.VENDORS_TRANSACTIONS, query],
-    {
-      method: 'get',
-      url: '/reports/transactions-by-vendors',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+  const fetcher = useReportsApiFetcher();
+  return useQuery({
+    queryKey: [t.FINANCIAL_REPORT, t.VENDORS_TRANSACTIONS, query],
+    queryFn: () => fetchTransactionsByVendorsTable(fetcher, query ?? {}),
+    ...props,
+  });
 }
 
 export const useVendorsTransactionsXlsxExport = (query, args) => {
