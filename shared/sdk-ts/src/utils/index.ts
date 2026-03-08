@@ -35,3 +35,24 @@ export type OpResponseBodyTable<O> = O extends {
 }
   ? R
   : unknown;
+
+/** Response body for CSV format (returns as Blob) */
+export type OpResponseBodyCsv<O> = O extends {
+  responses: { 200: { content: { 'application/csv': infer R } } };
+}
+  ? R
+  : Blob;
+
+/** Response body for XLSX format (returns as Blob) */
+export type OpResponseBodyXlsx<O> = O extends {
+  responses: { 200: { content: { 'application/xlsx': infer R } } };
+}
+  ? R
+  : Blob;
+
+/** Response body for PDF format (returns as Blob) */
+export type OpResponseBodyPdf<O> = O extends {
+  responses: { 200: { content: { 'application/pdf': infer R } } };
+}
+  ? R
+  : Blob;
