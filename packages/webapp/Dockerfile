@@ -4,7 +4,7 @@ FROM node:18.16.0-alpine AS builder
 WORKDIR /app
 
 # Install pnpm
-RUN npm install -g pnpm@8.10.2
+RUN npm install -g pnpm@9.0.5
 
 # Install build dependencies
 RUN apk add --no-cache python3 build-base chromium
