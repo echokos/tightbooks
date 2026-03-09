@@ -15119,6 +15119,24 @@ export interface operations {
                 onlyInactive?: boolean;
                 /** @description Structure type for the accounts list */
                 structure?: "tree" | "flat";
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles array */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order */
+                sortOrder?: "DESC" | "ASC";
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+                /** @description Page number */
+                page?: number;
+                /** @description Page size */
+                pageSize?: number;
             };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
@@ -20656,7 +20674,7 @@ export interface operations {
                 /** @description Custom view ID */
                 customViewId?: number;
                 /** @description Filter roles array */
-                filterRoles?: unknown[][];
+                filterRoles?: string[];
                 /** @description Column to sort by */
                 columnSortBy?: string;
                 /** @description Sort order */
