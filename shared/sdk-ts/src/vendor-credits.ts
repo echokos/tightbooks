@@ -154,7 +154,7 @@ export async function fetchRefundVendorCreditTransaction(
     .path(VENDOR_CREDITS_ROUTES.REFUND_BY_ID)
     .method('get')
     .create();
-  const { data } = await get({ refundCreditId });
+  const { data } = await get({ refundCreditId: String(refundCreditId) });
   return data;
 }
 

@@ -17,6 +17,8 @@ export type EditVendorBody = OpRequestBody<OpForPath<typeof VENDORS_ROUTES.BY_ID
 export type ValidateBulkDeleteVendorsResponse = OpResponseBody<OpForPath<typeof VENDORS_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
 export type BulkDeleteVendorsBody = OpRequestBody<OpForPath<typeof VENDORS_ROUTES.BULK_DELETE, 'post'>>;
 export type GetVendorsQuery = OpQueryParams<OpForPath<typeof VENDORS_ROUTES.LIST, 'get'>>;
+export type EditVendorOpeningBalanceBody = OpRequestBody<OpForPath<typeof VENDORS_ROUTES.OPENING_BALANCE, 'put'>>;
+export type EditVendorOpeningBalanceResponse = OpResponseBody<OpForPath<typeof VENDORS_ROUTES.OPENING_BALANCE, 'put'>>;
 
 export async function fetchVendors(
   fetcher: ApiFetcher,
@@ -72,4 +74,14 @@ export async function bulkDeleteVendors(
 ): Promise<void> {
   const post = fetcher.path(VENDORS_ROUTES.BULK_DELETE).method('post').create();
   await post(body);
+}
+
+export async function editVendorOpeningBalance(
+  fetcher: ApiFetcher,
+  id: number,
+  values: EditVendorOpeningBalanceBody
+): Promise<EditVendorOpeningBalanceResponse> {
+  const put = fetcher.path(VENDORS_ROUTES.OPENING_BALANCE).method('put').create();
+  const { data } = await put({ id, ...values });
+  return data;
 }
