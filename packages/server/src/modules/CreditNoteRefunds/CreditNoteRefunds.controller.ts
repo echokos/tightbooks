@@ -1,4 +1,10 @@
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -18,9 +24,11 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { CreditNoteAction } from '../CreditNotes/types/CreditNotes.types';
+import { RefundCreditNoteResponseDto } from './dto/RefundCreditNoteResponse.dto';
 
 @Controller('credit-notes')
 @ApiTags('Credit Note Refunds')
+@ApiExtraModels(RefundCreditNoteResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class CreditNoteRefundsController {
@@ -31,9 +39,35 @@ export class CreditNoteRefundsController {
   @Get(':creditNoteId/refunds')
   @RequirePermission(CreditNoteAction.View, AbilitySubject.CreditNote)
   @ApiOperation({ summary: 'Retrieve the credit note graph.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Credit note refunds retrieved successfully.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(RefundCreditNoteResponseDto) },
+    },
+  })
   getCreditNoteRefunds(@Param('creditNoteId') creditNoteId: number) {
     return this.creditNotesRefundsApplication.getCreditNoteRefunds(
       creditNoteId,
+    );
+  }
+
+  @Get('refunds/:refundCreditId')
+  @RequirePermission(CreditNoteAction.View, AbilitySubject.CreditNote)
+  @ApiOperation({ summary: 'Retrieve a refund transaction for the given credit note.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Refund credit note transaction retrieved successfully.',
+    schema: {
+      $ref: getSchemaPath(RefundCreditNoteResponseDto),
+    },
+  })
+  getRefundCreditNoteTransaction(
+    @Param('refundCreditId') refundCreditId: number,
+  ) {
+    return this.creditNotesRefundsApplication.getRefundCreditNoteTransaction(
+      refundCreditId,
     );
   }
 

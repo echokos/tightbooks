@@ -24,6 +24,10 @@ export type ValidateBulkDeleteCreditNotesBody = OpRequestBody<OpForPath<typeof C
 export type ValidateBulkDeleteCreditNotesResponse = OpResponseBody<OpForPath<typeof CREDIT_NOTES_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
 export type BulkDeleteCreditNotesBody = OpRequestBody<OpForPath<typeof CREDIT_NOTES_ROUTES.BULK_DELETE, 'post'>>;
 export type CreateRefundCreditNoteBody = OpRequestBody<OpForPath<typeof CREDIT_NOTES_ROUTES.REFUNDS, 'post'>>;
+export type CreditNoteRefundsResponse = OpResponseBody<OpForPath<typeof CREDIT_NOTES_ROUTES.REFUNDS, 'get'>>;
+export type RefundCreditNoteTransaction = OpResponseBody<OpForPath<typeof CREDIT_NOTES_ROUTES.REFUND_BY_ID, 'get'>>;
+export type AppliedCreditNoteInvoicesResponse = OpResponseBody<OpForPath<typeof CREDIT_NOTES_ROUTES.APPLIED_INVOICES, 'get'>>;
+export type CreditNoteInvoicesToApplyResponse = OpResponseBody<OpForPath<typeof CREDIT_NOTES_ROUTES.APPLY_INVOICES, 'get'>>;
 export type ApplyCreditNoteToInvoicesBody = OpRequestBody<OpForPath<typeof CREDIT_NOTES_ROUTES.APPLY_INVOICES, 'post'>>;
 export type GetCreditNotesQuery = OpQueryParams<OpForPath<typeof CREDIT_NOTES_ROUTES.LIST, 'get'>>;
 
@@ -104,9 +108,10 @@ export async function bulkDeleteCreditNotes(
 export async function fetchCreditNoteRefunds(
   fetcher: ApiFetcher,
   creditNoteId: number
-): Promise<void> {
+): Promise<CreditNoteRefundsResponse> {
   const getRefunds = fetcher.path(CREDIT_NOTES_ROUTES.REFUNDS).method('get').create();
-  await getRefunds({ creditNoteId });
+  const { data } = await getRefunds({ creditNoteId });
+  return data;
 }
 
 export async function createRefundCreditNote(
@@ -129,17 +134,28 @@ export async function deleteRefundCreditNote(
 export async function fetchAppliedInvoices(
   fetcher: ApiFetcher,
   creditNoteId: number
-): Promise<void> {
+): Promise<AppliedCreditNoteInvoicesResponse> {
   const getApplied = fetcher.path(CREDIT_NOTES_ROUTES.APPLIED_INVOICES).method('get').create();
-  await getApplied({ creditNoteId });
+  const { data } = await getApplied({ creditNoteId });
+  return data;
 }
 
 export async function fetchCreditNoteAssociatedInvoicesToApply(
   fetcher: ApiFetcher,
   creditNoteId: number
-): Promise<void> {
+): Promise<CreditNoteInvoicesToApplyResponse> {
   const get = fetcher.path(CREDIT_NOTES_ROUTES.APPLY_INVOICES).method('get').create();
-  await get({ creditNoteId });
+  const { data } = await get({ creditNoteId });
+  return data;
+}
+
+export async function fetchRefundCreditNoteTransaction(
+  fetcher: ApiFetcher,
+  refundCreditId: number
+): Promise<RefundCreditNoteTransaction> {
+  const get = fetcher.path(CREDIT_NOTES_ROUTES.REFUND_BY_ID).method('get').create();
+  const { data } = await get({ refundCreditId });
+  return data;
 }
 
 export async function applyCreditNoteToInvoices(

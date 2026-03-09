@@ -1,6 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
 import { paths } from './schema';
-import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const INVENTORY_ADJUSTMENTS_ROUTES = {
   LIST: '/api/inventory-adjustments',
@@ -12,10 +12,16 @@ export const INVENTORY_ADJUSTMENTS_ROUTES = {
 export type InventoryAdjustmentsListResponse = OpResponseBody<OpForPath<typeof INVENTORY_ADJUSTMENTS_ROUTES.LIST, 'get'>>;
 export type InventoryAdjustment = OpResponseBody<OpForPath<typeof INVENTORY_ADJUSTMENTS_ROUTES.BY_ID, 'get'>>;
 export type CreateQuickInventoryAdjustmentBody = OpRequestBody<OpForPath<typeof INVENTORY_ADJUSTMENTS_ROUTES.QUICK, 'post'>>;
+export type GetInventoryAdjustmentsQuery = OpQueryParams<OpForPath<typeof INVENTORY_ADJUSTMENTS_ROUTES.LIST, 'get'>>;
 
-export async function fetchInventoryAdjustments(fetcher: ApiFetcher): Promise<InventoryAdjustmentsListResponse> {
+export async function fetchInventoryAdjustments(
+  fetcher: ApiFetcher,
+  query?: GetInventoryAdjustmentsQuery
+): Promise<InventoryAdjustmentsListResponse> {
   const get = fetcher.path(INVENTORY_ADJUSTMENTS_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await (get as (params?: GetInventoryAdjustmentsQuery) => Promise<{ data: InventoryAdjustmentsListResponse }>)(
+    query ?? {}
+  );
   return data;
 }
 

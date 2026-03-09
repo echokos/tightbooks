@@ -36,6 +36,7 @@ import {
   OrganizationBuiltResponseExample,
 } from './Organization.swagger';
 import { GetCurrentOrganizationResponseDto } from './dtos/GetCurrentOrganizationResponse.dto';
+import { OrganizationBuildJobResponseDto } from './dtos/OrganizationBuildJobResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @ApiTags('Organization')
@@ -44,6 +45,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @IgnoreTenantSeededRoute()
 @IgnoreTenantModelsInitialize()
 @ApiExtraModels(GetCurrentOrganizationResponseDto)
+@ApiExtraModels(OrganizationBuildJobResponseDto)
 @ApiCommonHeaders()
 export class OrganizationController {
   constructor(
@@ -88,6 +90,13 @@ export class OrganizationController {
   })
   @HttpCode(200)
   @ApiOperation({ summary: 'Gets the organization build job details' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the organization build job details',
+    schema: {
+      $ref: getSchemaPath(OrganizationBuildJobResponseDto),
+    },
+  })
   async buildJob(@Param('buildJobId') buildJobId: string) {
     return this.getBuildOrganizationJobService.getJobDetails(buildJobId);
   }
