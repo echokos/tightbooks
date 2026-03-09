@@ -18,10 +18,7 @@ export function useAPAgingSummaryReport(query, props) {
         Accept: 'application/json+table',
       },
     },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
+    props
   );
 }
 

@@ -62,11 +62,7 @@ export function useProject(projectId, props, requestProps) {
   return useRequestQuery(
     [t.PROJECT, projectId],
     { method: 'get', url: `projects/${projectId}`, ...requestProps },
-    {
-      select: (res) => res.data.project,
-      defaultData: {},
-      ...props,
-    },
+     props,
   );
 }
 
@@ -78,13 +74,7 @@ export function useProjects(query, props) {
   return useRequestQuery(
     [t.PROJECTS, query],
     { method: 'get', url: 'projects', params: query },
-    {
-      select: transformProjects,
-      defaultData: {
-        projects: [],
-      },
-      ...props,
-    },
+    props,
   );
 }
 

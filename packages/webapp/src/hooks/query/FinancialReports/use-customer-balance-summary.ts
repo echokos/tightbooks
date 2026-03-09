@@ -18,19 +18,7 @@ export function useCustomerBalanceSummaryReport(query, props) {
         Accept: 'application/json+table',
       },
     },
-    {
-      select: (res) => ({
-        query: res.data.query,
-        table: res.data.table,
-        meta: res.data.meta,
-      }),
-      defaultData: {
-        table: {},
-        query: {},
-        meta: {},
-      },
-      ...props,
-    },
+    props
   );
 }
 

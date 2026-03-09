@@ -19,6 +19,10 @@ import {
   fetchCreditNotes,
   fetchCreditNote,
   fetchCreditNoteState,
+  fetchCreditNoteRefunds,
+  fetchRefundCreditNoteTransaction,
+  fetchCreditNoteAssociatedInvoicesToApply,
+  fetchAppliedInvoices,
   createCreditNote,
   editCreditNote,
   deleteCreditNote,
@@ -31,7 +35,6 @@ import {
   deleteApplyCreditNoteToInvoices,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { useRequestQuery } from '../useQueryRequest';
 import { useRequestPdf } from '../useRequestPdf';
 import { transformPagination, transformToCamelCase } from '@/utils';
 import t from './types';
@@ -262,18 +265,19 @@ export function useDeleteRefundCreditNote(
  */
 export function useRefundCreditNote(
   id: number | null | undefined,
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
-  requestProps?: Record<string, unknown>
+  props?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof fetchCreditNoteRefunds>>>,
+    'queryKey' | 'queryFn'
+  >,
+  _requestProps?: Record<string, unknown>
 ) {
-  return useRequestQuery(
-    [t.REFUND_CREDIT_NOTE, id],
-    { method: 'get', url: `credit-notes/${id}/refunds`, ...requestProps },
-    {
-      select: (res: { data?: unknown }) => res.data ?? {},
-      defaultData: {},
-      ...props,
-    } as UseQueryOptions<unknown>
-  );
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.REFUND_CREDIT_NOTE, id],
+    queryFn: () => fetchCreditNoteRefunds(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
 }
 
 /**
@@ -300,18 +304,19 @@ export function useOpenCreditNote(
  */
 export function useReconcileCreditNote(
   id: number | null | undefined,
-  props?: Omit<UseQueryOptions<unknown[]>, 'queryKey' | 'queryFn'>,
-  requestProps?: Record<string, unknown>
+  props?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof fetchCreditNoteAssociatedInvoicesToApply>>>,
+    'queryKey' | 'queryFn'
+  >,
+  _requestProps?: Record<string, unknown>
 ) {
-  return useRequestQuery(
-    [t.RECONCILE_CREDIT_NOTE, id],
-    { method: 'get', url: `credit-notes/${id}/apply-invoices`, ...requestProps },
-    {
-      select: (res: { data?: unknown }) => (res.data as unknown[]) ?? [],
-      defaultData: [],
-      ...props,
-    } as UseQueryOptions<unknown[]>
-  );
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.RECONCILE_CREDIT_NOTE, id],
+    queryFn: () => fetchCreditNoteAssociatedInvoicesToApply(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
 }
 
 /**
@@ -339,18 +344,19 @@ export function useCreateReconcileCreditNote(
  */
 export function useReconcileCreditNotes(
   id: number | null | undefined,
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
-  requestProps?: Record<string, unknown>
+  props?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof fetchAppliedInvoices>>>,
+    'queryKey' | 'queryFn'
+  >,
+  _requestProps?: Record<string, unknown>
 ) {
-  return useRequestQuery(
-    [t.RECONCILE_CREDIT_NOTES, id],
-    { method: 'get', url: `credit-notes/${id}/applied-invoices`, ...requestProps },
-    {
-      select: (res: { data?: unknown }) => res.data ?? {},
-      defaultData: {},
-      ...props,
-    } as UseQueryOptions<unknown>
-  );
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.RECONCILE_CREDIT_NOTES, id],
+    queryFn: () => fetchAppliedInvoices(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
 }
 
 /**
@@ -375,18 +381,19 @@ export function useDeleteReconcileCredit(
  */
 export function useRefundCreditTransaction(
   id: number | null | undefined,
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
-  requestProps?: Record<string, unknown>
+  props?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof fetchRefundCreditNoteTransaction>>>,
+    'queryKey' | 'queryFn'
+  >,
+  _requestProps?: Record<string, unknown>
 ) {
-  return useRequestQuery(
-    [t.REFUND_CREDIT_NOTE_TRANSACTION, id],
-    { method: 'get', url: `credit-notes/refunds/${id}`, ...requestProps },
-    {
-      select: (res: { data?: unknown }) => res.data ?? {},
-      defaultData: {},
-      ...props,
-    } as UseQueryOptions<unknown>
-  );
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.REFUND_CREDIT_NOTE_TRANSACTION, id],
+    queryFn: () => fetchRefundCreditNoteTransaction(fetcher, id!),
+    enabled: id != null,
+    ...props,
+  });
 }
 
 /**

@@ -124,7 +124,6 @@ export function useAuthMetadata(
   return useQuery({
     queryKey: [t.AUTH_METADATA_PAGE],
     queryFn: () => fetchAuthMeta(fetcher),
-    select: (data) => data ?? ({} as AuthMetaResponse),
     ...props,
   });
 }

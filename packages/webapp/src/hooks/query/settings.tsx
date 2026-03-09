@@ -167,11 +167,7 @@ export function useSettingSMSNotifications(props) {
   return useRequestQuery(
     [t.SETTING_SMS_NOTIFICATIONS],
     { method: 'get', url: `settings/sms-notifications` },
-    {
-      select: (res) => res.data,
-      defaultData: [],
-      ...props,
-    },
+    props,
   );
 }
 
@@ -185,13 +181,7 @@ export function useSettingSMSNotification(key, props) {
       method: 'get',
       url: `settings/sms-notification/${key}`,
     },
-    {
-      select: (res) => res.data,
-      defaultData: {
-        smsNotification: [],
-      },
-      ...props,
-    },
+    props,
   );
 }
 

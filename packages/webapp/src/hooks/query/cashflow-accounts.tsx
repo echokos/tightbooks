@@ -66,7 +66,6 @@ export function useCashflowAccounts(query?: Record<string, unknown>, props?: obj
   return useQuery({
     queryKey: [t.CASH_FLOW_ACCOUNTS, query],
     queryFn: () => fetchBankingAccounts(fetcher),
-    select: (data) => data ?? [],
     ...props,
   });
 }
@@ -98,7 +97,6 @@ export function useCashflowTransaction(id: string | number | null | undefined, p
     queryKey: [t.CASH_FLOW_TRANSACTIONS, id],
     queryFn: () => getBankingTransaction(fetcher, id!),
     enabled: id != null,
-    select: (data) => data ?? [],
     ...props,
   });
 }
@@ -222,7 +220,6 @@ export function useUncategorizedTransaction(
     queryKey: [t.CASHFLOW_UNCAATEGORIZED_TRANSACTION, uncategorizedTransactionId],
     queryFn: () => getUncategorizedTransaction(fetcher, uncategorizedTransactionId!),
     enabled: uncategorizedTransactionId != null,
-    select: (data) => (data as { data?: unknown })?.data ?? data,
     ...props,
   });
 }

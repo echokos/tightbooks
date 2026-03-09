@@ -21,7 +21,6 @@ export function useApiKeys(
   return useQuery({
     queryKey: [t.API_KEYS],
     queryFn: () => fetchApiKeys(fetcher),
-    select: (data: ApiKeysList) => data ?? ([] as ApiKeysList),
     ...props,
   });
 }

@@ -83,7 +83,6 @@ export function useBranches(
   return useQuery({
     queryKey: [t.BRANCHES, query],
     queryFn: () => fetchBranches(fetcher),
-    select: (data: BranchesListResponse) => data,
     ...props,
   });
 }

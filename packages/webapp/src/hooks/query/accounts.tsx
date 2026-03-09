@@ -47,7 +47,6 @@ export function useAccounts(
   return useQuery({
     queryKey: [t.ACCOUNTS, query],
     queryFn: () => fetchAccounts(fetcher, query ?? {}),
-    select: (data: AccountsList) => data,
     ...props,
   });
 }

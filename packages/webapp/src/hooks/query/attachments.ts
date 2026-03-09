@@ -16,9 +16,6 @@ function toFormData(values: FormData | Record<string, unknown>): FormData {
   return formData;
 }
 
-/**
- * Uploads the given attachments.
- */
 export function useUploadAttachments(
   props?: UseMutationOptions<UploadAttachmentResponse, Error, FormData | Record<string, unknown>>
 ) {
@@ -29,9 +26,6 @@ export function useUploadAttachments(
   });
 }
 
-/**
- * Deletes the given attachment key.
- */
 export function useDeleteAttachment(props?: UseMutationOptions<void, Error, string>) {
   const fetcher = useApiFetcher();
   return useMutation({
@@ -40,9 +34,6 @@ export function useDeleteAttachment(props?: UseMutationOptions<void, Error, stri
   });
 }
 
-/**
- * Uploads the given attachments.
- */
 export function useGetPresignedUrlAttachment(
   props?: UseMutationOptions<unknown, Error, string>
 ) {

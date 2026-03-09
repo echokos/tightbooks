@@ -1,18 +1,19 @@
 // @ts-nocheck
 import { transformToCamelCase } from '@/utils';
-import { useRequestQuery } from '../useQueryRequest';
+import { useQuery } from '@tanstack/react-query';
+import { fetchOrganizationBuildJob } from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 
 /**
  * Retrieve the job metadata.
  */
 export function useJob(jobId, props = {}) {
-  return useRequestQuery(
-    ['JOB', jobId],
-    { method: 'get', url: `organization/build/${jobId}` },
-    {
-      select: (res) => transformToCamelCase(res.data),
-      defaultData: {},
-      ...props,
-    },
-  );
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: ['JOB', jobId],
+    queryFn: () =>
+      fetchOrganizationBuildJob(fetcher, jobId).then((data) => transformToCamelCase(data)),
+    enabled: jobId != null,
+    ...props,
+  });
 }

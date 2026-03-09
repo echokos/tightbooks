@@ -217,7 +217,6 @@ export function useDueBills(
     queryKey: [t.BILLS, t.BILLS_DUE, vendorId],
     queryFn: () =>
       fetchDueBills(fetcher, vendorId != null ? { vendor_id: vendorId } : undefined),
-    select: (data) => data ?? [],
     enabled: true,
     ...props,
   });
@@ -238,7 +237,6 @@ export function useBillPaymentTransactions(
   return useQuery({
     queryKey: [t.BILLS_PAYMENT_TRANSACTIONS, id],
     queryFn: () => fetchBillPaymentTransactions(fetcher, id!),
-    select: (data) => data ?? [],
     enabled: id != null,
     ...props,
   });
