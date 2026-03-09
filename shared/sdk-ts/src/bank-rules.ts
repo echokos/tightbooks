@@ -266,9 +266,6 @@ export async function fetchAutofillCategorizeTransaction(
   return data as AutofillCategorizeTransactionResponse;
 }
 
-/**
- * Uncategorize bank transactions in bulk (DELETE /api/banking/categorize/bulk with query uncategorizedTransactionIds).
- */
 export async function uncategorizeTransactionsBulk(
   fetcher: ApiFetcher,
   uncategorizedTransactionIds: number[],
@@ -276,11 +273,6 @@ export async function uncategorizeTransactionsBulk(
   const del = fetcher
     .path(BANK_RULES_ROUTES.CATEGORIZE_BULK)
     .method('delete')
-    .create(
-      { uncategorizedTransactionIds } as unknown as {
-        uncategorizedTransactionIds: true | 1;
-      },
-    );
-  // create() binds query; call with no args (params were passed to create())
-  await (del as unknown as () => Promise<unknown>)();
+    .create({ uncategorizedTransactionIds: 1 });
+  await del({ uncategorizedTransactionIds: uncategorizedTransactionIds.map(String) });
 }

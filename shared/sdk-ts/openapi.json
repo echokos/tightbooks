@@ -2279,6 +2279,104 @@
               ],
               "type": "string"
             }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles array",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "example": "created_at",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order",
+            "schema": {
+              "example": "DESC",
+              "enum": [
+                "DESC",
+                "ASC"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "example": "{\"fieldKey\":\"root_type\",\"value\":\"asset\"}",
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "example": "bank account",
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
+            "schema": {
+              "example": "assets",
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "minimum": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "minimum": 1,
+              "example": 25,
+              "type": "number"
+            }
           }
         ],
         "responses": {
@@ -11531,115 +11629,6 @@
             "required": false,
             "in": "query",
             "description": "Include inactive accounts",
-            "schema": {
-              "default": false,
-              "example": false,
-              "type": "boolean"
-            }
-          },
-          {
-            "description": "Custom view ID",
-            "required": false,
-            "name": "customViewId",
-            "in": "query",
-            "schema": {
-              "example": 1,
-              "type": "number"
-            }
-          },
-          {
-            "description": "Filter roles array",
-            "required": false,
-            "name": "filterRoles",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "array"
-              }
-            }
-          },
-          {
-            "description": "Column to sort by",
-            "required": false,
-            "name": "columnSortBy",
-            "in": "query",
-            "schema": {
-              "example": "created_at",
-              "type": "string"
-            }
-          },
-          {
-            "description": "Sort order",
-            "required": false,
-            "name": "sortOrder",
-            "in": "query",
-            "schema": {
-              "example": "DESC",
-              "enum": [
-                "DESC",
-                "ASC"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "description": "Stringified filter roles",
-            "required": false,
-            "name": "stringifiedFilterRoles",
-            "in": "query",
-            "schema": {
-              "example": "{\"fieldKey\":\"status\",\"value\":\"active\"}",
-              "type": "string"
-            }
-          },
-          {
-            "description": "Search keyword",
-            "required": false,
-            "name": "searchKeyword",
-            "in": "query",
-            "schema": {
-              "example": "bank account",
-              "type": "string"
-            }
-          },
-          {
-            "description": "View slug",
-            "required": false,
-            "name": "viewSlug",
-            "in": "query",
-            "schema": {
-              "example": "active-accounts",
-              "type": "string"
-            }
-          },
-          {
-            "description": "Page number",
-            "required": false,
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "minimum": 1,
-              "example": 1,
-              "type": "number"
-            }
-          },
-          {
-            "description": "Page size",
-            "required": false,
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "minimum": 1,
-              "example": 25,
-              "type": "number"
-            }
-          },
-          {
-            "description": "Include inactive accounts",
-            "required": false,
-            "name": "inactiveMode",
-            "in": "query",
             "schema": {
               "default": false,
               "example": false,
