@@ -16,7 +16,7 @@ import {
   type GetUncategorizedTransactionsQuery,
   type CreateBankingTransactionBody,
   type CategorizeTransactionBody,
-} from '../../../../../shared/sdk-ts/src/cashflow-accounts';
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
   queryClient.invalidateQueries({ queryKey: [t.SETTING, t.SETTING_CASHFLOW] });

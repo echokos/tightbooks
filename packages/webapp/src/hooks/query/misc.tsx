@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useQuery } from '@tanstack/react-query';
 import { fetchDateFormats } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
