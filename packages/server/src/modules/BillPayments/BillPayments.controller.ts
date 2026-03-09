@@ -14,6 +14,7 @@ import {
   ApiExtraModels,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -92,7 +93,7 @@ export class BillPaymentsController {
     summary:
       'Retrieves the payable entries of the new page once vendor be selected.',
   })
-  @ApiParam({
+  @ApiQuery({
     name: 'vendorId',
     required: true,
     type: Number,
