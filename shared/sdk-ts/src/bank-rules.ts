@@ -276,10 +276,11 @@ export async function uncategorizeTransactionsBulk(
   const del = fetcher
     .path(BANK_RULES_ROUTES.CATEGORIZE_BULK)
     .method('delete')
-    .create();
-  await (del as (params: {
-    query?: { uncategorizedTransactionIds: number[] };
-  }) => Promise<unknown>)({
-    query: { uncategorizedTransactionIds },
-  });
+    .create(
+      { uncategorizedTransactionIds } as unknown as {
+        uncategorizedTransactionIds: true | 1;
+      },
+    );
+  // create() binds query; call with no args (params were passed to create())
+  await (del as unknown as () => Promise<unknown>)();
 }

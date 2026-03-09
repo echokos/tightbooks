@@ -44,9 +44,17 @@ export async function fetchCreditNote(fetcher: ApiFetcher, id: number): Promise<
   return data;
 }
 
-export async function fetchCreditNoteState(fetcher: ApiFetcher): Promise<void> {
+/** Credit note state (default template etc.). Defined in controller DTO when not in schema. */
+export interface CreditNoteStateResponse {
+  defaultTemplateId: number;
+}
+
+export async function fetchCreditNoteState(
+  fetcher: ApiFetcher
+): Promise<CreditNoteStateResponse> {
   const getState = fetcher.path(CREDIT_NOTES_ROUTES.STATE).method('get').create();
-  await getState({});
+  const { data } = await getState({});
+  return (data ?? { defaultTemplateId: 0 }) as CreditNoteStateResponse;
 }
 
 export async function createCreditNote(

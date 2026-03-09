@@ -17,6 +17,8 @@ export type EditCustomerBody = OpRequestBody<OpForPath<typeof CUSTOMERS_ROUTES.B
 export type ValidateBulkDeleteCustomersResponse = OpResponseBody<OpForPath<typeof CUSTOMERS_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
 export type BulkDeleteCustomersBody = OpRequestBody<OpForPath<typeof CUSTOMERS_ROUTES.BULK_DELETE, 'post'>>;
 export type GetCustomersQuery = OpQueryParams<OpForPath<typeof CUSTOMERS_ROUTES.LIST, 'get'>>;
+export type EditCustomerOpeningBalanceBody = OpRequestBody<OpForPath<typeof CUSTOMERS_ROUTES.OPENING_BALANCE, 'put'>>;
+export type EditCustomerOpeningBalanceResponse = OpResponseBody<OpForPath<typeof CUSTOMERS_ROUTES.OPENING_BALANCE, 'put'>>;
 
 export async function fetchCustomers(
   fetcher: ApiFetcher,
@@ -72,4 +74,14 @@ export async function bulkDeleteCustomers(
 ): Promise<void> {
   const post = fetcher.path(CUSTOMERS_ROUTES.BULK_DELETE).method('post').create();
   await post(body);
+}
+
+export async function editCustomerOpeningBalance(
+  fetcher: ApiFetcher,
+  id: number,
+  values: EditCustomerOpeningBalanceBody
+): Promise<EditCustomerOpeningBalanceResponse> {
+  const put = fetcher.path(CUSTOMERS_ROUTES.OPENING_BALANCE).method('put').create();
+  const { data } = await put({ id, ...values });
+  return data;
 }
