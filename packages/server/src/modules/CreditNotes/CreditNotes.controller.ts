@@ -24,6 +24,7 @@ import { CreditNoteApplication } from './CreditNoteApplication.service';
 import { ICreditNotesQueryDTO } from './types/CreditNotes.types';
 import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
 import { CreditNoteResponseDto } from './dtos/CreditNoteResponse.dto';
+import { CreditNoteStateResponseDto } from './dtos/CreditNoteStateResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
@@ -62,7 +63,11 @@ export class CreditNotesController {
   @Get('state')
   @RequirePermission(CreditNoteAction.View, AbilitySubject.CreditNote)
   @ApiOperation({ summary: 'Get credit note state' })
-  @ApiResponse({ status: 200, description: 'Returns the credit note state' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the credit note state',
+    type: CreditNoteStateResponseDto,
+  })
   getCreditNoteState() {
     return this.creditNoteApplication.getCreditNoteState();
   }
