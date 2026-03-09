@@ -20,6 +20,8 @@ import { InventoryAdjustmentsApplicationService } from './InventoryAdjustmentsAp
 import { IInventoryAdjustmentsFilter } from './types/InventoryAdjustments.types';
 import { InventoryAdjustment } from './models/InventoryAdjustment';
 import { CreateQuickInventoryAdjustmentDto } from './dtos/CreateQuickInventoryAdjustment.dto';
+import { InventoryAdjustmentsFilterDto } from './dtos/InventoryAdjustmentsFilter.dto';
+import { InventoryAdjustmentsListResponseDto } from './dtos/InventoryAdjustmentsListResponse.dto';
 import { InventoryAdjustmentResponseDto } from './dtos/InventoryAdjustmentResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
@@ -31,6 +33,7 @@ import { InventoryAdjustmentAction } from './types/InventoryAdjustments.types';
 @Controller('inventory-adjustments')
 @ApiTags('Inventory Adjustments')
 @ApiExtraModels(InventoryAdjustmentResponseDto)
+@ApiExtraModels(InventoryAdjustmentsListResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class InventoryAdjustmentsController {
@@ -75,15 +78,14 @@ export class InventoryAdjustmentsController {
     status: 200,
     description: 'The inventory adjustments have been successfully retrieved.',
     schema: {
-      type: 'array',
-      items: { $ref: getSchemaPath(InventoryAdjustmentResponseDto) },
+      $ref: getSchemaPath(InventoryAdjustmentsListResponseDto),
     },
   })
   public async getInventoryAdjustments(
-    @Query() filterDTO: IInventoryAdjustmentsFilter,
+    @Query() filterDTO: InventoryAdjustmentsFilterDto,
   ) {
     return this.inventoryAdjustmentsApplicationService.getInventoryAdjustments(
-      filterDTO,
+      filterDTO as IInventoryAdjustmentsFilter,
     );
   }
 

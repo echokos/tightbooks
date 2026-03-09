@@ -7,7 +7,13 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { GetCreditNoteAssociatedAppliedInvoices } from './queries/GetCreditNoteAssociatedAppliedInvoices.service';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
@@ -19,9 +25,12 @@ import { GetCreditNoteAssociatedInvoicesToApply } from './queries/GetCreditNoteA
 import { CreditNoteApplyToInvoices } from './commands/CreditNoteApplyToInvoices.service';
 import { DeleteCreditNoteApplyToInvoices } from './commands/DeleteCreditNoteApplyToInvoices.service';
 import { ApplyCreditNoteToInvoicesDto } from './dtos/ApplyCreditNoteToInvoices.dto';
+import { AppliedCreditNoteInvoiceResponseDto } from './dtos/AppliedCreditNoteInvoiceResponse.dto';
+import { CreditNoteInvoiceToApplyResponseDto } from './dtos/CreditNoteInvoiceToApplyResponse.dto';
 
 @Controller('credit-notes')
 @ApiTags('Credit Notes Apply Invoice')
+@ApiExtraModels(AppliedCreditNoteInvoiceResponseDto, CreditNoteInvoiceToApplyResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class CreditNotesApplyInvoiceController {
@@ -38,6 +47,10 @@ export class CreditNotesApplyInvoiceController {
   @ApiResponse({
     status: 200,
     description: 'Credit note successfully applied to invoices',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(AppliedCreditNoteInvoiceResponseDto) },
+    },
   })
   @ApiResponse({ status: 404, description: 'Credit note not found' })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
@@ -53,6 +66,10 @@ export class CreditNotesApplyInvoiceController {
   @ApiResponse({
     status: 200,
     description: 'Credit note associated invoices to apply',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(CreditNoteInvoiceToApplyResponseDto) },
+    },
   })
   @ApiResponse({ status: 404, description: 'Credit note not found' })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
