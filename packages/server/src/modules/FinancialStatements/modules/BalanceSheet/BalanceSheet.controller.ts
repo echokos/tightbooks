@@ -3,13 +3,22 @@ import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common'
 import { AcceptType } from '@/constants/accept-type';
 import { BalanceSheetApplication } from './BalanceSheetApplication';
 import {
+  ApiExtraModels,
   ApiOperation,
   ApiProduces,
   ApiResponse,
   ApiTags,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { BalanceSheetQueryDto } from './BalanceSheet.dto';
-import { BalanceSheetResponseExample } from './BalanceSheet.swagger';
+import {
+  BalanceSheetResponseExample,
+  BalanceSheetTableResponseExample,
+} from './BalanceSheet.swagger';
+import {
+  BalanceSheetResponseDto,
+  BalanceSheetTableResponseDto,
+} from './BalanceSheetResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
@@ -21,6 +30,7 @@ import { ReportsAction } from '../../types/Report.types';
 @ApiTags('Reports')
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
+@ApiExtraModels(BalanceSheetResponseDto, BalanceSheetTableResponseDto)
 export class BalanceSheetStatementController {
   constructor(private readonly balanceSheetApp: BalanceSheetApplication) {}
 
@@ -36,7 +46,16 @@ export class BalanceSheetStatementController {
   @ApiResponse({
     status: 200,
     description: 'Balance sheet statement',
-    example: BalanceSheetResponseExample,
+    content: {
+      [AcceptType.ApplicationJson]: {
+        schema: { $ref: getSchemaPath(BalanceSheetResponseDto) },
+        example: BalanceSheetResponseExample,
+      },
+      [AcceptType.ApplicationJsonTable]: {
+        schema: { $ref: getSchemaPath(BalanceSheetTableResponseDto) },
+        example: BalanceSheetTableResponseExample,
+      },
+    },
   })
   @ApiProduces(
     AcceptType.ApplicationJson,

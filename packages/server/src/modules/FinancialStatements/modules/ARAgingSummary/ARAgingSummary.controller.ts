@@ -3,13 +3,19 @@ import { ARAgingSummaryApplication } from './ARAgingSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import {
+  ApiExtraModels,
   ApiOperation,
   ApiProduces,
   ApiResponse,
   ApiTags,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { ARAgingSummaryQueryDto } from './ARAgingSummaryQuery.dto';
 import { ARAgingSummaryResponseExample } from './ARAgingSummary.swagger';
+import {
+  ARAgingSummaryResponseDto,
+  ARAgingSummaryTableResponseDto,
+} from './ARAgingSummaryResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
@@ -21,6 +27,7 @@ import { ReportsAction } from '../../types/Report.types';
 @ApiTags('Reports')
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
+@ApiExtraModels(ARAgingSummaryResponseDto, ARAgingSummaryTableResponseDto)
 export class ARAgingSummaryController {
   constructor(private readonly ARAgingSummaryApp: ARAgingSummaryApplication) {}
 
@@ -30,7 +37,15 @@ export class ARAgingSummaryController {
   @ApiResponse({
     status: 200,
     description: 'Receivable aging summary response',
-    example: ARAgingSummaryResponseExample,
+    content: {
+      [AcceptType.ApplicationJson]: {
+        schema: { $ref: getSchemaPath(ARAgingSummaryResponseDto) },
+        example: ARAgingSummaryResponseExample,
+      },
+      [AcceptType.ApplicationJsonTable]: {
+        schema: { $ref: getSchemaPath(ARAgingSummaryTableResponseDto) },
+      },
+    },
   })
   @ApiProduces(
     AcceptType.ApplicationJson,

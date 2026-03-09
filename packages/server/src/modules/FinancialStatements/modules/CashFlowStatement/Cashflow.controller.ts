@@ -3,13 +3,19 @@ import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common'
 import { AcceptType } from '@/constants/accept-type';
 import { CashflowSheetApplication } from './CashflowSheetApplication';
 import {
+  ApiExtraModels,
   ApiOperation,
   ApiProduces,
   ApiResponse,
   ApiTags,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { CashFlowStatementQueryDto } from './CashFlowStatementQuery.dto';
 import { CashflowStatementResponseExample } from './CashflowStatement.swagger';
+import {
+  CashflowStatementResponseDto,
+  CashflowStatementTableResponseDto,
+} from './CashflowStatementResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
@@ -21,6 +27,7 @@ import { ReportsAction } from '../../types/Report.types';
 @ApiTags('Reports')
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
+@ApiExtraModels(CashflowStatementResponseDto, CashflowStatementTableResponseDto)
 export class CashflowController {
   constructor(private readonly cashflowSheetApp: CashflowSheetApplication) { }
 
@@ -29,7 +36,15 @@ export class CashflowController {
   @ApiResponse({
     status: 200,
     description: 'Cashflow statement report',
-    example: CashflowStatementResponseExample,
+    content: {
+      [AcceptType.ApplicationJson]: {
+        schema: { $ref: getSchemaPath(CashflowStatementResponseDto) },
+        example: CashflowStatementResponseExample,
+      },
+      [AcceptType.ApplicationJsonTable]: {
+        schema: { $ref: getSchemaPath(CashflowStatementTableResponseDto) },
+      },
+    },
   })
   @ApiOperation({ summary: 'Get cashflow statement report' })
   @ApiProduces(

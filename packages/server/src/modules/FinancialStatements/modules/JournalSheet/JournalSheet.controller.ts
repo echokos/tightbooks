@@ -3,13 +3,19 @@ import { Response } from 'express';
 import { AcceptType } from '@/constants/accept-type';
 import { JournalSheetApplication } from './JournalSheetApplication';
 import {
+  ApiExtraModels,
   ApiOperation,
   ApiProduces,
   ApiResponse,
   ApiTags,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { JournalSheetQueryDto } from './JournalSheetQuery.dto';
 import { JournalSheetResponseExample } from './JournalSheet.swagger';
+import {
+  JournalSheetResponseDto,
+  JournalSheetTableResponseDto,
+} from './JournalSheetResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
@@ -21,6 +27,7 @@ import { ReportsAction } from '../../types/Report.types';
 @ApiTags('Reports')
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
+@ApiExtraModels(JournalSheetResponseDto, JournalSheetTableResponseDto)
 export class JournalSheetController {
   constructor(private readonly journalSheetApp: JournalSheetApplication) {}
 
@@ -29,7 +36,15 @@ export class JournalSheetController {
   @ApiResponse({
     status: 200,
     description: 'Journal report',
-    example: JournalSheetResponseExample,
+    content: {
+      [AcceptType.ApplicationJson]: {
+        schema: { $ref: getSchemaPath(JournalSheetResponseDto) },
+        example: JournalSheetResponseExample,
+      },
+      [AcceptType.ApplicationJsonTable]: {
+        schema: { $ref: getSchemaPath(JournalSheetTableResponseDto) },
+      },
+    },
   })
   @ApiOperation({ summary: 'Journal report' })
   @ApiProduces(
