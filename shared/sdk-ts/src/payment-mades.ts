@@ -57,3 +57,21 @@ export async function fetchBillPaymentEditPage(
   const { data } = await get({ billPaymentId });
   return data;
 }
+
+export type BillPaymentNewPageEntriesResponse = unknown;
+
+export async function fetchBillPaymentNewPageEntries(
+  fetcher: ApiFetcher,
+  vendorId: number
+): Promise<BillPaymentNewPageEntriesResponse> {
+  const get = fetcher
+    .path(BILL_PAYMENTS_ROUTES.NEW_PAGE_ENTRIES)
+    .method('get')
+    .create();
+
+    const { data } = await (
+    // @ts-ignore
+    get as (params: { query?: { vendorId: number } }) => Promise<{ data: BillPaymentNewPageEntriesResponse }>
+  )({ query: { vendorId } });
+  return data;
+}
