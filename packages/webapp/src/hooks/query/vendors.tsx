@@ -21,8 +21,9 @@ import {
   deleteVendor,
   validateBulkDeleteVendors,
   bulkDeleteVendors,
+  editVendorOpeningBalance,
 } from '@bigcapital/sdk-ts';
-import useApiRequest, { useApiFetcher } from '../useRequest';
+import { useApiFetcher } from '../useRequest';
 import { transformPagination, transformToCamelCase } from '@/utils';
 import t from './types';
 
@@ -161,11 +162,11 @@ export function useEditVendorOpeningBalance(
   props?: UseMutationOptions<unknown, Error, [number, Record<string, unknown>]>
 ) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
   return useMutation({
     mutationFn: ([id, values]: [number, Record<string, unknown>]) =>
-      apiRequest.put(`vendors/${id}/opening-balance`, values),
+      editVendorOpeningBalance(fetcher, id, values as Parameters<typeof editVendorOpeningBalance>[2]),
     onSuccess: (_data: unknown, [id]: [number, Record<string, unknown>]) => {
       queryClient.invalidateQueries({ queryKey: [t.VENDOR, id] });
       commonInvalidateQueries(queryClient);

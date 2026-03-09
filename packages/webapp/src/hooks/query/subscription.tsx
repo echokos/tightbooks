@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   useMutation,
   UseMutationOptions,
@@ -8,185 +7,99 @@ import {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query';
-import useApiRequest from '../useRequest';
+import { useApiFetcher } from '../useRequest';
 import { transformToCamelCase } from '@/utils';
+import type {
+  SubscriptionsListResponse,
+  ChangeSubscriptionPlanBody,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchSubscriptions,
+  cancelSubscription,
+  resumeSubscription,
+  changeSubscriptionPlan,
+} from '@bigcapital/sdk-ts';
 
 const QueryKeys = {
   Subscriptions: 'GetSubscriptions',
 };
 
-interface CancelMainSubscriptionValues {}
-interface CancelMainSubscriptionResponse {}
-
 /**
  * Cancels the main subscription of the current organization.
- * @param {UseMutationOptions<CreateBankRuleValues, Error, CreateBankRuleValues>} options -
- * @returns {UseMutationResult<CreateBankRuleValues, Error, CreateBankRuleValues>}TCHES
  */
 export function useCancelMainSubscription(
-  options?: UseMutationOptions<
-    CancelMainSubscriptionValues,
-    Error,
-    CancelMainSubscriptionResponse
-  >,
-): UseMutationResult<
-  CancelMainSubscriptionValues,
-  Error,
-  CancelMainSubscriptionResponse
-> {
+  options?: UseMutationOptions<void, Error, void>
+): UseMutationResult<void, Error, void> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    CancelMainSubscriptionValues,
-    Error,
-    CancelMainSubscriptionResponse
-  >(
-    (values) =>
-      apiRequest.post(`/subscription/cancel`, values).then((res) => res.data),
-          onSuccess: () => {
-        queryClient.invalidateQueries(QueryKeys.Subscriptions);
-      },
-      ...options,
+  return useMutation({
+    mutationFn: () => cancelSubscription(fetcher),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.Subscriptions] });
     },
-  );
+    ...options,
+  });
 }
-
-interface ResumeMainSubscriptionValues {}
-interface ResumeMainSubscriptionResponse {}
 
 /**
  * Resumes the main subscription of the current organization.
- * @param {UseMutationOptions<CreateBankRuleValues, Error, CreateBankRuleValues>} options -
- * @returns {UseMutationResult<CreateBankRuleValues, Error, CreateBankRuleValues>}TCHES
  */
 export function useResumeMainSubscription(
-  options?: UseMutationOptions<
-    ResumeMainSubscriptionValues,
-    Error,
-    ResumeMainSubscriptionResponse
-  >,
-): UseMutationResult<
-  ResumeMainSubscriptionValues,
-  Error,
-  ResumeMainSubscriptionResponse
-> {
+  options?: UseMutationOptions<void, Error, void>
+): UseMutationResult<void, Error, void> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    ResumeMainSubscriptionValues,
-    Error,
-    ResumeMainSubscriptionResponse
-  >(
-    (values) =>
-      apiRequest.post(`/subscription/resume`, values).then((res) => res.data),
-          onSuccess: () => {
-        queryClient.invalidateQueries(QueryKeys.Subscriptions);
-      },
-      ...options,
+  return useMutation({
+    mutationFn: () => resumeSubscription(fetcher),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.Subscriptions] });
     },
-  );
+    ...options,
+  });
 }
-
-interface ChangeMainSubscriptionPlanValues {
-  variant_id: string;
-}
-interface ChangeMainSubscriptionPlanResponse {}
 
 /**
- * Changese the main subscription of the current organization.
- * @param {UseMutationOptions<ChangeMainSubscriptionPlanValues, Error, ChangeMainSubscriptionPlanResponse>} options -
- * @returns {UseMutationResult<ChangeMainSubscriptionPlanValues, Error, ChangeMainSubscriptionPlanResponse>}
+ * Changes the main subscription plan of the current organization.
  */
 export function useChangeSubscriptionPlan(
-  options?: UseMutationOptions<
-    ChangeMainSubscriptionPlanValues,
-    Error,
-    ChangeMainSubscriptionPlanResponse
-  >,
-): UseMutationResult<
-  ChangeMainSubscriptionPlanValues,
-  Error,
-  ChangeMainSubscriptionPlanResponse
-> {
+  options?: UseMutationOptions<void, Error, ChangeSubscriptionPlanBody>
+): UseMutationResult<void, Error, ChangeSubscriptionPlanBody> {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<
-    ChangeMainSubscriptionPlanResponse,
-    Error,
-    ChangeMainSubscriptionPlanValues
-  >(
-    (values) =>
-      apiRequest.post(`/subscription/change`, values).then((res) => res.data),
-          onSuccess: () => {
-        queryClient.invalidateQueries(QueryKeys.Subscriptions);
-      },
-      ...options,
+  return useMutation({
+    mutationFn: (values: ChangeSubscriptionPlanBody) =>
+      changeSubscriptionPlan(fetcher, values),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.Subscriptions] });
     },
-  );
+    ...options,
+  });
 }
 
-interface LemonSubscription {
-  active: boolean;
-  canceled: string | null;
-  canceledAt: string | null;
-  canceledAtFormatted: string | null;
-  cancelsAt: string | null;
-  cancelsAtFormatted: string | null;
-  createdAt: string;
-  ended: boolean;
-  endsAt: string | null;
-  inactive: boolean;
-  lemonSubscriptionId: string;
-  lemon_urls: {
-    updatePaymentMethod: string;
-    customerPortal: string;
-    customerPortalUpdateSubscription: string;
-  };
-  onTrial: boolean;
-  planId: number;
-  planName: string;
-  planSlug: string;
-  slug: string;
-  startsAt: string | null;
-  status: string;
-  statusFormatted: string;
-  tenantId: number;
-  trialEndsAt: string | null;
-  trialEndsAtFormatted: string | null;
-  trialStartsAt: string | null;
-  trialStartsAtFormatted: string | null;
-  updatedAt: string;
-}
-
-interface GetSubscriptionsQuery {}
-interface GetSubscriptionsResponse {
-  subscriptions: Array<LemonSubscription>;
-}
+export type GetSubscriptionsResponse = {
+  subscriptions?: unknown[];
+  [key: string]: unknown;
+};
 
 /**
- * Changese the main subscription of the current organization.
- * @param {UseMutationOptions<ChangeMainSubscriptionPlanValues, Error, ChangeMainSubscriptionPlanResponse>} options -
- * @returns {UseMutationResult<ChangeMainSubscriptionPlanValues, Error, ChangeMainSubscriptionPlanResponse>}
+ * Fetches subscriptions for the current tenant.
  */
 export function useGetSubscriptions(
   options?: UseQueryOptions<
-    GetSubscriptionsQuery,
+    SubscriptionsListResponse,
     Error,
     GetSubscriptionsResponse
-  >,
+  >
 ): UseQueryResult<GetSubscriptionsResponse, Error> {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useQuery<GetSubscriptionsQuery, Error, GetSubscriptionsResponse>(
-    [QueryKeys.Subscriptions],
-    (values) =>
-      apiRequest
-        .get(`/subscription`)
-        .then((res) => transformToCamelCase(res.data)),
-          ...options,
-    },
-  );
+  return useQuery({
+    queryKey: [QueryKeys.Subscriptions],
+    queryFn: () => fetchSubscriptions(fetcher),
+    select: (data) => transformToCamelCase(data) as GetSubscriptionsResponse,
+    ...options,
+  });
 }

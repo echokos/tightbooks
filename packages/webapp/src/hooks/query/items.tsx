@@ -21,6 +21,7 @@ import {
   fetchItemEstimates,
   fetchItemReceipts,
   fetchItemWarehouses,
+  fetchInventoryCostItems,
   createItem,
   editItem,
   deleteItem,
@@ -29,8 +30,11 @@ import {
   validateBulkDeleteItems,
   bulkDeleteItems,
 } from '@bigcapital/sdk-ts';
+import type {
+  GetInventoryItemsCostQuery,
+  GetInventoryItemsCostResponse,
+} from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination, transformResponse, transformToCamelCase } from '@/utils';
 import t from './types';
 
@@ -279,16 +283,16 @@ export function useItemWarehouseLocation(
 }
 
 export function useItemInventoryCost(
-  query?: Record<string, unknown>,
+  query?: GetInventoryItemsCostQuery,
   props?: Omit<UseQueryOptions<unknown[]>, 'queryKey' | 'queryFn'>
 ) {
-  return useRequestQuery(
-    [t.ITEM_INVENTORY_COST, query],
-    { method: 'get', url: 'inventory-cost/items', params: { ...query } },
-    {
-      select: (res: { data?: { costs?: unknown[] } }) => res.data?.costs ?? [],
-      defaultData: [],
-      ...props,
-    }
-  );
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.ITEM_INVENTORY_COST, query],
+    queryFn: () =>
+      fetchInventoryCostItems(fetcher, query ?? {}).then(
+        (res: GetInventoryItemsCostResponse) => res.costs ?? []
+      ),
+    ...props,
+  });
 }

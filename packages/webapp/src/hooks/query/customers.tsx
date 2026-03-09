@@ -20,8 +20,9 @@ import {
   deleteCustomer,
   validateBulkDeleteCustomers,
   bulkDeleteCustomers,
+  editCustomerOpeningBalance,
 } from '@bigcapital/sdk-ts';
-import useApiRequest, { useApiFetcher } from '../useRequest';
+import { useApiFetcher } from '../useRequest';
 import { transformPagination, transformToCamelCase } from '@/utils';
 import t from './types';
 
@@ -174,11 +175,11 @@ export function useEditCustomerOpeningBalance(
   props?: UseMutationOptions<unknown, Error, [number, Record<string, unknown>]>
 ) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
   return useMutation({
     mutationFn: ([id, values]: [number, Record<string, unknown>]) =>
-      apiRequest.put(`customers/${id}/opening-balance`, values),
+      editCustomerOpeningBalance(fetcher, id, values as Parameters<typeof editCustomerOpeningBalance>[2]),
     onSuccess: (_data, [id]) => {
       queryClient.invalidateQueries({ queryKey: [t.CUSTOMER, id] });
       commonInvalidateQueries(queryClient);

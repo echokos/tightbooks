@@ -1,13 +1,28 @@
-// @ts-nocheck
 import {
   useMutation,
   UseMutationOptions,
   UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
+  useQuery,
 } from '@tanstack/react-query';
-import useApiRequest from '../useRequest';
+import { useApiFetcher } from '../useRequest';
 import { transformToCamelCase } from '@/utils';
+import type {
+  GetStripeConnectLinkResponse,
+  CreateStripeAccountLinkResponse,
+  CreateStripeAccountSessionResponse,
+  CreateStripeAccountResponse,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchGetStripeConnectLink,
+  fetchExchangeStripeOAuth,
+  fetchCreateStripeAccountLink,
+  fetchCreateStripeAccountSession,
+  fetchCreateStripeAccount,
+} from '@bigcapital/sdk-ts';
 
-// Create Stripe Account Link.
+// Create Stripe Account Link
 // ------------------------------------
 interface StripeAccountLinkResponse {
   clientSecret: {
@@ -32,59 +47,44 @@ export const useCreateStripeAccountLink = (
   Error,
   StripeAccountLinkValues
 > => {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation({ mutationFn: (values: StripeAccountLinkValues) => {
-      return apiRequest
-        .post('/stripe/account_link', {
-          stripe_account_id: values?.stripeAccountId,
-        })
-        .then((res) => transformToCamelCase(res.data));
-    },
-    { ...options },
-  );
+  return useMutation({
+    mutationFn: (values: StripeAccountLinkValues) =>
+      fetchCreateStripeAccountLink(fetcher, {
+        stripeAccountId: values.stripeAccountId,
+      }).then((data) => transformToCamelCase(data) as StripeAccountLinkResponse),
+    ...options,
+  });
 };
 
-// Create Stripe Account Session.
+// Create Stripe Account Session
 // ------------------------------------
 interface AccountSessionValues {
   connectedAccountId?: string;
 }
-interface AccountSessionResponse {
-  client_secret: string;
-}
 
-/**
- * Generates a new Stripe checkout session for the provided link ID.
- * @param {CreateCheckoutSessionValues} values - The values required to create a checkout session.
- * @returns {Promise<CreateCheckoutSessionResponse>} The response containing the checkout session details.
- */
 export const useCreateStripeAccountSession = (
   options?: UseMutationOptions<
-    AccountSessionResponse,
+    CreateStripeAccountSessionResponse,
     Error,
     AccountSessionValues
   >,
-): UseMutationResult<AccountSessionResponse, Error, AccountSessionValues> => {
-  const apiRequest = useApiRequest();
+): UseMutationResult<CreateStripeAccountSessionResponse, Error, AccountSessionValues> => {
+  const fetcher = useApiFetcher();
 
-  return useMutation({ mutationFn: (values: AccountSessionValues) => {
-      return apiRequest
-        .post('/stripe/account_session', {
-          account: values?.connectedAccountId,
-        })
-        .then((res) => res.data);
-    },
-    { ...options },
-  );
+  return useMutation({
+    mutationFn: (values: AccountSessionValues) =>
+      fetchCreateStripeAccountSession(fetcher, {
+        account: values?.connectedAccountId,
+      }),
+    ...options,
+  });
 };
 
-// Create Stripe Account.
+// Create Stripe Account
 // ------------------------------------
 interface CreateStripeAccountValues {}
-interface CreateStripeAccountResponse {
-  account_id: string;
-}
 
 export const useCreateStripeAccount = (
   options?: UseMutationOptions<
@@ -93,48 +93,30 @@ export const useCreateStripeAccount = (
     CreateStripeAccountValues
   >,
 ) => {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation({ mutationFn: (values: CreateStripeAccountValues) => {
-      return apiRequest
-        .post('/stripe/account')
-        .then((res) => res.data);
-    },
-    { ...options },
-  );
-};
-
-
-// Create Stripe Account OAuth Link.
-// ------------------------------------
-interface StripeAccountLinkResponse {
-  clientSecret: {
-    created: number;
-    expiresAt: number;
-    object: string;
-    url: string;
-  };
-}
-
-interface StripeAccountLinkValues {
-  stripeAccountId: string;
-}
-
-export const useGetStripeAccountLink = (
-  options?: UseQueryOptions<StripeAccountLinkResponse, Error>,
-): UseQueryResult<StripeAccountLinkResponse, Error> => {
-  const apiRequest = useApiRequest();
-  return useQuery({
-    queryKey: ['getStripeAccountLink'],
-    queryFn: () =>
-      apiRequest
-        .get('/stripe/link')
-        .then((res) => transformToCamelCase(res.data)),
+  return useMutation({
+    mutationFn: (_values: CreateStripeAccountValues) =>
+      fetchCreateStripeAccount(fetcher),
     ...options,
   });
 };
 
-// Get Stripe Account OAuth Callback Mutation.
+// Get Stripe Account OAuth Link
+// ------------------------------------
+export const useGetStripeAccountLink = (
+  options?: UseQueryOptions<GetStripeConnectLinkResponse, Error>,
+): UseQueryResult<GetStripeConnectLinkResponse, Error> => {
+  const fetcher = useApiFetcher();
+
+  return useQuery({
+    queryKey: ['getStripeAccountLink'],
+    queryFn: () => fetchGetStripeConnectLink(fetcher),
+    ...options,
+  });
+};
+
+// Stripe Account OAuth Callback
 // ------------------------------------
 interface StripeAccountCallbackMutationValues {
   code: string;
@@ -155,17 +137,13 @@ export const useSetStripeAccountCallback = (
   Error,
   StripeAccountCallbackMutationValues
 > => {
-  const apiRequest = useApiRequest();
-  return useMutation({ mutationFn: (values: StripeAccountCallbackMutationValues) => {
-      return apiRequest
-        .post(`/stripe/callback`, values)
-        .then(
-          (res) =>
-            transformToCamelCase(
-              res.data,
-            ) as StripeAccountCallbackMutationResponse,
-        );
-    },
-    { ...options },
-  );
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: (values: StripeAccountCallbackMutationValues) =>
+      fetchExchangeStripeOAuth(fetcher, { code: values.code }).then(
+        () => ({ success: true }) as StripeAccountCallbackMutationResponse,
+      ),
+    ...options,
+  });
 };

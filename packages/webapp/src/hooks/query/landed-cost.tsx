@@ -1,17 +1,18 @@
 // @ts-nocheck
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
-import { fetchLandedCostTransactions } from '@bigcapital/sdk-ts';
-import useApiRequest from '../useRequest';
+import {
+  fetchLandedCostTransactions,
+  allocateLandedCost,
+  deleteAllocatedLandedCost,
+  fetchBillLandedCostTransactions,
+} from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { useRequestQuery } from '../useQueryRequest';
 
 import t from './types';
 
 const commonInvalidateQueries = (queryClient) => {
-  // Invalidate bills.
   queryClient.invalidateQueries({ queryKey: [t.BILLS] });
   queryClient.invalidateQueries({ queryKey: [t.BILL] });
-  // Invalidate landed cost.
   queryClient.invalidateQueries({ queryKey: [t.LANDED_COST] });
   queryClient.invalidateQueries({ queryKey: [t.LANDED_COST_TRANSACTION] });
 };
@@ -21,17 +22,15 @@ const commonInvalidateQueries = (queryClient) => {
  */
 export function useCreateLandedCost(props) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation({ mutationFn: ([id, values]) =>
-      apiRequest.post(`landed-cost/bills/${id}/allocate`, values),
-          onSuccess: (res, id) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation({
+    mutationFn: ([id, values]) => allocateLandedCost(fetcher, id, values),
+    onSuccess: () => {
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -39,17 +38,15 @@ export function useCreateLandedCost(props) {
  */
 export function useDeleteLandedCost(props) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation({ mutationFn: (landedCostId) =>
-      apiRequest.delete(`landed-cost/${landedCostId}`),
-          onSuccess: (res, id) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation({
+    mutationFn: (landedCostId) => deleteAllocatedLandedCost(fetcher, landedCostId),
+    onSuccess: () => {
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -69,13 +66,13 @@ export function useLandedCostTransaction(query, props) {
  * Retrieve the bill located landed cost transactions.
  */
 export function useBillLocatedLandedCost(id, props) {
-  return useRequestQuery(
-    [t.LANDED_COST_TRANSACTION, id],
-    { method: 'get', url: `landed-cost/bills/${id}/transactions` },
-    {
-      select: (res) => res.data?.data,
-      defaultData: [],
-      ...props,
-    },
-  );
+  const fetcher = useApiFetcher();
+
+  return useQuery({
+    queryKey: [t.LANDED_COST_TRANSACTION, id],
+    queryFn: () => fetchBillLandedCostTransactions(fetcher, id),
+    select: (data) => (data as { data?: unknown[] })?.data ?? [],
+    enabled: id != null,
+    ...props,
+  });
 }

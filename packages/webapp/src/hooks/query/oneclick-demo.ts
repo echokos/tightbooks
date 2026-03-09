@@ -40,7 +40,8 @@ export function useCreateOneClickDemo(
 
   return useMutation<CreateOneClickDemoRes, Error, CreateOneClickDemoValues>(
     () => apiRequest.post(`/demo/one_click`),
-          onSuccess: (res, id) => { },
+    {
+      onSuccess: (res, id) => { },
       ...props,
     },
   );
@@ -72,26 +73,25 @@ export function useOneClickDemoSignin(
   const setTenantId = useSetTenantId();
   const setLocale = useSetLocale();
 
-  return useMutation<OneClickSigninDemoRes, Error, OneClickSigninDemoValues>(
-    ({ demoId }) =>
+  return useMutation<OneClickSigninDemoRes, Error, OneClickSigninDemoValues>({
+    mutationFn: ({ demoId }) =>
       apiRequest.post(`/demo/one_click_signin`, { demo_id: demoId }),
-          onSuccess: (res, id) => {
-        // Set authentication cookies.
-        setAuthLoginCookies(res.data);
+    onSuccess: (res, _id) => {
+      // Set authentication cookies.
+      setAuthLoginCookies(res.data);
 
-        batch(() => {
-          // Sets the auth metadata to global state.
-          setAuthToken(res.data.token);
-          setOrganizationId(res.data.tenant.organization_id);
-          setUserId(res.data.user.id);
-          setTenantId(res.data.tenant.id);
+      batch(() => {
+        // Sets the auth metadata to global state.
+        setAuthToken(res.data.token);
+        setOrganizationId(res.data.tenant.organization_id);
+        setUserId(res.data.user.id);
+        setTenantId(res.data.tenant.id);
 
-          if (res.data?.tenant?.metadata?.language) {
-            setLocale(res.data?.tenant?.metadata?.language);
-          }
-        });
-      },
-      ...props,
+        if (res.data?.tenant?.metadata?.language) {
+          setLocale(res.data?.tenant?.metadata?.language);
+        }
+      });
     },
-  );
+    ...props,
+  });
 }

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchSettings } from '@bigcapital/sdk-ts';
+import { fetchSettings, saveSettings } from '@bigcapital/sdk-ts';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest, { useApiFetcher } from '../useRequest';
 import { useSetSettings } from '@/hooks/state';
@@ -12,10 +12,10 @@ import t from './types';
  */
 export function useSaveSettings(props) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
   return useMutation({
-    mutationFn: (settings) => apiRequest.put('settings', settings),
+    mutationFn: (settings) => saveSettings(fetcher, settings),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [t.SETTING] });
     },

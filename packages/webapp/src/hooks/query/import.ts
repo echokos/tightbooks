@@ -1,112 +1,129 @@
-// @ts-nocheck
 import {
   QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
 } from '@tanstack/react-query';
 import useApiRequest from '../useRequest';
+import { useApiFetcher } from '../useRequest';
 import { transformToCamelCase } from '@/utils';
-import { downloadFile, useDownloadFile } from '../useDownloadFile';
+import { downloadFile } from '../useDownloadFile';
 import T from './types';
 import { BANK_QUERY_KEY } from '@/constants/query-keys/banking';
+import type {
+  ImportMappingBody,
+  ImportPreviewResponse,
+  ImportFileMetaResponse,
+  ImportProcessResponse,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchImportPreview,
+  fetchImportFileMeta,
+  importMapping,
+  importProcess,
+} from '@bigcapital/sdk-ts';
 
 const QueryKeys = {
   ImportPreview: 'ImportPreview',
   ImportFileMeta: 'ImportFileMeta',
 };
+
 /**
- *
+ * Upload import file (multipart/form-data). Uses apiRequest because SDK does not support FormData.
  */
 export function useImportFileUpload(props = {}) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation({ mutationFn: (values) => apiRequest.post(`import/file`, values),
-        onSuccess: (res, id) => {
-      // Invalidate queries.
+  return useMutation({
+    mutationFn: (values: FormData | Record<string, unknown>) =>
+      apiRequest.post(`import/file`, values),
+    onSuccess: () => {},
+    ...props,
+  });
+}
+
+export function useImportFileMapping(
+  props?: UseMutationOptions<void, Error, [string, ImportMappingBody]>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    mutationFn: ([importId, values]: [string, ImportMappingBody]) =>
+      importMapping(fetcher, importId, values),
+    onSuccess: () => {
+      queryClient.invalidateQueries([QueryKeys.ImportPreview]);
+      queryClient.invalidateQueries([QueryKeys.ImportFileMeta]);
     },
     ...props,
   });
 }
 
-export function useImportFileMapping(props = {}) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation({ mutationFn: ([importId, values]) =>
-      apiRequest.post(`import/${importId}/mapping`, values),
-          onSuccess: (res, id) => {
-        // Invalidate queries.
-        queryClient.invalidateQueries([QueryKeys.ImportPreview]);
-        queryClient.invalidateQueries([QueryKeys.ImportFileMeta]);
-      },
-      ...props,
-    },
-  );
-}
-
-export function useImportFilePreview(importId: string, props = {}) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+export function useImportFilePreview(
+  importId: string,
+  props?: UseQueryOptions<ImportPreviewResponse, Error, unknown>
+) {
+  const fetcher = useApiFetcher();
 
   return useQuery({
     queryKey: [QueryKeys.ImportPreview, importId],
-    queryFn: () =>
-      apiRequest
-        .get(`import/${importId}/preview`)
-        .then((res) => transformToCamelCase(res.data)),
+    queryFn: () => fetchImportPreview(fetcher, importId),
+    select: (data) => transformToCamelCase(data),
+    enabled: !!importId,
+    ...props,
   });
 }
 
-export function useImportFileMeta(importId: string, props = {}) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+export function useImportFileMeta(
+  importId: string,
+  props?: UseQueryOptions<ImportFileMetaResponse, Error, unknown>
+) {
+  const fetcher = useApiFetcher();
 
   return useQuery({
     queryKey: [QueryKeys.ImportFileMeta, importId],
-    queryFn: () =>
-      apiRequest
-        .get(`import/${importId}`)
-        .then((res) => transformToCamelCase(res.data)),
+    queryFn: () => fetchImportFileMeta(fetcher, importId),
+    select: (data) => transformToCamelCase(data),
+    enabled: !!importId,
+    ...props,
   });
 }
 
-/**
- *
- */
-export function useImportFileProcess(props = {}) {
+export function useImportFileProcess(
+  props?: UseMutationOptions<ImportProcessResponse, Error, string>
+) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation({ mutationFn: (importId) => apiRequest.post(`import/${importId}/import`),
-          onSuccess: (res, id) => {
-        // Invalidate queries.
-        invalidateResourcesOnImport(queryClient, res.data.resource);
-      },
-      ...props,
+  return useMutation({
+    mutationFn: (importId: string) => importProcess(fetcher, importId),
+    onSuccess: (_data, _importId) => {
+      if (_data?.resource) {
+        invalidateResourcesOnImport(queryClient, _data.resource);
+      }
     },
-  );
+    ...props,
+  });
 }
 
-interface SampleSheetImportQuery {
+export interface SampleSheetImportQuery {
   resource: string;
   filename: string;
   format: 'xlsx' | 'csv';
 }
 
 /**
- * Initiates a download of the balance sheet in XLSX format.
- * @param {Object} query - The query parameters for the request.
- * @param {Object} args - Additional configurations for the download.
- * @returns {Function} A function to trigger the file download.
+ * Download import sample sheet (blob). Uses apiRequest for blob response.
  */
 export const useSampleSheetImport = () => {
   const apiRequest = useApiRequest();
 
-  return useMutation<void, AxiosError, IArgs>(
-    (data: SampleSheetImportQuery) => {
-      return apiRequest
+  return useMutation({
+    mutationFn: (data: SampleSheetImportQuery) =>
+      apiRequest
         .get('/import/sample', {
           responseType: 'blob',
           headers: {
@@ -121,15 +138,12 @@ export const useSampleSheetImport = () => {
         .then((res) => {
           downloadFile(res.data, `${data.filename}.${data.format}`);
           return res;
-        });
-    },
-  );
+        }),
+  });
 };
 
 /**
- * Invalidates resources cached queries based on the given resource name,
- * @param queryClient
- * @param resource
+ * Invalidates resources cached queries based on the given resource name.
  */
 const invalidateResourcesOnImport = (
   queryClient: QueryClient,
@@ -209,7 +223,6 @@ const invalidateResourcesOnImport = (
       break;
 
     case 'UncategorizedBankTransaction':
-      queryClient.invalidateQueries(T.CASH_FLOW_TRANSACTIONS);
       queryClient.invalidateQueries(T.CASH_FLOW_TRANSACTIONS);
       queryClient.invalidateQueries(T.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
       queryClient.invalidateQueries(

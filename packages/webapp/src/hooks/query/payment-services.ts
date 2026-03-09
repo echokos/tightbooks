@@ -3,94 +3,72 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  UseMutationOptions,
   UseQueryOptions,
   UseQueryResult,
+  UseMutationResult,
 } from '@tanstack/react-query';
-import useApiRequest from '../useRequest';
-import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
+import {
+  fetchGetPaymentServices,
+  fetchGetPaymentServicesState,
+  fetchGetPaymentService,
+  fetchUpdatePaymentMethod,
+  fetchDeletePaymentMethod,
+  type GetPaymentServicesResponse,
+  type GetPaymentServicesStateResponse,
+  type GetPaymentServiceResponse,
+  type UpdatePaymentMethodBody,
+  type UpdatePaymentMethodResponse,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
+import { transformToCamelCase } from '@/utils';
 
 const PaymentServicesQueryKey = 'PaymentServices';
 const PaymentServicesStateQueryKey = 'PaymentServicesState';
 
 // # Get payment services.
 // -----------------------------------------
-export interface GetPaymentServicesResponse {}
 /**
  * Retrieves the integrated payment services.
- * @param {UseQueryOptions<GetPaymentServicesResponse, Error>} options
- * @returns {UseQueryResult<GetPaymentServicesResponse, Error>}
  */
 export const useGetPaymentServices = (
   options?: UseQueryOptions<GetPaymentServicesResponse, Error>,
 ): UseQueryResult<GetPaymentServicesResponse, Error> => {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
   return useQuery<GetPaymentServicesResponse, Error>(
     [PaymentServicesQueryKey],
     () =>
-      apiRequest
-        .get('/payment-services')
-        .then(
-          (response) =>
-            transformToCamelCase(
-              response.data?.payment_services,
-            ) as GetPaymentServicesResponse,
-        ),
-          ...options,
-    },
+      fetchGetPaymentServices(fetcher).then((res) =>
+        transformToCamelCase(res?.payment_services) as GetPaymentServicesResponse,
+      ),
+    { ...options },
   );
 };
 
 // # Get payment services state.
 // -----------------------------------------
-export interface GetPaymentServicesStateResponse {
-  stripe: {
-    isStripeAccountCreated: boolean;
-    isStripePaymentEnabled: boolean;
-    isStripePayoutEnabled: boolean;
-    isStripeEnabled: boolean;
-    isStripeServerConfigured: boolean;
-    stripeAccountId: string | null;
-    stripePaymentMethodId: number | null;
-    stripeCurrencies: string[];
-    stripePublishableKey: string;
-    stripeAuthLink: string;
-    stripeRedirectUrl: string;
-  };
-}
 /**
  * Retrieves the state of payment services.
- * @param {UseQueryOptions<GetPaymentServicesStateResponse, Error>} options
- * @returns {UseQueryResult<GetPaymentServicesStateResponse, Error>}
  */
 export const useGetPaymentServicesState = (
   options?: UseQueryOptions<GetPaymentServicesStateResponse, Error>,
 ): UseQueryResult<GetPaymentServicesStateResponse, Error> => {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
   return useQuery<GetPaymentServicesStateResponse, Error>(
     [PaymentServicesStateQueryKey],
     () =>
-      apiRequest
-        .get('/payment-services/state')
-        .then(
-          (response) =>
-            transformToCamelCase(
-              response.data?.data,
-            ) as GetPaymentServicesStateResponse,
-        ),
-          ...options,
-    },
+      fetchGetPaymentServicesState(fetcher).then((data) =>
+        transformToCamelCase(data) as GetPaymentServicesStateResponse,
+      ),
+    { ...options },
   );
 };
 
 // # Update payment method
 // -----------------------------------------
-interface UpdatePaymentMethodResponse {
-  id: number;
-  message: string;
-}
-interface UpdatePaymentMethodValues {
+export interface UpdatePaymentMethodValues {
   paymentMethodId: string | number;
   values: {
     name: string;
@@ -100,7 +78,6 @@ interface UpdatePaymentMethodValues {
 }
 /**
  * Updates a payment method.
- * @returns {UseMutationResult<UpdatePaymentMethodResponse, Error, UpdatePaymentMethodValues, unknown>}
  */
 export const useUpdatePaymentMethod = (): UseMutationResult<
   UpdatePaymentMethodResponse,
@@ -108,7 +85,7 @@ export const useUpdatePaymentMethod = (): UseMutationResult<
   UpdatePaymentMethodValues,
   unknown
 > => {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
   const queryClient = useQueryClient();
 
   return useMutation<
@@ -116,71 +93,60 @@ export const useUpdatePaymentMethod = (): UseMutationResult<
     Error,
     UpdatePaymentMethodValues,
     unknown
-  >(
-    (data: UpdatePaymentMethodValues) =>
-      apiRequest
-        .post(
-          `/payment-services/${data.paymentMethodId}`,
-          transfromToSnakeCase(data.values),
-        )
-        .then((response) => response.data),
-          onSuccess: () => {
-        queryClient.invalidateQueries(PaymentServicesStateQueryKey);
-        queryClient.invalidateQueries(PaymentServicesQueryKey);
-      },
+  >({
+    mutationFn: (data: UpdatePaymentMethodValues) =>
+      fetchUpdatePaymentMethod(fetcher, Number(data.paymentMethodId), {
+        name: data.values.name,
+        options: {
+          bankAccountId: data.values.bankAccountId,
+          clearningAccountId: data.values.clearingAccountId,
+        },
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [PaymentServicesStateQueryKey] });
+      queryClient.invalidateQueries({ queryKey: [PaymentServicesQueryKey] });
     },
-  );
+  });
 };
 
 // # Get payment method
 // -----------------------------------------
-interface GetPaymentMethodResponse {}
 /**
  * Retrieves a specific payment method.
- * @param {number} paymentMethodId - The ID of the payment method.
- * @returns {UseQueryResult<GetPaymentMethodResponse, Error>}
  */
 export const useGetPaymentMethod = (
   paymentMethodId: number,
-  options?: UseQueryOptions<GetPaymentMethodResponse, Error>,
-): UseQueryResult<GetPaymentMethodResponse, Error> => {
-  const apiRequest = useApiRequest();
+  options?: UseQueryOptions<GetPaymentServiceResponse, Error>,
+): UseQueryResult<GetPaymentServiceResponse, Error> => {
+  const fetcher = useApiFetcher();
 
-  return useQuery<GetPaymentMethodResponse, Error>(
+  return useQuery<GetPaymentServiceResponse, Error>(
     [PaymentServicesQueryKey, paymentMethodId],
     () =>
-      apiRequest
-        .get(`/payment-services/${paymentMethodId}`)
-        .then(
-          (res) =>
-            transformToCamelCase(res.data?.data) as GetPaymentMethodResponse,
-        ),
+      fetchGetPaymentService(fetcher, paymentMethodId).then((res) =>
+        transformToCamelCase(res?.data) as GetPaymentServiceResponse,
+      ),
     options,
   );
 };
 
 // # Delete payment method
 // -----------------------------------------
-interface DeletePaymentMethodValues {
+export interface DeletePaymentMethodValues {
   paymentMethodId: number;
 }
 export const useDeletePaymentMethod = (
   options?: UseMutationOptions<void, Error, DeletePaymentMethodValues>,
 ): UseMutationResult<void, Error, DeletePaymentMethodValues> => {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, DeletePaymentMethodValues>(
-    ({ paymentMethodId }) => {
-      return apiRequest
-        .delete(`/payment-services/${paymentMethodId}`)
-        .then((res) => res.data);
+  return useMutation<void, Error, DeletePaymentMethodValues>({
+    mutationFn: ({ paymentMethodId }) =>
+      fetchDeletePaymentMethod(fetcher, paymentMethodId).then(() => undefined),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [PaymentServicesStateQueryKey] });
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(PaymentServicesStateQueryKey);
-      },
-      ...options,
-    },
-  );
+    ...options,
+  });
 };

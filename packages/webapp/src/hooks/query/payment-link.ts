@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   UseMutationOptions,
   UseMutationResult,
@@ -7,13 +6,23 @@ import {
   useMutation,
   useQuery,
 } from '@tanstack/react-query';
-import useApiRequest from '../useRequest';
-import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
+import { useApiFetcher } from '../useRequest';
+import { transformToCamelCase } from '@/utils';
+import type {
+  GetInvoicePaymentLinkResponse,
+  CreateStripeCheckoutSessionResponse,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchGetInvoicePaymentLink,
+  fetchCreateStripeCheckoutSession,
+  fetchGetPaymentLinkInvoicePdf,
+  generateSaleInvoiceSharableLink,
+} from '@bigcapital/sdk-ts';
 
 const GetPaymentLinkInvoice = 'GetPaymentLinkInvoice';
 const GetPaymentLinkInvoicePdf = 'GetPaymentLinkInvoicePdf';
 
-// Create Payment Link
+// Create Payment Link (sale-invoices generate-link via SDK)
 // ------------------------------------
 interface CreatePaymentLinkValues {
   publicity: string;
@@ -24,10 +33,9 @@ interface CreatePaymentLinkValues {
 interface CreatePaymentLinkResponse {
   link: string;
 }
+
 /**
  * Creates a new payment link.
- * @param {UseMutationOptions<CreatePaymentLinkResponse, Error, CreatePaymentLinkValues>} options
- * @returns {UseMutationResult<CreatePaymentLinkResponse, Error, CreatePaymentLinkValues>}
  */
 export function useCreatePaymentLink(
   options?: UseMutationOptions<
@@ -40,196 +48,111 @@ export function useCreatePaymentLink(
   Error,
   CreatePaymentLinkValues
 > {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<CreatePaymentLinkResponse, Error, CreatePaymentLinkValues>(
-    (values) =>
-      apiRequest
-        .post(
-          `/sale-invoices/${values.transactionId}/generate-link`,
-          transfromToSnakeCase(values),
-        )
-        .then((res) => res.data),
-          ...options,
-    },
-  );
+  return useMutation<CreatePaymentLinkResponse, Error, CreatePaymentLinkValues>({
+    mutationFn: (values) =>
+      generateSaleInvoiceSharableLink(
+        fetcher,
+        Number(values.transactionId),
+      ).then((data) => ({ link: data.link })),
+    ...options,
+  });
 }
 
 // Get Invoice Payment Link
 // -----------------------------------------
-interface GetInvoicePaymentLinkAddressResponse {
-  address_1: string;
-  address_2: string;
-  postal_code: string;
-  city: string;
-  state_province: string;
-  phone: string;
-}
 
-interface GetInvoicePaymentLinkOrganizationRes {
-  address: Record<string, GetInvoicePaymentLinkAddressResponse>;
-  name: string;
-  primaryColor: string;
-  logoUri: string;
-  addressTextFormatted: string;
-}
-
-export interface GetInvoicePaymentLinkResponse {
-  dueAmount: number;
-  dueAmountFormatted: string;
-  dueDate: string;
-  dueDateFormatted: string;
-  invoiceDateFormatted: string;
-  invoiceNo: string;
-  paymentAmount: number;
-  paymentAmountFormatted: string;
-  subtotal: number;
-  subtotalFormatted: string;
-  subtotalLocalFormatted: string;
-  total: number;
-  totalFormatted: string;
-  totalLocalFormatted: string;
-  customerName: string;
-  invoiceMessage: string;
-  termsConditions: string;
-  entries: Array<{
-    description: string;
-    itemName: string;
-    quantity: number;
-    quantityFormatted: string;
-    rate: number;
-    rateFormatted: string;
-    total: number;
-    totalFormatted: string;
-  }>;
-  taxes: Array<{
-    name: string;
-    taxRateAmount: number;
-    taxRateAmountFormatted: string;
-    taxRateCode: string;
-  }>;
-  brandingTemplate: {
-    companyLogoUri: string;
-    primaryColor: string;
-  };
-  organization: GetInvoicePaymentLinkOrganizationRes;
-  hasStripePaymentMethod: boolean;
-  isReceivable: boolean;
-  formattedCustomerAddress: string;
-}
+export type { GetInvoicePaymentLinkResponse };
 
 /**
  * Fetches the sharable invoice link metadata for a given link ID.
- * @param {string} linkId - The ID of the link to fetch metadata for.
- * @param {UseQueryOptions<GetInvoicePaymentLinkResponse, Error>} options - Optional query options.
- * @returns {UseQueryResult<GetInvoicePaymentLinkResponse, Error>} The query result.
  */
 export function useGetInvoicePaymentLink(
   linkId: string,
   options?: UseQueryOptions<GetInvoicePaymentLinkResponse, Error>,
 ): UseQueryResult<GetInvoicePaymentLinkResponse, Error> {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useQuery<GetInvoicePaymentLinkResponse, Error>(
-    [GetPaymentLinkInvoice, linkId],
-    () =>
-      apiRequest
-        .get(`/payment-links/${linkId}/invoice`)
-        .then((res) => transformToCamelCase(res.data?.data)),
-          ...options,
-    },
-  );
+  return useQuery<GetInvoicePaymentLinkResponse, Error>({
+    queryKey: [GetPaymentLinkInvoice, linkId],
+    queryFn: () =>
+      fetchGetInvoicePaymentLink(fetcher, linkId).then((data) =>
+        transformToCamelCase(data) as GetInvoicePaymentLinkResponse,
+      ),
+    enabled: !!linkId,
+    ...options,
+  });
 }
 
-// Create Stripe Checkout Session.
+// Create Stripe Checkout Session
 // ------------------------------------
 interface CreateCheckoutSessionValues {
   linkId: string;
 }
-interface CreateCheckoutSessionResponse {
-  sessionId: string;
-  publishableKey: string;
-  redirectTo: string;
-}
+
 export const useCreateStripeCheckoutSession = (
   options?: UseMutationOptions<
-    CreateCheckoutSessionResponse,
+    CreateStripeCheckoutSessionResponse,
     Error,
     CreateCheckoutSessionValues
   >,
 ): UseMutationResult<
-  CreateCheckoutSessionResponse,
+  CreateStripeCheckoutSessionResponse,
   Error,
   CreateCheckoutSessionValues
 > => {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation({ mutationFn: (values: CreateCheckoutSessionValues) => {
-      return apiRequest
-        .post(`/payment-links/${values.linkId}/stripe_checkout_session`, values)
-        .then(
-          (res) =>
-            transformToCamelCase(res.data) as CreateCheckoutSessionResponse,
-        );
-    },
-    { ...options },
-  );
+  return useMutation({
+    mutationFn: (values: CreateCheckoutSessionValues) =>
+      fetchCreateStripeCheckoutSession(fetcher, values.linkId).then((data) =>
+        transformToCamelCase(data) as CreateStripeCheckoutSessionResponse,
+      ),
+    ...options,
+  });
 };
 
 // Get Payment Link Invoice PDF
 // ------------------------------------
-interface GetPaymentLinkInvoicePdfResponse {}
-
 interface GeneratePaymentLinkInvoicePdfValues {
   paymentLinkId: string;
 }
 
 export const useGeneratePaymentLinkInvoicePdf = (
   options?: UseMutationOptions<
-    GetPaymentLinkInvoicePdfResponse,
+    Blob,
     Error,
     GeneratePaymentLinkInvoicePdfValues
   >,
 ): UseMutationResult<
-  GetPaymentLinkInvoicePdfResponse,
+  Blob,
   Error,
   GeneratePaymentLinkInvoicePdfValues
 > => {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
   return useMutation<
-    GetPaymentLinkInvoicePdfResponse,
+    Blob,
     Error,
     GeneratePaymentLinkInvoicePdfValues
-  >(
-    (values: GeneratePaymentLinkInvoicePdfValues) => {
-      return apiRequest
-        .get(`/payment-links/${values.paymentLinkId}/invoice/pdf`, {
-          responseType: 'blob',
-          headers: { accept: 'application/pdf' },
-        })
-        .then((res) => res?.data);
-    },
-    { ...options },
-  );
+  >({
+    mutationFn: (values: GeneratePaymentLinkInvoicePdfValues) =>
+      fetchGetPaymentLinkInvoicePdf(fetcher, values.paymentLinkId),
+    ...options,
+  });
 };
 
 export const useGetPaymentLinkInvoicePdf = (
   invoiceId: string,
-  options?: UseQueryOptions<GetPaymentLinkInvoicePdfResponse, Error>,
-): UseQueryResult<GetPaymentLinkInvoicePdfResponse, Error> => {
-  const apiRequest = useApiRequest();
+  options?: UseQueryOptions<Blob, Error>,
+): UseQueryResult<Blob, Error> => {
+  const fetcher = useApiFetcher();
 
-  return useQuery<GetPaymentLinkInvoicePdfResponse, Error>(
-    [GetPaymentLinkInvoicePdf, invoiceId],
-    () =>
-      apiRequest
-        .get(`/payment-links/${invoiceId}/invoice/pdf`, {
-          responseType: 'blob',
-          headers: { accept: 'application/pdf' },
-        })
-        .then((res) => res.data),
-          ...options,
-    },
-  );
+  return useQuery<Blob, Error>({
+    queryKey: [GetPaymentLinkInvoicePdf, invoiceId],
+    queryFn: () => fetchGetPaymentLinkInvoicePdf(fetcher, invoiceId),
+    enabled: !!invoiceId,
+    ...options,
+  });
 };

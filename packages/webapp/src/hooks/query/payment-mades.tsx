@@ -18,9 +18,9 @@ import {
   editBillPayment,
   deleteBillPayment,
   fetchBillPaymentEditPage,
+  fetchBillPaymentNewPageEntries,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from '@/utils';
 import t from './types';
 
@@ -135,24 +135,22 @@ export function usePaymentMadeEditPage(
   });
 }
 
-/** New page entries – uses vendor_id param; kept on useRequestQuery (schema path/param mismatch). */
+/** New page entries – uses vendorId param via SDK. */
 export function usePaymentMadeNewPageEntries(
   vendorId: number | null | undefined,
-  props?: Record<string, unknown>
+  props?: Omit<
+    UseQueryOptions<unknown, Error, unknown>,
+    'queryKey' | 'queryFn' | 'enabled'
+  >
 ) {
-  return useRequestQuery(
-    [t.PAYMENT_MADE_NEW_ENTRIES, vendorId],
-    {
-      method: 'get',
-      url: 'bill-payments/new-page/entries',
-      params: { vendor_id: vendorId },
-    },
-    {
-      select: (res: { data: unknown }) => res.data,
-      defaultData: [],
-      ...props,
-    },
-  );
+  const fetcher = useApiFetcher();
+  return useQuery({
+    queryKey: [t.PAYMENT_MADE_NEW_ENTRIES, vendorId],
+    queryFn: () => fetchBillPaymentNewPageEntries(fetcher, vendorId!),
+    enabled: vendorId != null,
+    select: (data) => data ?? [],
+    ...props,
+  });
 }
 
 export function useRefreshPaymentMades() {

@@ -1,16 +1,18 @@
-// @ts-nocheck
 import {
   useMutation,
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query';
-import useApiRequest from '../useRequest';
-
-
+import {
+  fetchUpdatePaymentMethod,
+  type UpdatePaymentMethodBody,
+  type UpdatePaymentMethodResponse,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../useRequest';
 
 // # Edit payment method
 // -----------------------------------------
-interface EditPaymentMethodValues {
+export interface EditPaymentMethodValues {
   paymentMethodId: number;
   name?: string;
   bankAccountId?: number;
@@ -22,29 +24,41 @@ interface EditPaymentMethodValues {
   showJcb?: boolean;
   showDiners?: boolean;
 }
-interface EditPaymentMethodResponse {
-  id: number;
-  message: string;
-}
+
 export const useEditPaymentMethod = (
   options?: UseMutationOptions<
-    EditPaymentMethodResponse,
+    UpdatePaymentMethodResponse,
     Error,
     EditPaymentMethodValues
   >,
 ): UseMutationResult<
-  EditPaymentMethodResponse,
+  UpdatePaymentMethodResponse,
   Error,
   EditPaymentMethodValues
 > => {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<EditPaymentMethodResponse, Error, EditPaymentMethodValues>(
-    ({ paymentMethodId, ...editData }) => {
-      return apiRequest
-        .put(`/payment-methods/${paymentMethodId}`, editData)
-        .then((res) => res.data);
+  return useMutation<
+    UpdatePaymentMethodResponse,
+    Error,
+    EditPaymentMethodValues
+  >({
+    mutationFn: ({ paymentMethodId, ...editData }) => {
+      const body: UpdatePaymentMethodBody = {
+        name: editData.name,
+        options: {
+          bankAccountId: editData.bankAccountId,
+          clearningAccountId: editData.clearningAccountId,
+          showVisa: editData.showVisa,
+          showMasterCard: editData.showMasterCard,
+          showDiscover: editData.showDiscover,
+          showAmer: editData.showAmer,
+          showJcb: editData.showJcb,
+          showDiners: editData.showDiners,
+        },
+      };
+      return fetchUpdatePaymentMethod(fetcher, paymentMethodId, body);
     },
-    { ...options },
-  );
+    ...options,
+  });
 };

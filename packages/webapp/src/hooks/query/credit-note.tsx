@@ -18,6 +18,7 @@ import type { CreditNotesListResponse } from '@bigcapital/sdk-ts';
 import {
   fetchCreditNotes,
   fetchCreditNote,
+  fetchCreditNoteState,
   createCreditNote,
   editCreditNote,
   deleteCreditNote,
@@ -29,7 +30,7 @@ import {
   applyCreditNoteToInvoices,
   deleteApplyCreditNoteToInvoices,
 } from '@bigcapital/sdk-ts';
-import useApiRequest, { useApiFetcher } from '../useRequest';
+import { useApiFetcher } from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
 import { useRequestPdf } from '../useRequestPdf';
 import { transformPagination, transformToCamelCase } from '@/utils';
@@ -402,16 +403,14 @@ export interface CreditNoteStateResponse {
 export function useGetCreditNoteState(
   options?: UseQueryOptions<CreditNoteStateResponse, Error>
 ): UseQueryResult<CreditNoteStateResponse, Error> {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
   return useQuery<CreditNoteStateResponse, Error>({
     queryKey: ['CREDIT_NOTE_STATE'],
     queryFn: () =>
-      apiRequest
-        .get('/credit-notes/state')
-        .then((res: { data?: unknown }) =>
-          transformToCamelCase(res.data as Record<string, unknown>) as CreditNoteStateResponse
-        ),
+      fetchCreditNoteState(fetcher).then((data) =>
+        transformToCamelCase(data as unknown as Record<string, unknown>) as CreditNoteStateResponse
+      ),
     ...options,
   });
 }
