@@ -1329,6 +1329,24 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 12,
+              "type": "number"
+            }
           }
         ],
         "responses": {
@@ -1337,10 +1355,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/InventoryAdjustmentResponseDto"
-                  }
+                  "$ref": "#/components/schemas/InventoryAdjustmentsListResponseDto"
                 }
               }
             }
@@ -2279,6 +2294,104 @@
               ],
               "type": "string"
             }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles array",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "example": "created_at",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order",
+            "schema": {
+              "example": "DESC",
+              "enum": [
+                "DESC",
+                "ASC"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "example": "{\"fieldKey\":\"root_type\",\"value\":\"asset\"}",
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "example": "bank account",
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
+            "schema": {
+              "example": "assets",
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "minimum": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "minimum": 1,
+              "example": 25,
+              "type": "number"
+            }
           }
         ],
         "responses": {
@@ -2707,7 +2820,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Items inventory cost list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetInventoryItemsCostResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -5293,14 +5413,23 @@
             "name": "resourceModel",
             "required": true,
             "in": "path",
+            "description": "The resource model name (e.g., SaleInvoice, Customer, Item)",
             "schema": {
+              "example": "SaleInvoice",
               "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Retrieves the resource meta"
+            "description": "Retrieves the resource meta",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceMetaResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -5349,13 +5478,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "description": "Payment link metadata"
-                    }
-                  }
+                  "$ref": "#/components/schemas/GetInvoicePaymentLinkResponseWrapperDto"
                 }
               }
             }
@@ -5410,17 +5533,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "description": "Stripe checkout session ID"
-                    },
-                    "url": {
-                      "type": "string",
-                      "description": "Stripe checkout session URL"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CreateStripeCheckoutSessionResponseDto"
                 }
               }
             }
@@ -5493,10 +5606,19 @@
     "/api/stripe/link": {
       "get": {
         "operationId": "StripeIntegrationController_getStripeConnectLink",
+        "summary": "Get Stripe Connect link",
+        "description": "Retrieves the Stripe OAuth2 Connect authorization URL",
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Successfully retrieved Stripe Connect link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStripeConnectLinkResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -5507,10 +5629,78 @@
     "/api/stripe/callback": {
       "post": {
         "operationId": "StripeIntegrationController_exchangeOAuth",
+        "summary": "Exchange Stripe OAuth code",
+        "description": "Exchanges the Stripe authorization code for user id and access token",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExchangeStripeOAuthBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully exchanged OAuth code"
+          }
+        },
+        "tags": [
+          "stripe"
+        ]
+      }
+    },
+    "/api/stripe/account": {
+      "post": {
+        "operationId": "StripeIntegrationController_createAccount",
+        "summary": "Create Stripe account",
+        "description": "Creates a new Stripe Connect account",
         "parameters": [],
         "responses": {
           "201": {
-            "description": ""
+            "description": "Successfully created Stripe account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateStripeAccountResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "stripe"
+        ]
+      }
+    },
+    "/api/stripe/account_session": {
+      "post": {
+        "operationId": "StripeIntegrationController_createAccountSession",
+        "summary": "Create Stripe account session",
+        "description": "Creates an account session for the Stripe Connect embedded component",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStripeAccountSessionBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created account session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateStripeAccountSessionResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -5521,10 +5711,29 @@
     "/api/stripe/account_link": {
       "post": {
         "operationId": "StripeIntegrationController_createAccountLink",
+        "summary": "Create Stripe account link",
+        "description": "Creates a Stripe Connect account link for onboarding",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStripeAccountLinkBodyDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Successfully created account link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateStripeAccountLinkResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -9679,7 +9888,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the credit note state"
+            "description": "Returns the credit note state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditNoteStateResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -10031,7 +10247,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Credit note refunds retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RefundCreditNoteResponseDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -10091,6 +10317,54 @@
       }
     },
     "/api/credit-notes/refunds/{refundCreditId}": {
+      "get": {
+        "operationId": "CreditNoteRefundsController_getRefundCreditNoteTransaction",
+        "summary": "Retrieve a refund transaction for the given credit note.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "refundCreditId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Refund credit note transaction retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefundCreditNoteResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Credit Note Refunds"
+        ]
+      },
       "delete": {
         "operationId": "CreditNoteRefundsController_deleteRefundCreditNote",
         "summary": "Delete a refund for the given credit note.",
@@ -10168,7 +10442,17 @@
         ],
         "responses": {
           "200": {
-            "description": "Credit note successfully applied to invoices"
+            "description": "Credit note successfully applied to invoices",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AppliedCreditNoteInvoiceResponseDto"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid input data"
@@ -10217,7 +10501,17 @@
         ],
         "responses": {
           "200": {
-            "description": "Credit note associated invoices to apply"
+            "description": "Credit note associated invoices to apply",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreditNoteInvoiceToApplyResponseDto"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid input data"
@@ -11140,7 +11434,7 @@
           {
             "name": "vendorId",
             "required": true,
-            "in": "path",
+            "in": "query",
             "description": "The vendor id",
             "schema": {
               "type": "number"
@@ -11531,115 +11825,6 @@
             "required": false,
             "in": "query",
             "description": "Include inactive accounts",
-            "schema": {
-              "default": false,
-              "example": false,
-              "type": "boolean"
-            }
-          },
-          {
-            "description": "Custom view ID",
-            "required": false,
-            "name": "customViewId",
-            "in": "query",
-            "schema": {
-              "example": 1,
-              "type": "number"
-            }
-          },
-          {
-            "description": "Filter roles array",
-            "required": false,
-            "name": "filterRoles",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "array"
-              }
-            }
-          },
-          {
-            "description": "Column to sort by",
-            "required": false,
-            "name": "columnSortBy",
-            "in": "query",
-            "schema": {
-              "example": "created_at",
-              "type": "string"
-            }
-          },
-          {
-            "description": "Sort order",
-            "required": false,
-            "name": "sortOrder",
-            "in": "query",
-            "schema": {
-              "example": "DESC",
-              "enum": [
-                "DESC",
-                "ASC"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "description": "Stringified filter roles",
-            "required": false,
-            "name": "stringifiedFilterRoles",
-            "in": "query",
-            "schema": {
-              "example": "{\"fieldKey\":\"status\",\"value\":\"active\"}",
-              "type": "string"
-            }
-          },
-          {
-            "description": "Search keyword",
-            "required": false,
-            "name": "searchKeyword",
-            "in": "query",
-            "schema": {
-              "example": "bank account",
-              "type": "string"
-            }
-          },
-          {
-            "description": "View slug",
-            "required": false,
-            "name": "viewSlug",
-            "in": "query",
-            "schema": {
-              "example": "active-accounts",
-              "type": "string"
-            }
-          },
-          {
-            "description": "Page number",
-            "required": false,
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "minimum": 1,
-              "example": 1,
-              "type": "number"
-            }
-          },
-          {
-            "description": "Page size",
-            "required": false,
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "minimum": 1,
-              "example": 25,
-              "type": "number"
-            }
-          },
-          {
-            "description": "Include inactive accounts",
-            "required": false,
-            "name": "inactiveMode",
-            "in": "query",
             "schema": {
               "default": false,
               "example": false,
@@ -21675,7 +21860,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Returns the organization build job details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationBuildJobResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -22237,7 +22429,17 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DateFormatResponseDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -24042,6 +24244,46 @@
           "entries"
         ]
       },
+      "InventoryAdjustmentsPaginationDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number",
+            "example": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "example": 12
+          },
+          "total": {
+            "type": "number",
+            "example": 42
+          }
+        },
+        "required": [
+          "page",
+          "pageSize",
+          "total"
+        ]
+      },
+      "InventoryAdjustmentsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryAdjustmentResponseDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/InventoryAdjustmentsPaginationDto"
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
       "CreateQuickInventoryAdjustmentDto": {
         "type": "object",
         "properties": {
@@ -24929,6 +25171,48 @@
           "accountType",
           "description",
           "parentAccountId"
+        ]
+      },
+      "InventoryItemCostDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "number",
+            "description": "Item ID"
+          },
+          "valuation": {
+            "type": "number",
+            "description": "Valuation"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "Quantity"
+          },
+          "average": {
+            "type": "number",
+            "description": "Average cost"
+          }
+        },
+        "required": [
+          "itemId",
+          "valuation",
+          "quantity",
+          "average"
+        ]
+      },
+      "GetInventoryItemsCostResponseDto": {
+        "type": "object",
+        "properties": {
+          "costs": {
+            "description": "List of item costs",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryItemCostDto"
+            }
+          }
+        },
+        "required": [
+          "costs"
         ]
       },
       "GenerateSaleInvoiceSharableLinkResponseDto": {
@@ -26203,6 +26487,551 @@
           "entries",
           "branchId",
           "attachments"
+        ]
+      },
+      "ModelMetaDefaultSortDto": {
+        "type": "object",
+        "properties": {
+          "sortOrder": {
+            "type": "string",
+            "description": "The sort order",
+            "example": "DESC",
+            "enum": [
+              "DESC",
+              "ASC"
+            ]
+          },
+          "sortField": {
+            "type": "string",
+            "description": "The sort field",
+            "example": "createdAt"
+          }
+        },
+        "required": [
+          "sortOrder",
+          "sortField"
+        ]
+      },
+      "ModelPrintMetaDto": {
+        "type": "object",
+        "properties": {
+          "pageTitle": {
+            "type": "string",
+            "description": "The page title for print",
+            "example": "Invoice INV-0001"
+          }
+        },
+        "required": [
+          "pageTitle"
+        ]
+      },
+      "ResourceMetaResponseDto": {
+        "type": "object",
+        "properties": {
+          "defaultFilterField": {
+            "type": "string",
+            "description": "The default filter field",
+            "example": "query"
+          },
+          "defaultSort": {
+            "description": "The default sort configuration",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ModelMetaDefaultSortDto"
+              }
+            ]
+          },
+          "exportable": {
+            "type": "boolean",
+            "description": "Whether the resource is exportable",
+            "example": true
+          },
+          "exportFlattenOn": {
+            "type": "string",
+            "description": "The field to flatten on during export",
+            "example": "entries"
+          },
+          "importable": {
+            "type": "boolean",
+            "description": "Whether the resource is importable",
+            "example": true
+          },
+          "importAggregator": {
+            "type": "string",
+            "description": "The import aggregator field",
+            "example": "entries"
+          },
+          "importAggregateOn": {
+            "type": "string",
+            "description": "The field to aggregate on during import",
+            "example": "referenceNo"
+          },
+          "importAggregateBy": {
+            "type": "string",
+            "description": "The field to aggregate by during import",
+            "example": "id"
+          },
+          "print": {
+            "description": "The print metadata",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ModelPrintMetaDto"
+              }
+            ]
+          },
+          "fields": {
+            "type": "object",
+            "description": "The resource fields (legacy format)",
+            "additionalProperties": true
+          },
+          "fields2": {
+            "type": "object",
+            "description": "The resource fields (new format)",
+            "additionalProperties": true
+          },
+          "columns": {
+            "type": "object",
+            "description": "The resource columns",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "defaultFilterField",
+          "defaultSort",
+          "fields",
+          "fields2",
+          "columns"
+        ]
+      },
+      "PaymentLinkEntryDto": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Line item description"
+          },
+          "itemName": {
+            "type": "string",
+            "description": "Item name"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "Quantity"
+          },
+          "quantityFormatted": {
+            "type": "string",
+            "description": "Formatted quantity"
+          },
+          "rate": {
+            "type": "number",
+            "description": "Unit rate"
+          },
+          "rateFormatted": {
+            "type": "string",
+            "description": "Formatted rate"
+          },
+          "total": {
+            "type": "number",
+            "description": "Line total"
+          },
+          "totalFormatted": {
+            "type": "string",
+            "description": "Formatted total"
+          }
+        },
+        "required": [
+          "description",
+          "itemName",
+          "quantity",
+          "quantityFormatted",
+          "rate",
+          "rateFormatted",
+          "total",
+          "totalFormatted"
+        ]
+      },
+      "PaymentLinkTaxEntryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tax name"
+          },
+          "taxRateAmount": {
+            "type": "number",
+            "description": "Tax rate amount"
+          },
+          "taxRateAmountFormatted": {
+            "type": "string",
+            "description": "Formatted tax rate amount"
+          },
+          "taxRateCode": {
+            "type": "string",
+            "description": "Tax rate code"
+          }
+        },
+        "required": [
+          "name",
+          "taxRateAmount",
+          "taxRateAmountFormatted",
+          "taxRateCode"
+        ]
+      },
+      "PaymentLinkBrandingTemplateDto": {
+        "type": "object",
+        "properties": {
+          "companyLogoUri": {
+            "type": "string",
+            "description": "Company logo URI"
+          },
+          "primaryColor": {
+            "type": "string",
+            "description": "Primary color"
+          },
+          "secondaryColor": {
+            "type": "string",
+            "description": "Secondary color"
+          }
+        },
+        "required": [
+          "companyLogoUri",
+          "primaryColor"
+        ]
+      },
+      "PaymentLinkOrganizationDto": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "object",
+            "description": "Organization address"
+          },
+          "name": {
+            "type": "string",
+            "description": "Organization name"
+          },
+          "primaryColor": {
+            "type": "string",
+            "description": "Primary brand color"
+          },
+          "logoUri": {
+            "type": "string",
+            "description": "Logo URI"
+          },
+          "addressTextFormatted": {
+            "type": "string",
+            "description": "Formatted address text"
+          }
+        },
+        "required": [
+          "address",
+          "name",
+          "primaryColor",
+          "logoUri",
+          "addressTextFormatted"
+        ]
+      },
+      "GetInvoicePaymentLinkResponseDto": {
+        "type": "object",
+        "properties": {
+          "dueAmount": {
+            "type": "number",
+            "description": "Amount due"
+          },
+          "dueAmountFormatted": {
+            "type": "string",
+            "description": "Formatted amount due"
+          },
+          "dueDate": {
+            "type": "string",
+            "description": "Due date"
+          },
+          "dueDateFormatted": {
+            "type": "string",
+            "description": "Formatted due date"
+          },
+          "invoiceDateFormatted": {
+            "type": "string",
+            "description": "Formatted invoice date"
+          },
+          "invoiceNo": {
+            "type": "string",
+            "description": "Invoice number"
+          },
+          "paymentAmount": {
+            "type": "number",
+            "description": "Payment amount"
+          },
+          "paymentAmountFormatted": {
+            "type": "string",
+            "description": "Formatted payment amount"
+          },
+          "subtotal": {
+            "type": "number",
+            "description": "Subtotal"
+          },
+          "subtotalFormatted": {
+            "type": "string",
+            "description": "Formatted subtotal"
+          },
+          "subtotalLocalFormatted": {
+            "type": "string",
+            "description": "Formatted subtotal in local currency"
+          },
+          "total": {
+            "type": "number",
+            "description": "Total amount"
+          },
+          "totalFormatted": {
+            "type": "string",
+            "description": "Formatted total"
+          },
+          "totalLocalFormatted": {
+            "type": "string",
+            "description": "Formatted total in local currency"
+          },
+          "customerName": {
+            "type": "string",
+            "description": "Customer name"
+          },
+          "invoiceMessage": {
+            "type": "string",
+            "description": "Invoice message"
+          },
+          "termsConditions": {
+            "type": "string",
+            "description": "Terms and conditions"
+          },
+          "entries": {
+            "description": "Invoice line entries",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentLinkEntryDto"
+            }
+          },
+          "taxes": {
+            "description": "Tax entries",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentLinkTaxEntryDto"
+            }
+          },
+          "brandingTemplate": {
+            "description": "Branding template",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PaymentLinkBrandingTemplateDto"
+              }
+            ]
+          },
+          "organization": {
+            "description": "Organization metadata",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PaymentLinkOrganizationDto"
+              }
+            ]
+          },
+          "hasStripePaymentMethod": {
+            "type": "boolean",
+            "description": "Whether Stripe is available as payment method"
+          },
+          "isReceivable": {
+            "type": "boolean",
+            "description": "Whether invoice has receivable balance"
+          },
+          "formattedCustomerAddress": {
+            "type": "string",
+            "description": "Formatted customer address"
+          }
+        },
+        "required": [
+          "dueAmount",
+          "dueAmountFormatted",
+          "dueDate",
+          "dueDateFormatted",
+          "invoiceDateFormatted",
+          "invoiceNo",
+          "paymentAmount",
+          "paymentAmountFormatted",
+          "subtotal",
+          "subtotalFormatted",
+          "subtotalLocalFormatted",
+          "total",
+          "totalFormatted",
+          "totalLocalFormatted",
+          "customerName",
+          "invoiceMessage",
+          "termsConditions",
+          "entries",
+          "taxes",
+          "brandingTemplate",
+          "organization",
+          "hasStripePaymentMethod",
+          "isReceivable",
+          "formattedCustomerAddress"
+        ]
+      },
+      "GetInvoicePaymentLinkResponseWrapperDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Payment link invoice metadata",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetInvoicePaymentLinkResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateStripeCheckoutSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Stripe checkout session ID",
+            "example": "cs_test_xxx"
+          },
+          "publishableKey": {
+            "type": "string",
+            "description": "Stripe publishable key for the client",
+            "example": "pk_test_xxx"
+          },
+          "redirectTo": {
+            "type": "string",
+            "description": "URL to redirect the customer to complete checkout",
+            "example": "https://checkout.stripe.com/c/pay/cs_test_xxx"
+          }
+        },
+        "required": [
+          "sessionId",
+          "publishableKey",
+          "redirectTo"
+        ]
+      },
+      "GetStripeConnectLinkResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Stripe OAuth2 Connect authorization URL",
+            "example": "https://connect.stripe.com/oauth/authorize?response_type=code&client_id=..."
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "ExchangeStripeOAuthBodyDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Authorization code returned by Stripe OAuth",
+            "example": "ac_xxx"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "CreateStripeAccountResponseDto": {
+        "type": "object",
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "description": "The Stripe Connect account ID",
+            "example": "acct_1234567890"
+          }
+        },
+        "required": [
+          "account_id"
+        ]
+      },
+      "CreateStripeAccountSessionBodyDto": {
+        "type": "object",
+        "properties": {
+          "account": {
+            "type": "string",
+            "description": "Stripe Connect account ID to create a session for",
+            "example": "acct_1234567890"
+          }
+        }
+      },
+      "CreateStripeAccountSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "client_secret": {
+            "type": "string",
+            "description": "Stripe Account Session client secret for the Connect embedded component",
+            "example": "acs_xxx_secret_xxx"
+          }
+        },
+        "required": [
+          "client_secret"
+        ]
+      },
+      "CreateStripeAccountLinkBodyDto": {
+        "type": "object",
+        "properties": {
+          "stripeAccountId": {
+            "type": "string",
+            "description": "Stripe Connect account ID",
+            "example": "acct_xxx"
+          }
+        },
+        "required": [
+          "stripeAccountId"
+        ]
+      },
+      "StripeAccountLinkResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL for the account onboarding flow",
+            "example": "https://connect.stripe.com/setup/xxx"
+          },
+          "created": {
+            "type": "number",
+            "description": "Unix timestamp when the link was created",
+            "example": 1234567890
+          },
+          "expires_at": {
+            "type": "number",
+            "description": "Unix timestamp when the link expires",
+            "example": 1234567890
+          },
+          "object": {
+            "type": "string",
+            "description": "Stripe object type",
+            "example": "account_link"
+          }
+        },
+        "required": [
+          "url",
+          "created",
+          "expires_at",
+          "object"
+        ]
+      },
+      "CreateStripeAccountLinkResponseDto": {
+        "type": "object",
+        "properties": {
+          "clientSecret": {
+            "description": "Stripe AccountLink object for onboarding",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StripeAccountLinkResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "clientSecret"
         ]
       },
       "ItemCategoryResponseDto": {
@@ -30177,6 +31006,19 @@
           "discountType"
         ]
       },
+      "CreditNoteStateResponseDto": {
+        "type": "object",
+        "properties": {
+          "defaultTemplateId": {
+            "type": "number",
+            "description": "Default PDF template ID for credit notes",
+            "example": 1
+          }
+        },
+        "required": [
+          "defaultTemplateId"
+        ]
+      },
       "EditCreditNoteDto": {
         "type": "object",
         "properties": {
@@ -30283,6 +31125,90 @@
           "discountType"
         ]
       },
+      "RefundCreditAccountDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 10
+          },
+          "name": {
+            "type": "string",
+            "example": "Cash on Hand"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "RefundCreditNoteSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "creditNoteNumber": {
+            "type": "string",
+            "example": "CN-0001"
+          }
+        },
+        "required": [
+          "id",
+          "creditNoteNumber"
+        ]
+      },
+      "RefundCreditNoteResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 100
+          },
+          "date": {
+            "type": "string",
+            "example": "2024-01-15"
+          },
+          "formattedDate": {
+            "type": "string",
+            "example": "2024-01-15"
+          },
+          "amount": {
+            "type": "number",
+            "example": 250
+          },
+          "formttedAmount": {
+            "type": "string",
+            "example": "$250.00"
+          },
+          "referenceNo": {
+            "type": "string",
+            "example": "REF-001",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "example": "Refund issued to customer",
+            "nullable": true
+          },
+          "fromAccount": {
+            "$ref": "#/components/schemas/RefundCreditAccountDto"
+          },
+          "creditNote": {
+            "$ref": "#/components/schemas/RefundCreditNoteSummaryDto"
+          }
+        },
+        "required": [
+          "id",
+          "date",
+          "formattedDate",
+          "amount",
+          "formttedAmount",
+          "fromAccount",
+          "creditNote"
+        ]
+      },
       "CreditNoteRefundDto": {
         "type": "object",
         "properties": {
@@ -30331,6 +31257,130 @@
           "description",
           "date",
           "branchId"
+        ]
+      },
+      "AppliedCreditNoteInvoiceResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "amount": {
+            "type": "number",
+            "example": 200
+          },
+          "formttedAmount": {
+            "type": "string",
+            "example": "$200.00"
+          },
+          "creditNoteNumber": {
+            "type": "string",
+            "example": "CN-0001"
+          },
+          "creditNoteDate": {
+            "type": "string",
+            "example": "2024-01-10"
+          },
+          "formattedCreditNoteDate": {
+            "type": "string",
+            "example": "2024-01-10"
+          },
+          "invoiceNumber": {
+            "type": "string",
+            "example": "INV-0001"
+          },
+          "invoiceReferenceNo": {
+            "type": "string",
+            "example": "REF-001",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "amount",
+          "formttedAmount",
+          "creditNoteNumber",
+          "creditNoteDate",
+          "formattedCreditNoteDate",
+          "invoiceNumber"
+        ]
+      },
+      "CreditNoteInvoiceToApplyResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "invoiceNo": {
+            "type": "string",
+            "example": "INV-0001"
+          },
+          "referenceNo": {
+            "type": "string",
+            "example": "REF-001",
+            "nullable": true
+          },
+          "invoiceDate": {
+            "type": "string",
+            "example": "2024-01-10"
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2024-01-20"
+          },
+          "currencyCode": {
+            "type": "string",
+            "example": "USD",
+            "nullable": true
+          },
+          "balance": {
+            "type": "number",
+            "example": 500
+          },
+          "dueAmount": {
+            "type": "number",
+            "example": 500
+          },
+          "paymentAmount": {
+            "type": "number",
+            "example": 0
+          },
+          "formattedInvoiceDate": {
+            "type": "string",
+            "example": "2024-01-10"
+          },
+          "formattedDueDate": {
+            "type": "string",
+            "example": "2024-01-20"
+          },
+          "formatted_amount": {
+            "type": "string",
+            "example": "$500.00"
+          },
+          "formattedDueAmount": {
+            "type": "string",
+            "example": "$500.00"
+          },
+          "formattedPaymentAmount": {
+            "type": "string",
+            "example": "$0.00"
+          }
+        },
+        "required": [
+          "id",
+          "invoiceNo",
+          "invoiceDate",
+          "dueDate",
+          "balance",
+          "dueAmount",
+          "paymentAmount",
+          "formattedInvoiceDate",
+          "formattedDueDate",
+          "formatted_amount",
+          "formattedDueAmount",
+          "formattedPaymentAmount"
         ]
       },
       "ApplyCreditNoteInvoiceEntryDto": {
@@ -37332,6 +38382,48 @@
           "permissions"
         ]
       },
+      "OrganizationBuildJobResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "123"
+          },
+          "state": {
+            "type": "string",
+            "example": "active"
+          },
+          "progress": {
+            "type": "object",
+            "example": 50
+          },
+          "isCompleted": {
+            "type": "boolean",
+            "example": false
+          },
+          "isRunning": {
+            "type": "boolean",
+            "example": true
+          },
+          "isWaiting": {
+            "type": "boolean",
+            "example": false
+          },
+          "isFailed": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "id",
+          "state",
+          "progress",
+          "isCompleted",
+          "isRunning",
+          "isWaiting",
+          "isFailed"
+        ]
+      },
       "OrganizationMetadataResponseDto": {
         "type": "object",
         "properties": {
@@ -37813,6 +38905,23 @@
         "required": [
           "currencyName",
           "currencySign"
+        ]
+      },
+      "DateFormatResponseDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "03/09/2026 [MM/DD/YYYY]"
+          },
+          "key": {
+            "type": "string",
+            "example": "MM/DD/YYYY"
+          }
+        },
+        "required": [
+          "label",
+          "key"
         ]
       },
       "EditUserDto": {
