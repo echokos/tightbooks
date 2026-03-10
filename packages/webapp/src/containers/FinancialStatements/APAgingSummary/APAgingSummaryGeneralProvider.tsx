@@ -12,12 +12,12 @@ const APAgingSummaryGeneralContext = createContext();
 function APAgingSummaryGeneralProvider({ filter, ...props }) {
   // Retrieve the vendors list.
   const {
-    data: { vendors },
+    data: vendorsData,
     isFetching: isVendorsLoading,
   } = useVendors();
 
   const provider = {
-    vendors,
+    vendors: vendorsData?.vendors,
     isVendorsLoading,
   };
   // Loading state.

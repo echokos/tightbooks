@@ -45,7 +45,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
 
   // Handle fetch Items data table or list
   const {
-    data: { items },
+    data: itemsData,
     isFetching: isItemsFetching,
     isLoading: isItemsLoading,
   } = useItems({
@@ -55,7 +55,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
 
   // Handle fetch customers data table or list
   const {
-    data: { customers },
+    data: customersData,
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
@@ -75,7 +75,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
 
   // Fetches the projects list.
   const {
-    data: { projects },
+    data: projectsData,
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
@@ -114,11 +114,11 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
   const provider = {
     estimateId,
     estimate,
-    items,
-    customers,
+    items: itemsData?.items,
+    customers: customersData?.customers,
     branches,
     warehouses,
-    projects,
+    projects: projectsData?.projects,
     isNewMode,
 
     isItemsFetching,

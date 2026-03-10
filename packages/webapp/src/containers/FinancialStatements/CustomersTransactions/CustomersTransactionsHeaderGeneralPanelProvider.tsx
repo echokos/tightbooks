@@ -11,13 +11,13 @@ const CustomersTransactionsGeneralPanelContext = createContext();
 function CustomersTransactionsGeneralPanelProvider({ ...props }) {
   // Fetches the customers list.
   const {
-    data: { customers },
+    data: customersData,
     isFetching: isCustomersFetching,
     isLoading: isCustomersLoading,
   } = useCustomers();
 
   const provider = {
-    customers,
+    customers: customersData?.customers,
     isCustomersLoading,
     isCustomersFetching,
   };

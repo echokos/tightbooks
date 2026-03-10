@@ -11,7 +11,7 @@ const CustomersBalanceSummaryGeneralContext = createContext();
 function CustomersBalanceSummaryGeneralProvider({ ...props }) {
   // Fetches the customers list.
   const {
-    data: { customers },
+    data: customersData,
     isFetching: isCustomersFetching,
     isLoading: isCustomersLoading,
   } = useCustomers();
@@ -19,7 +19,7 @@ function CustomersBalanceSummaryGeneralProvider({ ...props }) {
   const provider = {
     isCustomersLoading,
     isCustomersFetching,
-    customers,
+    customers: customersData?.customers,
   };
 
   const loading = isCustomersLoading;

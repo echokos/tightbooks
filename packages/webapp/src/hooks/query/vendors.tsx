@@ -24,7 +24,7 @@ import {
   editVendorOpeningBalance,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { transformPagination, transformToCamelCase } from '@/utils';
+import { transformToCamelCase } from '@/utils';
 import t from './types';
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
@@ -35,24 +35,9 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: [t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES] });
 };
 
-export type VendorsListResult = {
-  vendors: unknown[];
-  pagination: ReturnType<typeof transformPagination>;
-  filterMeta: Record<string, unknown>;
-};
-
-function transformVendorsList(res: VendorsListResponse): VendorsListResult {
-  const data = res as { vendors?: unknown[]; pagination?: unknown; filter_meta?: Record<string, unknown> };
-  return {
-    vendors: data?.vendors ?? [],
-    pagination: transformPagination(data?.pagination ?? {}),
-    filterMeta: data?.filter_meta ?? {},
-  };
-}
-
 export function useVendors(
   query?: Record<string, unknown>,
-  props?: Omit<UseQueryOptions<VendorsListResult>, 'queryKey' | 'queryFn'>
+  props?: Omit<UseQueryOptions<VendorsListResponse>, 'queryKey' | 'queryFn'>
 ) {
   const fetcher = useApiFetcher();
   return useQuery({
@@ -61,7 +46,7 @@ export function useVendors(
       (fetchVendors as (f: ReturnType<typeof useApiFetcher>, q?: Record<string, unknown>) => Promise<VendorsListResponse>)(
         fetcher,
         query
-      ).then(transformVendorsList),
+      ),
     ...props,
   });
 }

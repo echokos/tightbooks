@@ -17,9 +17,6 @@ const commonInvalidateQueries = (queryClient) => {
   queryClient.invalidateQueries({ queryKey: [t.LANDED_COST_TRANSACTION] });
 };
 
-/**
- * Creates a new landed cost.
- */
 export function useCreateLandedCost(props) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
@@ -33,9 +30,6 @@ export function useCreateLandedCost(props) {
   });
 }
 
-/**
- * Deletes the given landed cost.
- */
 export function useDeleteLandedCost(props) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
@@ -49,9 +43,6 @@ export function useDeleteLandedCost(props) {
   });
 }
 
-/**
- * Retrieve the landed cost transactions.
- */
 export function useLandedCostTransaction(query, props) {
   const fetcher = useApiFetcher();
   return useQuery({
@@ -62,9 +53,6 @@ export function useLandedCostTransaction(query, props) {
   });
 }
 
-/**
- * Retrieve the bill located landed cost transactions.
- */
 export function useBillLocatedLandedCost(id, props) {
   const fetcher = useApiFetcher();
 

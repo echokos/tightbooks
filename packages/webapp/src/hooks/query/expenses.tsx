@@ -17,14 +17,7 @@ import {
   validateBulkDeleteExpenses,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { transformPagination } from '@/utils';
 import t from './types';
-
-const defaultPagination = {
-  pageSize: 20,
-  page: 0,
-  pagesCount: 0,
-};
 
 // Common invalidate queries.
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
@@ -50,15 +43,6 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: [t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES] });
 };
 
-function transformExpensesList(response: ExpensesListResponse) {
-  const data = response as { expenses?: unknown[]; pagination?: unknown; filter_meta?: Record<string, unknown> };
-  return {
-    expenses: data?.expenses ?? [],
-    pagination: transformPagination(data?.pagination ?? {}) as typeof defaultPagination,
-    filterMeta: data?.filter_meta ?? {},
-  };
-}
-
 /**
  * Retrieve the expenses list.
  */
@@ -69,7 +53,7 @@ export function useExpenses(
   const fetcher = useApiFetcher();
   return useQuery({
     queryKey: [t.EXPENSES, query],
-    queryFn: () => fetchExpenses(fetcher, query).then(transformExpensesList),
+    queryFn: () => fetchExpenses(fetcher, query),
     ...props,
   });
 }

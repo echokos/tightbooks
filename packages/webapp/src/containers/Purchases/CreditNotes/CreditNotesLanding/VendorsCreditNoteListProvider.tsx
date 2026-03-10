@@ -34,24 +34,24 @@ function VendorsCreditNoteListProvider({ query, tableStateChanged, ...props }) {
 
   // Fetch vendor credits list.
   const {
-    data: { vendorCredits, pagination, filterMeta },
+    data: vendorCreditsData,
     isLoading: isVendorCreditsLoading,
     isFetching: isVendorCreditsFetching,
   } = useVendorCredits(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isEmpty(vendorCredits) && !isVendorCreditsLoading && !tableStateChanged;
+    isEmpty(vendorCreditsData?.data) && !isVendorCreditsLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {
-    vendorCredits,
-    pagination,
+    vendorCredits: vendorCreditsData?.data,
+    pagination: vendorCreditsData?.pagination,
     VendorCreditsViews,
     refresh,
 
     resourceMeta,
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
     isResourceLoading,
     isResourceFetching,
 

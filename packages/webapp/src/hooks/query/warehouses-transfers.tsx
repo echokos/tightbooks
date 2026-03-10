@@ -21,22 +21,10 @@ import {
   transferredWarehouseTransfer,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { transformPagination } from '@/utils';
 import t from './types';
 
 /** Query params for listing warehouse transfers (pagination, filter, etc.). */
 type GetWarehouseTransfersQuery = Record<string, string | number | boolean | undefined>;
-
-/** API list response may include filter even if schema does not. */
-type WarehouseTransfersListResponseWithFilter = WarehouseTransfersListResponse & {
-  filter?: Record<string, unknown>;
-};
-
-type WarehousesTransferListResult = {
-  warehousesTransfers: WarehouseTransfersListResponse['data'];
-  pagination: ReturnType<typeof transformPagination>;
-  filterMeta: Record<string, unknown>;
-};
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
   queryClient.invalidateQueries({ queryKey: [t.WAREHOUSE_TRANSFERS] });
@@ -44,16 +32,6 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: [t.ITEMS] });
   queryClient.invalidateQueries({ queryKey: [t.ITEM] });
 };
-
-function transformWarehousesTransfer(
-  res: WarehouseTransfersListResponseWithFilter
-): WarehousesTransferListResult {
-  return {
-    warehousesTransfers: res.data ?? [],
-    pagination: transformPagination(res.pagination ?? {}),
-    filterMeta: (res as WarehouseTransfersListResponseWithFilter).filter ?? {},
-  };
-}
 
 /**
  * Create a new warehouse transfer.
@@ -114,7 +92,7 @@ export function useDeleteWarehouseTransfer(
 export function useWarehousesTransfers(
   query?: GetWarehouseTransfersQuery | null,
   props?: Omit<
-    UseQueryOptions<WarehousesTransferListResult>,
+    UseQueryOptions<WarehouseTransfersListResponse>,
     'queryKey' | 'queryFn'
   >
 ) {
@@ -126,8 +104,8 @@ export function useWarehousesTransfers(
         fetchWarehouseTransfers as (
           fetcher: unknown,
           query?: GetWarehouseTransfersQuery
-        ) => Promise<WarehouseTransfersListResponseWithFilter>
-      )(fetcher, query ?? undefined).then(transformWarehousesTransfer),
+        ) => Promise<WarehouseTransfersListResponse>
+      )(fetcher, query ?? undefined),
     ...props,
   });
 }

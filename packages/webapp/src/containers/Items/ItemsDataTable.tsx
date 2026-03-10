@@ -140,7 +140,7 @@ function ItemsDataTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={items}
+        data={items || []}
         loading={isItemsLoading}
         headerLoading={isItemsLoading}
         progressBarLoading={isItemsFetching}
@@ -153,10 +153,10 @@ function ItemsDataTable({
         sticky={true}
         rowClassNames={rowClassNames}
         pagination={true}
-        initialPageSize={itemsTableState.pageSize}
+        initialPageSize={itemsTableState?.pageSize || 10}
         manualSortBy={true}
         manualPagination={true}
-        pagesCount={pagination.pagesCount}
+        rowsCount={pagination?.total || 0}
         autoResetSortBy={false}
         autoResetPage={true}
         TableLoadingRenderer={TableSkeletonRows}

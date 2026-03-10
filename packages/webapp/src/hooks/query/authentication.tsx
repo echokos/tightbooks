@@ -35,10 +35,14 @@ import {
  * Saves the response data to cookies.
  */
 export function setAuthLoginCookies(data: AuthSigninResponse): void {
-  setCookie('token', data.accessToken ?? '');
-  setCookie('authenticated_user_id', String(data.userId ?? ''));
-  setCookie('organization_id', data.organizationId ?? '');
-  setCookie('tenant_id', String(data.tenantId ?? ''));
+  // @ts-ignore
+  setCookie('token', data.access_token ?? '');
+  // @ts-ignore
+  setCookie('authenticated_user_id', String(data.user_id ?? ''));
+  // @ts-ignore
+  setCookie('organization_id', data.organization_id ?? '');
+  // @ts-ignore
+  setCookie('tenant_id', String(data.tenant_id ?? ''));
 }
 
 export function useAuthLogin(

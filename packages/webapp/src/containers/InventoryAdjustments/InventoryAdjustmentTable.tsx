@@ -83,7 +83,7 @@ function InventoryAdjustmentDataTable({
   return (
     <DataTable
       columns={columns}
-      data={inventoryAdjustments}
+      data={inventoryAdjustments ?? []}
       loading={isAdjustmentsLoading}
       headerLoading={isAdjustmentsLoading}
       progressBarLoading={isAdjustmentsFetching}
@@ -92,8 +92,8 @@ function InventoryAdjustmentDataTable({
       manualSortBy={true}
       selectionColumn={true}
       pagination={true}
-      initialPageSize={inventoryAdjustmentTableState.pageSize}
-      pagesCount={pagination.pagesCount}
+      initialPageSize={inventoryAdjustmentTableState?.pageSize ?? 10}
+      rowsCount={pagination?.total ?? 0}
       autoResetSortBy={false}
       autoResetPage={false}
       onCellClick={handleCellClick}

@@ -112,7 +112,7 @@ function WarehouseTransfersDataTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={warehousesTransfers}
+        data={warehousesTransfers ?? []}
         loading={isWarehouseTransfersLoading}
         headerLoading={isWarehouseTransfersLoading}
         progressBarLoading={isWarehouseTransfersFetching}
@@ -123,7 +123,7 @@ function WarehouseTransfersDataTable({
         sticky={true}
         pagination={true}
         manualPagination={true}
-        pagesCount={pagination.pagesCount}
+        rowsCount={pagination?.total ?? 0}
         autoResetSortBy={false}
         autoResetPage={false}
         TableLoadingRenderer={TableSkeletonRows}

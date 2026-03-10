@@ -135,7 +135,7 @@ function CustomersTable({
       <DataTable
         noInitialFetch={true}
         columns={columns}
-        data={customers}
+        data={customers ?? []}
         loading={isCustomersLoading}
         headerLoading={isCustomersLoading}
         progressBarLoading={isCustomersFetching}
@@ -145,10 +145,10 @@ function CustomersTable({
         sticky={true}
         spinnerProps={{ size: 30 }}
         pagination={true}
-        initialPageSize={customersTableState.pageSize}
+        initialPageSize={customersTableState?.pageSize ?? 10}
         manualSortBy={true}
         manualPagination={true}
-        pagesCount={pagination.pagesCount}
+        rowsCount={pagination?.total ?? 0}
         onSelectedRowsChange={handleSelectedRowsChange}
         autoResetSelectedRows={false}
         autoResetSortBy={false}

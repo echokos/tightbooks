@@ -105,7 +105,7 @@ function AccountsDataTable({
     <DataTable
       noInitialFetch={true}
       columns={columns}
-      data={accounts}
+      data={accounts ?? []}
       selectionColumn={true}
       expandable={true}
       sticky={true}

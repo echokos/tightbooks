@@ -15,7 +15,7 @@ export default function TablePagination() {
       pageCount,
       state: { pageIndex, pageSize },
     },
-    props: { pagination, loading, onPaginationChange, hidePaginationNoPages },
+    props: { pagination, loading, onPaginationChange, hidePaginationNoPages, rowsCount },
   } = useContext(TableContext);
 
   const triggerOnPaginationChange = useCallback(
@@ -59,7 +59,7 @@ export default function TablePagination() {
     showPagination && (
       <Pagination
         currentPage={pageIndex + 1}
-        total={pageSize * pageCount}
+        total={rowsCount ?? pageSize * pageCount}
         size={pageSize}
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}

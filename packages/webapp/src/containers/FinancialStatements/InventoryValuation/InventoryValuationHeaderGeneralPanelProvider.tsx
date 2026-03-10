@@ -8,7 +8,7 @@ const InventoryValuationGeneralPanelContext = React.createContext();
 function InventoryValuationGeneralPanelProvider({ query, ...props }) {
   // Handle fetching the items based on the given query.
   const {
-    data: { items },
+    data: itemsData,
     isLoading: isItemsLoading,
     isFetching: isItemsFetching,
   } = useItems({
@@ -20,7 +20,7 @@ function InventoryValuationGeneralPanelProvider({ query, ...props }) {
 
   // Provider data.
   const provider = {
-    items,
+    items: itemsData?.items,
     isItemsFetching,
     isItemsLoading,
   };

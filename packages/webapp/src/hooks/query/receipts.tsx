@@ -28,7 +28,7 @@ import {
   fetchSaleReceiptState,
 } from '@bigcapital/sdk-ts';
 import useApiRequest, { useApiFetcher } from '../useRequest';
-import { transformPagination, transformToCamelCase } from '@/utils';
+import { transformToCamelCase } from '@/utils';
 import { useRequestPdf } from '../useRequestPdf';
 import { useRequestQuery } from '../useQueryRequest';
 import t from './types';
@@ -151,38 +151,18 @@ export function useCloseReceipt(props?: UseMutationOptions<void, Error, number>)
   });
 }
 
-function transformReceiptsList(res: SaleReceiptsListResponse) {
-  const data = res as {
-    data?: unknown[];
-    pagination?: unknown;
-    filter_meta?: Record<string, unknown>;
-  };
-  return {
-    receipts: data?.data ?? [],
-    pagination: transformPagination(data?.pagination ?? {}),
-    filterMeta: data?.filter_meta ?? {},
-  };
-}
-
 /**
  * Retrieve sale receipts list with pagination meta.
  */
 export function useReceipts(
   query?: Record<string, unknown>,
-  props?: UseQueryOptions<
-    {
-      receipts: unknown[];
-      pagination: ReturnType<typeof transformPagination>;
-      filterMeta: Record<string, unknown>;
-    },
-    Error
-  >
+  props?: UseQueryOptions<SaleReceiptsListResponse, Error>
 ) {
   const fetcher = useApiFetcher();
 
   return useQuery({
     queryKey: [t.SALE_RECEIPTS, query],
-    queryFn: () => fetchSaleReceipts(fetcher, query).then(transformReceiptsList),
+    queryFn: () => fetchSaleReceipts(fetcher, query),
     ...props,
   });
 }

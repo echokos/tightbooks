@@ -52,13 +52,13 @@ function BillFormProvider({ billId, ...props }) {
 
   // Handle fetch vendors data table
   const {
-    data: { vendors },
+    data: vendorsData,
     isLoading: isVendorsLoading,
   } = useVendors({ page_size: 10000 });
 
   // Handle fetch Items data table or list
   const {
-    data: { items },
+    data: itemsData,
     isLoading: isItemsLoading,
   } = useItems({
     page_size: 10000,
@@ -89,7 +89,7 @@ function BillFormProvider({ billId, ...props }) {
 
   // Fetches the projects list.
   const {
-    data: { projects },
+    data: projectsData,
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
@@ -114,12 +114,12 @@ function BillFormProvider({ billId, ...props }) {
 
   const provider = {
     accounts,
-    vendors,
-    items,
+    vendors: vendorsData?.vendors,
+    items: itemsData?.items,
     bill,
     warehouses,
     branches,
-    projects,
+    projects: projectsData?.projects,
     taxRates,
     submitPayload,
     isNewMode,

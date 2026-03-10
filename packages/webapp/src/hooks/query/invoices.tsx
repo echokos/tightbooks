@@ -36,7 +36,7 @@ import {
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
-import { transformPagination, transformToCamelCase } from '@/utils';
+import { transformToCamelCase } from '@/utils';
 import useApiRequest from '../useRequest';
 import { useRequestPdf } from '../useRequestPdf';
 import t from './types';
@@ -165,46 +165,18 @@ export function useValidateBulkDeleteInvoices(
   });
 }
 
-function transformInvoicesList(res: SaleInvoicesListResponse) {
-  const data = res as {
-    data?: unknown[];
-    sales_invoices?: unknown[];
-    salesInvoices?: unknown[];
-    pagination?: unknown;
-    filter_meta?: Record<string, unknown>;
-    filterMeta?: Record<string, unknown>;
-  };
-  const invoices =
-    data?.data ??
-    data?.sales_invoices ??
-    data?.salesInvoices ??
-    [];
-  return {
-    invoices,
-    pagination: transformPagination(data?.pagination ?? {}),
-    filterMeta: data?.filter_meta ?? data?.filterMeta ?? {},
-  };
-}
-
 /**
  * Retrieve sale invoices list with pagination meta.
  */
 export function useInvoices(
   query?: GetSaleInvoicesQuery,
-  props?: UseQueryOptions<
-    {
-      invoices: unknown[];
-      pagination: ReturnType<typeof transformPagination>;
-      filterMeta: Record<string, unknown>;
-    },
-    Error
-  >
+  props?: UseQueryOptions<SaleInvoicesListResponse, Error>
 ) {
   const fetcher = useApiFetcher();
 
   return useQuery({
     queryKey: [t.SALE_INVOICES, query],
-    queryFn: () => fetchSaleInvoices(fetcher, query).then(transformInvoicesList),
+    queryFn: () => fetchSaleInvoices(fetcher, query),
     ...props,
   });
 }

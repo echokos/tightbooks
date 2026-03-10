@@ -30,7 +30,7 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
 
   // Fetches customers list.
   const {
-    data: { customers },
+    data: customersData,
     isLoading: isCustomersLoading,
   } = useCustomers();
 
@@ -51,7 +51,7 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
 
   // Fetch the  projects list.
   const {
-    data: { projects },
+    data: projectsData,
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
@@ -77,11 +77,11 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
     submitPayloadRef, // Expose ref for synchronous access
 
     currencies,
-    customers,
+    customers: customersData?.customers,
     expense,
     accounts,
     branches,
-    projects,
+    projects: projectsData?.projects,
 
     isCurrenciesLoading,
     isExpenseLoading,

@@ -15,7 +15,7 @@ function ProjectTaskProvider({ ...props }) {
 
   // Handle fetch project tasks.
   const {
-    data: { projectTasks },
+    data: projectTasksData,
     isFetching: isProjectTasksFetching,
     isLoading: isProjectTasksLoading,
   } = useProjectTasks(projectId, {
@@ -32,7 +32,7 @@ function ProjectTaskProvider({ ...props }) {
   const provider = {
     project,
     projectId,
-    projectTasks,
+    projectTasks: projectTasksData?.projectTasks,
     isProjectTasksFetching,
     isProjectTasksLoading,
   };

@@ -29,23 +29,23 @@ function PaymentsReceivedListProvider({ query, tableStateChanged, ...props }) {
 
   // Fetch accounts list according to the given custom view id.
   const {
-    data: { paymentReceives, pagination, filterMeta },
+    data: paymentReceivesData,
     isLoading: isPaymentReceivesLoading,
     isFetching: isPaymentReceivesFetching,
   } = usePaymentReceives(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    !isPaymentReceivesLoading && !tableStateChanged && isEmpty(paymentReceives);
+    !isPaymentReceivesLoading && !tableStateChanged && isEmpty(paymentReceivesData?.data);
 
   // Provider payload.
   const provider = {
-    paymentReceives,
+    paymentReceives: paymentReceivesData?.data,
     paymentReceivesViews,
-    pagination,
+    pagination: paymentReceivesData?.pagination,
     resourceMeta,
 
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
 
     isEmptyStatus,
     isViewsLoading,

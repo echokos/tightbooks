@@ -27,7 +27,7 @@ function ProjectFormProvider({
 
   // Handle fetch customers data table or list
   const {
-    data: { customers },
+    data: customersData,
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
@@ -35,7 +35,7 @@ function ProjectFormProvider({
 
   // State provider.
   const provider = {
-    customers,
+    customers: customersData?.customers,
     dialogName,
     project,
     projectId,

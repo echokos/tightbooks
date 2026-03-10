@@ -7,7 +7,7 @@ const PurchasesByItemsGeneralPanelContext = createContext();
 function PurchasesByItemsGeneralPanelProvider({ ...props }) {
   // Handle fetching the items based on the given query.
   const {
-    data: { items },
+    data: itemsData,
     isLoading: isItemsLoading,
     isFetching: isItemsFetching,
   } = useItems({
@@ -18,7 +18,7 @@ function PurchasesByItemsGeneralPanelProvider({ ...props }) {
   });
 
   const provider = {
-    items,
+    items: itemsData?.items,
     isItemsLoading,
     isItemsFetching,
   };

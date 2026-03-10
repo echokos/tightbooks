@@ -5,7 +5,6 @@ import {
   UseMutationOptions,
   UseQueryOptions,
 } from '@tanstack/react-query';
-import { defaultTo } from 'lodash';
 import type {
   CreateVendorCreditBody,
   EditVendorCreditBody,
@@ -34,7 +33,7 @@ import {
   deleteAppliedBillToVendorCredit,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { transformPagination, transformToCamelCase } from '@/utils';
+import { transformToCamelCase } from '@/utils';
 import t from './types';
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
@@ -59,32 +58,6 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: [t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES] });
 };
 
-export type VendorCreditsListResult = {
-  vendorCredits: unknown[];
-  pagination: ReturnType<typeof transformPagination>;
-  filterMeta: Record<string, unknown>;
-};
-
-const DEFAULT_VENDOR_CREDITS_PLACEHOLDER: VendorCreditsListResult = {
-  vendorCredits: [],
-  pagination: transformPagination({}),
-  filterMeta: {},
-};
-
-function transformVendorCreditsResponse(response: Record<string, unknown>): VendorCreditsListResult {
-  const raw = response as {
-    vendor_credits?: unknown[];
-    vendorCredits?: unknown[];
-    pagination?: unknown;
-    filter_meta?: Record<string, unknown>;
-    filterMeta?: Record<string, unknown>;
-  };
-  return {
-    vendorCredits: raw.vendor_credits ?? raw.vendorCredits ?? [],
-    pagination: transformPagination(raw.pagination ?? {}),
-    filterMeta: raw.filter_meta ?? raw.filterMeta ?? {},
-  };
-}
 
 /**
  * Create a new vendor credit.
@@ -179,23 +152,15 @@ export function useValidateBulkDeleteVendorCredits(
  */
 export function useVendorCredits(
   query?: GetVendorCreditsQuery,
-  props?: Omit<UseQueryOptions<VendorCreditsListResult>, 'queryKey' | 'queryFn'>
+  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>
 ) {
   const fetcher = useApiFetcher();
 
-  const result = useQuery({
+  return useQuery({
     queryKey: [t.VENDOR_CREDITS, query],
-    queryFn: () =>
-      fetchVendorCredits(fetcher, query).then((data: Record<string, unknown>) =>
-        transformVendorCreditsResponse(data)
-      ),
+    queryFn: () => fetchVendorCredits(fetcher, query),
     ...props,
   });
-
-  return {
-    ...result,
-    data: defaultTo(result.data, DEFAULT_VENDOR_CREDITS_PLACEHOLDER),
-  };
 }
 
 /**

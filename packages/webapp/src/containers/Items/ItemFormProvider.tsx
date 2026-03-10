@@ -28,7 +28,7 @@ function ItemFormProvider({ itemId, ...props }) {
   // Fetches the items categories list.
   const {
     isLoading: isItemsCategoriesLoading,
-    data: { itemsCategories },
+    data: itemsCategoriesData,
   } = useItemsCategories();
 
   const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates();
@@ -71,7 +71,7 @@ function ItemFormProvider({ itemId, ...props }) {
     itemId,
     accounts,
     item,
-    itemsCategories,
+    itemsCategories: itemsCategoriesData?.itemsCategories,
     taxRates,
     submitPayload,
     isNewMode,

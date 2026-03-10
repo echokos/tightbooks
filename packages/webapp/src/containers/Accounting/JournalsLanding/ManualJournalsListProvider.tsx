@@ -15,7 +15,7 @@ function ManualJournalsListProvider({ query, tableStateChanged, ...props }) {
 
   // Fetches the manual journals transactions with pagination meta.
   const {
-    data: { manualJournals, pagination, filterMeta },
+    data: manualJournalsData,
     isLoading: isManualJournalsLoading,
     isFetching: isManualJournalsFetching,
   } = useJournals(query, { keepPreviousData: true });
@@ -29,16 +29,16 @@ function ManualJournalsListProvider({ query, tableStateChanged, ...props }) {
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isEmpty(manualJournals) && !tableStateChanged && !isManualJournalsLoading;
+    isEmpty(manualJournalsData?.data) && !tableStateChanged && !isManualJournalsLoading;
 
   // Global state.
   const state = {
-    manualJournals,
-    pagination,
+    manualJournals: manualJournalsData?.data,
+    pagination: manualJournalsData?.pagination,
     journalsViews,
 
     resourceMeta,
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
 
     isManualJournalsLoading,
     isManualJournalsFetching,

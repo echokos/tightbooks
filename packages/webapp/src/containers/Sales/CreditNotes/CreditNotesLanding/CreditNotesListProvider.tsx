@@ -34,25 +34,25 @@ function CreditNotesListProvider({ query, tableStateChanged, ...props }) {
 
   // Fetch credit note list.
   const {
-    data: { creditNotes, pagination, filterMeta },
+    data: creditNotesData,
     isFetching: isCreditNotesFetching,
     isLoading: isCreditNotesLoading,
   } = useCreditNotes(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.S
   const isEmptyStatus =
-    isEmpty(creditNotes) && !isCreditNotesLoading && !tableStateChanged;
+    isEmpty(creditNotesData?.data) && !isCreditNotesLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {
-    creditNotes,
-    pagination,
+    creditNotes: creditNotesData?.data,
+    pagination: creditNotesData?.pagination,
 
     CreditNotesView,
     refresh,
 
     resourceMeta,
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
     isResourceLoading,
     isResourceFetching,
 

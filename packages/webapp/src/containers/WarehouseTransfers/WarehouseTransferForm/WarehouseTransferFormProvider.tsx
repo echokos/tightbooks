@@ -26,7 +26,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
 
   // Handle fetch Items data table or list
   const {
-    data: { items },
+    data: itemsData,
     isFetching: isItemsFetching,
     isLoading: isItemsLoading,
   } = useItems({
@@ -82,7 +82,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
 
   // Provider payload.
   const provider = {
-    items,
+    items: itemsData?.items,
     warehouses,
     warehouseTransfer,
 

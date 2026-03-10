@@ -15,7 +15,7 @@ function ItemsCategoriesProvider({ tableState, ...props }) {
 
   // Items categories list.
   const {
-    data: { itemsCategories, pagination },
+    data: itemsCategoriesData,
     isFetching: isCategoriesFetching,
     isLoading: isCategoriesLoading,
   } = useItemsCategories(query, { keepPreviousData: true });
@@ -31,13 +31,13 @@ function ItemsCategoriesProvider({ tableState, ...props }) {
     isCategoriesFetching,
     isCategoriesLoading,
 
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
     resourceMeta,
     isResourceLoading,
     isResourceFetching,
 
-    itemsCategories,
-    pagination,
+    itemsCategories: itemsCategoriesData?.itemsCategories,
+    pagination: itemsCategoriesData?.pagination,
     query,
   };
 

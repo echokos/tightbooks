@@ -23,14 +23,14 @@ function PaymentMadesProvider({ query, ...props }) {
 
   // Fetch accounts list according to the given custom view id.
   const {
-    data: { paymentMades, pagination },
+    data: paymentMadesData,
     isLoading: isPaymentsLoading,
   } = usePaymentMades(query);
 
   // Provider payload.
   const provider = {
-    paymentMades,
-    pagination,
+    paymentMades: paymentMadesData?.data,
+    pagination: paymentMadesData?.pagination,
     paymentsFields,
     paymentsViews,
 

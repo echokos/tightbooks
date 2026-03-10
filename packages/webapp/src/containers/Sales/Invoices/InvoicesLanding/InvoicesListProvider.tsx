@@ -25,21 +25,21 @@ function InvoicesListProvider({ query, tableStateChanged, ...props }) {
 
   // Fetch sale invoices of the given query.
   const {
-    data: { invoices, pagination, filterMeta },
+    data: invoicesData,
     isFetching: isInvoicesFetching,
     isLoading: isInvoicesLoading,
   } = useInvoices(query, { keepPreviousData: true });
 
   // Detarmines whether the table should show empty state.
   const isEmptyStatus =
-    isEmpty(invoices) && !tableStateChanged && !isInvoicesLoading;
+    isEmpty(invoicesData?.data) && !tableStateChanged && !isInvoicesLoading;
 
   // Provider payload.
   const provider = {
-    invoices,
-    pagination,
+    invoices: invoicesData?.data,
+    pagination: invoicesData?.pagination,
 
-    invoicesFields: getFieldsFromResourceMeta(resourceMeta.fields),
+    invoicesFields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
     invoicesViews,
 
     isInvoicesLoading,

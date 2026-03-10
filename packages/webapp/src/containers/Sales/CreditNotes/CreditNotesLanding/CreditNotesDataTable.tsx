@@ -133,7 +133,7 @@ function CreditNotesDataTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={creditNotes}
+        data={creditNotes ?? []}
         loading={isCreditNotesLoading}
         headerLoading={isCreditNotesLoading}
         progressBarLoading={isCreditNotesFetching}
@@ -145,8 +145,8 @@ function CreditNotesDataTable({
         noInitialFetch={true}
         sticky={true}
         pagination={true}
-        initialPageSize={creditNoteTableState.pageSize}
-        pagesCount={pagination.pagesCount}
+        initialPageSize={creditNoteTableState?.pageSize ?? 10}
+        rowsCount={pagination?.total ?? 0}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}

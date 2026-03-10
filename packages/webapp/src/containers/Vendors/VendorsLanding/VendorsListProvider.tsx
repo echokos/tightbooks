@@ -15,7 +15,7 @@ function VendorsListProvider({ tableState, tableStateChanged, ...props }) {
 
   // Fetch vendors list with pagination meta.
   const {
-    data: { vendors, pagination, filterMeta },
+    data: vendorsData,
     isLoading: isVendorsLoading,
     isFetching: isVendorsFetching,
   } = useVendors(tableQuery, { keepPreviousData: true });
@@ -33,14 +33,14 @@ function VendorsListProvider({ tableState, tableStateChanged, ...props }) {
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isEmpty(vendors) && !isVendorsLoading && !tableStateChanged;
+    isEmpty(vendorsData?.data) && !isVendorsLoading && !tableStateChanged;
 
   const provider = {
-    vendors,
-    pagination,
+    vendors: vendorsData?.data,
+    pagination: vendorsData?.pagination,
     vendorsViews,
 
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
     resourceMeta,
     isResourceMetaLoading,
     isResourceMetaFetching,

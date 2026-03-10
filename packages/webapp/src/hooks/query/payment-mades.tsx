@@ -21,7 +21,6 @@ import {
   fetchBillPaymentNewPageEntries,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { transformPagination } from '@/utils';
 import t from './types';
 
 const commonInvalidateQueries = (client: ReturnType<typeof useQueryClient>) => {
@@ -40,37 +39,14 @@ const commonInvalidateQueries = (client: ReturnType<typeof useQueryClient>) => {
   client.invalidateQueries({ queryKey: [t.BILLS_PAYMENT_TRANSACTIONS] });
 };
 
-export type PaymentMadesListResult = {
-  paymentMades: unknown[];
-  pagination: ReturnType<typeof transformPagination>;
-  filterMeta: Record<string, unknown>;
-};
-
-function transformPaymentMades(data: BillPaymentsListResponse): PaymentMadesListResult {
-  const raw = data as {
-    bill_payments?: unknown[];
-    pagination?: unknown;
-    filter_meta?: Record<string, unknown>;
-  };
-  return {
-    paymentMades: raw.bill_payments ?? (data as { data?: unknown[] })?.data ?? [],
-    pagination: transformPagination(raw.pagination ?? {}),
-    filterMeta: raw.filter_meta ?? {},
-  };
-}
-
 export function usePaymentMades(
   query?: Record<string, unknown>,
-  props?: Omit<
-    UseQueryOptions<BillPaymentsListResponse, Error, PaymentMadesListResult>,
-    'queryKey' | 'queryFn' | 'select'
-  >
+  props?: Omit<UseQueryOptions<BillPaymentsListResponse>, 'queryKey' | 'queryFn'>
 ) {
   const fetcher = useApiFetcher();
-  return useQuery<BillPaymentsListResponse, Error, PaymentMadesListResult>({
+  return useQuery({
     queryKey: [t.PAYMENT_MADES, query],
-    queryFn: () => fetchBillPayments(fetcher),
-    select: transformPaymentMades,
+    queryFn: () => fetchBillPayments(fetcher, query),
     ...props,
   });
 }

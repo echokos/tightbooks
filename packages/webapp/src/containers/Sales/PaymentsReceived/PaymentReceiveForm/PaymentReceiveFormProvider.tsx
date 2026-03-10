@@ -59,7 +59,7 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
 
   // Fetches customers list.
   const {
-    data: { customers },
+    data: customersData,
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
@@ -72,7 +72,7 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
 
   // Fetches the projects list.
   const {
-    data: { projects },
+    data: projectsData,
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
@@ -110,9 +110,9 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     paymentReceiveEditPage,
     paymentEntriesEditPage,
     accounts,
-    customers,
+    customers: customersData?.customers,
     branches,
-    projects,
+    projects: projectsData?.projects,
 
     isPaymentLoading,
     isAccountsLoading,

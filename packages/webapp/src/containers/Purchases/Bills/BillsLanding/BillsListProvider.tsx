@@ -26,22 +26,22 @@ function BillsListProvider({ query, tableStateChanged, ...props }) {
 
   // Fetch accounts list according to the given custom view id.
   const {
-    data: { bills, pagination, filterMeta },
+    data: billsData,
     isLoading: isBillsLoading,
     isFetching: isBillsFetching,
   } = useBills(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus = isEmpty(bills) && !isBillsLoading && !tableStateChanged;
+  const isEmptyStatus = isEmpty(billsData?.data) && !isBillsLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {
-    bills,
-    pagination,
+    bills: billsData?.data,
+    pagination: billsData?.pagination,
     billsViews,
 
     resourceMeta,
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
     isResourceLoading,
     isResourceFetching,
 

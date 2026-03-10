@@ -11,12 +11,12 @@ const ARAgingSummaryGeneralContext = createContext();
 function ARAgingSummaryGeneralProvider({ ...props }) {
   // Retrieve the customers list.
   const {
-    data: { customers },
+    data: customersData,
     isLoading: isCustomersLoading,
   } = useCustomers();
 
   const provider = {
-    customers,
+    customers: customersData?.customers,
     isCustomersLoading,
   };
   // Loading state.

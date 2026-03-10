@@ -102,7 +102,7 @@ function PaymentMadesTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={paymentMades}
+        data={paymentMades ?? []}
         onFetchData={handleDataTableFetchData}
         loading={isPaymentsLoading}
         headerLoading={isPaymentsLoading}
@@ -112,8 +112,8 @@ function PaymentMadesTable({
         noInitialFetch={true}
         sticky={true}
         pagination={true}
-        initialPageSize={paymentMadesTableState.pageSize}
-        pagesCount={pagination.pagesCount}
+        initialPageSize={paymentMadesTableState?.pageSize ?? 10}
+        rowsCount={pagination?.total ?? 0}
         autoResetSortBy={false}
         autoResetPage={false}
         TableLoadingRenderer={TableSkeletonRows}

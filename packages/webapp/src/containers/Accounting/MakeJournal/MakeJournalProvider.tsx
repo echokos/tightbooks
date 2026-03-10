@@ -59,7 +59,7 @@ function MakeJournalProvider({ journalId, query, ...props }) {
 
   // Fetch the projects list.
   const {
-    data: { projects },
+    data: projectsData,
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectFeatureCan });
 
@@ -74,7 +74,7 @@ function MakeJournalProvider({ journalId, query, ...props }) {
     contacts,
     currencies,
     manualJournal,
-    projects,
+    projects: projectsData?.projects,
     branches,
 
     createJournalMutate,

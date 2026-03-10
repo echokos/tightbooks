@@ -22,7 +22,7 @@ function ProjectProfitabilitySummaryProvider({ filter, ...props }) {
 
   // Fetch project list.
   const {
-    data: { projects },
+    data: projectsData,
     isLoading: isProjectsLoading,
   } = useProjects();
 
@@ -31,8 +31,8 @@ function ProjectProfitabilitySummaryProvider({ filter, ...props }) {
     isProjectProfitabilitySummaryFetching,
     isProjectProfitabilitySummaryLoading,
     refetchProjectProfitabilitySummary,
-    projects,
-    
+    projects: projectsData?.projects,
+
     query,
     filter,
   };

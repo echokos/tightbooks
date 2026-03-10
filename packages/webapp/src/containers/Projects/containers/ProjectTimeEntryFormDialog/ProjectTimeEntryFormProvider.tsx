@@ -32,7 +32,7 @@ function ProjectTimeEntryFormProvider({
 
   // Handle fetch project tasks.
   const {
-    data: { projectTasks },
+    data: projectTasksData,
   } = useProjectTasks(project, {
     enabled: !!project,
   });
@@ -45,7 +45,7 @@ function ProjectTimeEntryFormProvider({
 
   // Fetch project list data table or list
   const {
-    data: { projects },
+    data: projectsData,
     isLoading: isProjectsLoading,
   } = useProjects();
 
@@ -54,10 +54,10 @@ function ProjectTimeEntryFormProvider({
   // provider payload.
   const provider = {
     dialogName,
-    projects,
+    projects: projectsData?.projects,
     projectId,
     timesheetId,
-    projectTasks,
+    projectTasks: projectTasksData?.projectTasks,
     isNewMode,
     setProjectPayload,
     projectTimeEntry,

@@ -120,7 +120,7 @@ function ManualJournalsDataTable({
       <DataTable
         noInitialFetch={true}
         columns={columns}
-        data={manualJournals}
+        data={manualJournals ?? []}
         manualSortBy={true}
         selectionColumn={true}
         sticky={true}
@@ -128,8 +128,8 @@ function ManualJournalsDataTable({
         headerLoading={isManualJournalsLoading}
         progressBarLoading={isManualJournalsFetching}
         pagination={true}
-        initialPageSize={manualJournalsTableState.pageSize}
-        pagesCount={pagination.pagesCount}
+        initialPageSize={manualJournalsTableState?.pageSize ?? 10}
+        rowsCount={pagination?.total ?? 0}
         autoResetSortBy={false}
         autoResetPage={false}
         onSelectedRowsChange={handleSelectedRowsChange}

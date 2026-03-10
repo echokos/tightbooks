@@ -11,13 +11,13 @@ const VendorsTransactionsGeneralPanelContext = createContext();
 function VendorsTransactionsGeneralPanelProvider({ ...props }) {
   // Fetch vendors list based on the given query.
   const {
-    data: { vendors },
+    data: vendorsData,
     isLoading: isVendorsLoading,
     isFetching: isVendorsFetching,
   } = useVendors({ page_size: 100000 });
 
   const provider = {
-    vendors,
+    vendors: vendorsData?.vendors,
     isVendorsLoading,
     isVendorsFetching,
   };

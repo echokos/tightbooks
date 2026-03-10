@@ -26,21 +26,21 @@ function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
 
   // Fetches customers data with pagination meta.
   const {
-    data: { customers, pagination, filterMeta },
+    data: customersData,
     isLoading: isCustomersLoading,
     isFetching: isCustomersFetching,
   } = useCustomers(tableQuery, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isEmpty(customers) && !isCustomersLoading && !tableStateChanged;
+    isEmpty(customersData?.data) && !isCustomersLoading && !tableStateChanged;
 
   const state = {
     customersViews,
-    customers,
-    pagination,
+    customers: customersData?.data,
+    pagination: customersData?.pagination,
 
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
     resourceMeta,
     isResourceMetaLoading,
     isResourceMetaFetching,

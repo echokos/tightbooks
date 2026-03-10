@@ -23,14 +23,8 @@ import {
   editCustomerOpeningBalance,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { transformPagination, transformToCamelCase } from '@/utils';
+import { transformToCamelCase } from '@/utils';
 import t from './types';
-
-const defaultPagination = {
-  pageSize: 20,
-  page: 0,
-  pagesCount: 0,
-};
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
   queryClient.invalidateQueries({ queryKey: [t.CUSTOMERS] });
@@ -44,24 +38,9 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: [t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES] });
 };
 
-export type CustomersSelectorResult = {
-  customers: unknown[];
-  pagination: typeof defaultPagination;
-  filterMeta: Record<string, unknown>;
-};
-
-function transformCustomersList(res: CustomersListResponse): CustomersSelectorResult {
-  const data = res as { customers?: unknown[]; pagination?: unknown; filter_meta?: Record<string, unknown> };
-  return {
-    customers: data?.customers ?? [],
-    pagination: transformPagination(data?.pagination ?? {}) as typeof defaultPagination,
-    filterMeta: data?.filter_meta ?? {},
-  };
-}
-
 export function useCustomers(
   query?: Record<string, unknown>,
-  props?: Omit<UseQueryOptions<CustomersSelectorResult>, 'queryKey' | 'queryFn'>
+  props?: Omit<UseQueryOptions<CustomersListResponse>, 'queryKey' | 'queryFn'>
 ) {
   const fetcher = useApiFetcher();
   return useQuery({
@@ -70,7 +49,7 @@ export function useCustomers(
       (fetchCustomers as (f: ReturnType<typeof useApiFetcher>, q?: Record<string, unknown>) => Promise<CustomersListResponse>)(
         fetcher,
         query
-      ).then(transformCustomersList),
+      ),
     ...props,
   });
 }

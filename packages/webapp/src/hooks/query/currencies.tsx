@@ -19,9 +19,6 @@ import {
 import { useApiFetcher } from '../useRequest';
 import t from './types';
 
-/**
- * Create a new currency.
- */
 export function useCreateCurrency(
   props?: UseMutationOptions<void, Error, CreateCurrencyBody>
 ) {
@@ -38,9 +35,6 @@ export function useCreateCurrency(
   });
 }
 
-/**
- * Edits the given currency by ID.
- */
 export function useEditCurrency(
   props?: UseMutationOptions<void, Error, [number, EditCurrencyBody]>
 ) {
@@ -57,9 +51,6 @@ export function useEditCurrency(
   });
 }
 
-/**
- * Deletes the given currency.
- */
 export function useDeleteCurrency(
   props?: UseMutationOptions<void, Error, string>
 ) {
@@ -76,9 +67,6 @@ export function useDeleteCurrency(
   });
 }
 
-/**
- * Retrieve the currencies list.
- */
 export function useCurrencies(
   props?: Omit<UseQueryOptions<CurrenciesListResponse>, 'queryKey' | 'queryFn'>
 ) {

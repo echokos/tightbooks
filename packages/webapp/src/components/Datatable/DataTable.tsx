@@ -56,7 +56,7 @@ export function DataTable(props) {
     expandable = false,
     noInitialFetch = false,
 
-    pagesCount: controlledPageCount,
+    rowsCount,
 
     // Pagination props.
     initialPageIndex = 0,
@@ -121,7 +121,7 @@ export function DataTable(props) {
         hiddenColumns: initialHiddenColumns,
       },
       manualPagination,
-      pageCount: controlledPageCount,
+      pageCount: rowsCount && pageSize > 0 ? Math.ceil(rowsCount / pageSize) : 0,
       getSubRows: (row) => row.children,
       manualSortBy,
       expandSubRows,

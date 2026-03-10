@@ -18,7 +18,7 @@ function ExpensesListProvider({ query, tableStateChanged, ...props }) {
 
   // Fetches the expenses with pagination meta.
   const {
-    data: { expenses, pagination, filterMeta },
+    data: expensesData,
     isLoading: isExpensesLoading,
     isFetching: isExpensesFetching,
   } = useExpenses(query, { keepPreviousData: true });
@@ -32,15 +32,15 @@ function ExpensesListProvider({ query, tableStateChanged, ...props }) {
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isEmpty(expenses) && !isExpensesLoading && !tableStateChanged;
+    isEmpty(expensesData?.data) && !isExpensesLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {
     expensesViews,
-    expenses,
-    pagination,
+    expenses: expensesData?.data,
+    pagination: expensesData?.pagination,
 
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
     resourceMeta,
     isResourceMetaLoading,
     isResourceMetaFetching,

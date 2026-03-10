@@ -137,7 +137,7 @@ function VendorsTable({
       <DataTable
         noInitialFetch={true}
         columns={columns}
-        data={vendors}
+        data={vendors ?? []}
         loading={isVendorsLoading}
         headerLoading={isVendorsLoading}
         progressBarLoading={isVendorsFetching}
@@ -146,9 +146,9 @@ function VendorsTable({
         expandable={false}
         sticky={true}
         pagination={true}
-        initialPageSize={vendorsTableState.pageSize}
+        initialPageSize={vendorsTableState?.pageSize ?? 10}
         manualSortBy={true}
-        pagesCount={pagination.pagesCount}
+        rowsCount={pagination?.total ?? 0}
         autoResetSortBy={false}
         autoResetPage={false}
         onSelectedRowsChange={handleSelectedRowsChange}

@@ -25,14 +25,8 @@ import {
   validateBulkDeleteManualJournals,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { transformPagination, transformToCamelCase } from '@/utils';
+import { transformToCamelCase } from '@/utils';
 import t from './types';
-
-export type JournalsListResult = {
-  manualJournals: ManualJournal[];
-  pagination: ReturnType<typeof transformPagination>;
-  filterMeta: Record<string, unknown>;
-};
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
   // Invalidate manual journals.
@@ -166,30 +160,16 @@ export function usePublishJournal(
   });
 }
 
-function transformJournalsList(data: ManualJournalsListResponse): JournalsListResult {
-  const raw = data as {
-    manual_journals?: ManualJournal[];
-    manualJournals?: ManualJournal[];
-    pagination?: Parameters<typeof transformPagination>[0];
-    filter_meta?: Record<string, unknown>;
-    filterMeta?: Record<string, unknown>;
-  };
-  return {
-    manualJournals: (raw?.manual_journals ?? raw?.manualJournals ?? []) as ManualJournal[],
-    pagination: transformPagination(raw?.pagination ?? {}),
-    filterMeta: raw?.filter_meta ?? raw?.filterMeta ?? {},
-  };
-}
 export function useJournals(
   query?: ManualJournalsListQuery | null,
-  props?: Omit<UseQueryOptions<JournalsListResult>, 'queryKey' | 'queryFn'>
+  props?: Omit<UseQueryOptions<ManualJournalsListResponse>, 'queryKey' | 'queryFn'>
 ) {
   const fetcher = useApiFetcher();
 
   return useQuery({
     queryKey: [t.MANUAL_JOURNALS, query],
     queryFn: async () =>
-      transformJournalsList(await fetchManualJournals(fetcher, query ?? {})),
+      fetchManualJournals(fetcher, query ?? {}),
     ...props,
   });
 }

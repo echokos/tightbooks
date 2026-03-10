@@ -122,7 +122,7 @@ function PaymentsReceivedDataTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={paymentReceives}
+        data={paymentReceives ?? []}
         loading={isPaymentReceivesLoading}
         headerLoading={isPaymentReceivesLoading}
         progressBarLoading={isPaymentReceivesFetching}
@@ -135,8 +135,8 @@ function PaymentsReceivedDataTable({
         autoResetPage={false}
         pagination={true}
         onSelectedRowsChange={handleSelectedRowsChange}
-        initialPageSize={paymentReceivesTableState.pageSize}
-        pagesCount={pagination.pagesCount}
+        initialPageSize={paymentReceivesTableState?.pageSize ?? 10}
+        rowsCount={pagination?.total ?? 0}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}

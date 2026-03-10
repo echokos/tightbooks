@@ -35,24 +35,12 @@ import type {
   GetInventoryItemsCostResponse,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { transformPagination, transformResponse, transformToCamelCase } from '@/utils';
+import { transformToCamelCase } from '@/utils';
 import t from './types';
-
-const DEFAULT_PAGINATION = {
-  pageSize: 20,
-  page: 0,
-  pagesCount: 0,
-};
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
   queryClient.invalidateQueries({ queryKey: [t.ITEMS] });
   queryClient.invalidateQueries({ queryKey: [t.ITEMS_CATEGORIES] });
-};
-
-export type ItemsListResult = {
-  items: unknown[];
-  pagination: typeof DEFAULT_PAGINATION;
-  filterMeta: Record<string, unknown>;
 };
 
 export function useCreateItem(
@@ -166,24 +154,9 @@ export function useInactivateItem(
   });
 }
 
-function transformItemsList(res: ItemsListResponse): ItemsListResult {
-  const data = res as {
-    items?: unknown[];
-    pagination?: unknown;
-    filter_meta?: Record<string, unknown>;
-  };
-  return {
-    items: data?.items ?? [],
-    pagination: transformPagination(
-      transformResponse(data?.pagination ?? {})
-    ) as typeof DEFAULT_PAGINATION,
-    filterMeta: transformResponse(data?.filter_meta ?? {}) as Record<string, unknown>,
-  };
-}
-
 export function useItems(
   query?: Record<string, unknown>,
-  props?: Omit<UseQueryOptions<ItemsListResult>, 'queryKey' | 'queryFn'>
+  props?: Omit<UseQueryOptions<ItemsListResponse>, 'queryKey' | 'queryFn'>
 ) {
   const fetcher = useApiFetcher();
   return useQuery({
@@ -192,7 +165,7 @@ export function useItems(
       (fetchItems as (f: ReturnType<typeof useApiFetcher>, q?: Record<string, unknown>) => Promise<ItemsListResponse>)(
         fetcher,
         query
-      ).then(transformItemsList),
+      ),
     ...props,
   });
 }

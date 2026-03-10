@@ -29,23 +29,23 @@ function PaymentMadesListProvider({ query, tableStateChanged, ...props }) {
 
   // Fetch accounts list according to the given custom view id.
   const {
-    data: { paymentMades, pagination, filterMeta },
+    data: paymentMadesData,
     isLoading: isPaymentsLoading,
     isFetching: isPaymentsFetching,
   } = usePaymentMades(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isEmpty(paymentMades) && !isPaymentsLoading && !tableStateChanged;
+    isEmpty(paymentMadesData?.data) && !isPaymentsLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {
-    paymentMades,
-    pagination,
-    filterMeta,
+    paymentMades: paymentMadesData?.data,
+    pagination: paymentMadesData?.pagination,
+    filterMeta: paymentMadesData?.filter_meta,
     paymentMadesViews,
 
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
     resourceMeta,
     isResourceMetaLoading,
     isResourceMetaFetching,

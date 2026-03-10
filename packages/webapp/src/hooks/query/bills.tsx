@@ -26,7 +26,6 @@ import {
   fetchBillPaymentTransactions,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import { transformPagination } from '@/utils';
 import t from './types';
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
@@ -48,12 +47,6 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({
     queryKey: [t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES],
   });
-};
-
-export type BillsListResult = {
-  bills: unknown[];
-  pagination: ReturnType<typeof transformPagination>;
-  filterMeta: Record<string, unknown>;
 };
 
 export function useCreateBill(
@@ -161,36 +154,14 @@ export function useValidateBulkDeleteBills(
   });
 }
 
-/** API may return bills/data, pagination, and filter_meta (snake_case). */
-type BillsListResponseShape = {
-  bills?: unknown[];
-  data?: unknown[];
-  pagination?: unknown;
-  filter_meta?: Record<string, unknown>;
-};
-
-function isRecord(obj: unknown): obj is Record<string, unknown> {
-  return typeof obj === 'object' && obj !== null && !Array.isArray(obj);
-}
-
-function transformBillsList(res: BillsListResponse & BillsListResponseShape): BillsListResult {
-  const bills = res.bills ?? res.data ?? [];
-  const pagination = res.pagination ?? {};
-  const filterMeta = res.filter_meta;
-  return {
-    bills: Array.isArray(bills) ? bills : [],
-    pagination: transformPagination(pagination),
-    filterMeta: isRecord(filterMeta) ? filterMeta : {},
-  };
-}
 export function useBills(
   query?: GetBillsQuery,
-  props?: Omit<UseQueryOptions<BillsListResult>, 'queryKey' | 'queryFn'>
+  props?: Omit<UseQueryOptions<BillsListResponse>, 'queryKey' | 'queryFn'>
 ) {
   const fetcher = useApiFetcher();
   return useQuery({
     queryKey: [t.BILLS, query],
-    queryFn: () => fetchBills(fetcher, query).then(transformBillsList),
+    queryFn: () => fetchBills(fetcher, query),
     ...props,
   });
 }

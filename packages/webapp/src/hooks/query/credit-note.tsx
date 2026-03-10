@@ -36,7 +36,7 @@ import {
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
 import { useRequestPdf } from '../useRequestPdf';
-import { transformPagination, transformToCamelCase } from '@/utils';
+import { transformToCamelCase } from '@/utils';
 import t from './types';
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
@@ -172,27 +172,12 @@ export function useValidateBulkDeleteCreditNotes(
   });
 }
 
-export type CreditNotesListResult = {
-  creditNotes: unknown[];
-  pagination: ReturnType<typeof transformPagination>;
-  filterMeta: Record<string, unknown>;
-};
-
-function transformCreditNotesList(res: CreditNotesListResponse): CreditNotesListResult {
-  const data = res as { credit_notes?: unknown[]; pagination?: unknown; filter_meta?: Record<string, unknown> };
-  return {
-    creditNotes: data?.credit_notes ?? [],
-    pagination: transformPagination(data?.pagination ?? {}),
-    filterMeta: data?.filter_meta ?? {},
-  };
-}
-
 /**
  * Retrieve credit notes list with pagination meta.
  */
 export function useCreditNotes(
   query?: Record<string, unknown>,
-  props?: Omit<UseQueryOptions<CreditNotesListResult>, 'queryKey' | 'queryFn'>
+  props?: Omit<UseQueryOptions<CreditNotesListResponse>, 'queryKey' | 'queryFn'>
 ) {
   const fetcher = useApiFetcher();
   return useQuery({
@@ -201,7 +186,7 @@ export function useCreditNotes(
       (fetchCreditNotes as (f: ReturnType<typeof useApiFetcher>, q?: Record<string, unknown>) => Promise<CreditNotesListResponse>)(
         fetcher,
         query
-      ).then(transformCreditNotesList),
+      ),
     ...props,
   });
 }

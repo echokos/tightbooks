@@ -56,7 +56,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
 
   // Fetch project list.
   const {
-    data: { projects },
+    data: projectsData,
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
@@ -82,7 +82,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
 
   // Handle fetching the items table based on the given query.
   const {
-    data: { items },
+    data: itemsData,
     isLoading: isItemsLoading,
   } = useItems({
     page_size: 10000,
@@ -91,7 +91,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
 
   // Handle fetch customers data table or list
   const {
-    data: { customers },
+    data: customersData,
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
@@ -142,15 +142,15 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
 
   const provider = {
     invoice,
-    items,
-    customers,
+    items: itemsData?.items,
+    customers: customersData?.customers,
     newInvoice,
     estimateId,
     invoiceId,
     submitPayload,
     branches,
     warehouses,
-    projects,
+    projects: projectsData?.projects,
     taxRates,
     brandingTemplates,
 

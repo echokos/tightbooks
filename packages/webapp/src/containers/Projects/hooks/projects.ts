@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useRequestQuery } from '@/hooks/useQueryRequest';
-import { transformPagination } from '@/utils';
 import useApiRequest from '@/hooks/useRequest';
 import t from './type';
 

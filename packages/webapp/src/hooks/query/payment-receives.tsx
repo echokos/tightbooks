@@ -36,7 +36,7 @@ export type ValidateBulkDeletePaymentsReceivedResponse = {
 };
 import useApiRequest, { useApiFetcher } from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
-import { transformPagination, saveInvoke, transformToCamelCase } from '@/utils';
+import { saveInvoke, transformToCamelCase } from '@/utils';
 import { useRequestPdf } from '../useRequestPdf';
 import t from './types';
 
@@ -60,37 +60,14 @@ const commonInvalidateQueries = (client: ReturnType<typeof useQueryClient>) => {
   client.invalidateQueries({ queryKey: [t.SALE_INVOICE_PAYMENT_TRANSACTIONS] });
 };
 
-export type PaymentReceivesListResult = {
-  paymentReceives: unknown[];
-  pagination: ReturnType<typeof transformPagination>;
-  filterMeta: Record<string, unknown>;
-};
-
-function transformPaymentReceives(data: PaymentsReceivedListResponse): PaymentReceivesListResult {
-  const raw = data as {
-    payment_receives?: unknown[];
-    pagination?: unknown;
-    filter_meta?: Record<string, unknown>;
-  };
-  return {
-    paymentReceives: raw.payment_receives ?? (data as { data?: unknown[] })?.data ?? [],
-    pagination: transformPagination(raw.pagination ?? {}),
-    filterMeta: raw.filter_meta ?? {},
-  };
-}
-
 export function usePaymentReceives(
   query?: Record<string, unknown>,
-  props?: Omit<
-    UseQueryOptions<PaymentsReceivedListResponse, Error, PaymentReceivesListResult>,
-    'queryKey' | 'queryFn' | 'select'
-  >
+  props?: Omit<UseQueryOptions<PaymentsReceivedListResponse>, 'queryKey' | 'queryFn'>
 ) {
   const fetcher = useApiFetcher();
-  return useQuery<PaymentsReceivedListResponse, Error, PaymentReceivesListResult>({
+  return useQuery({
     queryKey: [t.PAYMENT_RECEIVES, query],
-    queryFn: () => fetchPaymentsReceived(fetcher),
-    select: transformPaymentReceives,
+    queryFn: () => fetchPaymentsReceived(fetcher, query),
     ...props,
   });
 }

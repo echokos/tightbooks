@@ -12,14 +12,14 @@ const VendorsBalanceSummaryGeneralPanelContext = React.createContext();
 function VendorsBalanceSummaryGeneralPanelProvider({ filter, ...props }) {
   // Fetch vendors list with pagination meta.
   const {
-    data: { vendors },
+    data: vendorsData,
     isLoading: isVendorsLoading,
     isFetching: isVendorsFetching,
   } = useVendors({ page_size: 1000000 });
 
   // Provider.
   const provider = {
-    vendors,
+    vendors: vendorsData?.vendors,
     isVendorsFetching,
     isVendorsLoading,
   };

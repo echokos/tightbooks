@@ -11,7 +11,7 @@ const InventoryItemDetailsHeaderGeneralContext = React.createContext();
 function InventoryItemDetailsHeaderGeneralProvider({ ...props }) {
   // Handle fetching the items based on the given query.
   const {
-    data: { items },
+    data: itemsData,
     isLoading: isItemsLoading,
     isFetching: isItemsFetching,
   } = useItems({
@@ -24,7 +24,7 @@ function InventoryItemDetailsHeaderGeneralProvider({ ...props }) {
   const provider = {
     isItemsFetching,
     isItemsLoading,
-    items,
+    items: itemsData?.items,
   };
   // Loading state.
   const loading = isItemsLoading;

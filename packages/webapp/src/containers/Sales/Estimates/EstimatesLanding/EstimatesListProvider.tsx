@@ -27,21 +27,21 @@ function EstimatesListProvider({ query, tableStateChanged, ...props }) {
 
   // Fetches estimates list according to the given custom view id.
   const {
-    data: { estimates, pagination, filterMeta },
+    data: estimatesData,
     isLoading: isEstimatesLoading,
     isFetching: isEstimatesFetching,
   } = useEstimates(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    !isEstimatesLoading && !tableStateChanged && isEmpty(estimates);
+    !isEstimatesLoading && !tableStateChanged && isEmpty(estimatesData?.data);
 
   // Provider payload.
   const provider = {
-    estimates,
-    pagination,
+    estimates: estimatesData?.data,
+    pagination: estimatesData?.pagination,
 
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
     estimatesViews,
 
     isResourceLoading,

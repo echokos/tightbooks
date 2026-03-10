@@ -35,7 +35,7 @@ function AccountsChartProvider({ query, tableStateChanged, ...props }) {
     resourceMeta,
     resourceViews,
 
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
 
     isAccountsLoading,
     isAccountsFetching,

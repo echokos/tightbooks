@@ -38,7 +38,7 @@ export type ValidateBulkDeleteEstimatesResponse = {
   nonDeletableIds: number[];
 };
 import useApiRequest, { useApiFetcher } from '../useRequest';
-import { transformPagination, transformToCamelCase } from '@/utils';
+import { transformToCamelCase } from '@/utils';
 import t from './types';
 import { useRequestPdf } from '../useRequestPdf';
 
@@ -47,15 +47,6 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: [t.ITEM_ASSOCIATED_WITH_ESTIMATES] });
 };
 
-export type EstimatesListResult = {
-  estimates: unknown[];
-  pagination: ReturnType<typeof transformPagination>;
-  filterMeta: Record<string, unknown>;
-};
-
-/**
- * Creates a new sale estimate.
- */
 export function useCreateEstimate(
   props?: UseMutationOptions<void, Error, CreateSaleEstimateBody>
 ) {
@@ -73,9 +64,6 @@ export function useCreateEstimate(
   });
 }
 
-/**
- * Edits the given sale estimate.
- */
 export function useEditEstimate(
   props?: UseMutationOptions<void, Error, [number, EditSaleEstimateBody]>
 ) {
@@ -93,18 +81,6 @@ export function useEditEstimate(
   });
 }
 
-function transformEstimates(data: SaleEstimatesListResponse): EstimatesListResult {
-  const raw = data as { sales_estimates?: unknown[]; pagination?: unknown; filter_meta?: Record<string, unknown> };
-  return {
-    estimates: raw.sales_estimates ?? (raw as { data?: unknown[] }).data ?? [],
-    pagination: transformPagination(raw.pagination ?? {}),
-    filterMeta: raw.filter_meta ?? {},
-  };
-}
-
-/**
- * Retrieve sale estimate details.
- */
 export function useEstimate(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<SaleEstimate>, 'queryKey' | 'queryFn'>
@@ -118,28 +94,19 @@ export function useEstimate(
   });
 }
 
-/**
- * Retrieve sale estimates list with pagination meta.
- */
 export function useEstimates(
   query?: Record<string, unknown>,
-  props?: Omit<
-    UseQueryOptions<SaleEstimatesListResponse, Error, EstimatesListResult>,
-    'queryKey' | 'queryFn' | 'select'
-  >
+  props?: Omit<UseQueryOptions<SaleEstimatesListResponse>, 'queryKey' | 'queryFn'>
 ) {
   const fetcher = useApiFetcher();
-  return useQuery<SaleEstimatesListResponse, Error, EstimatesListResult>({
+  return useQuery({
     queryKey: [t.SALE_ESTIMATES, query],
-    queryFn: () => fetchSaleEstimates(fetcher),
-    select: transformEstimates,
+    queryFn: () => fetchSaleEstimates(fetcher, query),
     ...props,
   });
 }
 
-/**
- * Deletes the given sale estimate.
- */
+
 export function useDeleteEstimate(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -156,9 +123,6 @@ export function useDeleteEstimate(
   });
 }
 
-/**
- * Deletes multiple sale estimates in bulk.
- */
 export function useBulkDeleteEstimates(
   props?: UseMutationOptions<void, Error, BulkDeleteEstimatesBody>
 ) {
@@ -187,9 +151,6 @@ export function useValidateBulkDeleteEstimates(
   });
 }
 
-/**
- * Mark the given estimate as delivered.
- */
 export function useDeliverEstimate(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -206,9 +167,6 @@ export function useDeliverEstimate(
   });
 }
 
-/**
- * Mark the given estimate as approved.
- */
 export function useApproveEstimate(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -225,9 +183,6 @@ export function useApproveEstimate(
   });
 }
 
-/**
- * Mark the given estimate as rejected.
- */
 export function useRejectEstimate(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -244,9 +199,6 @@ export function useRejectEstimate(
   });
 }
 
-/**
- * Retrieve the estimate pdf document data.
- */
 export function usePdfEstimate(estimateId: number) {
   return useRequestPdf({
     url: `sale-estimates/${estimateId}`,
@@ -263,9 +215,6 @@ export function useRefreshEstimates() {
   };
 }
 
-/**
- * Notify estimate by SMS.
- */
 export function useCreateNotifyEstimateBySMS(
   props?: UseMutationOptions<void, Error, [number, Record<string, unknown>]>
 ) {
@@ -283,9 +232,6 @@ export function useCreateNotifyEstimateBySMS(
   });
 }
 
-/**
- * Retrieve estimate SMS detail.
- */
 export function useEstimateSMSDetail(
   estimateId: number | null | undefined,
   props?: Record<string, unknown>,
@@ -350,9 +296,6 @@ export interface SaleEstimateMailStateResponse {
   toOptions: Array<unknown>;
 }
 
-/**
- * Retrieves the sale estimate mail state.
- */
 export function useSaleEstimateMailState(
   estimateId: number,
   props?: UseQueryOptions<SaleEstimateMailStateResponse, Error>

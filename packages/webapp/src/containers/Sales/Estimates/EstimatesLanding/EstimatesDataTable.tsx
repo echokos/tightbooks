@@ -145,7 +145,7 @@ function EstimatesDataTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={estimates}
+        data={estimates ?? []}
         loading={isEstimatesLoading}
         headerLoading={isEstimatesLoading}
         progressBarLoading={isEstimatesFetching}
@@ -157,9 +157,9 @@ function EstimatesDataTable({
         selectionColumn={true}
         sticky={true}
         pagination={true}
-        initialPageSize={estimatesTableState.pageSize}
+        initialPageSize={estimatesTableState?.pageSize ?? 10}
         manualPagination={true}
-        pagesCount={pagination.pagesCount}
+        rowsCount={pagination?.total ?? 0}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}

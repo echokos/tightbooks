@@ -47,7 +47,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
 
   // Fetch customers list.
   const {
-    data: { customers },
+    data: customersData,
     isLoading: isCustomersLoading,
   } = useCustomers({ page_size: 10000 });
 
@@ -89,7 +89,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
 
   // Handle fetch Items data table or list.
   const {
-    data: { items },
+    data: itemsData,
     isLoading: isItemsLoading,
   } = useItems({
     page_size: 10000,
@@ -97,7 +97,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   });
   // Fetch project list.
   const {
-    data: { projects },
+    data: projectsData,
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
@@ -133,11 +133,11 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     receiptId,
     receipt,
     accounts,
-    customers,
-    items,
+    customers: customersData?.customers,
+    items: itemsData?.items,
     branches,
     warehouses,
-    projects,
+    projects: projectsData?.projects,
     submitPayload,
 
     isNewMode,

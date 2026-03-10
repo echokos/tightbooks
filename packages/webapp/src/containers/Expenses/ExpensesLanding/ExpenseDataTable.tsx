@@ -118,7 +118,7 @@ function ExpensesDataTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={expenses}
+        data={expenses || []}
         loading={isExpensesLoading}
         headerLoading={isExpensesLoading}
         progressBarLoading={isExpensesFetching}
@@ -127,10 +127,10 @@ function ExpensesDataTable({
         sticky={true}
         onFetchData={handleFetchData}
         pagination={true}
-        initialPageSize={expensesTableState.pageSize}
+        initialPageSize={expensesTableState?.pageSize ?? 10}
         manualSortBy={true}
         manualPagination={true}
-        pagesCount={pagination.pagesCount}
+        rowsCount={pagination?.total ?? 0}
         autoResetSortBy={false}
         autoResetPage={false}
         TableLoadingRenderer={TableSkeletonRows}

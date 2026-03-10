@@ -144,7 +144,7 @@ function InvoicesDataTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={invoices}
+        data={invoices ?? []}
         loading={isInvoicesLoading}
         headerLoading={isInvoicesLoading}
         progressBarLoading={isInvoicesFetching}
@@ -155,9 +155,9 @@ function InvoicesDataTable({
         noInitialFetch={true}
         sticky={true}
         pagination={true}
-        initialPageSize={invoicesTableState.pageSize}
+        initialPageSize={invoicesTableState?.pageSize ?? 10}
         manualPagination={true}
-        pagesCount={pagination.pagesCount}
+        rowsCount={pagination?.total ?? 0}
         autoResetSortBy={false}
         autoResetPage={false}
         autoResetSelectedRows={false}

@@ -31,7 +31,7 @@ function ItemsListProvider({ tableState, tableStateChanged, ...props }) {
 
   // Handle fetching the items table based on the given query.
   const {
-    data: { items, pagination, filterMeta },
+    data: itemsData,
     isFetching: isItemsFetching,
     isLoading: isItemsLoading,
   } = useItems(
@@ -42,14 +42,14 @@ function ItemsListProvider({ tableState, tableStateChanged, ...props }) {
   );
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus = !tableStateChanged && !isItemsLoading && isEmpty(items);
+  const isEmptyStatus = !tableStateChanged && !isItemsLoading && isEmpty(itemsData?.data);
 
   const state = {
     itemsViews,
-    items,
-    pagination,
+    items: itemsData?.data,
+    pagination: itemsData?.pagination,
 
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields ? getFieldsFromResourceMeta(resourceMeta.fields) : [],
 
     isViewsLoading,
     isItemsLoading,

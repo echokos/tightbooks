@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { transformPagination } from '@/utils';
 import { useApiFetcher } from '../useRequest';
 import {
   createQuickInventoryAdjustment,
@@ -63,13 +62,6 @@ export function useDeleteInventoryAdjustment(props) {
   });
 }
 
-const inventoryAdjustmentsTransformer = (response) => {
-  return {
-    inventoryAdjustments: response.data,
-    pagination: transformPagination(response.pagination),
-  };
-};
-
 /**
  * Retrieve inventory adjustment list with pagination meta.
  * Uses useRequestQuery because list endpoint query params may not be in OpenAPI.
@@ -79,7 +71,6 @@ export function useInventoryAdjustments(query, props) {
   return useQuery({
     queryKey: ['inventory-adjustments', query],
     queryFn: () => fetchInventoryAdjustments(fetcher, query),
-    select: inventoryAdjustmentsTransformer,
     ...props,
   });
 }

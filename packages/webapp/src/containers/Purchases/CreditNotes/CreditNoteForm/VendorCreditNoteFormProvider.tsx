@@ -34,7 +34,7 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
 
   // Handle fetching the items table based on the given query.
   const {
-    data: { items },
+    data: itemsData,
     isLoading: isItemsLoading,
   } = useItems({
     page_size: 10000,
@@ -45,7 +45,7 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
 
   // Handle fetch vendors data table or list
   const {
-    data: { vendors },
+    data: vendorsData,
     isLoading: isVendorsLoading,
   } = useVendors({ page_size: 10000 });
 
@@ -95,8 +95,8 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
 
   // Provider payload.
   const provider = {
-    items,
-    vendors,
+    items: itemsData?.items,
+    vendors: vendorsData?.vendors,
     vendorCredit,
     warehouses,
     branches,
