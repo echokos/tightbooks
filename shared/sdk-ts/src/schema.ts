@@ -1539,6 +1539,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Get Stripe Connect link
+         * @description Retrieves the Stripe OAuth2 Connect authorization URL
+         */
         get: operations["StripeIntegrationController_getStripeConnectLink"];
         put?: never;
         post?: never;
@@ -1557,23 +1561,11 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Exchange Stripe OAuth code
+         * @description Exchanges the Stripe authorization code for user id and access token
+         */
         post: operations["StripeIntegrationController_exchangeOAuth"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/stripe/account_link": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["StripeIntegrationController_createAccountLink"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1589,6 +1581,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Create Stripe account
+         * @description Creates a new Stripe Connect account
+         */
         post: operations["StripeIntegrationController_createAccount"];
         delete?: never;
         options?: never;
@@ -1605,7 +1601,31 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Create Stripe account session
+         * @description Creates an account session for the Stripe Connect embedded component
+         */
         post: operations["StripeIntegrationController_createAccountSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stripe/account_link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Stripe account link
+         * @description Creates a Stripe Connect account link for onboarding
+         */
+        post: operations["StripeIntegrationController_createAccountLink"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2723,7 +2743,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Retrieve a refund transaction for the given credit note. */
+        get: operations["CreditNoteRefundsController_getRefundCreditNoteTransaction"];
         put?: never;
         post?: never;
         /** Delete a refund for the given credit note. */
@@ -5544,6 +5565,18 @@ export interface components {
             /** @description The entries associated with this adjustment */
             entries: unknown[][];
         };
+        InventoryAdjustmentsPaginationDto: {
+            /** @example 1 */
+            page: number;
+            /** @example 12 */
+            pageSize: number;
+            /** @example 42 */
+            total: number;
+        };
+        InventoryAdjustmentsListResponseDto: {
+            data: components["schemas"]["InventoryAdjustmentResponseDto"][];
+            pagination: components["schemas"]["InventoryAdjustmentsPaginationDto"];
+        };
         CreateQuickInventoryAdjustmentDto: {
             /**
              * Format: date-time
@@ -6178,6 +6211,20 @@ export interface components {
              * @example 1
              */
             parentAccountId: number;
+        };
+        InventoryItemCostDto: {
+            /** @description Item ID */
+            itemId: number;
+            /** @description Valuation */
+            valuation: number;
+            /** @description Quantity */
+            quantity: number;
+            /** @description Average cost */
+            average: number;
+        };
+        GetInventoryItemsCostResponseDto: {
+            /** @description List of item costs */
+            costs: components["schemas"]["InventoryItemCostDto"][];
         };
         GenerateSaleInvoiceSharableLinkResponseDto: {
             /**
@@ -7156,6 +7203,266 @@ export interface components {
              *     ]
              */
             attachments: string[];
+        };
+        ModelMetaDefaultSortDto: {
+            /**
+             * @description The sort order
+             * @example DESC
+             * @enum {string}
+             */
+            sortOrder: "DESC" | "ASC";
+            /**
+             * @description The sort field
+             * @example createdAt
+             */
+            sortField: string;
+        };
+        ModelPrintMetaDto: {
+            /**
+             * @description The page title for print
+             * @example Invoice INV-0001
+             */
+            pageTitle: string;
+        };
+        ResourceMetaResponseDto: {
+            /**
+             * @description The default filter field
+             * @example query
+             */
+            defaultFilterField: string;
+            /** @description The default sort configuration */
+            defaultSort: components["schemas"]["ModelMetaDefaultSortDto"];
+            /**
+             * @description Whether the resource is exportable
+             * @example true
+             */
+            exportable?: boolean;
+            /**
+             * @description The field to flatten on during export
+             * @example entries
+             */
+            exportFlattenOn?: string;
+            /**
+             * @description Whether the resource is importable
+             * @example true
+             */
+            importable?: boolean;
+            /**
+             * @description The import aggregator field
+             * @example entries
+             */
+            importAggregator?: string;
+            /**
+             * @description The field to aggregate on during import
+             * @example referenceNo
+             */
+            importAggregateOn?: string;
+            /**
+             * @description The field to aggregate by during import
+             * @example id
+             */
+            importAggregateBy?: string;
+            /** @description The print metadata */
+            print?: components["schemas"]["ModelPrintMetaDto"];
+            /** @description The resource fields (legacy format) */
+            fields: {
+                [key: string]: unknown;
+            };
+            /** @description The resource fields (new format) */
+            fields2: {
+                [key: string]: unknown;
+            };
+            /** @description The resource columns */
+            columns: {
+                [key: string]: unknown;
+            };
+        };
+        PaymentLinkEntryDto: {
+            /** @description Line item description */
+            description: string;
+            /** @description Item name */
+            itemName: string;
+            /** @description Quantity */
+            quantity: number;
+            /** @description Formatted quantity */
+            quantityFormatted: string;
+            /** @description Unit rate */
+            rate: number;
+            /** @description Formatted rate */
+            rateFormatted: string;
+            /** @description Line total */
+            total: number;
+            /** @description Formatted total */
+            totalFormatted: string;
+        };
+        PaymentLinkTaxEntryDto: {
+            /** @description Tax name */
+            name: string;
+            /** @description Tax rate amount */
+            taxRateAmount: number;
+            /** @description Formatted tax rate amount */
+            taxRateAmountFormatted: string;
+            /** @description Tax rate code */
+            taxRateCode: string;
+        };
+        PaymentLinkBrandingTemplateDto: {
+            /** @description Company logo URI */
+            companyLogoUri: string;
+            /** @description Primary color */
+            primaryColor: string;
+            /** @description Secondary color */
+            secondaryColor?: string;
+        };
+        PaymentLinkOrganizationDto: {
+            /** @description Organization address */
+            address: Record<string, never>;
+            /** @description Organization name */
+            name: string;
+            /** @description Primary brand color */
+            primaryColor: string;
+            /** @description Logo URI */
+            logoUri: string;
+            /** @description Formatted address text */
+            addressTextFormatted: string;
+        };
+        GetInvoicePaymentLinkResponseDto: {
+            /** @description Amount due */
+            dueAmount: number;
+            /** @description Formatted amount due */
+            dueAmountFormatted: string;
+            /** @description Due date */
+            dueDate: string;
+            /** @description Formatted due date */
+            dueDateFormatted: string;
+            /** @description Formatted invoice date */
+            invoiceDateFormatted: string;
+            /** @description Invoice number */
+            invoiceNo: string;
+            /** @description Payment amount */
+            paymentAmount: number;
+            /** @description Formatted payment amount */
+            paymentAmountFormatted: string;
+            /** @description Subtotal */
+            subtotal: number;
+            /** @description Formatted subtotal */
+            subtotalFormatted: string;
+            /** @description Formatted subtotal in local currency */
+            subtotalLocalFormatted: string;
+            /** @description Total amount */
+            total: number;
+            /** @description Formatted total */
+            totalFormatted: string;
+            /** @description Formatted total in local currency */
+            totalLocalFormatted: string;
+            /** @description Customer name */
+            customerName: string;
+            /** @description Invoice message */
+            invoiceMessage: string;
+            /** @description Terms and conditions */
+            termsConditions: string;
+            /** @description Invoice line entries */
+            entries: components["schemas"]["PaymentLinkEntryDto"][];
+            /** @description Tax entries */
+            taxes: components["schemas"]["PaymentLinkTaxEntryDto"][];
+            /** @description Branding template */
+            brandingTemplate: components["schemas"]["PaymentLinkBrandingTemplateDto"];
+            /** @description Organization metadata */
+            organization: components["schemas"]["PaymentLinkOrganizationDto"];
+            /** @description Whether Stripe is available as payment method */
+            hasStripePaymentMethod: boolean;
+            /** @description Whether invoice has receivable balance */
+            isReceivable: boolean;
+            /** @description Formatted customer address */
+            formattedCustomerAddress: string;
+        };
+        GetInvoicePaymentLinkResponseWrapperDto: {
+            /** @description Payment link invoice metadata */
+            data: components["schemas"]["GetInvoicePaymentLinkResponseDto"];
+        };
+        CreateStripeCheckoutSessionResponseDto: {
+            /**
+             * @description Stripe checkout session ID
+             * @example cs_test_xxx
+             */
+            sessionId: string;
+            /**
+             * @description Stripe publishable key for the client
+             * @example pk_test_xxx
+             */
+            publishableKey: string;
+            /**
+             * @description URL to redirect the customer to complete checkout
+             * @example https://checkout.stripe.com/c/pay/cs_test_xxx
+             */
+            redirectTo: string;
+        };
+        GetStripeConnectLinkResponseDto: {
+            /**
+             * @description Stripe OAuth2 Connect authorization URL
+             * @example https://connect.stripe.com/oauth/authorize?response_type=code&client_id=...
+             */
+            url: string;
+        };
+        ExchangeStripeOAuthBodyDto: {
+            /**
+             * @description Authorization code returned by Stripe OAuth
+             * @example ac_xxx
+             */
+            code: string;
+        };
+        CreateStripeAccountResponseDto: {
+            /**
+             * @description The Stripe Connect account ID
+             * @example acct_1234567890
+             */
+            account_id: string;
+        };
+        CreateStripeAccountSessionBodyDto: {
+            /**
+             * @description Stripe Connect account ID to create a session for
+             * @example acct_1234567890
+             */
+            account?: string;
+        };
+        CreateStripeAccountSessionResponseDto: {
+            /**
+             * @description Stripe Account Session client secret for the Connect embedded component
+             * @example acs_xxx_secret_xxx
+             */
+            client_secret: string;
+        };
+        CreateStripeAccountLinkBodyDto: {
+            /**
+             * @description Stripe Connect account ID
+             * @example acct_xxx
+             */
+            stripeAccountId: string;
+        };
+        StripeAccountLinkResponseDto: {
+            /**
+             * @description URL for the account onboarding flow
+             * @example https://connect.stripe.com/setup/xxx
+             */
+            url: string;
+            /**
+             * @description Unix timestamp when the link was created
+             * @example 1234567890
+             */
+            created: number;
+            /**
+             * @description Unix timestamp when the link expires
+             * @example 1234567890
+             */
+            expires_at: number;
+            /**
+             * @description Stripe object type
+             * @example account_link
+             */
+            object: string;
+        };
+        CreateStripeAccountLinkResponseDto: {
+            /** @description Stripe AccountLink object for onboarding */
+            clientSecret: components["schemas"]["StripeAccountLinkResponseDto"];
         };
         ItemCategoryResponseDto: {
             /**
@@ -10021,6 +10328,13 @@ export interface components {
              */
             discountType: "percentage" | "amount";
         };
+        CreditNoteStateResponseDto: {
+            /**
+             * @description Default PDF template ID for credit notes
+             * @example 1
+             */
+            defaultTemplateId: number;
+        };
         EditCreditNoteDto: {
             /**
              * @description The customer ID
@@ -10102,6 +10416,36 @@ export interface components {
              */
             discountType: "percentage" | "amount";
         };
+        RefundCreditAccountDto: {
+            /** @example 10 */
+            id: number;
+            /** @example Cash on Hand */
+            name: string;
+        };
+        RefundCreditNoteSummaryDto: {
+            /** @example 1 */
+            id: number;
+            /** @example CN-0001 */
+            creditNoteNumber: string;
+        };
+        RefundCreditNoteResponseDto: {
+            /** @example 100 */
+            id: number;
+            /** @example 2024-01-15 */
+            date: string;
+            /** @example 2024-01-15 */
+            formattedDate: string;
+            /** @example 250 */
+            amount: number;
+            /** @example $250.00 */
+            formttedAmount: string;
+            /** @example REF-001 */
+            referenceNo?: string | null;
+            /** @example Refund issued to customer */
+            description?: string | null;
+            fromAccount: components["schemas"]["RefundCreditAccountDto"];
+            creditNote: components["schemas"]["RefundCreditNoteSummaryDto"];
+        };
         CreditNoteRefundDto: {
             /**
              * @description The id of the from account
@@ -10139,6 +10483,54 @@ export interface components {
              * @example 1
              */
             branchId: number;
+        };
+        AppliedCreditNoteInvoiceResponseDto: {
+            /** @example 1 */
+            id: number;
+            /** @example 200 */
+            amount: number;
+            /** @example $200.00 */
+            formttedAmount: string;
+            /** @example CN-0001 */
+            creditNoteNumber: string;
+            /** @example 2024-01-10 */
+            creditNoteDate: string;
+            /** @example 2024-01-10 */
+            formattedCreditNoteDate: string;
+            /** @example INV-0001 */
+            invoiceNumber: string;
+            /** @example REF-001 */
+            invoiceReferenceNo?: string | null;
+        };
+        CreditNoteInvoiceToApplyResponseDto: {
+            /** @example 1 */
+            id: number;
+            /** @example INV-0001 */
+            invoiceNo: string;
+            /** @example REF-001 */
+            referenceNo?: string | null;
+            /** @example 2024-01-10 */
+            invoiceDate: string;
+            /** @example 2024-01-20 */
+            dueDate: string;
+            /** @example USD */
+            currencyCode?: string | null;
+            /** @example 500 */
+            balance: number;
+            /** @example 500 */
+            dueAmount: number;
+            /** @example 0 */
+            paymentAmount: number;
+            /** @example 2024-01-10 */
+            formattedInvoiceDate: string;
+            /** @example 2024-01-20 */
+            formattedDueDate: string;
+            /** @example $500.00 */
+            formatted_amount: string;
+            /** @example $500.00 */
+            formattedDueAmount: string;
+            /** @example $0.00 */
+            formattedPaymentAmount: string;
         };
         ApplyCreditNoteInvoiceEntryDto: {
             /**
@@ -13344,6 +13736,22 @@ export interface components {
             /** @description The permissions of the role */
             permissions: components["schemas"]["EditRolePermissionDto"][];
         };
+        OrganizationBuildJobResponseDto: {
+            /** @example 123 */
+            id: string;
+            /** @example active */
+            state: string;
+            /** @example 50 */
+            progress: Record<string, never>;
+            /** @example false */
+            isCompleted: boolean;
+            /** @example true */
+            isRunning: boolean;
+            /** @example false */
+            isWaiting: boolean;
+            /** @example false */
+            isFailed: boolean;
+        };
         OrganizationMetadataResponseDto: {
             /**
              * @description Internal numeric ID of the metadata
@@ -13689,6 +14097,12 @@ export interface components {
              * @example $
              */
             currencySign: string;
+        };
+        DateFormatResponseDto: {
+            /** @example 03/09/2026 [MM/DD/YYYY] */
+            label: string;
+            /** @example MM/DD/YYYY */
+            key: string;
         };
         EditUserDto: {
             /**
@@ -14577,7 +14991,10 @@ export interface operations {
     };
     InventoryAdjustmentsController_getInventoryAdjustments: {
         parameters: {
-            query?: never;
+            query?: {
+                page?: number;
+                pageSize?: number;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -14595,7 +15012,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["InventoryAdjustmentResponseDto"][];
+                    "application/json": components["schemas"]["InventoryAdjustmentsListResponseDto"];
                 };
             };
         };
@@ -15432,11 +15849,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Items inventory cost list */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["GetInventoryItemsCostResponseDto"];
+                };
             };
         };
     };
@@ -17001,6 +17421,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                /** @description The resource model name (e.g., SaleInvoice, Customer, Item) */
                 resourceModel: string;
             };
             cookie?: never;
@@ -17012,7 +17433,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ResourceMetaResponseDto"];
+                };
             };
         };
     };
@@ -17039,10 +17462,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @description Payment link metadata */
-                        data?: Record<string, never>;
-                    };
+                    "application/json": components["schemas"]["GetInvoicePaymentLinkResponseWrapperDto"];
                 };
             };
             /** @description Payment link not found */
@@ -17077,12 +17497,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @description Stripe checkout session ID */
-                        id?: string;
-                        /** @description Stripe checkout session URL */
-                        url?: string;
-                    };
+                    "application/json": components["schemas"]["CreateStripeCheckoutSessionResponseDto"];
                 };
             };
             /** @description Payment link not found */
@@ -17138,11 +17553,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Successfully retrieved Stripe Connect link */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["GetStripeConnectLinkResponseDto"];
+                };
             };
         };
     };
@@ -17153,25 +17571,13 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExchangeStripeOAuthBodyDto"];
             };
         };
-    };
-    StripeIntegrationController_createAccountLink: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
         responses: {
+            /** @description Successfully exchanged OAuth code */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -17189,12 +17595,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Successfully created Stripe account */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": { account_id: string };
+                    "application/json": components["schemas"]["CreateStripeAccountResponseDto"];
                 };
             };
         };
@@ -17208,16 +17615,41 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": { account?: string };
+                "application/json": components["schemas"]["CreateStripeAccountSessionBodyDto"];
             };
         };
         responses: {
+            /** @description Successfully created account session */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": { client_secret: string };
+                    "application/json": components["schemas"]["CreateStripeAccountSessionResponseDto"];
+                };
+            };
+        };
+    };
+    StripeIntegrationController_createAccountLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateStripeAccountLinkBodyDto"];
+            };
+        };
+        responses: {
+            /** @description Successfully created account link */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreateStripeAccountLinkResponseDto"];
                 };
             };
         };
@@ -19619,7 +20051,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["CreditNoteStateResponseDto"];
+                };
             };
         };
     };
@@ -19841,11 +20275,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Credit note refunds retrieved successfully. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["RefundCreditNoteResponseDto"][];
+                };
             };
         };
     };
@@ -19874,6 +20311,33 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    CreditNoteRefundsController_getRefundCreditNoteTransaction: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                refundCreditId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Refund credit note transaction retrieved successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RefundCreditNoteResponseDto"];
+                };
             };
         };
     };
@@ -19922,7 +20386,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["AppliedCreditNoteInvoiceResponseDto"][];
+                };
             };
             /** @description Invalid input data */
             400: {
@@ -19961,7 +20427,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["CreditNoteInvoiceToApplyResponseDto"][];
+                };
             };
             /** @description Invalid input data */
             400: {
@@ -20495,17 +20963,17 @@ export interface operations {
     };
     BillPaymentsController_getBillPaymentNewPageEntries: {
         parameters: {
-            query?: never;
+            query: {
+                /** @description The vendor id */
+                vendorId: number;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
                 /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
                 "organization-id": string;
             };
-            path: {
-                /** @description The vendor id */
-                vendorId: number;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -27564,11 +28032,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Returns the organization build job details */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["OrganizationBuildJobResponseDto"];
+                };
             };
         };
     };
@@ -27971,7 +28442,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["DateFormatResponseDto"][];
+                };
             };
         };
     };
