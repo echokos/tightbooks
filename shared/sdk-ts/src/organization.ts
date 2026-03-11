@@ -37,7 +37,10 @@ export async function buildOrganization(
 export async function fetchOrgBaseCurrencyMutateAbilities(
   fetcher: ApiFetcher
 ): Promise<OrgBaseCurrencyMutateAbilitiesResponse> {
-  const get = fetcher.path(ORGANIZATION_ROUTES.BASE_CURRENCY_MUTATE).method('get').create();
+  const get = fetcher
+    .path(ORGANIZATION_ROUTES.BASE_CURRENCY_MUTATE)
+    .method('get')
+    .create();
   const { data } = await get({});
   return data;
 }

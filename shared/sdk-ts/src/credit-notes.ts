@@ -154,7 +154,7 @@ export async function fetchRefundCreditNoteTransaction(
   refundCreditId: number
 ): Promise<RefundCreditNoteTransaction> {
   const get = fetcher.path(CREDIT_NOTES_ROUTES.REFUND_BY_ID).method('get').create();
-  const { data } = await get({ refundCreditId });
+  const { data } = await get({ refundCreditId: String(refundCreditId) } as never);
   return data;
 }
 
