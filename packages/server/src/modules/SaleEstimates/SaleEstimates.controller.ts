@@ -186,7 +186,7 @@ export class SaleEstimatesController {
     description: 'Sale estimates retrieved successfully',
     schema: {
       allOf: [
-        { $ref: getSchemaPath(SaleEstimateResponseDto) },
+        { $ref: getSchemaPath(PaginatedResponseDto) },
         {
           properties: {
             data: {

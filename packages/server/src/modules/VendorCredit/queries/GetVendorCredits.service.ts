@@ -61,12 +61,12 @@ export class GetVendorCreditsService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transformes the vendor credits models to POJO.
-    const vendorCredits = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new VendorCreditTransformer(),
     );
     return {
-      vendorCredits,
+      data,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

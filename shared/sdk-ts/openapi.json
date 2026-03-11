@@ -7640,7 +7640,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/SaleEstimateResponseDto"
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
                     },
                     {
                       "properties": {

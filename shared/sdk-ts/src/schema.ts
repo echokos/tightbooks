@@ -18708,7 +18708,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SaleEstimateResponseDto"] & {
+                    "application/json": components["schemas"]["PaginatedResponseDto"] & {
                         data?: components["schemas"]["SaleEstimateResponseDto"][];
                     };
                 };

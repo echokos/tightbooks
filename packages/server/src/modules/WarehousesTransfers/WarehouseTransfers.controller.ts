@@ -155,11 +155,11 @@ export class WarehouseTransfersController {
     },
   })
   async getWarehousesTransfers(@Query() query: GetWarehouseTransfersQueryDto) {
-    const { warehousesTransfers, pagination, filter } =
+    const { data, pagination, filter } =
       await this.warehouseTransferApplication.getWarehousesTransfers(query);
 
     return {
-      data: warehousesTransfers,
+      data,
       pagination,
       filter,
     };

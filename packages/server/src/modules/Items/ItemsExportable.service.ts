@@ -31,6 +31,6 @@ export class ItemsExportable extends Exportable {
 
     return this.itemsApplication
       .getItems(parsedQuery)
-      .then((output) => output.items);
+      .then((output) => output.data);
   }
 }

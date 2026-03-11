@@ -29,6 +29,6 @@ export class VendorsExportable extends Exportable {
 
     return this.vendorsApplication
       .getVendors(parsedQuery)
-      .then((output) => output.vendors);
+      .then((output) => output.data);
   }
 }

@@ -22,12 +22,12 @@ export class GetSaleInvoicesService {
   /**
    * Retrieve sales invoices filterable and paginated list.
    * @param {ISalesInvoicesFilter} filterDTO -
-   * @returns {Promise<{ salesInvoices: SaleInvoice[]; pagination: IPaginationMeta; filterMeta: IFilterMeta; }>}
+   * @returns {Promise<{ data: SaleInvoice[]; pagination: IPaginationMeta; filterMeta: IFilterMeta; }>}
    */
   public async getSaleInvoices(
     filterDTO: Partial<ISalesInvoicesFilter>,
   ): Promise<{
-    salesInvoices: SaleInvoice[];
+    data: SaleInvoice[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
@@ -58,13 +58,13 @@ export class GetSaleInvoicesService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed sale invoices.
-    const salesInvoices = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new SaleInvoiceTransformer(),
     );
 
     return {
-      salesInvoices,
+      data,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

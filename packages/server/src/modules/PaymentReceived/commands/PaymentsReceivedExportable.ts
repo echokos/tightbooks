@@ -32,6 +32,6 @@ export class PaymentsReceivedExportable extends Exportable {
     };
     return this.paymentReceivedApp
       .getPaymentsReceived(parsedQuery)
-      .then((output) => output.paymentReceives);
+      .then((output) => output.data);
   }
 }

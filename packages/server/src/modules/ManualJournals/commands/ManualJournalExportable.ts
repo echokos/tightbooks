@@ -30,6 +30,6 @@ export class ManualJournalsExportable extends Exportable {
 
     return this.manualJournalsApplication
       .getManualJournals(parsedQuery)
-      .then((output) => output.manualJournals);
+      .then((output) => output.data);
   }
 }

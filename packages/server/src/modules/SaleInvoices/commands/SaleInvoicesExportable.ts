@@ -34,6 +34,6 @@ export class SaleInvoicesExportable extends Exportable{
 
     return this.saleInvoicesApplication
       .getSaleInvoices(parsedQuery)
-      .then((output) => output.salesInvoices);
+      .then((output) => output.data);
   }
 }

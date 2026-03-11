@@ -121,7 +121,7 @@ export function DataTable(props) {
         hiddenColumns: initialHiddenColumns,
       },
       manualPagination,
-      pageCount: rowsCount && pageSize > 0 ? Math.ceil(rowsCount / pageSize) : 0,
+      pageCount: rowsCount && initialPageSize > 0 ? Math.ceil(rowsCount / initialPageSize) : 0,
       getSubRows: (row) => row.children,
       manualSortBy,
       expandSubRows,

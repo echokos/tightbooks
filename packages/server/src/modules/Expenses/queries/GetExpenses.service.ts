@@ -24,7 +24,7 @@ export class GetExpensesService {
    * @return {IExpense[]}
    */
   public async getExpensesList(filterDto: Partial<IExpensesFilter>): Promise<{
-    expenses: Expense[];
+    data: Expense[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
@@ -56,12 +56,12 @@ export class GetExpensesService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transformes the expenses models to POJO.
-    const expenses = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new ExpenseTransfromer(),
     );
     return {
-      expenses,
+      data,
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

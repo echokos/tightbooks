@@ -34,6 +34,6 @@ export class ExpensesExportable extends Exportable {
 
     return this.expensesApplication
       .getExpenses(parsedQuery)
-      .then((output) => output.expenses);
+      .then((output) => output.data);
   }
 }
