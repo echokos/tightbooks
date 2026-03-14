@@ -19,9 +19,9 @@ export function useApiKeys(
 ) {
   const fetcher = useApiFetcher();
   return useQuery({
+    ...props,
     queryKey: [t.API_KEYS],
     queryFn: () => fetchApiKeys(fetcher),
-    ...props,
   });
 }
 
@@ -32,9 +32,9 @@ export function useGenerateApiKey(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...props,
     mutationFn: (values: GenerateApiKeyBody) => generateApiKey(fetcher, values),
     onSuccess: () => commonInvalidateQueries(client),
-    ...props,
   });
 }
 
@@ -45,8 +45,8 @@ export function useRevokeApiKey(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...props,
     mutationFn: (id: number) => revokeApiKey(fetcher, id),
     onSuccess: () => commonInvalidateQueries(client),
-    ...props,
   });
 }

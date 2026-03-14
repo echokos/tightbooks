@@ -31,12 +31,12 @@ function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
       <DrawerHeaderContent
         name={DRAWERS.INVOICE_DETAILS}
         title={intl.get('invoice_details.drawer.title', {
-          invoiceNumber: invoice.invoice_no,
+          invoiceNumber: invoice?.invoice_no,
         })}
         subTitle={
           featureCan(Features.Branches)
             ? intl.get('invoice_details.drawer.subtitle', {
-                value: invoice.branch?.name,
+                value: invoice?.branch?.name,
               })
             : null
         }

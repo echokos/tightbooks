@@ -1,0 +1,164 @@
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
+import type {
+  Vendor,
+  CreateVendorBody,
+  EditVendorBody,
+  BulkDeleteVendorsBody,
+  ValidateBulkDeleteVendorsResponse,
+} from '@bigcapital/sdk-ts';
+import type { VendorsListResponse } from '@bigcapital/sdk-ts';
+import {
+  fetchVendors,
+  fetchVendor,
+  createVendor,
+  editVendor,
+  deleteVendor,
+  validateBulkDeleteVendors,
+  bulkDeleteVendors,
+  editVendorOpeningBalance,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../../useRequest';
+import { transformToCamelCase } from '@/utils';
+import { vendorsKeys } from './query-keys';
+
+const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
+  queryClient.invalidateQueries({ queryKey: vendorsKeys.all() });
+};
+
+export function useVendors(
+  query?: Record<string, unknown>,
+  props?: Omit<UseQueryOptions<VendorsListResponse>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    ...props,
+    queryKey: vendorsKeys.list(query),
+    queryFn: () =>
+      (fetchVendors as (f: ReturnType<typeof useApiFetcher>, q?: Record<string, unknown>) => Promise<VendorsListResponse>)(
+        fetcher,
+        query
+      ),
+  });
+}
+
+export function useEditVendor(
+  props?: UseMutationOptions<void, Error, [number, EditVendorBody]>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: ([id, values]: [number, EditVendorBody]) =>
+      editVendor(fetcher, id, values),
+    onSuccess: (_data: void, [id]: [number, EditVendorBody]) => {
+      queryClient.invalidateQueries({ queryKey: vendorsKeys.detail(id) });
+      commonInvalidateQueries(queryClient);
+    },
+  });
+}
+
+export function useDeleteVendor(
+  props?: UseMutationOptions<void, Error, number>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (id: number) => deleteVendor(fetcher, id),
+    onSuccess: (_data: void, id: number) => {
+      queryClient.invalidateQueries({ queryKey: vendorsKeys.detail(id) });
+      commonInvalidateQueries(queryClient);
+    },
+  });
+}
+
+export function useBulkDeleteVendors(
+  props?: UseMutationOptions<void, Error, { ids: number[]; skipUndeletable?: boolean }>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) => bulkDeleteVendors(fetcher, { ids, skipUndeletable }),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
+export function useValidateBulkDeleteVendors(
+  props?: UseMutationOptions<ValidateBulkDeleteVendorsResponse, Error, number[]>
+) {
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (ids: number[]) =>
+      validateBulkDeleteVendors(fetcher, { ids, skipUndeletable: false } as BulkDeleteVendorsBody).then(
+        (res) => transformToCamelCase(res as Record<string, unknown>) as ValidateBulkDeleteVendorsResponse
+      ),
+  });
+}
+
+export function useCreateVendor(
+  props?: UseMutationOptions<void, Error, CreateVendorBody>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (values: CreateVendorBody) => createVendor(fetcher, values),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
+export function useVendor(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<Vendor>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    ...props,
+    queryKey: vendorsKeys.detail(id),
+    queryFn: () => fetchVendor(fetcher, id!),
+    enabled: id != null,
+  });
+}
+
+export function useEditVendorOpeningBalance(
+  props?: UseMutationOptions<unknown, Error, [number, Record<string, unknown>]>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: ([id, values]: [number, Record<string, unknown>]) =>
+      editVendorOpeningBalance(fetcher, id, values as Parameters<typeof editVendorOpeningBalance>[2]),
+    onSuccess: (_data: unknown, [id]: [number, Record<string, unknown>]) => {
+      queryClient.invalidateQueries({ queryKey: vendorsKeys.detail(id) });
+      commonInvalidateQueries(queryClient);
+    },
+  });
+}
+
+export function useRefreshVendors() {
+  const queryClient = useQueryClient();
+  return {
+    refresh: () => queryClient.invalidateQueries({ queryKey: vendorsKeys.all() }),
+  };
+}

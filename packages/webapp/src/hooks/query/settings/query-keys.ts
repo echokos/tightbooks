@@ -1,0 +1,50 @@
+// Query key constants
+export const SETTING = 'SETTING';
+export const SETTING_INVOICES = 'SETTING_INVOICES';
+export const SETTING_ESTIMATES = 'SETTING_ESTIMATES';
+export const SETTING_RECEIPTS = 'SETTING_RECEIPTS';
+export const SETTING_PAYMENT_RECEIVES = 'SETTING_PAYMENT_RECEIVES';
+export const SETTING_MANUAL_JOURNALS = 'SETTING_MANUAL_JOURNALS';
+export const SETTING_ITEMS = 'SETTING_ITEMS';
+export const SETTING_CASHFLOW = 'SETTING_CASHFLOW';
+export const SETTING_SMS_NOTIFICATION = 'SETTING_SMS_NOTIFICATION';
+export const SETTING_SMS_NOTIFICATIONS = 'SETTING_SMS_NOTIFICATIONS';
+export const SETTING_EDIT_SMS_NOTIFICATION = 'SETTING_EDIT_SMS_NOTIFICATION';
+export const SETTING_CREDIT_NOTES = 'SETTING_CREDIT_NOTES';
+export const SETTING_VENDOR_CREDITS = 'SETTING_VENDOR_CREDITS';
+export const SETTING_WAREHOUSE_TRANSFER = 'SETTING_WAREHOUSE_TRANSFERS';
+
+// Query key factory
+export const settingsKeys = {
+  all: () => [SETTING] as const,
+  invoices: () => [SETTING, SETTING_INVOICES] as const,
+  estimates: () => [SETTING, SETTING_ESTIMATES] as const,
+  receipts: () => [SETTING, SETTING_RECEIPTS] as const,
+  paymentReceives: () => [SETTING, SETTING_PAYMENT_RECEIVES] as const,
+  manualJournals: () => [SETTING, SETTING_MANUAL_JOURNALS] as const,
+  items: () => [SETTING, SETTING_ITEMS] as const,
+  cashflow: () => [SETTING, SETTING_CASHFLOW] as const,
+  creditNotes: () => [SETTING, SETTING_CREDIT_NOTES] as const,
+  vendorCredits: () => [SETTING, SETTING_VENDOR_CREDITS] as const,
+  warehouseTransfers: () => [SETTING, SETTING_WAREHOUSE_TRANSFER] as const,
+  smsNotifications: () => [SETTING_SMS_NOTIFICATIONS] as const,
+  smsNotification: (key: string) => [SETTING_SMS_NOTIFICATIONS, key] as const,
+};
+
+// Grouped object for use in components/hooks
+export const SettingsQueryKeys = {
+  SETTING,
+  SETTING_INVOICES,
+  SETTING_ESTIMATES,
+  SETTING_RECEIPTS,
+  SETTING_PAYMENT_RECEIVES,
+  SETTING_MANUAL_JOURNALS,
+  SETTING_ITEMS,
+  SETTING_CASHFLOW,
+  SETTING_SMS_NOTIFICATION,
+  SETTING_SMS_NOTIFICATIONS,
+  SETTING_EDIT_SMS_NOTIFICATION,
+  SETTING_CREDIT_NOTES,
+  SETTING_VENDOR_CREDITS,
+  SETTING_WAREHOUSE_TRANSFER,
+} as const;

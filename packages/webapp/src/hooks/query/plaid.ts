@@ -16,8 +16,8 @@ export function useGetPlaidLinkToken(
   const fetcher = useApiFetcher();
 
   return useMutation({
-    mutationFn: () => fetchPlaidLinkToken(fetcher),
     ...props,
+    mutationFn: () => fetchPlaidLinkToken(fetcher),
   });
 }
 
@@ -30,8 +30,8 @@ export function usePlaidExchangeToken(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...props,
     mutationFn: (data: PlaidExchangeTokenBody) =>
       fetchPlaidExchangeToken(fetcher, data),
-    ...props,
   });
 }

@@ -1,3 +1,11 @@
+// @ts-nocheck
+// This file is kept for backward compatibility.
+// Please import directly from the module directories instead.
+
+// ==========================================
+// Legacy constants (kept for backward compatibility)
+// ==========================================
+
 const Authentication = {
   AUTH_METADATA_PAGE: 'AUTH_META_PAGE',
 };
@@ -233,18 +241,22 @@ const ORGANIZATION = {
     'ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES',
 };
 
-export const TAX_RATES = {
+const TAX_RATES = {
   TAX_RATES: 'TAX_RATES',
 };
 
-export const EXCHANGE_RATE = {
+const EXCHANGE_RATE = {
   EXCHANGE_RATE: 'EXCHANGE_RATE',
 };
 
-export const API_KEYS = {
+const API_KEYS = {
   API_KEYS: 'API_KEYS',
 };
 
+// ==========================================
+// Legacy `t` object (for backward compatibility)
+// @deprecated Import specific {Module}QueryKeys instead
+// ==========================================
 const t = {
   ...Authentication,
   ...ACCOUNTS,
@@ -284,3 +296,41 @@ const t = {
 } as const;
 
 export default t;
+
+// ==========================================
+// New QueryKeys exports (preferred approach)
+// Re-export from module directories
+// ==========================================
+
+export { AuthenticationQueryKeys } from './authentication';
+export { AccountsQueryKeys } from './accounts';
+export { BillsQueryKeys } from './bills';
+export { VendorsQueryKeys } from './vendors';
+export { CustomersQueryKeys } from './customers';
+export { ItemsQueryKeys } from './items';
+export { EstimatesQueryKeys } from './estimates';
+export { InventoryAdjustmentsQueryKeys } from './inventory-adjustments';
+export { CurrenciesQueryKeys } from './currencies';
+export { ReceiptsQueryKeys } from './receipts';
+export { PaymentMadesQueryKeys } from './payment-mades';
+export { PaymentReceivesQueryKeys } from './payment-receives';
+export { InvoicesQueryKeys } from './invoices';
+export { UsersQueryKeys } from './users';
+export { RolesQueryKeys } from './roles';
+export { CreditNotesQueryKeys } from './credit-note';
+export { VendorCreditsQueryKeys } from './vendor-credit';
+export { SettingsQueryKeys } from './settings';
+export { OrganizationsQueryKeys } from './organization';
+export { SubscriptionsQueryKeys } from './subscriptions';
+export { ExpensesQueryKeys } from './expenses';
+export { ManualJournalsQueryKeys } from './manual-journals';
+export { LandedCostQueryKeys } from './landed-cost';
+export { ContactsQueryKeys } from './contacts';
+export { CashflowAccountsQueryKeys } from './cashflow-accounts';
+export { TransactionsLockingQueryKeys } from './transactions-locking';
+export { WarehousesQueryKeys } from './warehouses';
+export { WarehousesTransfersQueryKeys } from './warehouses-transfers';
+export { BranchesQueryKeys } from './branches';
+export { TaxRatesQueryKeys } from './tax-rates';
+export { ExchangeRatesQueryKeys } from './exchange-rates';
+export { ApiKeysQueryKeys } from './api-keys';

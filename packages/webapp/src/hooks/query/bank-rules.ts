@@ -66,9 +66,9 @@ export function useCreateBankRule(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...options,
     mutationFn: (values: CreateBankRuleBody) => createBankRule(fetcher, values),
     onSuccess: () => commonInvalidateQueries(queryClient),
-    ...options,
   });
 }
 
@@ -82,12 +82,12 @@ export function useDisconnectBankAccount(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...options,
     mutationFn: ({ bankAccountId }: DisconnectBankAccountValues) =>
       disconnectBankAccount(fetcher, bankAccountId),
     onSuccess: (_data, values) => {
       queryClient.invalidateQueries({ queryKey: [t.ACCOUNT, values.bankAccountId] });
     },
-    ...options,
   });
 }
 
@@ -101,10 +101,10 @@ export function useUpdateBankAccount(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...options,
     mutationFn: ({ bankAccountId }: UpdateBankAccountValues) =>
       refreshBankAccount(fetcher, bankAccountId),
     onSuccess: () => {},
-    ...options,
   });
 }
 
@@ -115,10 +115,10 @@ export function useEditBankRule(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...options,
     mutationFn: ({ id, value }: { id: number; value: EditBankRuleBody }) =>
       editBankRule(fetcher, id, value),
     onSuccess: () => commonInvalidateQueries(queryClient),
-    ...options,
   });
 }
 
@@ -129,6 +129,7 @@ export function useDeleteBankRule(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...options,
     mutationFn: (id: number) => deleteBankRule(fetcher, id),
     onSuccess: () => {
       commonInvalidateQueries(queryClient);
@@ -139,7 +140,6 @@ export function useDeleteBankRule(
         queryKey: [t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY],
       });
     },
-    ...options,
   });
 }
 
@@ -149,9 +149,9 @@ export function useBankRules(
   const fetcher = useApiFetcher();
 
   return useQuery({
+    ...options,
     queryKey: [BANK_QUERY_KEY.BANK_RULES],
     queryFn: () => fetchBankRules(fetcher),
-    ...options,
   });
 }
 
@@ -162,9 +162,9 @@ export function useBankRule(
   const fetcher = useApiFetcher();
 
   return useQuery({
+    ...options,
     queryKey: [BANK_QUERY_KEY.BANK_RULES, bankRuleId],
     queryFn: () => fetchBankRule(fetcher, bankRuleId),
-    ...options,
   });
 }
 
@@ -175,12 +175,12 @@ export function useGetBankTransactionsMatches(
   const fetcher = useApiFetcher();
 
   return useQuery({
+    ...options,
     queryKey: [BANK_QUERY_KEY.BANK_TRANSACTION_MATCHES, uncategorizedTransactionIds],
     queryFn: () =>
       fetchMatchedTransactions(fetcher, uncategorizedTransactionIds).then((data) =>
         transformToCamelCase(data as unknown as Record<string, unknown>) as MatchedTransactionsResponse
       ),
-    ...options,
   });
 }
 
@@ -208,10 +208,10 @@ export function useExcludeUncategorizedTransaction(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...options,
     mutationFn: (uncategorizedTransactionId: number) =>
       excludeBankTransaction(fetcher, uncategorizedTransactionId),
     onSuccess: () => onValidateExcludeUncategorizedTransaction(queryClient),
-    ...options,
   });
 }
 
@@ -222,10 +222,10 @@ export function useUnexcludeUncategorizedTransaction(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...options,
     mutationFn: (uncategorizedTransactionId: number) =>
       unexcludeBankTransaction(fetcher, uncategorizedTransactionId),
     onSuccess: () => onValidateExcludeUncategorizedTransaction(queryClient),
-    ...options,
   });
 }
 
@@ -236,10 +236,10 @@ export function useExcludeUncategorizedTransactions(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...options,
     mutationFn: (value: ExcludeBankTransactionsBulkBody) =>
       excludeBankTransactionsBulk(fetcher, value),
     onSuccess: () => onValidateExcludeUncategorizedTransaction(queryClient),
-    ...options,
   });
 }
 
@@ -250,10 +250,10 @@ export function useUnexcludeUncategorizedTransactions(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...options,
     mutationFn: (value: ExcludeBankTransactionsBulkBody) =>
       unexcludeBankTransactionsBulk(fetcher, value),
     onSuccess: () => onValidateExcludeUncategorizedTransaction(queryClient),
-    ...options,
   });
 }
 
@@ -264,6 +264,7 @@ export function useMatchUncategorizedTransaction(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...props,
     mutationFn: (value: MatchTransactionBody) => matchTransaction(fetcher, value),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -278,7 +279,6 @@ export function useMatchUncategorizedTransaction(
         queryKey: [BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META],
       });
     },
-    ...props,
   });
 }
 
@@ -294,6 +294,7 @@ export function useUnmatchMatchedUncategorizedTransaction(
   const fetcher = useApiFetcher();
 
   return useMutation({
+    ...props,
     mutationFn: ({ id }: UnmatchUncategorizedTransactionValues) =>
       unmatchMatchedTransaction(fetcher, id),
     onSuccess: () => {
@@ -309,7 +310,6 @@ export function useUnmatchMatchedUncategorizedTransaction(
         queryKey: [BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META],
       });
     },
-    ...props,
   });
 }
 
@@ -320,6 +320,7 @@ export function useGetRecognizedBankTransaction(
   const fetcher = useApiFetcher();
 
   return useQuery({
+    ...options,
     queryKey: [
       BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTION,
       uncategorizedTransactionId,
@@ -328,7 +329,6 @@ export function useGetRecognizedBankTransaction(
       fetchRecognizedTransaction(fetcher, uncategorizedTransactionId).then(
         (data: unknown) => transformToCamelCase(data as unknown as Record<string, unknown>)
       ),
-    ...options,
   });
 }
 
@@ -339,13 +339,13 @@ export function useGetBankAccountSummaryMeta(
   const fetcher = useApiFetcher();
 
   return useQuery({
+    ...options,
     queryKey: [BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META, bankAccountId],
     queryFn: () =>
       fetchBankingAccountSummary(fetcher, bankAccountId).then(
         (data) =>
           transformToCamelCase(data as unknown as Record<string, unknown>) as BankingAccountSummaryResponse
       ),
-    ...options,
   });
 }
 
@@ -356,6 +356,7 @@ export function useGetAutofillCategorizeTransaction(
   const fetcher = useApiFetcher();
 
   return useQuery({
+    ...options,
     queryKey: [
       BANK_QUERY_KEY.AUTOFILL_CATEGORIZE_BANK_TRANSACTION,
       uncategorizedTransactionIds,
@@ -365,7 +366,6 @@ export function useGetAutofillCategorizeTransaction(
         (data) =>
           transformToCamelCase(data as unknown as Record<string, unknown>) as AutofillCategorizeTransactionResponse
       ),
-    ...options,
   });
 }
 
@@ -376,6 +376,7 @@ export function useRecognizedBankTransactionsInfinity(
   const fetcher = useApiFetcher();
 
   return useInfiniteQuery({
+    ...infinityProps,
     queryKey: [BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY, query],
     initialPageParam: 1,
     queryFn: async ({
@@ -397,7 +398,6 @@ export function useRecognizedBankTransactionsInfinity(
         ? lastPage.pagination.page + 1
         : undefined;
     },
-    ...infinityProps,
   });
 }
 
@@ -408,6 +408,7 @@ export function useExcludedBankTransactionsInfinity(
   const fetcher = useApiFetcher();
 
   return useInfiniteQuery({
+    ...infinityProps,
     queryKey: [BANK_QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY, query],
     initialPageParam: 1,
     queryFn: async ({
@@ -429,7 +430,6 @@ export function useExcludedBankTransactionsInfinity(
         ? lastPage.pagination.page + 1
         : undefined;
     },
-    ...infinityProps,
   });
 }
 
@@ -440,6 +440,7 @@ export function usePendingBankTransactionsInfinity(
   const fetcher = useApiFetcher();
 
   return useInfiniteQuery({
+    ...infinityProps,
     queryKey: [BANK_QUERY_KEY.PENDING_BANK_ACCOUNT_TRANSACTIONS_INFINITY, query],
     initialPageParam: 1,
     queryFn: async ({
@@ -461,6 +462,5 @@ export function usePendingBankTransactionsInfinity(
         ? lastPage.pagination.page + 1
         : undefined;
     },
-    ...infinityProps,
   });
 }

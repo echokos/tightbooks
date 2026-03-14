@@ -10,10 +10,10 @@ import { useApiFetcher } from '../useRequest';
 export function useJob(jobId, props = {}) {
   const fetcher = useApiFetcher();
   return useQuery({
+    ...props,
     queryKey: ['JOB', jobId],
     queryFn: () =>
       fetchOrganizationBuildJob(fetcher, jobId).then((data) => transformToCamelCase(data)),
     enabled: jobId != null,
-    ...props,
   });
 }

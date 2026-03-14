@@ -9,10 +9,10 @@ export function useResourceViews(
 ) {
   const fetcher = useApiFetcher();
   return useQuery({
+    ...props,
     queryKey: ['RESOURCE_VIEW', resourceSlug],
     queryFn: () => fetchResourceView(fetcher, resourceSlug!),
     enabled: !!resourceSlug,
-    ...props,
   });
 }
 
@@ -22,9 +22,9 @@ export function useResourceMeta(
 ) {
   const fetcher = useApiFetcher();
   return useQuery({
+    ...props,
     queryKey: ['RESOURCE_META', resourceSlug],
     queryFn: () => fetchResourceMeta(fetcher, resourceSlug!),
     enabled: !!resourceSlug,
-    ...props,
   });
 }

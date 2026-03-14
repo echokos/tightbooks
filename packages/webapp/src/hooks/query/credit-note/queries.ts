@@ -1,0 +1,415 @@
+import {
+  useQueryClient,
+  useMutation,
+  useQuery,
+  UseMutationOptions,
+  UseQueryOptions,
+  UseQueryResult,
+} from '@tanstack/react-query';
+import type {
+  CreditNote,
+  CreateCreditNoteBody,
+  EditCreditNoteBody,
+  CreateRefundCreditNoteBody,
+  ApplyCreditNoteToInvoicesBody,
+  ValidateBulkDeleteCreditNotesResponse,
+} from '@bigcapital/sdk-ts';
+import type { CreditNotesListResponse } from '@bigcapital/sdk-ts';
+import {
+  fetchCreditNotes,
+  fetchCreditNote,
+  fetchCreditNoteState,
+  fetchCreditNoteRefunds,
+  fetchRefundCreditNoteTransaction,
+  fetchCreditNoteAssociatedInvoicesToApply,
+  fetchAppliedInvoices,
+  createCreditNote,
+  editCreditNote,
+  deleteCreditNote,
+  openCreditNote,
+  validateBulkDeleteCreditNotes,
+  bulkDeleteCreditNotes,
+  createRefundCreditNote,
+  deleteRefundCreditNote,
+  applyCreditNoteToInvoices,
+  deleteApplyCreditNoteToInvoices,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../../useRequest';
+import { useRequestPdf } from '../../useRequestPdf';
+import { transformToCamelCase } from '@/utils';
+import { creditNotesKeys, CreditNotesQueryKeys } from './query-keys';
+import { itemsKeys } from '../items/query-keys';
+import { customersKeys } from '../customers/query-keys';
+import { accountsKeys } from '../accounts/query-keys';
+import { invoicesKeys } from '../invoices/query-keys';
+
+// Keys that don't have factory methods yet - keeping inline
+const FINANCIAL_REPORT = 'FINANCIAL-REPORT';
+const TRANSACTIONS_BY_REFERENCE = 'TRANSACTIONS_BY_REFERENCE';
+const CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY = 'CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY';
+const ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES = 'ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES';
+const SETTING = 'SETTING';
+const SETTING_CREDIT_NOTES = 'SETTING_CREDIT_NOTES';
+
+const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
+  // Invalidate credit note.
+  queryClient.invalidateQueries({ queryKey: creditNotesKeys.all() });
+
+  // Invalidate items.
+  queryClient.invalidateQueries({ queryKey: itemsKeys.all() });
+
+  // Invalidate customers.
+  queryClient.invalidateQueries({ queryKey: customersKeys.all() });
+
+  // Invalidate accounts.
+  queryClient.invalidateQueries({ queryKey: accountsKeys.all() });
+
+  // Invalidate settings.
+  queryClient.invalidateQueries({ queryKey: [SETTING, SETTING_CREDIT_NOTES] });
+
+  // Invalidate refund credit
+  queryClient.invalidateQueries({ queryKey: creditNotesKeys.refund(null).slice(0, 1) });
+  queryClient.invalidateQueries({ queryKey: creditNotesKeys.refundTransaction(null).slice(0, 1) });
+
+  // Invalidate reconcile.
+  queryClient.invalidateQueries({ queryKey: creditNotesKeys.reconcile(null).slice(0, 1) });
+  queryClient.invalidateQueries({ queryKey: creditNotesKeys.reconciles(null).slice(0, 1) });
+
+  // Invalidate invoices.
+  queryClient.invalidateQueries({ queryKey: invoicesKeys.all() });
+
+  // Invalidate cashflow accounts.
+  queryClient.invalidateQueries({ queryKey: [CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY] });
+
+  // Invalidate financial reports.
+  queryClient.invalidateQueries({ queryKey: [FINANCIAL_REPORT] });
+
+  // Invalidate transactions by reference.
+  queryClient.invalidateQueries({ queryKey: [TRANSACTIONS_BY_REFERENCE] });
+
+  // Invalidate mutate base currency abilities.
+  queryClient.invalidateQueries({ queryKey: [ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES] });
+};
+
+/**
+ * Create a new credit note.
+ */
+export function useCreateCreditNote(
+  props?: UseMutationOptions<void, Error, CreateCreditNoteBody>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (values: CreateCreditNoteBody) => createCreditNote(fetcher, values),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
+/**
+ * Edit the given credit note.
+ */
+export function useEditCreditNote(
+  props?: UseMutationOptions<void, Error, [number, EditCreditNoteBody]>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: ([id, values]: [number, EditCreditNoteBody]) =>
+      editCreditNote(fetcher, id, values),
+    onSuccess: (_data, [id]) => {
+      commonInvalidateQueries(queryClient);
+      queryClient.invalidateQueries({ queryKey: creditNotesKeys.detail(id) });
+    },
+  });
+}
+
+/**
+ * Delete the given credit note.
+ */
+export function useDeleteCreditNote(
+  props?: UseMutationOptions<void, Error, number>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (id: number) => deleteCreditNote(fetcher, id),
+    onSuccess: (_data, id) => {
+      commonInvalidateQueries(queryClient);
+      queryClient.invalidateQueries({ queryKey: creditNotesKeys.detail(id) });
+    },
+  });
+}
+
+export function useBulkDeleteCreditNotes(
+  props?: UseMutationOptions<void, Error, { ids: number[]; skipUndeletable?: boolean }>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) => bulkDeleteCreditNotes(fetcher, { ids, skipUndeletable }),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
+export function useValidateBulkDeleteCreditNotes(
+  props?: UseMutationOptions<ValidateBulkDeleteCreditNotesResponse, Error, number[]>
+) {
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (ids: number[]) =>
+      validateBulkDeleteCreditNotes(fetcher, { ids, skipUndeletable: false }).then(
+        (res) => transformToCamelCase(res as Record<string, unknown>) as ValidateBulkDeleteCreditNotesResponse
+      ),
+  });
+}
+
+/**
+ * Retrieve credit notes list with pagination meta.
+ */
+export function useCreditNotes(
+  query?: Record<string, unknown>,
+  props?: Omit<UseQueryOptions<CreditNotesListResponse>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    ...props,
+    queryKey: creditNotesKeys.list(query),
+    queryFn: () =>
+      (fetchCreditNotes as (f: ReturnType<typeof useApiFetcher>, q?: Record<string, unknown>) => Promise<CreditNotesListResponse>)(
+        fetcher,
+        query
+      ),
+  });
+}
+
+export function useCreditNote(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<CreditNote>, 'queryKey' | 'queryFn'>,
+  _requestProps?: Record<string, unknown>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    ...props,
+    queryKey: creditNotesKeys.detail(id),
+    queryFn: () => fetchCreditNote(fetcher, id!),
+    enabled: id != null,
+  });
+}
+
+export function useRefreshCreditNotes() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries({ queryKey: creditNotesKeys.all() });
+    },
+  };
+}
+
+export function useCreateRefundCreditNote(
+  props?: UseMutationOptions<void, Error, [number, CreateRefundCreditNoteBody]>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: ([id, values]: [number, CreateRefundCreditNoteBody]) =>
+      createRefundCreditNote(fetcher, id, values),
+    onSuccess: (_data, [id]) => {
+      commonInvalidateQueries(queryClient);
+      queryClient.invalidateQueries({ queryKey: creditNotesKeys.detail(id) });
+    },
+  });
+}
+
+export function useDeleteRefundCreditNote(
+  props?: UseMutationOptions<void, Error, number>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (refundCreditId: number) => deleteRefundCreditNote(fetcher, refundCreditId),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
+/**
+ * Retrieve refund credit note detail of the given id.
+ */
+export function useRefundCreditNote(
+  id: number | null | undefined,
+  props?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof fetchCreditNoteRefunds>>>,
+    'queryKey' | 'queryFn'
+  >,
+  _requestProps?: Record<string, unknown>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    ...props,
+    queryKey: creditNotesKeys.refund(id),
+    queryFn: () => fetchCreditNoteRefunds(fetcher, id!),
+    enabled: id != null,
+  });
+}
+
+/**
+ * Mark the given credit note as opened.
+ */
+export function useOpenCreditNote(
+  props?: UseMutationOptions<void, Error, number>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (id: number) => openCreditNote(fetcher, id),
+    onSuccess: (_data, id) => {
+      commonInvalidateQueries(queryClient);
+      queryClient.invalidateQueries({ queryKey: creditNotesKeys.detail(id) });
+    },
+  });
+}
+
+/**
+ * Retrieve reconcile credit note of the given id.
+ */
+export function useReconcileCreditNote(
+  id: number | null | undefined,
+  props?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof fetchCreditNoteAssociatedInvoicesToApply>>>,
+    'queryKey' | 'queryFn'
+  >,
+  _requestProps?: Record<string, unknown>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    ...props,
+    queryKey: creditNotesKeys.reconcile(id),
+    queryFn: () => fetchCreditNoteAssociatedInvoicesToApply(fetcher, id!),
+    enabled: id != null,
+  });
+}
+
+/**
+ * Create Reconcile credit note.
+ */
+export function useCreateReconcileCreditNote(
+  props?: UseMutationOptions<void, Error, [number, ApplyCreditNoteToInvoicesBody]>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: ([id, values]: [number, ApplyCreditNoteToInvoicesBody]) =>
+      applyCreditNoteToInvoices(fetcher, id, values),
+    onSuccess: (_data, [id]) => {
+      commonInvalidateQueries(queryClient);
+      queryClient.invalidateQueries({ queryKey: creditNotesKeys.detail(id) });
+    },
+  });
+}
+
+/**
+ * Retrieve reconcile credit notes (applied invoices).
+ */
+export function useReconcileCreditNotes(
+  id: number | null | undefined,
+  props?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof fetchAppliedInvoices>>>,
+    'queryKey' | 'queryFn'
+  >,
+  _requestProps?: Record<string, unknown>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    ...props,
+    queryKey: creditNotesKeys.reconciles(id),
+    queryFn: () => fetchAppliedInvoices(fetcher, id!),
+    enabled: id != null,
+  });
+}
+
+/**
+ * Delete the given reconcile credit note (applied invoice).
+ */
+export function useDeleteReconcileCredit(
+  props?: UseMutationOptions<void, Error, number>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (applyCreditToInvoicesId: number) =>
+      deleteApplyCreditNoteToInvoices(fetcher, applyCreditToInvoicesId),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
+/**
+ * Retrieve refund credit transaction detail.
+ */
+export function useRefundCreditTransaction(
+  id: number | null | undefined,
+  props?: Omit<
+    UseQueryOptions<Awaited<ReturnType<typeof fetchRefundCreditNoteTransaction>>>,
+    'queryKey' | 'queryFn'
+  >,
+  _requestProps?: Record<string, unknown>
+) {
+  const fetcher = useApiFetcher();
+  return useQuery({
+    ...props,
+    queryKey: creditNotesKeys.refundTransaction(id),
+    queryFn: () => fetchRefundCreditNoteTransaction(fetcher, id!),
+    enabled: id != null,
+  });
+}
+
+/**
+ * Retrieve the credit note pdf document data.
+ */
+export function usePdfCreditNote(creditNoteId: number | string) {
+  return useRequestPdf({ url: `credit-notes/${creditNoteId}` });
+}
+
+export interface CreditNoteStateResponse {
+  defaultTemplateId: number;
+}
+
+export function useGetCreditNoteState(
+  options?: UseQueryOptions<CreditNoteStateResponse, Error>
+): UseQueryResult<CreditNoteStateResponse, Error> {
+  const fetcher = useApiFetcher();
+
+  return useQuery<CreditNoteStateResponse, Error>({
+    ...options,
+    queryKey: ['CREDIT_NOTE_STATE'],
+    queryFn: () =>
+      fetchCreditNoteState(fetcher).then((data) =>
+        transformToCamelCase(data as unknown as Record<string, unknown>) as CreditNoteStateResponse
+      ),
+  });
+}

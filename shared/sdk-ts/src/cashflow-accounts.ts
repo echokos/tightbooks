@@ -121,7 +121,8 @@ export async function getUncategorizedTransaction(
   return data;
 }
 
-export async function categorizeTransaction(
+/** Categorize multiple transactions at once (bulk operation). */
+export async function categorizeTransactionsBulk(
   fetcher: ApiFetcher,
   body: CategorizeTransactionBody
 ): Promise<void> {
@@ -135,4 +136,58 @@ export async function uncategorizeTransaction(
 ): Promise<void> {
   const del = fetcher.path(BANKING_ACCOUNTS_ROUTES.UNCATEGORIZE).method('delete').create();
   await del({ id });
+}
+
+// ============================================
+// Cashflow-named aliases for backward compatibility
+// ============================================
+
+/** Type aliases for cashflow naming convention */
+export type CreateCashflowTransactionBody = CreateBankingTransactionBody;
+export type CashflowAccountTransactionsQuery = GetBankingTransactionsQuery;
+export type CashflowAccountUncategorizedTransactionsQuery = GetUncategorizedTransactionsQuery;
+
+/** Fetch cashflow accounts (alias for fetchBankingAccounts with optional query params). */
+export async function fetchCashflowAccounts(
+  fetcher: ApiFetcher,
+  _query?: Record<string, unknown>
+): Promise<BankingAccountsListResponse> {
+  return fetchBankingAccounts(fetcher);
+}
+
+/** Create a cashflow transaction (alias for createBankingTransaction). */
+export const createCashflowTransaction = createBankingTransaction;
+
+/** Fetch a single cashflow transaction (alias for getBankingTransaction). */
+export const fetchCashflowTransaction = getBankingTransaction;
+
+/** Delete a cashflow transaction (alias for deleteBankingTransaction). */
+export const deleteCashflowTransaction = deleteBankingTransaction;
+
+/** Fetch account transactions with accountId included in query (wrapper for fetchBankingTransactions). */
+export async function fetchAccountTransactionsInfinity(
+  fetcher: ApiFetcher,
+  accountId: number,
+  query: GetBankingTransactionsQuery
+): Promise<BankingTransactionsListResponse & { pagination?: { nextPage?: number } }> {
+  const result = await fetchBankingTransactions(fetcher, { ...query, accountId });
+  return result as BankingTransactionsListResponse & { pagination?: { nextPage?: number } };
+}
+
+/** Fetch uncategorized transactions for an account (alias for fetchUncategorizedTransactions). */
+export const fetchAccountUncategorizedTransactions = fetchUncategorizedTransactions;
+
+/** Fetch a single uncategorized transaction (alias for getUncategorizedTransaction). */
+export const fetchUncategorizedTransaction = getUncategorizedTransaction;
+
+/** Categorize a single transaction by ID. */
+export async function categorizeTransaction(
+  fetcher: ApiFetcher,
+  id: number,
+  values: Omit<CategorizeTransactionBody, 'uncategorizedTransactionIds'>
+): Promise<void> {
+  return categorizeTransactionsBulk(fetcher, {
+    ...values,
+    uncategorizedTransactionIds: [id],
+  } as CategorizeTransactionBody);
 }

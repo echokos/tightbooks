@@ -1,0 +1,256 @@
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useInfiniteQuery,
+  UseMutationOptions,
+  UseQueryOptions,
+  UseInfiniteQueryOptions,
+} from '@tanstack/react-query';
+import type {
+  CreateCashflowTransactionBody,
+  CashflowAccountTransactionsQuery,
+  CashflowAccountUncategorizedTransactionsQuery,
+  CategorizeTransactionBody,
+} from '@bigcapital/sdk-ts';
+import {
+  fetchCashflowAccounts,
+  createCashflowTransaction,
+  fetchCashflowTransaction,
+  deleteCashflowTransaction,
+  fetchAccountTransactionsInfinity,
+  fetchAccountUncategorizedTransactions,
+  fetchUncategorizedTransaction,
+  categorizeTransaction,
+  uncategorizeTransaction,
+} from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../../useRequest';
+import { cashflowAccountsKeys } from './query-keys';
+import { accountsKeys } from '../accounts/query-keys';
+import { customersKeys } from '../customers/query-keys';
+import { vendorsKeys } from '../vendors/query-keys';
+
+// Keys that don't have factory methods yet - keeping inline
+const FINANCIAL_REPORT = 'FINANCIAL-REPORT';
+
+const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
+  // Invalidate cashflow accounts.
+  queryClient.invalidateQueries({ queryKey: cashflowAccountsKeys.all() });
+
+  // Invalidate cashflow transactions.
+  queryClient.invalidateQueries({ queryKey: cashflowAccountsKeys.transactions() });
+  queryClient.invalidateQueries({ queryKey: cashflowAccountsKeys.transactionsInfinity() });
+  queryClient.invalidateQueries({ queryKey: cashflowAccountsKeys.uncategorizedInfinity() });
+
+  // Invalidate accounts.
+  queryClient.invalidateQueries({ queryKey: accountsKeys.all() });
+  queryClient.invalidateQueries({ queryKey: accountsKeys.transactions(null).slice(0, 1) });
+
+  // Invalidate financial reports.
+  queryClient.invalidateQueries({ queryKey: [FINANCIAL_REPORT] });
+
+  // Invalidate customers.
+  queryClient.invalidateQueries({ queryKey: customersKeys.all() });
+
+  // Invalidate vendors.
+  queryClient.invalidateQueries({ queryKey: vendorsKeys.all() });
+};
+
+/**
+ * Retrieve cashflow accounts.
+ */
+export function useCashflowAccounts(
+  query?: Record<string, unknown>,
+  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+
+  return useQuery({
+    ...props,
+    queryKey: cashflowAccountsKeys.list(query),
+    queryFn: () => fetchCashflowAccounts(fetcher, query ?? {}),
+  });
+}
+
+/**
+ * Creates a new cashflow transaction.
+ */
+export function useCreateCashflowTransaction(
+  props?: UseMutationOptions<void, Error, CreateCashflowTransactionBody>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (values: CreateCashflowTransactionBody) =>
+      createCashflowTransaction(fetcher, values),
+    onSuccess: () => {
+      commonInvalidateQueries(queryClient);
+    },
+  });
+}
+
+/**
+ * Retrieves the cashflow transaction details.
+ */
+export function useCashflowTransaction(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+
+  return useQuery({
+    ...props,
+    queryKey: cashflowAccountsKeys.transaction(id),
+    queryFn: () => fetchCashflowTransaction(fetcher, id!),
+    enabled: id != null,
+  });
+}
+
+/**
+ * Deletes the given cashflow transaction.
+ */
+export function useDeleteCashflowTransaction(
+  props?: UseMutationOptions<void, Error, number>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (id: number) => deleteCashflowTransaction(fetcher, id),
+    onSuccess: (_res, id) => {
+      queryClient.invalidateQueries({ queryKey: cashflowAccountsKeys.transaction(id) });
+      commonInvalidateQueries(queryClient);
+    },
+  });
+}
+
+/**
+ * Retrieve account transactions with infinite scroll.
+ */
+export function useAccountTransactionsInfinity(
+  accountId: number,
+  query?: CashflowAccountTransactionsQuery,
+  props?: Omit<
+    UseInfiniteQueryOptions<unknown, Error, unknown, unknown, readonly [string, number | undefined, CashflowAccountTransactionsQuery | undefined]>,
+    'queryKey' | 'queryFn' | 'initialPageParam' | 'getNextPageParam'
+  >
+) {
+  const fetcher = useApiFetcher();
+
+  return useInfiniteQuery({
+    ...props,
+    queryKey: cashflowAccountsKeys.transactionsInfinity(accountId, query),
+    queryFn: ({ pageParam = 1 }) =>
+      fetchAccountTransactionsInfinity(fetcher, accountId, { ...query, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage: { pagination?: { nextPage?: number } }) =>
+      lastPage?.pagination?.nextPage,
+  });
+}
+
+/**
+ * Retrieve uncategorized account transactions with infinite scroll.
+ */
+export function useAccountUncategorizedTransactionsInfinity(
+  accountId: number,
+  query?: CashflowAccountUncategorizedTransactionsQuery,
+  props?: Omit<
+    UseInfiniteQueryOptions<unknown, Error, unknown, unknown, readonly [string, number | undefined, CashflowAccountUncategorizedTransactionsQuery | undefined]>,
+    'queryKey' | 'queryFn' | 'initialPageParam' | 'getNextPageParam'
+  >
+) {
+  const fetcher = useApiFetcher();
+
+  return useInfiniteQuery({
+    ...props,
+    queryKey: cashflowAccountsKeys.uncategorizedInfinity(accountId, query),
+    queryFn: ({ pageParam = 1 }) =>
+      fetchAccountUncategorizedTransactions(fetcher, accountId, { ...query, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage: { pagination?: { nextPage?: number } }) =>
+      lastPage?.pagination?.nextPage,
+  });
+}
+
+/**
+ * Refreshes cashflow accounts.
+ */
+export function useRefreshCashflowAccounts() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries({ queryKey: cashflowAccountsKeys.all() });
+    },
+  };
+}
+
+/**
+ * Refreshes cashflow transactions.
+ */
+export function useRefreshCashflowTransactions() {
+  const queryClient = useQueryClient();
+
+  return {
+    refresh: () => {
+      queryClient.invalidateQueries({ queryKey: cashflowAccountsKeys.transactions() });
+    },
+  };
+}
+
+/**
+ * Retrieve the uncategorized transaction.
+ */
+export function useUncategorizedTransaction(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>
+) {
+  const fetcher = useApiFetcher();
+
+  return useQuery({
+    ...props,
+    queryKey: cashflowAccountsKeys.uncategorizedTransaction(id),
+    queryFn: () => fetchUncategorizedTransaction(fetcher, id!),
+    enabled: id != null,
+  });
+}
+
+/**
+ * Categorize the given transaction.
+ */
+export function useCategorizeTransaction(
+  props?: UseMutationOptions<void, Error, { id: number; values: CategorizeTransactionBody }>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: ({ id, values }: { id: number; values: CategorizeTransactionBody }) =>
+      categorizeTransaction(fetcher, id, values),
+    onSuccess: () => {
+      commonInvalidateQueries(queryClient);
+    },
+  });
+}
+
+/**
+ * Uncategorize the given transaction.
+ */
+export function useUncategorizeTransaction(
+  props?: UseMutationOptions<void, Error, number>
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (id: number) => uncategorizeTransaction(fetcher, id),
+    onSuccess: () => {
+      commonInvalidateQueries(queryClient);
+    },
+  });
+}
