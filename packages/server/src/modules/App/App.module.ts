@@ -99,6 +99,7 @@ import { UsersModule } from '../UsersModule/Users.module';
 import { ContactsModule } from '../Contacts/Contacts.module';
 import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
 import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.module';
+import { ExchangeRatesModule } from '../ExchangeRates/ExchangeRates.module';
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
 import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
 import { SocketModule } from '../Socket/Socket.module';
@@ -256,6 +257,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     UsersModule,
     ContactsModule,
     SocketModule,
+    ExchangeRatesModule,
   ],
   controllers: [AppController],
   providers: [
