@@ -16,3 +16,6 @@ export const OrganizationQueryKeys = {
   ORGANIZATION_CURRENT,
   ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES,
 } as const;
+
+/** @deprecated Use OrganizationQueryKeys */
+export const OrganizationsQueryKeys = OrganizationQueryKeys;

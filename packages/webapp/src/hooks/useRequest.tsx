@@ -146,6 +146,7 @@ export function useApiFetcher() {
     return createApiFetcher({
       baseUrl: '',
       init: { headers },
+      disableCamelCaseTransform: true,
     });
   }, [token, organizationId]);
 }

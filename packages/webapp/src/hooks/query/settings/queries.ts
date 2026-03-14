@@ -5,7 +5,7 @@ import {
   UseMutationOptions,
   UseQueryOptions,
 } from '@tanstack/react-query';
-import type { SettingValues } from '@bigcapital/sdk-ts';
+import type { SaveSettingsBody } from '@bigcapital/sdk-ts';
 import {
   fetchSettings,
   fetchSettingsInvoices,
@@ -26,30 +26,18 @@ import { useApiFetcher } from '../../useRequest';
 import {
   settingsKeys,
   SETTING,
-  SETTING_INVOICES,
-  SETTING_ESTIMATES,
-  SETTING_PAYMENT_RECEIVES,
-  SETTING_RECEIPTS,
-  SETTING_MANUAL_JOURNALS,
-  SETTING_ITEMS,
-  SETTING_CASHFLOW,
-  SETTING_CREDIT_NOTES,
-  SETTING_VENDOR_CREDITS,
-  SETTING_WAREHOUSE_TRANSFER,
   SETTING_SMS_NOTIFICATIONS,
-  SETTING_SMS_NOTIFICATION,
-  SETTING_EDIT_SMS_NOTIFICATION,
 } from './query-keys';
 
 export function useSaveSettings(
-  props?: UseMutationOptions<void, Error, SettingValues>
+  props?: UseMutationOptions<void, Error, SaveSettingsBody>
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 
   return useMutation({
     ...props,
-    mutationFn: async (values: SettingValues) => {
+    mutationFn: async (values: SaveSettingsBody) => {
       const { editSettings } = await import('@bigcapital/sdk-ts');
       return editSettings(fetcher, values);
     },
@@ -154,9 +142,6 @@ export function useSettingCashFlow(
   });
 }
 
-/**
- * Retrieve credit notes settings.
- */
 export function useSettingsCreditNotes(
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>
 ) {
@@ -192,7 +177,8 @@ export function useSettingsWarehouseTransfers(
     queryFn: () => fetchSettingsWarehouseTransfers(fetcher),
   });
 }
- function useSettingSMSNotifications(
+
+export function useSettingSMSNotifications(
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>
 ) {
   const fetcher = useApiFetcher();

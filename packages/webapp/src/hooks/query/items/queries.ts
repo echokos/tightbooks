@@ -36,7 +36,8 @@ import type {
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
 import { transformToCamelCase } from '@/utils';
-import { itemsKeys, itemsCategoriesKeys } from './query-keys';
+import { itemsKeys } from './query-keys';
+import { itemsCategoriesKeys } from '../items-categories/query-keys';
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
   queryClient.invalidateQueries({ queryKey: itemsKeys.all() });

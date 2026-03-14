@@ -8,10 +8,15 @@ import {
 import type { ApiKeysList, GenerateApiKeyBody } from '@bigcapital/sdk-ts';
 import { fetchApiKeys, generateApiKey, revokeApiKey } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../useRequest';
-import t from './types';
+
+const API_KEYS = 'API_KEYS';
+
+export const ApiKeysQueryKeys = {
+  API_KEYS,
+} as const;
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
-  queryClient.invalidateQueries({ queryKey: [t.API_KEYS] });
+  queryClient.invalidateQueries({ queryKey: [API_KEYS] });
 };
 
 export function useApiKeys(
@@ -20,7 +25,7 @@ export function useApiKeys(
   const fetcher = useApiFetcher();
   return useQuery({
     ...props,
-    queryKey: [t.API_KEYS],
+    queryKey: [API_KEYS],
     queryFn: () => fetchApiKeys(fetcher),
   });
 }
