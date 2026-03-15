@@ -43,6 +43,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build shared packages
+        run: pnpm run build --scope "@bigcapital/utils" --scope "@bigcapital/email-components" --scope "@bigcapital/pdf-templates"
+
       - name: Generate OpenAPI spec and SDK types
         run: pnpm run generate:sdk-types
 
