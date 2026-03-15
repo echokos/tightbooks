@@ -21,8 +21,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CreditNoteApplication } from './CreditNoteApplication.service';
-import { ICreditNotesQueryDTO } from './types/CreditNotes.types';
 import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
+import { GetCreditNotesQueryDto } from './dtos/GetCreditNotesQuery.dto';
 import { CreditNoteResponseDto } from './dtos/CreditNoteResponse.dto';
 import { CreditNoteStateResponseDto } from './dtos/CreditNoteStateResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
@@ -126,7 +126,7 @@ export class CreditNotesController {
       ],
     },
   })
-  getCreditNotes(@Query() creditNotesQuery: ICreditNotesQueryDTO) {
+  getCreditNotes(@Query() creditNotesQuery: GetCreditNotesQueryDto) {
     return this.creditNoteApplication.getCreditNotes(creditNotesQuery);
   }
 

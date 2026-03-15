@@ -23,9 +23,9 @@ import {
 } from '@nestjs/common';
 import { PaymentReceivesApplication } from './PaymentReceived.application';
 import {
-  IPaymentsReceivedFilter,
   PaymentReceiveMailOptsDTO,
 } from './types/PaymentReceived.types';
+import { GetPaymentsReceivedQueryDto } from './dtos/GetPaymentsReceivedQuery.dto';
 import {
   CreatePaymentReceivedDto,
   EditPaymentReceivedDto,
@@ -156,7 +156,7 @@ export class PaymentReceivesController {
     },
   })
   public getPaymentsReceived(
-    @Query() filterDTO: Partial<IPaymentsReceivedFilter>,
+    @Query() filterDTO: GetPaymentsReceivedQueryDto,
   ) {
     return this.paymentReceivesApplication.getPaymentsReceived(filterDTO);
   }

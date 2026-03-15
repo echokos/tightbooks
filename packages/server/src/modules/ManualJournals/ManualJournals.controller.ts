@@ -23,7 +23,7 @@ import {
   CreateManualJournalDto,
   EditManualJournalDto,
 } from './dtos/ManualJournal.dto';
-import { IManualJournalsFilter } from './types/ManualJournals.types';
+import { GetManualJournalsQueryDto } from './dtos/GetManualJournalsQuery.dto';
 import { ManualJournalResponseDto } from './dtos/ManualJournalResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
@@ -194,7 +194,7 @@ export class ManualJournalsController {
     },
   })
   @ApiResponse({ status: 404, description: 'The manual journal not found.' })
-  public getManualJournals(@Query() filterDto: Partial<IManualJournalsFilter>) {
+  public getManualJournals(@Query() filterDto: GetManualJournalsQueryDto) {
     return this.manualJournalsApplication.getManualJournals(filterDto);
   }
 }

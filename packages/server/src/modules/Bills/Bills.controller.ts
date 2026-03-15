@@ -21,8 +21,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BillsApplication } from './Bills.application';
-import { IBillsFilter } from './Bills.types';
 import { CreateBillDto, EditBillDto } from './dtos/Bill.dto';
+import { GetBillsQueryDto } from './dtos/GetBillsQuery.dto';
 import { BillResponseDto } from './dtos/BillResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
@@ -141,7 +141,7 @@ export class BillsController {
     type: Number,
     description: 'The bill id',
   })
-  getBills(@Query() filterDTO: Partial<IBillsFilter>) {
+  getBills(@Query() filterDTO: GetBillsQueryDto) {
     return this.billsApplication.getBills(filterDTO);
   }
 
