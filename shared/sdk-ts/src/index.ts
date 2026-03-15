@@ -14,6 +14,7 @@ export * from './bills';
 export * from './items';
 export * from './branches';
 export * from './warehouses';
+export * from './exchange-rates';
 export * from './expenses';
 export * from './import';
 export * from './manual-journals';
