@@ -22,7 +22,7 @@ export class GetBillsService {
    * @param {GetBillsQueryDto} filterDTO -
    */
   public async getBills(filterDTO: GetBillsQueryDto): Promise<{
-    data: Bill[];
+    bills: Bill[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {

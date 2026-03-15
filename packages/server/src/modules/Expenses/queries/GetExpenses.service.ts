@@ -25,7 +25,7 @@ export class GetExpensesService {
    * @return {IExpense[]}
    */
   public async getExpensesList(filterDTO: GetExpensesQueryDto): Promise<{
-    data: Expense[];
+    expenses: Expense[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
