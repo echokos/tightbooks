@@ -4643,6 +4643,23 @@ export interface paths {
         patch: operations["ContactsController_inactivateContact"];
         trace?: never;
     };
+    "/api/exchange-rates/latest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the latest exchange rate */
+        get: operations["ExchangeRatesController_getLatestExchangeRate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -14154,6 +14171,23 @@ export interface components {
              * @example StrongPassword123!
              */
             password: string;
+        };
+        ExchangeRateLatestResponseDto: {
+            /**
+             * @description The base currency code
+             * @example USD
+             */
+            baseCurrency: string;
+            /**
+             * @description The target currency code
+             * @example EUR
+             */
+            toCurrency: string;
+            /**
+             * @description The exchange rate value
+             * @example 0.85
+             */
+            exchangeRate: number;
         };
     };
     responses: never;
@@ -28764,6 +28798,38 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ExchangeRatesController_getLatestExchangeRate: {
+        parameters: {
+            query?: {
+                /** @description Source currency code (ISO 4217) */
+                from_currency?: string;
+                /** @description Target currency code (ISO 4217) */
+                to_currency?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully retrieved exchange rate */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExchangeRateLatestResponseDto"];
+                };
+            };
+            /** @description Invalid currency code or service error */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };

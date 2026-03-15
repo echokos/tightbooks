@@ -22955,6 +22955,52 @@
           "Contacts"
         ]
       }
+    },
+    "/api/exchange-rates/latest": {
+      "get": {
+        "operationId": "ExchangeRatesController_getLatestExchangeRate",
+        "summary": "Get the latest exchange rate",
+        "parameters": [
+          {
+            "name": "from_currency",
+            "required": false,
+            "in": "query",
+            "description": "Source currency code (ISO 4217)",
+            "schema": {
+              "example": "USD",
+              "type": "string"
+            }
+          },
+          {
+            "name": "to_currency",
+            "required": false,
+            "in": "query",
+            "description": "Target currency code (ISO 4217)",
+            "schema": {
+              "example": "EUR",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved exchange rate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExchangeRateLatestResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid currency code or service error"
+          }
+        },
+        "tags": [
+          "Exchange Rates"
+        ]
+      }
     }
   },
   "info": {
@@ -38997,6 +39043,31 @@
           "firstName",
           "lastName",
           "password"
+        ]
+      },
+      "ExchangeRateLatestResponseDto": {
+        "type": "object",
+        "properties": {
+          "baseCurrency": {
+            "type": "string",
+            "description": "The base currency code",
+            "example": "USD"
+          },
+          "toCurrency": {
+            "type": "string",
+            "description": "The target currency code",
+            "example": "EUR"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "The exchange rate value",
+            "example": 0.85
+          }
+        },
+        "required": [
+          "baseCurrency",
+          "toCurrency",
+          "exchangeRate"
         ]
       }
     }
