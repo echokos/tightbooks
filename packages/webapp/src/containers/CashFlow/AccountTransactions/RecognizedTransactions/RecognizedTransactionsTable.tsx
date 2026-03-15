@@ -21,7 +21,7 @@ import { useRecognizedTransactionsBoot } from './RecognizedTransactionsTableBoot
 import { ActionsMenu } from './_components';
 import { compose } from '@/utils';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
-import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
+import { useExcludeUncategorizedTransaction } from '@/hooks/query/banking';
 import {
   WithBankingActionsProps,
   withBankingActions,

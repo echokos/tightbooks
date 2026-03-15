@@ -45,10 +45,14 @@ export function StripeIntegrationEditForm({
     values: StripeIntegrationFormValues,
     { setSubmitting }: FormikHelpers<StripeIntegrationFormValues>,
   ) => {
-    const _values = { options: { ...values } };
-
     setSubmitting(true);
-    updatePaymentMethod({ paymentMethodId, values: _values })
+    updatePaymentMethod({
+      paymentMethodId,
+      values: {
+        bankAccountId: Number(values.bankAccountId),
+        clearingAccountId: Number(values.clearingAccountId),
+      },
+    })
       .then(() => {
         AppToaster.show({
           message: 'The Stripe settings have been updated.',

@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
-import { useBankRules } from '@/hooks/query/bank-rules';
+import { useBankRules } from '@/hooks/query/banking';
 import { isEmpty } from 'lodash';
 
 interface RulesListBootValues {

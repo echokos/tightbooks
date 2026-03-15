@@ -249,10 +249,6 @@ const EXCHANGE_RATE = {
   EXCHANGE_RATE: 'EXCHANGE_RATE',
 };
 
-const API_KEYS = {
-  API_KEYS: 'API_KEYS',
-};
-
 // ==========================================
 // Legacy `t` object (for backward compatibility)
 // @deprecated Import specific {Module}QueryKeys instead
@@ -292,7 +288,6 @@ const t = {
   ...ORGANIZATION,
   ...TAX_RATES,
   ...EXCHANGE_RATE,
-  ...API_KEYS,
 } as const;
 
 export default t;
@@ -333,4 +328,14 @@ export { WarehousesTransfersQueryKeys } from './warehouses-transfers';
 export { BranchesQueryKeys } from './branches';
 export { TaxRatesQueryKeys } from './tax-rates';
 export { ExchangeRatesQueryKeys } from './exchange-rates';
+// New nested module query keys
+export { BankingQueryKeys } from './banking';
+export { PaymentMethodsQueryKeys } from './payment-methods';
+export { PaymentServicesQueryKeys } from './payment-services';
+export { PaymentLinkQueryKeys } from './payment-link';
+export { StripeIntegrationQueryKeys } from './stripe-integration';
 export { ApiKeysQueryKeys } from './api-keys';
+export { JobsQueryKeys } from './jobs';
+export { PdfTemplatesQueryKeys } from './pdf-templates';
+export { SubscriptionQueryKeys } from './subscription';
+export { ViewsQueryKeys } from './views';

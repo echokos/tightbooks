@@ -17,12 +17,12 @@ export function PaymentPortal() {
   const { sharableLinkMeta, linkId } = usePaymentPortalBoot();
   const {
     mutateAsync: createStripeCheckoutSession,
-    isLoading: isStripeCheckoutLoading,
+    isPending: isStripeCheckoutLoading,
   } = useCreateStripeCheckoutSession();
 
   const {
     mutateAsync: generatePaymentLinkInvoice,
-    isLoading: isInvoiceGenerating,
+    isPending: isInvoiceGenerating,
   } = useGeneratePaymentLinkInvoicePdf();
 
   // Handles invoice preview button click.

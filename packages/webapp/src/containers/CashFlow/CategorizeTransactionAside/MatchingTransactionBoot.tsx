@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { defaultTo } from 'lodash';
 import * as R from 'ramda';
-import { useGetBankTransactionsMatches } from '@/hooks/query/bank-rules';
+import { useGetBankTransactionsMatches } from '@/hooks/query/banking';
 import { Spinner } from '@blueprintjs/core';
 
 interface MatchingTransactionBootValues {

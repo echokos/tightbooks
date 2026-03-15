@@ -7,7 +7,7 @@ import {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query';
-import { useApiFetcher } from '../useRequest';
+import { useApiFetcher } from '../../useRequest';
 import { transformToCamelCase } from '@/utils';
 import type {
   SubscriptionsListResponse,
@@ -19,10 +19,7 @@ import {
   resumeSubscription,
   changeSubscriptionPlan,
 } from '@bigcapital/sdk-ts';
-
-const QueryKeys = {
-  Subscriptions: 'GetSubscriptions',
-};
+import { subscriptionKeys } from './query-keys';
 
 /**
  * Cancels the main subscription of the current organization.
@@ -36,7 +33,7 @@ export function useCancelMainSubscription(
   return useMutation({
     mutationFn: () => cancelSubscription(fetcher),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.Subscriptions] });
+      queryClient.invalidateQueries({ queryKey: subscriptionKeys.all() });
     },
     ...options,
   });
@@ -54,7 +51,7 @@ export function useResumeMainSubscription(
   return useMutation({
     mutationFn: () => resumeSubscription(fetcher),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.Subscriptions] });
+      queryClient.invalidateQueries({ queryKey: subscriptionKeys.all() });
     },
     ...options,
   });
@@ -73,7 +70,7 @@ export function useChangeSubscriptionPlan(
     mutationFn: (values: ChangeSubscriptionPlanBody) =>
       changeSubscriptionPlan(fetcher, values),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.Subscriptions] });
+      queryClient.invalidateQueries({ queryKey: subscriptionKeys.all() });
     },
     ...options,
   });
@@ -97,7 +94,7 @@ export function useGetSubscriptions(
   const fetcher = useApiFetcher();
 
   return useQuery({
-    queryKey: [QueryKeys.Subscriptions],
+    queryKey: subscriptionKeys.list(),
     queryFn: () => fetchSubscriptions(fetcher),
     select: (data) => transformToCamelCase(data) as GetSubscriptionsResponse,
     ...options,

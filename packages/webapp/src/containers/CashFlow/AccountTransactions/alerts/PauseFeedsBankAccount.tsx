@@ -6,7 +6,7 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
-import { usePauseFeedsBankAccount } from '@/hooks/query/bank-accounts';
+import { usePauseFeedsBankAccount } from '@/hooks/query/banking';
 import { compose } from '@/utils';
 
 /**

@@ -15,7 +15,7 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 import { useExcludedTransactionsColumns } from './_utils';
 import { useExcludedTransactionsBoot } from './ExcludedTransactionsTableBoot';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
-import { useUnexcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
+import { useUnexcludeUncategorizedTransaction } from '@/hooks/query/banking';
 
 import { ActionsMenu } from './_components';
 import { BankAccountDataTable } from '../components/BankAccountDataTable';

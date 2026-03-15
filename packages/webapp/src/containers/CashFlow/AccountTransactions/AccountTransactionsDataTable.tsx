@@ -23,7 +23,7 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 import { useAccountTransactionsColumns, ActionsMenu } from './components';
 import { useAccountTransactionsAllContext } from './AccountTransactionsAllBoot';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
-import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/bank-rules';
+import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/banking';
 import { useUncategorizeTransaction } from '@/hooks/query';
 import { handleCashFlowTransactionType } from './utils';
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { flatten, map } from 'lodash';
 import { IntersectionObserver } from '@/components';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
-import { usePendingBankTransactionsInfinity } from '@/hooks/query/bank-rules';
+import { usePendingBankTransactionsInfinity } from '@/hooks/query/banking';
 
 const PendingTransactionsContext = React.createContext();
 

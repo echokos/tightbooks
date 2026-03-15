@@ -6,7 +6,7 @@ import {
   UseQueryResult,
   useQuery,
 } from '@tanstack/react-query';
-import { useApiFetcher } from '../useRequest';
+import { useApiFetcher } from '../../useRequest';
 import { transformToCamelCase } from '@/utils';
 import type {
   GetStripeConnectLinkResponse,
@@ -21,6 +21,7 @@ import {
   fetchCreateStripeAccountSession,
   fetchCreateStripeAccount,
 } from '@bigcapital/sdk-ts';
+import { stripeIntegrationKeys } from './query-keys';
 
 // Create Stripe Account Link
 // ------------------------------------
@@ -32,6 +33,7 @@ interface StripeAccountLinkResponse {
     url: string;
   };
 }
+
 interface StripeAccountLinkValues {
   stripeAccountId: string;
 }
@@ -110,7 +112,7 @@ export const useGetStripeAccountLink = (
   const fetcher = useApiFetcher();
 
   return useQuery({
-    queryKey: ['getStripeAccountLink'],
+    queryKey: stripeIntegrationKeys.accountLink(),
     queryFn: () => fetchGetStripeConnectLink(fetcher),
     ...options,
   });

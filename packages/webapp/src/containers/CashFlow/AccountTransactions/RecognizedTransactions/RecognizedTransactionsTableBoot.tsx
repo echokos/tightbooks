@@ -4,7 +4,7 @@ import { flatten, map } from 'lodash';
 import * as R from 'ramda';
 import { IntersectionObserver, NumericInputCell } from '@/components';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
-import { useRecognizedBankTransactionsInfinity } from '@/hooks/query/bank-rules';
+import { useRecognizedBankTransactionsInfinity } from '@/hooks/query/banking';
 import { withBanking } from '../../withBanking';
 
 interface RecognizedTransactionsContextValue {

@@ -2,7 +2,7 @@
 import * as R from 'ramda';
 import { transformToForm, transfromToSnakeCase } from '@/utils';
 import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
-import { GetAutofillCategorizeTransaction } from '@/hooks/query/bank-rules';
+import { GetAutofillCategorizeTransaction } from '@/hooks/query/banking';
 
 // Default initial form values.
 export const defaultInitialValues = {

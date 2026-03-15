@@ -1,11 +1,10 @@
-import { useMutation, UseMutationOptions } from '@tanstack/react-query';
-import { useApiFetcher } from '../useRequest';
-import {
-  fetchPlaidLinkToken,
-  fetchPlaidExchangeToken,
-  type PlaidLinkTokenResponse,
-  type PlaidExchangeTokenBody,
+import { UseMutationOptions, useMutation } from '@tanstack/react-query';
+import type {
+  PlaidExchangeTokenBody,
+  PlaidLinkTokenResponse,
 } from '@bigcapital/sdk-ts';
+import { fetchPlaidExchangeToken, fetchPlaidLinkToken } from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../../../useRequest';
 
 /**
  * Retrieves the Plaid link token.

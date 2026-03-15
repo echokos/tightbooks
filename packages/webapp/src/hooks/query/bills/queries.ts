@@ -172,7 +172,6 @@ export function useDueBills(
     queryKey: billsKeys.due(vendorId),
     queryFn: () =>
       fetchDueBills(fetcher, vendorId != null ? { vendor_id: vendorId } : undefined),
-    enabled: true,
   });
 }
 

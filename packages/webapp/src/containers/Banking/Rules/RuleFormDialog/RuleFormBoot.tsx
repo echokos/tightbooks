@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
-import { useBankRule } from '@/hooks/query/bank-rules';
+import { useBankRule } from '@/hooks/query/banking';
 import { useAccounts } from '@/hooks/query';
 
 interface RuleFormBootValues {

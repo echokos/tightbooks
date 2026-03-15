@@ -24,9 +24,8 @@ import type {
   PdfTemplateBrandingStateResponse,
   GetPdfTemplatesQuery,
 } from '@bigcapital/sdk-ts';
-import { useApiFetcher } from '../useRequest';
-
-const PdfTemplatesQueryKey = 'PdfTemplate';
+import { useApiFetcher } from '../../useRequest';
+import { pdfTemplatesKeys } from './query-keys';
 
 // Re-export types for consumers (aliases for SDK types)
 export type CreatePdfTemplateValues = CreatePdfTemplateBody;
@@ -50,7 +49,7 @@ export type AssignPdfTemplateAsDefaultResponse = void;
 export type GetPdfTemplateBrandingStateResponse = PdfTemplateBrandingStateResponse;
 
 function invalidatePdfTemplateQueries(queryClient: ReturnType<typeof useQueryClient>) {
-  queryClient.invalidateQueries({ queryKey: [PdfTemplatesQueryKey] });
+  queryClient.invalidateQueries({ queryKey: pdfTemplatesKeys.all() });
 }
 
 // Hook for creating a PDF template
@@ -108,13 +107,14 @@ export function useDeletePdfTemplate(
 // Hook for getting a single PDF template
 export function useGetPdfTemplate(
   templateId: number,
-  options?: UseQueryOptions<GetPdfTemplateResponse, Error>
+  options?: Omit<UseQueryOptions<GetPdfTemplateResponse, Error>, 'queryKey' | 'queryFn'>
 ): UseQueryResult<GetPdfTemplateResponse, Error> {
   const fetcher = useApiFetcher();
 
   return useQuery({
-    queryKey: [PdfTemplatesQueryKey, templateId],
+    queryKey: pdfTemplatesKeys.detail(templateId),
     queryFn: () => fetchPdfTemplate(fetcher, templateId),
+    enabled: !!templateId,
     ...options,
   });
 }
@@ -127,7 +127,7 @@ export function useGetPdfTemplates(
   const fetcher = useApiFetcher();
 
   return useQuery({
-    queryKey: [PdfTemplatesQueryKey, query],
+    queryKey: pdfTemplatesKeys.list(query),
     queryFn: () => fetchPdfTemplates(fetcher, query),
     ...options,
   });
@@ -170,7 +170,7 @@ export function useGetPdfTemplateBrandingState(
   const fetcher = useApiFetcher();
 
   return useQuery({
-    queryKey: [PdfTemplatesQueryKey, 'state'],
+    queryKey: pdfTemplatesKeys.state(),
     queryFn: () => fetchPdfTemplateBrandingState(fetcher),
     ...options,
   });

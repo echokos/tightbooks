@@ -8,10 +8,8 @@ import {
   type UpdatePaymentMethodBody,
   type UpdatePaymentMethodResponse,
 } from '@bigcapital/sdk-ts';
-import { useApiFetcher } from '../useRequest';
+import { useApiFetcher } from '../../useRequest';
 
-// # Edit payment method
-// -----------------------------------------
 export interface EditPaymentMethodValues {
   paymentMethodId: number;
   name?: string;
@@ -25,6 +23,9 @@ export interface EditPaymentMethodValues {
   showDiners?: boolean;
 }
 
+/**
+ * Edits a payment method.
+ */
 export const useEditPaymentMethod = (
   options?: UseMutationOptions<
     UpdatePaymentMethodResponse,

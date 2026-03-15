@@ -47,7 +47,7 @@ import {
   useUpdateBankAccount,
   useExcludeUncategorizedTransactions,
   useUnexcludeUncategorizedTransactions,
-} from '@/hooks/query/bank-rules';
+} from '@/hooks/query/banking';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';

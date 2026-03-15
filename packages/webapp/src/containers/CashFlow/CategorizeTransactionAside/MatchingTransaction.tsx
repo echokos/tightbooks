@@ -13,7 +13,7 @@ import {
   MatchTransactionCheckbox,
   MatchTransactionCheckboxProps,
 } from './MatchTransactionCheckbox';
-import { useMatchUncategorizedTransaction } from '@/hooks/query/bank-rules';
+import { useMatchUncategorizedTransaction } from '@/hooks/query/banking';
 import { MatchingTransactionFormValues } from './types';
 import {
   transformToReq,

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { DashboardInsider } from '@/components';
 import { useCashflowAccounts, useAccount } from '@/hooks/query';
 import { useAppQueryString } from '@/hooks';
-import { useGetBankAccountSummaryMeta } from '@/hooks/query/bank-rules';
+import { useGetBankAccountSummaryMeta } from '@/hooks/query/banking';
 
 const AccountTransactionsContext = React.createContext();
 

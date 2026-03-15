@@ -46,18 +46,18 @@ export * from './transactions-locking';
 export * from './warehouses';
 export * from './branches';
 export * from './warehouses-transfers';
-export * from './plaid';
+
+// Banking and payment hooks (nested directory structure)
+export * from './banking';
 export * from './api-keys';
-export * from './bank-accounts';
-export * from './bank-rules';
-export * from './bank-transaction';
-export * from './bank-transactions';
-export * from './base';
 export * from './payment-methods';
 export * from './payment-link';
 export * from './payment-services';
 export * from './pdf-templates';
 export * from './stripe-integration';
+
+// Shared configuration (can remain flat)
+export * from './base';
 
 // Subdirectories (already in nested structure)
 export * from './UniversalSearch/universal-search';

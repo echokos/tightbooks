@@ -18,7 +18,7 @@ export function BillingPageBoot({ children }: BillingPageBootProps) {
   const { isLoading: isSubscriptionsLoading, data: subscriptionsRes } =
     useGetSubscriptions();
 
-  const mainSubscription = subscriptionsRes?.subscriptions?.find(
+  const mainSubscription = (subscriptionsRes?.subscriptions as { slug: string }[] | undefined)?.find(
     (s) => s.slug === 'main',
   );
 

@@ -9,7 +9,7 @@ import { Spinner } from '@blueprintjs/core';
 import {
   GetAutofillCategorizeTransaction,
   useGetAutofillCategorizeTransaction,
-} from '@/hooks/query/bank-rules';
+} from '@/hooks/query/banking';
 
 interface CategorizeTransactionBootProps {
   uncategorizedTransactionsIds: Array<number>;

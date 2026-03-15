@@ -16,7 +16,7 @@ import {
   Group,
   Stack,
 } from '@/components';
-import { useCreateBankRule, useEditBankRule } from '@/hooks/query/bank-rules';
+import { useCreateBankRule, useEditBankRule } from '@/hooks/query/banking';
 import {
   Fields,
   RuleFormValues,

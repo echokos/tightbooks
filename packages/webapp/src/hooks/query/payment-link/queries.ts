@@ -6,7 +6,7 @@ import {
   useMutation,
   useQuery,
 } from '@tanstack/react-query';
-import { useApiFetcher } from '../useRequest';
+import { useApiFetcher } from '../../useRequest';
 import { transformToCamelCase } from '@/utils';
 import type {
   GetInvoicePaymentLinkResponse,
@@ -18,9 +18,7 @@ import {
   fetchGetPaymentLinkInvoicePdf,
   generateSaleInvoiceSharableLink,
 } from '@bigcapital/sdk-ts';
-
-const GetPaymentLinkInvoice = 'GetPaymentLinkInvoice';
-const GetPaymentLinkInvoicePdf = 'GetPaymentLinkInvoicePdf';
+import { paymentLinkKeys } from './query-keys';
 
 // Create Payment Link (sale-invoices generate-link via SDK)
 // ------------------------------------
@@ -30,6 +28,7 @@ interface CreatePaymentLinkValues {
   transactionId: number | string;
   expiryDate: string;
 }
+
 interface CreatePaymentLinkResponse {
   link: string;
 }
@@ -75,7 +74,7 @@ export function useGetInvoicePaymentLink(
   const fetcher = useApiFetcher();
 
   return useQuery<GetInvoicePaymentLinkResponse, Error>({
-    queryKey: [GetPaymentLinkInvoice, linkId],
+    queryKey: paymentLinkKeys.invoice(linkId),
     queryFn: () =>
       fetchGetInvoicePaymentLink(fetcher, linkId).then((data) =>
         transformToCamelCase(data) as GetInvoicePaymentLinkResponse,
@@ -150,7 +149,7 @@ export const useGetPaymentLinkInvoicePdf = (
   const fetcher = useApiFetcher();
 
   return useQuery<Blob, Error>({
-    queryKey: [GetPaymentLinkInvoicePdf, invoiceId],
+    queryKey: paymentLinkKeys.invoicePdf(invoiceId),
     queryFn: () => fetchGetPaymentLinkInvoicePdf(fetcher, invoiceId),
     enabled: !!invoiceId,
     ...options,

@@ -1,7 +1,8 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import type { ResourceViewResponse, ResourceMetaResponse } from '@bigcapital/sdk-ts';
 import { fetchResourceView, fetchResourceMeta } from '@bigcapital/sdk-ts';
-import { useApiFetcher } from '../useRequest';
+import { useApiFetcher } from '../../useRequest';
+import { viewsKeys } from './query-keys';
 
 export function useResourceViews(
   resourceSlug: string | null | undefined,
@@ -10,7 +11,7 @@ export function useResourceViews(
   const fetcher = useApiFetcher();
   return useQuery({
     ...props,
-    queryKey: ['RESOURCE_VIEW', resourceSlug],
+    queryKey: viewsKeys.view(resourceSlug),
     queryFn: () => fetchResourceView(fetcher, resourceSlug!),
     enabled: !!resourceSlug,
   });
@@ -23,7 +24,7 @@ export function useResourceMeta(
   const fetcher = useApiFetcher();
   return useQuery({
     ...props,
-    queryKey: ['RESOURCE_META', resourceSlug],
+    queryKey: viewsKeys.meta(resourceSlug),
     queryFn: () => fetchResourceMeta(fetcher, resourceSlug!),
     enabled: !!resourceSlug,
   });

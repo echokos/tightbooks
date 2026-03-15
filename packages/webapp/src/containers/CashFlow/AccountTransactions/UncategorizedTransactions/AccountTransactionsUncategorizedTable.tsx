@@ -19,7 +19,7 @@ import { withBanking } from '../../withBanking';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useAccountUncategorizedTransactionsContext } from '../AllTransactionsUncategorizedBoot';
-import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
+import { useExcludeUncategorizedTransaction } from '@/hooks/query/banking';
 import { useAccountUncategorizedTransactionsColumns } from './hooks';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 

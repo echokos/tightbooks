@@ -91,9 +91,6 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: [ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES] });
 };
 
-/**
- * Create a new credit note.
- */
 export function useCreateCreditNote(
   props?: UseMutationOptions<void, Error, CreateCreditNoteBody>
 ) {
@@ -107,9 +104,6 @@ export function useCreateCreditNote(
   });
 }
 
-/**
- * Edit the given credit note.
- */
 export function useEditCreditNote(
   props?: UseMutationOptions<void, Error, [number, EditCreditNoteBody]>
 ) {
@@ -127,9 +121,6 @@ export function useEditCreditNote(
   });
 }
 
-/**
- * Delete the given credit note.
- */
 export function useDeleteCreditNote(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -179,9 +170,6 @@ export function useValidateBulkDeleteCreditNotes(
   });
 }
 
-/**
- * Retrieve credit notes list with pagination meta.
- */
 export function useCreditNotes(
   query?: Record<string, unknown>,
   props?: Omit<UseQueryOptions<CreditNotesListResponse>, 'queryKey' | 'queryFn'>
@@ -252,9 +240,6 @@ export function useDeleteRefundCreditNote(
   });
 }
 
-/**
- * Retrieve refund credit note detail of the given id.
- */
 export function useRefundCreditNote(
   id: number | null | undefined,
   props?: Omit<
@@ -272,9 +257,6 @@ export function useRefundCreditNote(
   });
 }
 
-/**
- * Mark the given credit note as opened.
- */
 export function useOpenCreditNote(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -291,9 +273,6 @@ export function useOpenCreditNote(
   });
 }
 
-/**
- * Retrieve reconcile credit note of the given id.
- */
 export function useReconcileCreditNote(
   id: number | null | undefined,
   props?: Omit<
@@ -311,9 +290,6 @@ export function useReconcileCreditNote(
   });
 }
 
-/**
- * Create Reconcile credit note.
- */
 export function useCreateReconcileCreditNote(
   props?: UseMutationOptions<void, Error, [number, ApplyCreditNoteToInvoicesBody]>
 ) {
@@ -331,9 +307,6 @@ export function useCreateReconcileCreditNote(
   });
 }
 
-/**
- * Retrieve reconcile credit notes (applied invoices).
- */
 export function useReconcileCreditNotes(
   id: number | null | undefined,
   props?: Omit<
@@ -351,9 +324,6 @@ export function useReconcileCreditNotes(
   });
 }
 
-/**
- * Delete the given reconcile credit note (applied invoice).
- */
 export function useDeleteReconcileCredit(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -368,9 +338,6 @@ export function useDeleteReconcileCredit(
   });
 }
 
-/**
- * Retrieve refund credit transaction detail.
- */
 export function useRefundCreditTransaction(
   id: number | null | undefined,
   props?: Omit<
@@ -388,9 +355,6 @@ export function useRefundCreditTransaction(
   });
 }
 
-/**
- * Retrieve the credit note pdf document data.
- */
 export function usePdfCreditNote(creditNoteId: number | string) {
   return useRequestPdf({ url: `credit-notes/${creditNoteId}` });
 }

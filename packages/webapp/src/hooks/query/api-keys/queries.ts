@@ -7,16 +7,11 @@ import {
 } from '@tanstack/react-query';
 import type { ApiKeysList, GenerateApiKeyBody } from '@bigcapital/sdk-ts';
 import { fetchApiKeys, generateApiKey, revokeApiKey } from '@bigcapital/sdk-ts';
-import { useApiFetcher } from '../useRequest';
-
-const API_KEYS = 'API_KEYS';
-
-export const ApiKeysQueryKeys = {
-  API_KEYS,
-} as const;
+import { useApiFetcher } from '../../useRequest';
+import { apiKeysKeys } from './query-keys';
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
-  queryClient.invalidateQueries({ queryKey: [API_KEYS] });
+  queryClient.invalidateQueries({ queryKey: apiKeysKeys.all() });
 };
 
 export function useApiKeys(
@@ -25,7 +20,7 @@ export function useApiKeys(
   const fetcher = useApiFetcher();
   return useQuery({
     ...props,
-    queryKey: [API_KEYS],
+    queryKey: apiKeysKeys.list(),
     queryFn: () => fetchApiKeys(fetcher),
   });
 }
