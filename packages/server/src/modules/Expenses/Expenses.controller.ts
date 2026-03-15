@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ExpensesApplication } from './ExpensesApplication.service';
-import { IExpensesFilter } from './Expenses.types';
+import { GetExpensesQueryDto } from './dtos/GetExpensesQuery.dto';
 import {
   ApiExtraModels,
   ApiOperation,
@@ -151,7 +151,7 @@ export class ExpensesController {
       ],
     },
   })
-  public getExpenses(@Query() filterDTO: IExpensesFilter) {
+  public getExpenses(@Query() filterDTO: GetExpensesQueryDto) {
     return this.expensesApplication.getExpenses(filterDTO);
   }
 

@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { VendorCreditsApplicationService } from './VendorCreditsApplication.service';
-import { IVendorCreditsQueryDTO } from './types/VendorCredit.types';
+import { GetVendorCreditsQueryDto } from './dtos/GetVendorCreditsQuery.dto';
 import {
   ApiExtraModels,
   ApiOperation,
@@ -98,7 +98,7 @@ export class VendorCreditsController {
   @Get()
   @RequirePermission(VendorCreditAction.View, AbilitySubject.VendorCredit)
   @ApiOperation({ summary: 'Retrieves the vendor credits.' })
-  async getVendorCredits(@Query() filterDTO: IVendorCreditsQueryDTO) {
+  async getVendorCredits(@Query() filterDTO: GetVendorCreditsQueryDto) {
     return this.vendorCreditsApplication.getVendorCredits(filterDTO);
   }
 
