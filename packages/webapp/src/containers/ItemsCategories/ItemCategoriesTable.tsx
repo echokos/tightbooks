@@ -46,7 +46,7 @@ function ItemsCategoryTable({
     <DataTable
       noInitialFetch={true}
       columns={columns}
-      data={itemsCategories}
+      data={itemsCategories || []}
       loading={isCategoriesLoading}
       headerLoading={isCategoriesLoading}
       progressBarLoading={isCategoriesFetching}

@@ -35,6 +35,7 @@ import { GetSaleEstimatesQueryDto } from './dtos/GetSaleEstimatesQuery.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleEstiamteStateResponseDto } from './dtos/SaleEstimateStateResponse.dto';
 import { SaleEstimateHtmlContentResponseDto } from './dtos/SaleEstimateHtmlResponse.dto';
+import { SaleEstimateMailStateResponseDto } from './dtos/SaleEstimateMailStateResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
   BulkDeleteDto,
@@ -48,12 +49,14 @@ import { SaleEstimateAction } from './types/SaleEstimates.types';
 
 @Controller('sale-estimates')
 @ApiTags('Sale Estimates')
-@ApiExtraModels(SaleEstimateResponseDto)
-@ApiExtraModels(PaginatedResponseDto)
-@ApiExtraModels(SaleEstiamteStateResponseDto)
-@ApiExtraModels(SaleEstimateHtmlContentResponseDto)
-@ApiCommonHeaders()
-@ApiExtraModels(ValidateBulkDeleteResponseDto)
+@ApiExtraModels(
+  SaleEstimateResponseDto,
+  PaginatedResponseDto,
+  SaleEstiamteStateResponseDto,
+  SaleEstimateHtmlContentResponseDto,
+  ValidateBulkDeleteResponseDto,
+  SaleEstimateMailStateResponseDto,
+)
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class SaleEstimatesController {
   @Post('validate-bulk-delete')
@@ -302,6 +305,11 @@ export class SaleEstimatesController {
   @Get(':id/mail')
   @RequirePermission(SaleEstimateAction.View, AbilitySubject.SaleEstimate)
   @ApiOperation({ summary: 'Retrieves the sale estimate mail state.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Retrieves the sale estimate mail state.',
+    schema: { $ref: getSchemaPath(SaleEstimateMailStateResponseDto) },
+  })
   @ApiParam({
     name: 'id',
     required: true,

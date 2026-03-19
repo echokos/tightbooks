@@ -1,14 +1,17 @@
 import { Fetcher } from 'openapi-typescript-fetch';
 import type { paths } from './schema';
 import { createCamelCaseMiddleware } from './middleware/camel-case-middleware';
+import { createSnakeCaseRequestMiddleware } from './middleware/snake-case-request-middleware';
 
 export type ApiFetcher = ReturnType<typeof Fetcher.for<paths>>;
 
 export interface CreateApiFetcherConfig {
   baseUrl?: string;
   init?: RequestInit;
-  /** Set to true to disable automatic snake_case to camelCase transformation */
+  /** Set to true to disable automatic snake_case to camelCase transformation on responses */
   disableCamelCaseTransform?: boolean;
+  /** Set to true to disable automatic camelCase to snake_case transformation on requests */
+  disableSnakeCaseTransform?: boolean;
 }
 
 /**
@@ -22,13 +25,17 @@ export function createApiFetcher(config?: CreateApiFetcherConfig): ApiFetcher {
   const parsedConfig = {
     baseUrl: '',
     disableCamelCaseTransform: true,
+    disableSnakeCaseTransform: false,
     ...config,
   };
   const fetcher = Fetcher.for<paths>();
   fetcher.configure({
     baseUrl: parsedConfig.baseUrl,
     init: parsedConfig?.init,
-    use: parsedConfig.disableCamelCaseTransform ? [] : [createCamelCaseMiddleware()],
+    use: [
+      ...(parsedConfig.disableSnakeCaseTransform ? [] : [createSnakeCaseRequestMiddleware()]),
+      ...(parsedConfig.disableCamelCaseTransform ? [] : [createCamelCaseMiddleware()]),
+    ],
   });
   return fetcher;
 }

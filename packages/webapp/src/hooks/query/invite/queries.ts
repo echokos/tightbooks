@@ -4,9 +4,6 @@ import { acceptInvite, fetchInviteCheck, resendInvite } from '@bigcapital/sdk-ts
 import { useApiFetcher } from '../../useRequest';
 import { inviteKeys } from './query-keys';
 
-/**
- * Authentication invite accept.
- */
 export function useAuthInviteAccept(
   props?: UseMutationOptions<unknown, Error, [Record<string, unknown>, string]>
 ) {
@@ -18,9 +15,6 @@ export function useAuthInviteAccept(
   });
 }
 
-/**
- * Retrieve the invite meta by the given token.
- */
 export function useInviteMetaByToken(
   token: string | null | undefined,
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>
@@ -34,9 +28,6 @@ export function useInviteMetaByToken(
   });
 }
 
-/**
- * Resend invitation to user.
- */
 export function useResendInvitation(
   props?: UseMutationOptions<void, Error, number>
 ) {

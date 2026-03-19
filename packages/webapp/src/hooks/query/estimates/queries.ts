@@ -12,6 +12,10 @@ import type {
   CreateSaleEstimateBody,
   EditSaleEstimateBody,
   SaleEstimateHtmlContentResponse,
+  BulkDeleteEstimatesBody,
+  ValidateBulkDeleteEstimatesResponse,
+  SaleEstimatesStateResponse,
+  SaleEstimateMailStateResponse,
 } from '@bigcapital/sdk-ts';
 import {
   fetchSaleEstimates,
@@ -35,14 +39,6 @@ import { useApiFetcher } from '../../useRequest';
 import { estimatesKeys, EstimatesQueryKeys } from './query-keys';
 import { itemsKeys } from '../items/query-keys';
 import { useRequestPdf } from '../../useRequestPdf';
-
-export type BulkDeleteEstimatesBody = { ids: number[]; skipUndeletable?: boolean };
-export type ValidateBulkDeleteEstimatesResponse = {
-  deletableCount: number;
-  nonDeletableCount: number;
-  deletableIds: number[];
-  nonDeletableIds: number[];
-};
 
 // Keys that don't have factory methods yet - keeping inline
 const SETTING = 'SETTING';
@@ -264,41 +260,6 @@ export function useSendSaleEstimateMail(
   });
 }
 
-export interface SaleEstimateMailStateResponse {
-  attachEstimate: boolean;
-  companyLogoUri: string;
-  companyName: string;
-  customerName: string;
-  entries: Array<unknown>;
-  estimateDate: string;
-  estimateDateFormatted: string;
-  expirationDate: string;
-  expirationDateFormatted: string;
-  primaryColor: string;
-  total: number;
-  totalFormatted: string;
-  subtotal: number;
-  subtotalFormatted: string;
-  discountAmount: number;
-  discountAmountFormatted: string;
-  discountLabel: string;
-  discountPercentage: number | null;
-  discountPercentageFormatted: string;
-  adjustment: number;
-  adjustmentFormatted: string;
-  estimateNumber: string;
-  formatArgs: {
-    customerName: string;
-    estimateAmount: string;
-  };
-  from: Array<string>;
-  fromOptions: Array<unknown>;
-  message: string;
-  subject: string;
-  to: Array<string>;
-  toOptions: Array<unknown>;
-}
-
 export function useSaleEstimateMailState(
   estimateId: number,
   props?: UseQueryOptions<SaleEstimateMailStateResponse, Error>
@@ -307,23 +268,19 @@ export function useSaleEstimateMailState(
   return useQuery({
     ...props,
     queryKey: [EstimatesQueryKeys.SALE_ESTIMATE_MAIL_OPTIONS, estimateId],
-    queryFn: () => fetchSaleEstimateMail(fetcher, estimateId) as Promise<SaleEstimateMailStateResponse>,
+    queryFn: () => fetchSaleEstimateMail(fetcher, estimateId),
   });
 }
 
-export interface ISaleEstimatesStateResponse {
-  defaultTemplateId: number;
-}
-
 export function useGetSaleEstimatesState(
-  options?: UseQueryOptions<ISaleEstimatesStateResponse, Error>
-): UseQueryResult<ISaleEstimatesStateResponse, Error> {
+  options?: UseQueryOptions<SaleEstimatesStateResponse, Error>
+): UseQueryResult<SaleEstimatesStateResponse, Error> {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,
     queryKey: ['SALE_ESTIMATE_STATE'],
-    queryFn: () => fetchSaleEstimatesState(fetcher) as Promise<ISaleEstimatesStateResponse>,
+    queryFn: () => fetchSaleEstimatesState(fetcher),
   });
 }
 

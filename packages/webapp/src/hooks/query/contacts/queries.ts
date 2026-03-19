@@ -22,9 +22,6 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: contactsKeys.all() });
 };
 
-/**
- * Retrieve the contact by ID (for duplicate/form).
- */
 export function useContact(
   id: number | string | undefined | null,
   props?: Omit<UseQueryOptions<ContactResponse>, 'queryKey' | 'queryFn'>
@@ -41,9 +38,6 @@ export function useContact(
   });
 }
 
-/**
- * Retrieve the auto-complete contacts.
- */
 export function useAutoCompleteContacts(
   props?: Omit<UseQueryOptions<Awaited<ReturnType<typeof fetchContactsAutoComplete>>>, 'queryKey' | 'queryFn'>
 ) {
@@ -57,9 +51,6 @@ export function useAutoCompleteContacts(
   });
 }
 
-/**
- * Activate the given Contact.
- */
 export function useActivateContact(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -76,9 +67,6 @@ export function useActivateContact(
   });
 }
 
-/**
- * Inactivate the given contact.
- */
 export function useInactivateContact(
   props?: UseMutationOptions<void, Error, number>
 ) {

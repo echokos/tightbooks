@@ -24,11 +24,7 @@ import {
   editSettings,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
-import {
-  settingsKeys,
-  SETTING,
-  SETTING_SMS_NOTIFICATIONS,
-} from './query-keys';
+import { settingsKeys } from './query-keys';
 
 export function useSaveSettings(
   props?: UseMutationOptions<void, Error, SaveSettingsBody>
@@ -40,7 +36,7 @@ export function useSaveSettings(
     ...props,
     mutationFn: (values: SaveSettingsBody) => editSettings(fetcher, values),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [SETTING] });
+      queryClient.invalidateQueries({ queryKey: settingsKeys.all() });
     },
   });
 }
@@ -196,7 +192,7 @@ export function useSettingSMSNotification(
 
   return useQuery({
     ...props,
-    queryKey: [SETTING_SMS_NOTIFICATIONS, key],
+    queryKey: settingsKeys.smsNotification(key),
     queryFn: () => fetchSettingSMSNotification(fetcher, key),
     enabled: !!key,
   });
@@ -213,7 +209,7 @@ export function useSettingEditSMSNotification(
     mutationFn: ({ key, values }: { key: string; values: Record<string, unknown> }) =>
       editSettingSMSNotification(fetcher, key, values),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [SETTING_SMS_NOTIFICATIONS] });
+      queryClient.invalidateQueries({ queryKey: settingsKeys.smsNotifications() });
     },
   });
 }

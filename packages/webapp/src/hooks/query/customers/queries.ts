@@ -86,11 +86,7 @@ export function useBulkDeleteCustomers(
 
   return useMutation({
     ...props,
-    mutationFn: ({
-      ids,
-      skipUndeletable = false,
-    }: {
-      ids: number[];
+    mutationFn: ({ ids, skipUndeletable = false }: { ids: number[];
       skipUndeletable?: boolean;
     }) =>
       bulkDeleteCustomers(fetcher, {
