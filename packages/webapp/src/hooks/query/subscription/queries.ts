@@ -20,9 +20,6 @@ import {
 } from '@bigcapital/sdk-ts';
 import { subscriptionKeys } from './query-keys';
 
-/**
- * Cancels the main subscription of the current organization.
- */
 export function useCancelMainSubscription(
   options?: UseMutationOptions<void, Error, void>
 ): UseMutationResult<void, Error, void> {
@@ -38,9 +35,6 @@ export function useCancelMainSubscription(
   });
 }
 
-/**
- * Resumes the main subscription of the current organization.
- */
 export function useResumeMainSubscription(
   options?: UseMutationOptions<void, Error, void>
 ): UseMutationResult<void, Error, void> {
@@ -56,9 +50,6 @@ export function useResumeMainSubscription(
   });
 }
 
-/**
- * Changes the main subscription plan of the current organization.
- */
 export function useChangeSubscriptionPlan(
   options?: UseMutationOptions<void, Error, ChangeSubscriptionPlanBody>
 ): UseMutationResult<void, Error, ChangeSubscriptionPlanBody> {
@@ -80,9 +71,6 @@ export type GetSubscriptionsResponse = {
   [key: string]: unknown;
 };
 
-/**
- * Fetches subscriptions for the current tenant.
- */
 export function useGetSubscriptions(
   options?: UseQueryOptions<
     SubscriptionsListResponse,

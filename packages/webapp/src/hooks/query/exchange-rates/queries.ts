@@ -1,7 +1,10 @@
-// @ts-nocheck
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import {
+  fetchLatestExchangeRate,
+  ExchangeRateLatestResponse,
+} from '@bigcapital/sdk-ts';
 import { exchangeRateKeys } from './query-keys';
-import useApiRequest from '../../useRequest';
+import { useApiFetcher } from '../../useRequest';
 
 interface LatestExchangeRateQuery {
   fromCurrency?: string;
@@ -10,27 +13,20 @@ interface LatestExchangeRateQuery {
 
 /**
  * Retrieves latest exchange rate.
- * @param {number} customerId - Customer id.
  */
 export function useLatestExchangeRate(
   { toCurrency, fromCurrency }: LatestExchangeRateQuery,
-  props,
+  props?: UseQueryOptions<ExchangeRateLatestResponse>,
 ) {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useQuery({
+  return useQuery<ExchangeRateLatestResponse>({
     ...props,
     queryKey: exchangeRateKeys.rate(fromCurrency, toCurrency),
     queryFn: () =>
-      apiRequest
-        .http({
-          url: `/api/exchange_rates/latest`,
-          method: 'get',
-          params: {
-            to_currency: toCurrency,
-            from_currency: fromCurrency,
-          },
-        })
-        .then((res) => res.data),
+      fetchLatestExchangeRate(fetcher, {
+        from_currency: fromCurrency,
+        to_currency: toCurrency,
+      }),
   });
 }

@@ -56,9 +56,6 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: vendorsKeys.all() });
 };
 
-/**
- * Retrieve cashflow accounts.
- */
 export function useCashflowAccounts(
   query?: Record<string, unknown>,
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>
@@ -72,9 +69,6 @@ export function useCashflowAccounts(
   });
 }
 
-/**
- * Creates a new cashflow transaction.
- */
 export function useCreateCashflowTransaction(
   props?: UseMutationOptions<void, Error, CreateCashflowTransactionBody>
 ) {
@@ -91,9 +85,6 @@ export function useCreateCashflowTransaction(
   });
 }
 
-/**
- * Retrieves the cashflow transaction details.
- */
 export function useCashflowTransaction(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>
@@ -108,9 +99,6 @@ export function useCashflowTransaction(
   });
 }
 
-/**
- * Deletes the given cashflow transaction.
- */
 export function useDeleteCashflowTransaction(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -127,9 +115,6 @@ export function useDeleteCashflowTransaction(
   });
 }
 
-/**
- * Retrieve account transactions with infinite scroll.
- */
 export function useAccountTransactionsInfinity(
   accountId: number,
   query?: CashflowAccountTransactionsQuery,
@@ -151,9 +136,6 @@ export function useAccountTransactionsInfinity(
   });
 }
 
-/**
- * Retrieve uncategorized account transactions with infinite scroll.
- */
 export function useAccountUncategorizedTransactionsInfinity(
   accountId: number,
   query?: CashflowAccountUncategorizedTransactionsQuery,
@@ -175,9 +157,6 @@ export function useAccountUncategorizedTransactionsInfinity(
   });
 }
 
-/**
- * Refreshes cashflow accounts.
- */
 export function useRefreshCashflowAccounts() {
   const queryClient = useQueryClient();
 
@@ -188,9 +167,6 @@ export function useRefreshCashflowAccounts() {
   };
 }
 
-/**
- * Refreshes cashflow transactions.
- */
 export function useRefreshCashflowTransactions() {
   const queryClient = useQueryClient();
 
@@ -201,9 +177,6 @@ export function useRefreshCashflowTransactions() {
   };
 }
 
-/**
- * Retrieve the uncategorized transaction.
- */
 export function useUncategorizedTransaction(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>
@@ -218,9 +191,6 @@ export function useUncategorizedTransaction(
   });
 }
 
-/**
- * Categorize the given transaction.
- */
 export function useCategorizeTransaction(
   props?: UseMutationOptions<void, Error, { id: number; values: CategorizeTransactionBody }>
 ) {
@@ -237,9 +207,6 @@ export function useCategorizeTransaction(
   });
 }
 
-/**
- * Uncategorize the given transaction.
- */
 export function useUncategorizeTransaction(
   props?: UseMutationOptions<void, Error, number>
 ) {

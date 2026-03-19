@@ -64,10 +64,6 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: organizationKeys.mutateAbilities() });
 };
 
-
-/**
- * Create a new vendor credit.
- */
 export function useCreateVendorCredit(
   props?: UseMutationOptions<void, Error, CreateVendorCreditBody>
 ) {
@@ -81,9 +77,6 @@ export function useCreateVendorCredit(
   });
 }
 
-/**
- * Edit the given vendor credit.
- */
 export function useEditVendorCredit(
   props?: UseMutationOptions<void, Error, [number, EditVendorCreditBody]>
 ) {
@@ -101,9 +94,6 @@ export function useEditVendorCredit(
   });
 }
 
-/**
- * Delete the given vendor credit.
- */
 export function useDeleteVendorCredit(props?: UseMutationOptions<void, Error, number>) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
@@ -118,9 +108,6 @@ export function useDeleteVendorCredit(props?: UseMutationOptions<void, Error, nu
   });
 }
 
-/**
- * Deletes multiple vendor credits in bulk.
- */
 export function useBulkDeleteVendorCredits(
   props?: UseMutationOptions<void, Error, { ids: number[]; skipUndeletable?: boolean }>
 ) {
@@ -167,9 +154,6 @@ export function useVendorCredits(
   });
 }
 
-/**
- * Retrieve vendor credit detail of the given id.
- */
 export function useVendorCredit(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
@@ -195,9 +179,6 @@ export function useRefreshVendorCredits() {
   };
 }
 
-/**
- * Create refund vendor credit.
- */
 export function useCreateRefundVendorCredit(
   props?: UseMutationOptions<void, Error, [number, CreateRefundVendorCreditBody]>
 ) {
@@ -215,9 +196,6 @@ export function useCreateRefundVendorCredit(
   });
 }
 
-/**
- * Delete the given refund vendor credit.
- */
 export function useDeleteRefundVendorCredit(props?: UseMutationOptions<void, Error, number>) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
@@ -232,9 +210,6 @@ export function useDeleteRefundVendorCredit(props?: UseMutationOptions<void, Err
   });
 }
 
-/**
- * Retrieve refund vendor credit graph (list) for the given vendor credit id.
- */
 export function useRefundVendorCredit(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
@@ -250,9 +225,6 @@ export function useRefundVendorCredit(
   });
 }
 
-/**
- * Mark the given vendor credit as opened.
- */
 export function useOpenVendorCredit(props?: UseMutationOptions<void, Error, number>) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
@@ -267,9 +239,6 @@ export function useOpenVendorCredit(props?: UseMutationOptions<void, Error, numb
   });
 }
 
-/**
- * Create reconcile vendor credit (apply to bills).
- */
 export function useCreateReconcileVendorCredit(
   props?: UseMutationOptions<void, Error, [number, ApplyVendorCreditToBillsBody]>
 ) {
@@ -287,9 +256,6 @@ export function useCreateReconcileVendorCredit(
   });
 }
 
-/**
- * Retrieve reconcile vendor credit form (bills to apply) for the given id.
- */
 export function useReconcileVendorCredit(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
@@ -305,9 +271,6 @@ export function useReconcileVendorCredit(
   });
 }
 
-/**
- * Retrieve applied bills to vendor credit for the given id.
- */
 export function useReconcileVendorCredits(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
@@ -323,9 +286,6 @@ export function useReconcileVendorCredits(
   });
 }
 
-/**
- * Delete the given reconcile vendor credit (applied bill).
- */
 export function useDeleteReconcileVendorCredit(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -340,9 +300,6 @@ export function useDeleteReconcileVendorCredit(
   });
 }
 
-/**
- * Retrieve refund vendor credit transaction detail by id.
- */
 export function useRefundVendorCreditTransaction(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,

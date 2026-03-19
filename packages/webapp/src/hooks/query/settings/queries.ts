@@ -21,6 +21,7 @@ import {
   fetchSettingSMSNotifications,
   fetchSettingSMSNotification,
   editSettingSMSNotification,
+  editSettings,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
 import {
@@ -37,10 +38,7 @@ export function useSaveSettings(
 
   return useMutation({
     ...props,
-    mutationFn: async (values: SaveSettingsBody) => {
-      const { editSettings } = await import('@bigcapital/sdk-ts');
-      return editSettings(fetcher, values);
-    },
+    mutationFn: (values: SaveSettingsBody) => editSettings(fetcher, values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [SETTING] });
     },
