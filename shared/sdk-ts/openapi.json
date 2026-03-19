@@ -399,6 +399,76 @@
             }
           },
           {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID for filtering",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Array of filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column sort direction",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order direction",
+            "schema": {
+              "enum": [
+                "DESC",
+                "ASC"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug for filtering",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "inactiveMode",
             "required": false,
             "in": "query",
@@ -421,76 +491,6 @@
             "required": false,
             "in": "query",
             "description": "Page number for pagination",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "viewSlug",
-            "required": false,
-            "in": "query",
-            "description": "View slug for filtering",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "searchKeyword",
-            "required": false,
-            "in": "query",
-            "description": "Search keyword",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "stringifiedFilterRoles",
-            "required": false,
-            "in": "query",
-            "description": "Stringified filter roles",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortOrder",
-            "required": false,
-            "in": "query",
-            "description": "Sort order direction",
-            "schema": {
-              "enum": [
-                "DESC",
-                "ASC"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "name": "columnSortBy",
-            "required": false,
-            "in": "query",
-            "description": "Column sort direction",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filterRoles",
-            "required": false,
-            "in": "query",
-            "description": "Array of filter roles",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "customViewId",
-            "required": false,
-            "in": "query",
-            "description": "Custom view ID for filtering",
             "schema": {
               "type": "number"
             }
@@ -2998,6 +2998,72 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4781,6 +4847,72 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5831,6 +5963,72 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6155,6 +6353,72 @@
             "in": "header",
             "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
             "schema": {
               "type": "string"
             }
@@ -6875,6 +7139,72 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -7124,6 +7454,72 @@
             "in": "header",
             "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
             "schema": {
               "type": "string"
             }
@@ -7627,6 +8023,72 @@
             "in": "header",
             "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
             "schema": {
               "type": "string"
             }
@@ -8332,6 +8794,72 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -8853,6 +9381,72 @@
             "in": "header",
             "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
             "schema": {
               "type": "string"
             }
@@ -9519,6 +10113,72 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -9825,6 +10485,72 @@
             "in": "header",
             "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
             "schema": {
               "type": "string"
             }
@@ -10788,6 +11514,72 @@
             "in": "header",
             "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
             "schema": {
               "type": "string"
             }
@@ -22953,6 +23745,52 @@
         },
         "tags": [
           "Contacts"
+        ]
+      }
+    },
+    "/api/exchange-rates/latest": {
+      "get": {
+        "operationId": "ExchangeRatesController_getLatestExchangeRate",
+        "summary": "Get the latest exchange rate",
+        "parameters": [
+          {
+            "name": "from_currency",
+            "required": false,
+            "in": "query",
+            "description": "Source currency code (ISO 4217)",
+            "schema": {
+              "example": "USD",
+              "type": "string"
+            }
+          },
+          {
+            "name": "to_currency",
+            "required": false,
+            "in": "query",
+            "description": "Target currency code (ISO 4217)",
+            "schema": {
+              "example": "EUR",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved exchange rate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExchangeRateLatestResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid currency code or service error"
+          }
+        },
+        "tags": [
+          "Exchange Rates"
         ]
       }
     }
@@ -38997,6 +39835,31 @@
           "firstName",
           "lastName",
           "password"
+        ]
+      },
+      "ExchangeRateLatestResponseDto": {
+        "type": "object",
+        "properties": {
+          "baseCurrency": {
+            "type": "string",
+            "description": "The base currency code",
+            "example": "USD"
+          },
+          "toCurrency": {
+            "type": "string",
+            "description": "The target currency code",
+            "example": "EUR"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "The exchange rate value",
+            "example": 0.85
+          }
+        },
+        "required": [
+          "baseCurrency",
+          "toCurrency",
+          "exchangeRate"
         ]
       }
     }

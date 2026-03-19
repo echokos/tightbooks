@@ -4643,6 +4643,23 @@ export interface paths {
         patch: operations["ContactsController_inactivateContact"];
         trace?: never;
     };
+    "/api/exchange-rates/latest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the latest exchange rate */
+        get: operations["ExchangeRatesController_getLatestExchangeRate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -14155,6 +14172,23 @@ export interface components {
              */
             password: string;
         };
+        ExchangeRateLatestResponseDto: {
+            /**
+             * @description The base currency code
+             * @example USD
+             */
+            baseCurrency: string;
+            /**
+             * @description The target currency code
+             * @example EUR
+             */
+            toCurrency: string;
+            /**
+             * @description The exchange rate value
+             * @example 0.85
+             */
+            exchangeRate: number;
+        };
     };
     responses: never;
     parameters: never;
@@ -14444,26 +14478,26 @@ export interface operations {
     ItemsController_getItems: {
         parameters: {
             query?: {
+                /** @description Custom view ID for filtering */
+                customViewId?: number;
+                /** @description Array of filter roles */
+                filterRoles?: string[];
+                /** @description Column sort direction */
+                columnSortBy?: string;
+                /** @description Sort order direction */
+                sortOrder?: "DESC" | "ASC";
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug for filtering */
+                viewSlug?: string;
                 /** @description Filter for inactive items */
                 inactiveMode?: boolean;
                 /** @description Number of items per page */
                 pageSize?: number;
                 /** @description Page number for pagination */
                 page?: number;
-                /** @description View slug for filtering */
-                viewSlug?: string;
-                /** @description Search keyword */
-                searchKeyword?: string;
-                /** @description Stringified filter roles */
-                stringifiedFilterRoles?: string;
-                /** @description Sort order direction */
-                sortOrder?: "DESC" | "ASC";
-                /** @description Column sort direction */
-                columnSortBy?: string;
-                /** @description Array of filter roles */
-                filterRoles?: string[];
-                /** @description Custom view ID for filtering */
-                customViewId?: number;
             };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
@@ -15918,7 +15952,22 @@ export interface operations {
     };
     SaleInvoicesController_getSaleInvoices: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -17030,7 +17079,22 @@ export interface operations {
     };
     PaymentReceivesController_getPaymentsReceived: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -17675,7 +17739,22 @@ export interface operations {
     };
     ItemCategoryController_getItemCategories: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -17861,7 +17940,22 @@ export interface operations {
     };
     ExpensesController_getExpenses: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -18285,7 +18379,22 @@ export interface operations {
     };
     CustomersController_getCustomers: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -18426,7 +18535,22 @@ export interface operations {
     };
     VendorsController_getVendors: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -18690,7 +18814,22 @@ export interface operations {
     };
     SaleEstimatesController_getSaleEstimates: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -19099,7 +19238,22 @@ export interface operations {
     };
     SaleReceiptsController_getSaleReceipts: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -19397,7 +19551,22 @@ export interface operations {
     };
     BillsController_getBills: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -19770,7 +19939,22 @@ export interface operations {
     };
     ManualJournalsController_getManualJournals: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -19973,7 +20157,22 @@ export interface operations {
     };
     CreditNotesController_getCreditNotes: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -20580,7 +20779,22 @@ export interface operations {
     };
     VendorCreditsController_getVendorCredits: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
                 Authorization: string;
@@ -28764,6 +28978,38 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ExchangeRatesController_getLatestExchangeRate: {
+        parameters: {
+            query?: {
+                /** @description Source currency code (ISO 4217) */
+                from_currency?: string;
+                /** @description Target currency code (ISO 4217) */
+                to_currency?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully retrieved exchange rate */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExchangeRateLatestResponseDto"];
+                };
+            };
+            /** @description Invalid currency code or service error */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };

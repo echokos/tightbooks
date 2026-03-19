@@ -22,10 +22,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { SaleEstimatesApplication } from './SaleEstimates.application';
-import {
-  ISalesEstimatesFilter,
-  SaleEstimateMailOptionsDTO,
-} from './types/SaleEstimates.types';
+import { SaleEstimateMailOptionsDTO } from './types/SaleEstimates.types';
 import { SaleEstimate } from './models/SaleEstimate';
 import {
   CreateSaleEstimateDto,
@@ -34,6 +31,7 @@ import {
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import { SaleEstimateResponseDto } from './dtos/SaleEstimateResponse.dto';
+import { GetSaleEstimatesQueryDto } from './dtos/GetSaleEstimatesQuery.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleEstiamteStateResponseDto } from './dtos/SaleEstimateStateResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
@@ -198,7 +196,7 @@ export class SaleEstimatesController {
       ],
     },
   })
-  public getSaleEstimates(@Query() filterDTO: ISalesEstimatesFilter) {
+  public getSaleEstimates(@Query() filterDTO: GetSaleEstimatesQueryDto) {
     return this.saleEstimatesApplication.getSaleEstimates(filterDTO);
   }
 

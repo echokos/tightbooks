@@ -1,6 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
 import { paths } from './schema';
-import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const SALE_ESTIMATES_ROUTES = {
   LIST: '/api/sale-estimates',
@@ -20,10 +20,14 @@ export type SaleEstimatesListResponse = OpResponseBody<OpForPath<typeof SALE_EST
 export type SaleEstimate = OpResponseBody<OpForPath<typeof SALE_ESTIMATES_ROUTES.BY_ID, 'get'>>;
 export type CreateSaleEstimateBody = OpRequestBody<OpForPath<typeof SALE_ESTIMATES_ROUTES.LIST, 'post'>>;
 export type EditSaleEstimateBody = OpRequestBody<OpForPath<typeof SALE_ESTIMATES_ROUTES.BY_ID, 'put'>>;
+export type GetSaleEstimatesQuery = OpQueryParams<OpForPath<typeof SALE_ESTIMATES_ROUTES.LIST, 'get'>>;
 
-export async function fetchSaleEstimates(fetcher: ApiFetcher): Promise<SaleEstimatesListResponse> {
+export async function fetchSaleEstimates(
+  fetcher: ApiFetcher,
+  query?: GetSaleEstimatesQuery
+): Promise<SaleEstimatesListResponse> {
   const get = fetcher.path(SALE_ESTIMATES_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await get(query || {});
   return data;
 }
 

@@ -16,7 +16,6 @@ import {
 } from '@nestjs/common';
 import {
   ISaleInvoiceWriteoffDTO,
-  ISalesInvoicesFilter,
   SaleInvoiceMailState,
   SendInvoiceMailDTO,
 } from './SaleInvoice.types';
@@ -34,6 +33,7 @@ import {
   CreateSaleInvoiceDto,
   EditSaleInvoiceDto,
 } from './dtos/SaleInvoice.dto';
+import { GetSaleInvoicesQueryDto } from './dtos/GetSaleInvoicesQuery.dto';
 import { AcceptType } from '@/constants/accept-type';
 import { SaleInvoiceResponseDto } from './dtos/SaleInvoiceResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
@@ -262,7 +262,7 @@ export class SaleInvoicesController {
       ],
     },
   })
-  getSaleInvoices(@Query() filterDTO: Partial<ISalesInvoicesFilter>) {
+  getSaleInvoices(@Query() filterDTO: GetSaleInvoicesQueryDto) {
     return this.saleInvoiceApplication.getSaleInvoices(filterDTO);
   }
 
