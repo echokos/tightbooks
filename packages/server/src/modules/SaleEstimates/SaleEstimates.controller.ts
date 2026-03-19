@@ -34,6 +34,7 @@ import { SaleEstimateResponseDto } from './dtos/SaleEstimateResponse.dto';
 import { GetSaleEstimatesQueryDto } from './dtos/GetSaleEstimatesQuery.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleEstiamteStateResponseDto } from './dtos/SaleEstimateStateResponse.dto';
+import { SaleEstimateHtmlContentResponseDto } from './dtos/SaleEstimateHtmlResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
   BulkDeleteDto,
@@ -50,6 +51,7 @@ import { SaleEstimateAction } from './types/SaleEstimates.types';
 @ApiExtraModels(SaleEstimateResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(SaleEstiamteStateResponseDto)
+@ApiExtraModels(SaleEstimateHtmlContentResponseDto)
 @ApiCommonHeaders()
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
 @UseGuards(AuthorizationGuard, PermissionGuard)
@@ -322,8 +324,17 @@ export class SaleEstimatesController {
   @ApiResponse({
     status: 200,
     description: 'The sale estimate details have been successfully retrieved.',
-    schema: {
-      $ref: getSchemaPath(SaleEstimateResponseDto),
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(SaleEstimateResponseDto),
+        },
+      },
+      'application/json+html': {
+        schema: {
+          $ref: getSchemaPath(SaleEstimateHtmlContentResponseDto),
+        },
+      },
     },
   })
   @ApiParam({

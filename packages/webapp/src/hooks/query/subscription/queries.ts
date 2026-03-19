@@ -8,7 +8,6 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import type {
   SubscriptionsListResponse,
   ChangeSubscriptionPlanBody,
@@ -91,12 +90,11 @@ export function useGetSubscriptions(
     GetSubscriptionsResponse
   >
 ): UseQueryResult<GetSubscriptionsResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     queryKey: subscriptionKeys.list(),
     queryFn: () => fetchSubscriptions(fetcher),
-    select: (data) => transformToCamelCase(data) as GetSubscriptionsResponse,
     ...options,
   });
 }

@@ -26,6 +26,7 @@ export type BulkDeleteSaleInvoicesBody = OpRequestBody<OpForPath<typeof SALE_INV
 export type ValidateBulkDeleteSaleInvoicesResponse = OpResponseBody<OpForPath<typeof SALE_INVOICES_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
 export type SaleInvoiceStateResponse = OpResponseBody<OpForPath<typeof SALE_INVOICES_ROUTES.STATE, 'get'>>;
 export type GetSaleInvoicesQuery = OpQueryParams<OpForPath<typeof SALE_INVOICES_ROUTES.LIST, 'get'>>;
+export type SaleInvoiceHtmlContentResponse = OpResponseBody<OpForPath<typeof SALE_INVOICES_ROUTES.HTML, 'get'>>;
 
 export async function fetchSaleInvoices(
   fetcher: ApiFetcher,
@@ -151,10 +152,10 @@ export async function fetchInvoicePayments(
 export async function fetchSaleInvoiceHtml(
   fetcher: ApiFetcher,
   id: number
-): Promise<{ htmlContent: string }> {
+): Promise<SaleInvoiceHtmlContentResponse> {
   const get = fetcher.path(SALE_INVOICES_ROUTES.HTML).method('get').create();
-  const { data } = await (get as (params: { id: number }) => Promise<{ data: { htmlContent: string } }>)({ id });
-  return data as { htmlContent: string };
+  const { data } = await get({ id });
+  return data;
 }
 
 export async function generateSaleInvoiceSharableLink(

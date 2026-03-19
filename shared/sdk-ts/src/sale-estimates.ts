@@ -1,4 +1,5 @@
 import type { ApiFetcher } from './fetch-utils';
+import { rawRequest } from './fetch-utils';
 import { paths } from './schema';
 import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
@@ -21,6 +22,7 @@ export type SaleEstimate = OpResponseBody<OpForPath<typeof SALE_ESTIMATES_ROUTES
 export type CreateSaleEstimateBody = OpRequestBody<OpForPath<typeof SALE_ESTIMATES_ROUTES.LIST, 'post'>>;
 export type EditSaleEstimateBody = OpRequestBody<OpForPath<typeof SALE_ESTIMATES_ROUTES.BY_ID, 'put'>>;
 export type GetSaleEstimatesQuery = OpQueryParams<OpForPath<typeof SALE_ESTIMATES_ROUTES.LIST, 'get'>>;
+export type SaleEstimateHtmlContentResponse = { htmlContent: string };
 
 export async function fetchSaleEstimates(
   fetcher: ApiFetcher,
@@ -136,4 +138,17 @@ export async function fetchSaleEstimatesState(fetcher: ApiFetcher): Promise<unkn
   const get = fetcher.path(SALE_ESTIMATES_ROUTES.STATE).method('get').create();
   const { data } = await get({});
   return data;
+}
+
+export async function fetchSaleEstimateHtmlContent(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<SaleEstimateHtmlContentResponse> {
+  return rawRequest<SaleEstimateHtmlContentResponse>(
+    fetcher,
+    'GET',
+    `/api/sale-estimates/${id}`,
+    undefined,
+    { Accept: 'application/json+html' }
+  );
 }

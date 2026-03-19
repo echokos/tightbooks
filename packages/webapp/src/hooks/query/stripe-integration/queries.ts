@@ -7,12 +7,14 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import type {
   GetStripeConnectLinkResponse,
   CreateStripeAccountLinkResponse,
   CreateStripeAccountSessionResponse,
   CreateStripeAccountResponse,
+  CreateStripeAccountLinkBody,
+  CreateStripeAccountSessionBody,
+  ExchangeStripeOAuthBody,
 } from '@bigcapital/sdk-ts';
 import {
   fetchGetStripeConnectLink,
@@ -25,60 +27,43 @@ import { stripeIntegrationKeys } from './query-keys';
 
 // Create Stripe Account Link
 // ------------------------------------
-interface StripeAccountLinkResponse {
-  clientSecret: {
-    created: number;
-    expiresAt: number;
-    object: string;
-    url: string;
-  };
-}
-
-interface StripeAccountLinkValues {
-  stripeAccountId: string;
-}
-
 export const useCreateStripeAccountLink = (
   options?: UseMutationOptions<
-    StripeAccountLinkResponse,
+    CreateStripeAccountLinkResponse,
     Error,
-    StripeAccountLinkValues
+    CreateStripeAccountLinkBody
   >,
 ): UseMutationResult<
-  StripeAccountLinkResponse,
+  CreateStripeAccountLinkResponse,
   Error,
-  StripeAccountLinkValues
+  CreateStripeAccountLinkBody
 > => {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
-    mutationFn: (values: StripeAccountLinkValues) =>
+    mutationFn: (values: CreateStripeAccountLinkBody) =>
       fetchCreateStripeAccountLink(fetcher, {
         stripeAccountId: values.stripeAccountId,
-      }).then((data) => transformToCamelCase(data) as StripeAccountLinkResponse),
+      }),
     ...options,
   });
 };
 
 // Create Stripe Account Session
 // ------------------------------------
-interface AccountSessionValues {
-  connectedAccountId?: string;
-}
-
 export const useCreateStripeAccountSession = (
   options?: UseMutationOptions<
     CreateStripeAccountSessionResponse,
     Error,
-    AccountSessionValues
+    CreateStripeAccountSessionBody
   >,
-): UseMutationResult<CreateStripeAccountSessionResponse, Error, AccountSessionValues> => {
+): UseMutationResult<CreateStripeAccountSessionResponse, Error, CreateStripeAccountSessionBody> => {
   const fetcher = useApiFetcher();
 
   return useMutation({
-    mutationFn: (values: AccountSessionValues) =>
+    mutationFn: (values: CreateStripeAccountSessionBody) =>
       fetchCreateStripeAccountSession(fetcher, {
-        account: values?.connectedAccountId,
+        account: values?.account,
       }),
     ...options,
   });
@@ -86,20 +71,17 @@ export const useCreateStripeAccountSession = (
 
 // Create Stripe Account
 // ------------------------------------
-interface CreateStripeAccountValues {}
-
 export const useCreateStripeAccount = (
   options?: UseMutationOptions<
     CreateStripeAccountResponse,
     Error,
-    CreateStripeAccountValues
+    void
   >,
 ) => {
   const fetcher = useApiFetcher();
 
   return useMutation({
-    mutationFn: (_values: CreateStripeAccountValues) =>
-      fetchCreateStripeAccount(fetcher),
+    mutationFn: () => fetchCreateStripeAccount(fetcher),
     ...options,
   });
 };
@@ -120,10 +102,6 @@ export const useGetStripeAccountLink = (
 
 // Stripe Account OAuth Callback
 // ------------------------------------
-interface StripeAccountCallbackMutationValues {
-  code: string;
-}
-
 interface StripeAccountCallbackMutationResponse {
   success: boolean;
 }
@@ -132,17 +110,17 @@ export const useSetStripeAccountCallback = (
   options?: UseMutationOptions<
     StripeAccountCallbackMutationResponse,
     Error,
-    StripeAccountCallbackMutationValues
+    ExchangeStripeOAuthBody
   >,
 ): UseMutationResult<
   StripeAccountCallbackMutationResponse,
   Error,
-  StripeAccountCallbackMutationValues
+  ExchangeStripeOAuthBody
 > => {
   const fetcher = useApiFetcher();
 
   return useMutation({
-    mutationFn: (values: StripeAccountCallbackMutationValues) =>
+    mutationFn: (values: ExchangeStripeOAuthBody) =>
       fetchExchangeStripeOAuth(fetcher, { code: values.code }).then(
         () => ({ success: true }) as StripeAccountCallbackMutationResponse,
       ),

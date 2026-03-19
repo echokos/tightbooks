@@ -32,9 +32,6 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: [DASHBOARD_META] });
 };
 
-/**
- * Create a new warehouse.
- */
 export function useCreateWarehouse(
   props?: UseMutationOptions<void, Error, CreateWarehouseBody>
 ) {
@@ -49,9 +46,6 @@ export function useCreateWarehouse(
   });
 }
 
-/**
- * Edits the given warehouse.
- */
 export function useEditWarehouse(
   props?: UseMutationOptions<void, Error, [number, EditWarehouseBody]>
 ) {
@@ -69,9 +63,6 @@ export function useEditWarehouse(
   });
 }
 
-/**
- * Deletes the given warehouse.
- */
 export function useDeleteWarehouse(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -88,9 +79,6 @@ export function useDeleteWarehouse(
   });
 }
 
-/**
- * Retrieve warehouses list.
- */
 export function useWarehouses(
   query?: Record<string, unknown>,
   props?: Omit<UseQueryOptions<WarehousesListResponse>, 'queryKey' | 'queryFn'>
@@ -103,9 +91,6 @@ export function useWarehouses(
   });
 }
 
-/**
- * Retrieve the warehouse details.
- */
 export function useWarehouse(
   id: number | string | null | undefined,
   props?: Omit<UseQueryOptions<Warehouse>, 'queryKey' | 'queryFn'>,
@@ -121,9 +106,6 @@ export function useWarehouse(
   });
 }
 
-/**
- * Activate the given warehouse.
- */
 export function useActivateWarehouses(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -137,9 +119,6 @@ export function useActivateWarehouses(
   });
 }
 
-/**
- * Mark the given warehouse as primary.
- */
 export function useMarkWarehouseAsPrimary(
   props?: UseMutationOptions<void, Error, number>
 ) {

@@ -25,7 +25,6 @@ import {
   validateBulkDeleteManualJournals,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { manualJournalsKeys, MANUAL_JOURNAL } from './query-keys';
 import { accountsKeys } from '../accounts/query-keys';
 import { customersKeys } from '../customers/query-keys';
@@ -139,14 +138,11 @@ export function useValidateBulkDeleteManualJournals(
     number[]
   >
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,
-    mutationFn: (ids: number[]) =>
-      validateBulkDeleteManualJournals(fetcher, { ids }).then((res) =>
-        transformToCamelCase(res as unknown as Record<string, unknown>) as ValidateBulkDeleteManualJournalsResponse
-      ),
+    mutationFn: (ids: number[]) => validateBulkDeleteManualJournals(fetcher, { ids }),
   });
 }
 

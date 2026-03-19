@@ -67,9 +67,6 @@ function commonInvalidateQueries(queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: organizationKeys.mutateAbilities() });
 }
 
-/**
- * Creates a new sale invoice.
- */
 export function useCreateInvoice(
   props?: UseMutationOptions<void, Error, CreateSaleInvoiceBody>
 ) {
@@ -80,19 +77,14 @@ export function useCreateInvoice(
     ...props,
     mutationFn: (values: CreateSaleInvoiceBody) => createSaleInvoice(fetcher, values),
     onSuccess: (_data, values) => {
-      const customerId = (values as { customer_id?: number }).customer_id;
-      if (customerId != null) {
-        queryClient.invalidateQueries({ queryKey: customersKeys.detail(customerId) });
-      }
+      const customerId = values.customerId as unknown as number;
+      queryClient.invalidateQueries({ queryKey: customersKeys.detail(customerId) });
       queryClient.invalidateQueries({ queryKey: estimatesKeys.all() });
       commonInvalidateQueries(queryClient);
     },
   });
 }
 
-/**
- * Edits the given sale invoice.
- */
 export function useEditInvoice(
   props?: UseMutationOptions<void, Error, [number, EditSaleInvoiceBody]>
 ) {
@@ -104,19 +96,14 @@ export function useEditInvoice(
     mutationFn: ([id, values]: [number, EditSaleInvoiceBody]) =>
       editSaleInvoice(fetcher, id, values),
     onSuccess: (_data, [id, values]) => {
+      const customerId = values.customerId as unknown as number;
       queryClient.invalidateQueries({ queryKey: invoicesKeys.detail(id) });
-      const customerId = (values as { customer_id?: number }).customer_id;
-      if (customerId != null) {
-        queryClient.invalidateQueries({ queryKey: customersKeys.detail(customerId) });
-      }
+      queryClient.invalidateQueries({ queryKey: customersKeys.detail(customerId) });
       commonInvalidateQueries(queryClient);
     },
   });
 }
 
-/**
- * Deletes the given sale invoice.
- */
 export function useDeleteInvoice(props?: UseMutationOptions<void, Error, number>) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
@@ -132,9 +119,6 @@ export function useDeleteInvoice(props?: UseMutationOptions<void, Error, number>
   });
 }
 
-/**
- * Deletes multiple sale invoices in bulk.
- */
 export function useBulkDeleteInvoices(
   props?: UseMutationOptions<
     void,
@@ -158,10 +142,8 @@ export function useBulkDeleteInvoices(
   });
 }
 
-export type ValidateBulkDeleteInvoicesResponse = ValidateBulkDeleteSaleInvoicesResponse;
-
 export function useValidateBulkDeleteInvoices(
-  props?: UseMutationOptions<ValidateBulkDeleteInvoicesResponse, Error, number[]>
+  props?: UseMutationOptions<ValidateBulkDeleteSaleInvoicesResponse, Error, number[]>
 ) {
   const fetcher = useApiFetcher();
 
@@ -171,9 +153,6 @@ export function useValidateBulkDeleteInvoices(
   });
 }
 
-/**
- * Retrieve sale invoices list with pagination meta.
- */
 export function useInvoices(
   query?: GetSaleInvoicesQuery,
   props?: UseQueryOptions<SaleInvoicesListResponse, Error>
@@ -187,9 +166,6 @@ export function useInvoices(
   });
 }
 
-/**
- * Marks the sale invoice as delivered.
- */
 export function useDeliverInvoice(props?: UseMutationOptions<void, Error, number>) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
@@ -204,18 +180,13 @@ export function useDeliverInvoice(props?: UseMutationOptions<void, Error, number
   });
 }
 
-/**
- * Retrieve the sale invoice details.
- */
 export function useInvoice(
   invoiceId: number | null | undefined,
   props?: UseQueryOptions<SaleInvoice, Error>,
-  requestProps?: Record<string, unknown>
 ) {
   const fetcher = useApiFetcher();
 
   return useQuery({
-    ...requestProps,
     ...props,
     queryKey: invoicesKeys.detail(invoiceId),
     queryFn: () => fetchSaleInvoice(fetcher, invoiceId as number),
@@ -232,32 +203,19 @@ export function usePdfInvoice(invoiceId: number) {
   });
 }
 
-interface GetInvoiceHtmlResponse {
-  htmlContent: string;
-}
-
-/**
- * Retrieves the invoice html content.
- */
 export function useInvoiceHtml(
   invoiceId: number,
-  options?: UseQueryOptions<GetInvoiceHtmlResponse, Error>
+  options?: UseQueryOptions<SaleInvoiceHtmlContentResponse, Error>
 ): UseQueryResult<GetInvoiceHtmlResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,
     queryKey: ['SALE_INVOICE_HTML', invoiceId],
-    queryFn: () =>
-      fetchSaleInvoiceHtml(fetcher, invoiceId).then((data: { htmlContent: string }) =>
-        transformToCamelCase(data) as GetInvoiceHtmlResponse
-      ),
+    queryFn: () => fetchSaleInvoiceHtml(fetcher, invoiceId),
   });
 }
 
-/**
- * Retrieve due (receivable) invoices of the given customer id.
- */
 export function useDueInvoices(
   customerId: number | null | undefined,
   props?: UseQueryOptions<unknown, Error>
@@ -446,15 +404,12 @@ export function useSaleInvoiceMailState(
   invoiceId: number,
   options?: UseQueryOptions<GetSaleInvoiceDefaultOptionsResponse, Error>
 ): UseQueryResult<GetSaleInvoiceDefaultOptionsResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,
     queryKey: [InvoicesQueryKeys.SALE_INVOICE_DEFAULT_OPTIONS, invoiceId],
-    queryFn: () =>
-      fetchSaleInvoiceMailState(fetcher, invoiceId).then((data: unknown) =>
-        transformToCamelCase(data) as GetSaleInvoiceDefaultOptionsResponse
-      ),
+    queryFn: () => fetchSaleInvoiceMailState(fetcher, invoiceId) as Promise<GetSaleInvoiceDefaultOptionsResponse>,
   });
 }
 
@@ -464,14 +419,14 @@ export type GetSaleInvoiceStateResponse = SaleInvoiceStateResponse;
 export function useGetSaleInvoiceState(
   options?: UseQueryOptions<GetSaleInvoiceStateResponse, Error>
 ): UseQueryResult<GetSaleInvoiceStateResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,
     queryKey: ['SALE_INVOICE_STATE'],
     queryFn: () =>
       fetchSaleInvoiceState(fetcher).then((data: GetSaleInvoiceStateResponse & { data?: unknown }) =>
-        transformToCamelCase(data?.data ?? data) as GetSaleInvoiceStateResponse
+        (data?.data ?? data) as GetSaleInvoiceStateResponse
       ),
   });
 }

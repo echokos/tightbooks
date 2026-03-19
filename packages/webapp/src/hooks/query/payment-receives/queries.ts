@@ -12,6 +12,10 @@ import type {
   PaymentReceived,
   CreatePaymentReceivedBody,
   EditPaymentReceivedBody,
+  BulkDeletePaymentsReceivedBody,
+  ValidateBulkDeletePaymentsReceivedResponse,
+  PaymentReceivedStateResponse,
+  PaymentReceivedHtmlContentResponse,
 } from '@bigcapital/sdk-ts';
 import {
   fetchPaymentsReceived,
@@ -25,15 +29,9 @@ import {
   fetchPaymentReceiveMail,
   sendPaymentReceiveMail,
   fetchPaymentReceivedState,
+  fetchPaymentReceiveHtmlContent,
 } from '@bigcapital/sdk-ts';
 
-export type BulkDeletePaymentsReceivedBody = { ids: number[]; skipUndeletable?: boolean };
-export type ValidateBulkDeletePaymentsReceivedResponse = {
-  deletableCount: number;
-  nonDeletableCount: number;
-  deletableIds: number[];
-  nonDeletableIds: number[];
-};
 import useApiRequest, { useApiFetcher } from '../../useRequest';
 import { useRequestQuery } from '../../useQueryRequest';
 import { saveInvoke, transformToCamelCase } from '@/utils';
@@ -75,7 +73,7 @@ export function usePaymentReceives(
   return useQuery({
     ...props,
     queryKey: paymentReceivesKeys.list(query),
-    queryFn: () => fetchPaymentsReceived(fetcher, query),
+    queryFn: () => fetchPaymentsReceived(fetcher),
   });
 }
 
@@ -149,14 +147,11 @@ export function useBulkDeletePaymentReceives(
 export function useValidateBulkDeletePaymentReceives(
   props?: UseMutationOptions<ValidateBulkDeletePaymentsReceivedResponse, Error, number[]>
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,
-    mutationFn: (ids: number[]) =>
-      validateBulkDeletePaymentsReceived(fetcher, ids).then((data: Record<string, unknown>) =>
-        transformToCamelCase(data) as ValidateBulkDeletePaymentsReceivedResponse
-      ),
+    mutationFn: (ids: number[]) => validateBulkDeletePaymentsReceived(fetcher, ids),
   });
 }
 
@@ -298,56 +293,40 @@ export function usePaymentReceivedMailState(
   paymentReceiveId: number,
   props?: UseQueryOptions<GetPaymentReceivedMailStateResponse, Error>
 ): UseQueryResult<GetPaymentReceivedMailStateResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
     queryKey: [PaymentReceivesQueryKeys.PAYMENT_RECEIVE_MAIL_OPTIONS, paymentReceiveId],
     queryFn: () =>
-      fetchPaymentReceiveMail(fetcher, paymentReceiveId).then((data: Record<string, unknown>) =>
-        transformToCamelCase(data) as GetPaymentReceivedMailStateResponse
-      ),
+      fetchPaymentReceiveMail(fetcher, paymentReceiveId) as Promise<GetPaymentReceivedMailStateResponse>,
   });
-}
-
-export interface PaymentReceivedStateResponse {
-  defaultTemplateId: number;
 }
 
 export function usePaymentReceivedState(
   options?: UseQueryOptions<PaymentReceivedStateResponse, Error>
 ): UseQueryResult<PaymentReceivedStateResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,
     queryKey: ['PAYMENT_RECEIVED_STATE'],
-    queryFn: () =>
-      fetchPaymentReceivedState(fetcher).then((data: Record<string, unknown>) =>
-        transformToCamelCase(data) as PaymentReceivedStateResponse
-      ),
+    queryFn: () => fetchPaymentReceivedState(fetcher),
   });
 }
 
-interface PaymentReceivedHtmlResponse {
-  htmlContent: string;
-}
-
-/** HTML content uses custom Accept header; kept on apiRequest. */
+/**
+ * Retrieves the payment received HTML content.
+ */
 export function useGetPaymentReceiveHtml(
   paymentReceivedId: number,
-  options?: UseQueryOptions<PaymentReceivedHtmlResponse, Error>
-): UseQueryResult<PaymentReceivedHtmlResponse, Error> {
-  const apiRequest = useApiRequest();
+  options?: UseQueryOptions<PaymentReceivedHtmlContentResponse, Error>
+): UseQueryResult<PaymentReceivedHtmlContentResponse, Error> {
+  const fetcher = useApiFetcher();
 
   return useQuery({
     ...options,
     queryKey: ['PAYMENT_RECEIVED_HTML', paymentReceivedId],
-    queryFn: (): Promise<PaymentReceivedHtmlResponse> =>
-      apiRequest
-        .get(`/payments-received/${paymentReceivedId}`, {
-          headers: { Accept: 'application/json+html' },
-        })
-        .then((res) => transformToCamelCase(res.data) as PaymentReceivedHtmlResponse),
+    queryFn: () => fetchPaymentReceiveHtmlContent(fetcher, paymentReceivedId),
   });
 }

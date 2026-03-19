@@ -29,7 +29,6 @@ import {
   AccountTransactionsList
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { accountsKeys } from './query-keys';
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
@@ -164,14 +163,11 @@ export function useBulkDeleteAccounts(
 export function useValidateBulkDeleteAccounts(
   props?: UseMutationOptions<ValidateBulkDeleteResponse, Error, number[]>
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,
-    mutationFn: (ids: number[]) =>
-      validateBulkDeleteAccounts(fetcher, ids).then((res: ValidateBulkDeleteResponse) =>
-        transformToCamelCase(res as unknown as Record<string, unknown>) as ValidateBulkDeleteResponse
-      ),
+    mutationFn: (ids: number[]) => validateBulkDeleteAccounts(fetcher, ids),
   });
 }
 

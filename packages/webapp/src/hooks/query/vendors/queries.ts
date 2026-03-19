@@ -24,7 +24,6 @@ import {
   editVendorOpeningBalance,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { vendorsKeys } from './query-keys';
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
@@ -39,11 +38,7 @@ export function useVendors(
   return useQuery({
     ...props,
     queryKey: vendorsKeys.list(query),
-    queryFn: () =>
-      (fetchVendors as (f: ReturnType<typeof useApiFetcher>, q?: Record<string, unknown>) => Promise<VendorsListResponse>)(
-        fetcher,
-        query
-      ),
+    queryFn: () => fetchVendors(fetcher, query),
   });
 }
 
@@ -102,14 +97,12 @@ export function useBulkDeleteVendors(
 export function useValidateBulkDeleteVendors(
   props?: UseMutationOptions<ValidateBulkDeleteVendorsResponse, Error, number[]>
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,
     mutationFn: (ids: number[]) =>
-      validateBulkDeleteVendors(fetcher, { ids, skipUndeletable: false } as BulkDeleteVendorsBody).then(
-        (res) => transformToCamelCase(res as Record<string, unknown>) as ValidateBulkDeleteVendorsResponse
-      ),
+      validateBulkDeleteVendors(fetcher, { ids, skipUndeletable: false } as BulkDeleteVendorsBody),
   });
 }
 

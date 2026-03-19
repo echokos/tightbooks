@@ -34,6 +34,7 @@ import { AcceptType } from '@/constants/accept-type';
 import { PaymentReceivedResponseDto } from './dtos/PaymentReceivedResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { PaymentReceivedStateResponseDto } from './dtos/PaymentReceivedStateResponse.dto';
+import { PaymentReceivedHtmlContentResponseDto } from './dtos/PaymentReceivedHtmlResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
   BulkDeleteDto,
@@ -50,6 +51,7 @@ import { PaymentReceiveAction } from './types/PaymentReceived.types';
 @ApiExtraModels(PaymentReceivedResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(PaymentReceivedStateResponseDto)
+@ApiExtraModels(PaymentReceivedHtmlContentResponseDto)
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
@@ -236,8 +238,17 @@ export class PaymentReceivesController {
     status: 200,
     description:
       'The payment received details have been successfully retrieved.',
-    schema: {
-      $ref: getSchemaPath(PaymentReceivedResponseDto),
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(PaymentReceivedResponseDto),
+        },
+      },
+      'application/json+html': {
+        schema: {
+          $ref: getSchemaPath(PaymentReceivedHtmlContentResponseDto),
+        },
+      },
     },
   })
   public async getPaymentReceive(

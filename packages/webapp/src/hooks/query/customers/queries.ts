@@ -23,7 +23,6 @@ import {
   editCustomerOpeningBalance,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { customersKeys } from './query-keys';
 
 const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
@@ -105,14 +104,12 @@ export function useBulkDeleteCustomers(
 export function useValidateBulkDeleteCustomers(
   props?: UseMutationOptions<ValidateBulkDeleteCustomersResponse, Error, number[]>
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,
     mutationFn: (ids: number[]) =>
-      validateBulkDeleteCustomers(fetcher, { ids, skipUndeletable: false }).then(
-        (res) => transformToCamelCase(res as Record<string, unknown>) as ValidateBulkDeleteCustomersResponse
-      ),
+      validateBulkDeleteCustomers(fetcher, { ids, skipUndeletable: false }),
   });
 }
 

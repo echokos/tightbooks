@@ -1,22 +1,18 @@
 import { useInfiniteQuery, useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
 import { fetchExcludedBankTransactions, fetchRecognizedTransaction, fetchRecognizedTransactions } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { bankingKeys } from '../query-keys';
 
 export function useGetRecognizedBankTransaction(
   uncategorizedTransactionId: number,
   options?: UseQueryOptions<unknown, Error>
 ): UseQueryResult<unknown, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,
     queryKey: bankingKeys.recognizedTransaction(uncategorizedTransactionId),
-    queryFn: () =>
-      fetchRecognizedTransaction(fetcher, uncategorizedTransactionId).then(
-        (data: unknown) => transformToCamelCase(data as unknown as Record<string, unknown>)
-      ),
+    queryFn: () => fetchRecognizedTransaction(fetcher, uncategorizedTransactionId),
   });
 }
 

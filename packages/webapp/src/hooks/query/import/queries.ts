@@ -8,7 +8,6 @@ import {
 } from '@tanstack/react-query';
 import useApiRequest from '../../useRequest';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { downloadFile } from '../../useDownloadFile';
 import { importKeys } from './query-keys';
 import { BANK_QUERY_KEY } from '@/constants/query-keys/banking';
@@ -61,13 +60,12 @@ export function useImportFilePreview(
   importId: string,
   props?: UseQueryOptions<ImportPreviewResponse, Error, unknown>
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
     queryKey: importKeys.preview(importId),
     queryFn: () => fetchImportPreview(fetcher, importId),
-    select: (data) => transformToCamelCase(data),
     enabled: !!importId,
   });
 }
@@ -76,13 +74,12 @@ export function useImportFileMeta(
   importId: string,
   props?: UseQueryOptions<ImportFileMetaResponse, Error, unknown>
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
     queryKey: importKeys.fileMeta(importId),
     queryFn: () => fetchImportFileMeta(fetcher, importId),
-    select: (data) => transformToCamelCase(data),
     enabled: !!importId,
   });
 }

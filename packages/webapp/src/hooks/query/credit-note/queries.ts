@@ -36,7 +36,6 @@ import {
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
 import { useRequestPdf } from '../../useRequestPdf';
-import { transformToCamelCase } from '@/utils';
 import { creditNotesKeys, CreditNotesQueryKeys } from './query-keys';
 import { itemsKeys } from '../items/query-keys';
 import { customersKeys } from '../customers/query-keys';
@@ -159,14 +158,12 @@ export function useBulkDeleteCreditNotes(
 export function useValidateBulkDeleteCreditNotes(
   props?: UseMutationOptions<ValidateBulkDeleteCreditNotesResponse, Error, number[]>
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,
     mutationFn: (ids: number[]) =>
-      validateBulkDeleteCreditNotes(fetcher, { ids, skipUndeletable: false }).then(
-        (res) => transformToCamelCase(res as Record<string, unknown>) as ValidateBulkDeleteCreditNotesResponse
-      ),
+      validateBulkDeleteCreditNotes(fetcher, { ids, skipUndeletable: false }),
   });
 }
 
@@ -366,14 +363,11 @@ export interface CreditNoteStateResponse {
 export function useGetCreditNoteState(
   options?: UseQueryOptions<CreditNoteStateResponse, Error>
 ): UseQueryResult<CreditNoteStateResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery<CreditNoteStateResponse, Error>({
     ...options,
     queryKey: ['CREDIT_NOTE_STATE'],
-    queryFn: () =>
-      fetchCreditNoteState(fetcher).then((data) =>
-        transformToCamelCase(data as unknown as Record<string, unknown>) as CreditNoteStateResponse
-      ),
+    queryFn: () => fetchCreditNoteState(fetcher) as Promise<CreditNoteStateResponse>,
   });
 }

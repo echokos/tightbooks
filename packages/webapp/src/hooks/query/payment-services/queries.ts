@@ -20,7 +20,6 @@ import {
   type UpdatePaymentMethodResponse,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { paymentServicesKeys } from './query-keys';
 
 // # Get payment services.
@@ -31,13 +30,13 @@ import { paymentServicesKeys } from './query-keys';
 export const useGetPaymentServices = (
   options?: UseQueryOptions<GetPaymentServicesResponse, Error>,
 ): UseQueryResult<GetPaymentServicesResponse, Error> => {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery<GetPaymentServicesResponse, Error>({
     queryKey: paymentServicesKeys.list(),
     queryFn: () =>
       fetchGetPaymentServices(fetcher).then((res) =>
-        transformToCamelCase(res?.payment_services) as GetPaymentServicesResponse,
+        res?.payment_services as GetPaymentServicesResponse,
       ),
     ...options,
   });
@@ -51,14 +50,12 @@ export const useGetPaymentServices = (
 export const useGetPaymentServicesState = (
   options?: UseQueryOptions<GetPaymentServicesStateResponse, Error>,
 ): UseQueryResult<GetPaymentServicesStateResponse, Error> => {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery<GetPaymentServicesStateResponse, Error>({
     queryKey: paymentServicesKeys.state(),
     queryFn: () =>
-      fetchGetPaymentServicesState(fetcher).then((data) =>
-        transformToCamelCase(data) as GetPaymentServicesStateResponse,
-      ),
+      fetchGetPaymentServicesState(fetcher) as Promise<GetPaymentServicesStateResponse>,
     ...options,
   });
 };
@@ -116,13 +113,13 @@ export const useGetPaymentMethod = (
   paymentMethodId: number,
   options?: Omit<UseQueryOptions<GetPaymentServiceResponse, Error>, 'queryKey' | 'queryFn'>,
 ): UseQueryResult<GetPaymentServiceResponse, Error> => {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery<GetPaymentServiceResponse, Error>({
     queryKey: paymentServicesKeys.detail(paymentMethodId),
     queryFn: () =>
       fetchGetPaymentService(fetcher, paymentMethodId).then((res) =>
-        transformToCamelCase(res?.data) as GetPaymentServiceResponse,
+        res?.data as GetPaymentServiceResponse,
       ),
     enabled: !!paymentMethodId,
     ...options,

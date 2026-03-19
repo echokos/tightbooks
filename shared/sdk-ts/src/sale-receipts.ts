@@ -1,4 +1,5 @@
 import type { ApiFetcher } from './fetch-utils';
+import { rawRequest } from './fetch-utils';
 import { paths } from './schema';
 import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
@@ -20,6 +21,11 @@ export type BulkDeleteReceiptsBody = OpRequestBody<OpForPath<typeof SALE_RECEIPT
 export type ValidateBulkDeleteReceiptsResponse = OpResponseBody<OpForPath<typeof SALE_RECEIPTS_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
 export type SaleReceiptStateResponse = OpResponseBody<OpForPath<typeof SALE_RECEIPTS_ROUTES.STATE, 'get'>>;
 export type GetSaleReceiptsQuery = OpQueryParams<OpForPath<typeof SALE_RECEIPTS_ROUTES.LIST, 'get'>>;
+export type SaleReceiptMailResponse = OpResponseBody<OpForPath<typeof SALE_RECEIPTS_ROUTES.MAIL, 'get'>>;
+export type SaleReceiptSendMailBody = OpRequestBody<OpForPath<typeof SALE_RECEIPTS_ROUTES.MAIL, 'post'>>;
+export type SaleReceiptHtmlContentResponse = {
+  htmlContent: string;
+};
 
 export async function fetchSaleReceipts(
   fetcher: ApiFetcher,
@@ -85,16 +91,16 @@ export async function closeSaleReceipt(fetcher: ApiFetcher, id: number): Promise
 export async function fetchSaleReceiptMail(
   fetcher: ApiFetcher,
   id: number
-): Promise<unknown> {
+): Promise<SaleReceiptMailResponse> {
   const get = fetcher.path(SALE_RECEIPTS_ROUTES.MAIL).method('get').create();
   const { data } = await get({ id });
-  return data;
+  return data as SaleReceiptMailResponse;
 }
 
 export async function sendSaleReceiptMail(
   fetcher: ApiFetcher,
   id: number,
-  body?: Record<string, unknown>
+  body?: SaleReceiptSendMailBody
 ): Promise<void> {
   const post = fetcher.path(SALE_RECEIPTS_ROUTES.MAIL).method('post').create();
   await post({ id, ...(body ?? {}) } as never);
@@ -106,4 +112,17 @@ export async function fetchSaleReceiptState(
   const get = fetcher.path(SALE_RECEIPTS_ROUTES.STATE).method('get').create();
   const { data } = await (get as (params?: object) => Promise<{ data: SaleReceiptStateResponse }>)({});
   return data;
+}
+
+export async function fetchSaleReceiptHtmlContent(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<SaleReceiptHtmlContentResponse> {
+  return rawRequest<SaleReceiptHtmlContentResponse>(
+    fetcher,
+    'GET',
+    `/api/sale-receipts/${id}`,
+    undefined,
+    { Accept: 'application/json+html' }
+  );
 }

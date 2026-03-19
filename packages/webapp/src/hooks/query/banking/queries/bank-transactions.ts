@@ -25,22 +25,19 @@ import {
   unmatchMatchedTransaction,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { bankingKeys } from '../query-keys';
 
 export function useGetBankTransactionsMatches(
   uncategorizedTransactionIds: number[],
   options?: UseQueryOptions<MatchedTransactionsResponse, Error>
 ): UseQueryResult<MatchedTransactionsResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,
     queryKey: bankingKeys.transactionMatches(uncategorizedTransactionIds),
     queryFn: () =>
-      fetchMatchedTransactions(fetcher, uncategorizedTransactionIds).then((data) =>
-        transformToCamelCase(data as unknown as Record<string, unknown>) as MatchedTransactionsResponse
-      ),
+      fetchMatchedTransactions(fetcher, uncategorizedTransactionIds) as Promise<MatchedTransactionsResponse>,
   });
 }
 

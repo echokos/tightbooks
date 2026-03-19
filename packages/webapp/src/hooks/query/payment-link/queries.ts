@@ -7,7 +7,6 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import type {
   GetInvoicePaymentLinkResponse,
   CreateStripeCheckoutSessionResponse,
@@ -71,14 +70,11 @@ export function useGetInvoicePaymentLink(
   linkId: string,
   options?: UseQueryOptions<GetInvoicePaymentLinkResponse, Error>,
 ): UseQueryResult<GetInvoicePaymentLinkResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery<GetInvoicePaymentLinkResponse, Error>({
     queryKey: paymentLinkKeys.invoice(linkId),
-    queryFn: () =>
-      fetchGetInvoicePaymentLink(fetcher, linkId).then((data) =>
-        transformToCamelCase(data) as GetInvoicePaymentLinkResponse,
-      ),
+    queryFn: () => fetchGetInvoicePaymentLink(fetcher, linkId),
     enabled: !!linkId,
     ...options,
   });
@@ -101,13 +97,11 @@ export const useCreateStripeCheckoutSession = (
   Error,
   CreateCheckoutSessionValues
 > => {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     mutationFn: (values: CreateCheckoutSessionValues) =>
-      fetchCreateStripeCheckoutSession(fetcher, values.linkId).then((data) =>
-        transformToCamelCase(data) as CreateStripeCheckoutSessionResponse,
-      ),
+      fetchCreateStripeCheckoutSession(fetcher, values.linkId),
     ...options,
   });
 };

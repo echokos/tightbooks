@@ -5087,6 +5087,11 @@
                 "schema": {
                   "$ref": "#/components/schemas/PaymentReceivedResponseDto"
                 }
+              },
+              "application/json+html": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentReceivedHtmlContentResponseDto"
+                }
               }
             }
           }
@@ -8274,6 +8279,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SaleEstimateResponseDto"
+                }
+              },
+              "application/json+html": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleEstimateHtmlContentResponseDto"
                 }
               }
             }
@@ -26889,6 +26899,19 @@
           "active"
         ]
       },
+      "PaymentReceivedHtmlContentResponseDto": {
+        "type": "object",
+        "properties": {
+          "htmlContent": {
+            "type": "string",
+            "description": "The HTML content of the payment received",
+            "example": "<html>...</html>"
+          }
+        },
+        "required": [
+          "htmlContent"
+        ]
+      },
       "PaymentReceivedStateResponseDto": {
         "type": "object",
         "properties": {
@@ -29588,6 +29611,19 @@
         },
         "required": [
           "ids"
+        ]
+      },
+      "SaleEstimateHtmlContentResponseDto": {
+        "type": "object",
+        "properties": {
+          "htmlContent": {
+            "type": "string",
+            "description": "The HTML content of the estimate",
+            "example": "<html>...</html>"
+          }
+        },
+        "required": [
+          "htmlContent"
         ]
       },
       "SaleEstiamteStateResponseDto": {

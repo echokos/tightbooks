@@ -1,4 +1,5 @@
 import type { ApiFetcher } from './fetch-utils';
+import { rawRequest } from './fetch-utils';
 import { paths } from './schema';
 import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
@@ -16,6 +17,8 @@ export type PaymentsReceivedListResponse = OpResponseBody<OpForPath<typeof PAYME
 export type PaymentReceived = OpResponseBody<OpForPath<typeof PAYMENTS_RECEIVED_ROUTES.BY_ID, 'get'>>;
 export type CreatePaymentReceivedBody = OpRequestBody<OpForPath<typeof PAYMENTS_RECEIVED_ROUTES.LIST, 'post'>>;
 export type EditPaymentReceivedBody = OpRequestBody<OpForPath<typeof PAYMENTS_RECEIVED_ROUTES.BY_ID, 'put'>>;
+export type PaymentReceivedStateResponse = OpResponseBody<OpForPath<typeof PAYMENTS_RECEIVED_ROUTES.STATE, 'get'>>;
+export type PaymentReceivedHtmlContentResponse = { htmlContent: string };
 
 export async function fetchPaymentsReceived(fetcher: ApiFetcher): Promise<PaymentsReceivedListResponse> {
   const get = fetcher.path(PAYMENTS_RECEIVED_ROUTES.LIST).method('get').create();
@@ -104,8 +107,23 @@ export async function sendPaymentReceiveMail(
   return data;
 }
 
-export async function fetchPaymentReceivedState(fetcher: ApiFetcher): Promise<unknown> {
+export async function fetchPaymentReceivedState(
+  fetcher: ApiFetcher,
+): Promise<PaymentReceivedStateResponse> {
   const get = fetcher.path(PAYMENTS_RECEIVED_ROUTES.STATE).method('get').create();
   const { data } = await get({});
-  return data;
+  return data as PaymentReceivedStateResponse;
+}
+
+export async function fetchPaymentReceiveHtmlContent(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<PaymentReceivedHtmlContentResponse> {
+  return rawRequest<PaymentReceivedHtmlContentResponse>(
+    fetcher,
+    'GET',
+    `/api/payments-received/${id}`,
+    undefined,
+    { Accept: 'application/json+html' }
+  );
 }

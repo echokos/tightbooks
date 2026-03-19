@@ -19,11 +19,16 @@ export interface CreateApiFetcherConfig {
  * Set disableCamelCaseTransform: true to disable this behavior.
  */
 export function createApiFetcher(config?: CreateApiFetcherConfig): ApiFetcher {
+  const parsedConfig = {
+    baseUrl: '',
+    disableCamelCaseTransform: true,
+    ...config,
+  };
   const fetcher = Fetcher.for<paths>();
   fetcher.configure({
-    baseUrl: config?.baseUrl ?? '',
-    init: config?.init,
-    use: config?.disableCamelCaseTransform ? [] : [createCamelCaseMiddleware()],
+    baseUrl: parsedConfig.baseUrl,
+    init: parsedConfig?.init,
+    use: parsedConfig.disableCamelCaseTransform ? [] : [createCamelCaseMiddleware()],
   });
   return fetcher;
 }
@@ -43,7 +48,8 @@ export async function rawRequest<T = unknown>(
   fetcher: ApiFetcher,
   method: string,
   path: string,
-  body?: Record<string, unknown>
+  body?: Record<string, unknown>,
+  headers?: Record<string, string>
 ): Promise<T> {
   // Access the fetcher's internal configuration
   const fetcherConfig = (fetcher as unknown as { config?: { baseUrl: string; init?: RequestInit } }).config;
@@ -51,19 +57,20 @@ export async function rawRequest<T = unknown>(
   const init = fetcherConfig?.init ?? {};
 
   const url = `${baseUrl}${path}`;
-  const headers: Record<string, string> = {
+  const mergedHeaders: Record<string, string> = {
     'Accept': 'application/json',
     ...(init.headers as Record<string, string> || {}),
+    ...(headers || {}),
   };
 
   const requestInit: RequestInit = {
     ...init,
     method,
-    headers,
+    headers: mergedHeaders,
   };
 
   if (body && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
-    headers['Content-Type'] = 'application/json';
+    mergedHeaders['Content-Type'] = 'application/json';
     requestInit.body = JSON.stringify(body);
   }
 

@@ -6886,6 +6886,13 @@ export interface components {
              */
             active: boolean;
         };
+        PaymentReceivedHtmlContentResponseDto: {
+            /**
+             * @description The HTML content of the payment received
+             * @example <html>...</html>
+             */
+            htmlContent: string;
+        };
         PaymentReceivedStateResponseDto: {
             /**
              * @description The ID of the default PDF template for payment received
@@ -8630,6 +8637,13 @@ export interface components {
              * @default false
              */
             skipUndeletable: boolean;
+        };
+        SaleEstimateHtmlContentResponseDto: {
+            /**
+             * @description The HTML content of the estimate
+             * @example <html>...</html>
+             */
+            htmlContent: string;
         };
         SaleEstiamteStateResponseDto: {
             /**
@@ -17169,6 +17183,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaymentReceivedResponseDto"];
+                    "application/json+html": components["schemas"]["PaymentReceivedHtmlContentResponseDto"];
                 };
             };
         };
@@ -18906,6 +18921,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SaleEstimateResponseDto"];
+                    "application/json+html": components["schemas"]["SaleEstimateHtmlContentResponseDto"];
                 };
             };
         };

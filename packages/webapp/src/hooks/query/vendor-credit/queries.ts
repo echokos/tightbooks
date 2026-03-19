@@ -33,7 +33,6 @@ import {
   deleteAppliedBillToVendorCredit,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { vendorCreditsKeys, VendorCreditsQueryKeys } from './query-keys';
 import { vendorsKeys } from '../vendors/query-keys';
 import { itemsKeys } from '../items/query-keys';
@@ -143,14 +142,12 @@ export function useValidateBulkDeleteVendorCredits(
     number[]
   >
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,
     mutationFn: (ids: number[]) =>
-      validateBulkDeleteVendorCredits(fetcher, { ids } as BulkDeleteVendorCreditsBody).then(
-        (data: Record<string, unknown>) => transformToCamelCase(data) as ValidateBulkDeleteVendorCreditsResponse
-      ),
+      validateBulkDeleteVendorCredits(fetcher, { ids } as BulkDeleteVendorCreditsBody),
   });
 }
 

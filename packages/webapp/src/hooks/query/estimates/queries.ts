@@ -11,6 +11,7 @@ import type {
   SaleEstimatesListResponse,
   CreateSaleEstimateBody,
   EditSaleEstimateBody,
+  SaleEstimateHtmlContentResponse,
 } from '@bigcapital/sdk-ts';
 import {
   fetchSaleEstimates,
@@ -28,7 +29,12 @@ import {
   fetchSaleEstimateMail,
   sendSaleEstimateMail,
   fetchSaleEstimatesState,
+  fetchSaleEstimateHtmlContent,
 } from '@bigcapital/sdk-ts';
+import { useApiFetcher } from '../../useRequest';
+import { estimatesKeys, EstimatesQueryKeys } from './query-keys';
+import { itemsKeys } from '../items/query-keys';
+import { useRequestPdf } from '../../useRequestPdf';
 
 export type BulkDeleteEstimatesBody = { ids: number[]; skipUndeletable?: boolean };
 export type ValidateBulkDeleteEstimatesResponse = {
@@ -37,11 +43,6 @@ export type ValidateBulkDeleteEstimatesResponse = {
   deletableIds: number[];
   nonDeletableIds: number[];
 };
-import useApiRequest, { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
-import { estimatesKeys, EstimatesQueryKeys } from './query-keys';
-import { itemsKeys } from '../items/query-keys';
-import { useRequestPdf } from '../../useRequestPdf';
 
 // Keys that don't have factory methods yet - keeping inline
 const SETTING = 'SETTING';
@@ -145,14 +146,11 @@ export function useBulkDeleteEstimates(
 export function useValidateBulkDeleteEstimates(
   props?: UseMutationOptions<ValidateBulkDeleteEstimatesResponse, Error, number[]>
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,
-    mutationFn: (ids: number[]) =>
-      validateBulkDeleteSaleEstimates(fetcher, ids).then((data: Record<string, unknown>) =>
-        transformToCamelCase(data) as ValidateBulkDeleteEstimatesResponse
-      ),
+    mutationFn: (ids: number[]) => validateBulkDeleteSaleEstimates(fetcher, ids),
   });
 }
 
@@ -305,14 +303,11 @@ export function useSaleEstimateMailState(
   estimateId: number,
   props?: UseQueryOptions<SaleEstimateMailStateResponse, Error>
 ): UseQueryResult<SaleEstimateMailStateResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: [EstimatesQueryKeys.SALE_ESTIMATE_MAIL_OPTIONS, estimateId],
-    queryFn: () =>
-      fetchSaleEstimateMail(fetcher, estimateId).then((data: Record<string, unknown>) =>
-        transformToCamelCase(data) as SaleEstimateMailStateResponse
-      ),
+    queryFn: () => fetchSaleEstimateMail(fetcher, estimateId) as Promise<SaleEstimateMailStateResponse>,
   });
 }
 
@@ -323,42 +318,27 @@ export interface ISaleEstimatesStateResponse {
 export function useGetSaleEstimatesState(
   options?: UseQueryOptions<ISaleEstimatesStateResponse, Error>
 ): UseQueryResult<ISaleEstimatesStateResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,
     queryKey: ['SALE_ESTIMATE_STATE'],
-    queryFn: () =>
-      fetchSaleEstimatesState(fetcher).then((data: Record<string, unknown>) =>
-        transformToCamelCase(data) as ISaleEstimatesStateResponse
-      ),
+    queryFn: () => fetchSaleEstimatesState(fetcher) as Promise<ISaleEstimatesStateResponse>,
   });
-}
-
-interface GetEstimateHtmlResponse {
-  htmlContent: string;
 }
 
 /**
  * Retrieves the sale estimate html content.
- * Uses custom Accept header; kept on apiRequest until SDK supports per-request headers.
  */
 export const useGetSaleEstimateHtml = (
   estimateId: number,
-  options?: UseQueryOptions<GetEstimateHtmlResponse>
-): UseQueryResult<GetEstimateHtmlResponse> => {
-  const apiRequest = useApiRequest();
+  options?: UseQueryOptions<SaleEstimateHtmlContentResponse>
+): UseQueryResult<SaleEstimateHtmlContentResponse> => {
+  const fetcher = useApiFetcher();
 
   return useQuery({
     ...options,
     queryKey: ['SALE_ESTIMATE_HTML', estimateId],
-    queryFn: (): Promise<GetEstimateHtmlResponse> =>
-      apiRequest
-        .get(`sale-estimates/${estimateId}`, {
-          headers: {
-            Accept: 'application/json+html',
-          },
-        })
-        .then((res) => transformToCamelCase(res.data) as GetEstimateHtmlResponse),
+    queryFn: () => fetchSaleEstimateHtmlContent(fetcher, estimateId),
   });
 };

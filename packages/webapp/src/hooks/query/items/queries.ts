@@ -35,7 +35,6 @@ import type {
   GetInventoryItemsCostResponse,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { itemsKeys } from './query-keys';
 import { itemsCategoriesKeys } from '../items-categories/query-keys';
 
@@ -112,14 +111,12 @@ export function useBulkDeleteItems(
 export function useValidateBulkDeleteItems(
   props?: UseMutationOptions<ValidateBulkDeleteItemsResponse, Error, number[]>
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,
     mutationFn: (ids: number[]) =>
-      validateBulkDeleteItems(fetcher, { ids, skipUndeletable: false } as BulkDeleteItemsBody).then(
-        (res) => transformToCamelCase(res as Record<string, unknown>) as ValidateBulkDeleteItemsResponse
-      ),
+      validateBulkDeleteItems(fetcher, { ids, skipUndeletable: false } as BulkDeleteItemsBody),
   });
 }
 

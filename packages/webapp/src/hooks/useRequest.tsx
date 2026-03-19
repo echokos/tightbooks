@@ -124,8 +124,11 @@ export default function useApiRequest() {
 /**
  * Returns an ApiFetcher configured with baseUrl and auth headers for use with sdk-ts fetch functions.
  * Use this in query hooks that call fetchAccounts, fetchCreditNotes, etc.
+ *
+ * @param options - Optional configuration
+ * @param options.enableCamelCaseTransform - If true, automatically transforms response data from snake_case to camelCase
  */
-export function useApiFetcher() {
+export function useApiFetcher(options?: { enableCamelCaseTransform?: boolean }) {
   const token = useAuthToken();
   const organizationId = useAuthOrganizationId();
   const currentLocale = getCookie('locale');
@@ -146,9 +149,9 @@ export function useApiFetcher() {
     return createApiFetcher({
       baseUrl: '',
       init: { headers },
-      disableCamelCaseTransform: true,
+      disableCamelCaseTransform: !options?.enableCamelCaseTransform,
     });
-  }, [token, organizationId]);
+  }, [token, organizationId, currentLocale, options?.enableCamelCaseTransform]);
 }
 
 /**

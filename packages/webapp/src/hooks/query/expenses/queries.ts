@@ -9,7 +9,7 @@ import type {
   CreateExpenseBody,
   EditExpenseBody,
   Expense,
-  ExpensesListQuery,
+  GetExpensesQuery,
   ExpensesListResponse,
   BulkDeleteExpensesBody,
   ValidateBulkDeleteExpensesResponse,
@@ -25,7 +25,6 @@ import {
   validateBulkDeleteExpenses,
 } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { expensesKeys } from './query-keys';
 import { accountsKeys } from '../accounts/query-keys';
 import { customersKeys } from '../customers/query-keys';
@@ -65,9 +64,6 @@ const commonInvalidateQueries = (queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: [FINANCIAL_REPORT] });
 };
 
-/**
- * Creates a new expense.
- */
 export function useCreateExpense(
   props?: UseMutationOptions<void, Error, CreateExpenseBody>
 ) {
@@ -84,9 +80,6 @@ export function useCreateExpense(
   });
 }
 
-/**
- * Edits the given expense.
- */
 export function useEditExpense(
   props?: UseMutationOptions<void, Error, [number, EditExpenseBody]>
 ) {
@@ -104,9 +97,6 @@ export function useEditExpense(
   });
 }
 
-/**
- * Deletes the given expense.
- */
 export function useDeleteExpense(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -123,9 +113,6 @@ export function useDeleteExpense(
   });
 }
 
-/**
- * Publishes the given expense.
- */
 export function usePublishExpense(
   props?: UseMutationOptions<void, Error, number>
 ) {
@@ -142,9 +129,6 @@ export function usePublishExpense(
   });
 }
 
-/**
- * Bulk deletes expenses.
- */
 export function useBulkDeleteExpenses(
   props?: UseMutationOptions<void, Error, BulkDeleteExpensesBody>
 ) {
@@ -164,9 +148,6 @@ export function useBulkDeleteExpenses(
   });
 }
 
-/**
- * Validates bulk delete expenses.
- */
 export function useValidateBulkDeleteExpenses(
   props?: UseMutationOptions<
     ValidateBulkDeleteExpensesResponse,
@@ -174,22 +155,17 @@ export function useValidateBulkDeleteExpenses(
     number[]
   >
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,
     mutationFn: (ids: number[]) =>
-      validateBulkDeleteExpenses(fetcher, { ids }).then((res) =>
-        transformToCamelCase(res as unknown as Record<string, unknown>) as ValidateBulkDeleteExpensesResponse
-      ),
+      validateBulkDeleteExpenses(fetcher, { ids, skipUndeletable: false }),
   });
 }
 
-/**
- * Retrieves expenses list.
- */
 export function useExpenses(
-  query?: ExpensesListQuery | null,
+  query?: GetExpensesQuery | null,
   props?: Omit<UseQueryOptions<ExpensesListResponse>, 'queryKey' | 'queryFn'>
 ) {
   const fetcher = useApiFetcher();
@@ -197,14 +173,10 @@ export function useExpenses(
   return useQuery({
     ...props,
     queryKey: expensesKeys.list(query ?? undefined),
-    queryFn: async () =>
-      fetchExpenses(fetcher, query ?? {}),
+    queryFn: () => fetchExpenses(fetcher, query ?? {}),
   });
 }
 
-/**
- * Retrieves the expense details.
- */
 export function useExpense(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<Expense>, 'queryKey' | 'queryFn'>
@@ -219,9 +191,6 @@ export function useExpense(
   });
 }
 
-/**
- * Refreshes the expenses list.
- */
 export function useRefreshExpenses() {
   const queryClient = useQueryClient();
 

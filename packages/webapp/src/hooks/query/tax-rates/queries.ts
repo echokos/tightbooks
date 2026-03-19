@@ -35,7 +35,6 @@ export function useTaxRates(
     ...props,
     queryKey: taxRatesKeys.all(),
     queryFn: () => fetchTaxRates(fetcher),
-    select: (data) => ((data as { data?: unknown })?.data ?? data) as unknown[],
   });
 }
 

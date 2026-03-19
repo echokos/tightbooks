@@ -100,6 +100,5 @@ export function useRoles(
     ...props,
     queryKey: [...rolesKeys.all(), query],
     queryFn: () => fetchRoles(fetcher),
-    select: (data) => (Array.isArray(data) ? data : (data as { data?: unknown })?.data ?? data),
   });
 }

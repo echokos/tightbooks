@@ -1,5 +1,3 @@
-// @ts-nocheck
-import { transformToCamelCase } from '@/utils';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { fetchOrganizationBuildJob } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
@@ -9,12 +7,12 @@ import { jobsKeys } from './query-keys';
  * Retrieve the job metadata.
  */
 export function useJob(jobId: string | number | null | undefined, props: Omit<UseQueryOptions, 'queryKey' | 'queryFn'> = {}) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: jobsKeys.detail(jobId),
-    queryFn: () =>
-      fetchOrganizationBuildJob(fetcher, jobId).then((data) => transformToCamelCase(data)),
+    // @ts-expect-error - jobId is checked by enabled option
+    queryFn: () => fetchOrganizationBuildJob(fetcher, jobId),
     enabled: jobId != null,
   });
 }

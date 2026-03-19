@@ -13,6 +13,11 @@ import type {
   EditSaleReceiptBody,
   ValidateBulkDeleteReceiptsResponse,
   SaleReceiptStateResponse,
+  SaleReceiptMailResponse,
+  SaleReceiptSendMailBody,
+  SaleReceiptHtmlContentResponse,
+  GetSaleReceiptsQuery,
+  BulkDeleteReceiptsBody,
 } from '@bigcapital/sdk-ts';
 import {
   fetchSaleReceipts,
@@ -26,9 +31,9 @@ import {
   fetchSaleReceiptMail,
   sendSaleReceiptMail,
   fetchSaleReceiptState,
+  fetchSaleReceiptHtmlContent,
 } from '@bigcapital/sdk-ts';
 import useApiRequest, { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { useRequestPdf } from '../../useRequestPdf';
 import { useRequestQuery } from '../../useQueryRequest';
 import { receiptsKeys, ReceiptsQueryKeys } from './query-keys';
@@ -58,9 +63,6 @@ function commonInvalidateQueries(queryClient: ReturnType<typeof useQueryClient>)
   queryClient.invalidateQueries({ queryKey: [ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES] });
 }
 
-/**
- * Creates a new sale receipt.
- */
 export function useCreateReceipt(
   props?: UseMutationOptions<void, Error, CreateSaleReceiptBody>
 ) {
@@ -74,9 +76,6 @@ export function useCreateReceipt(
   });
 }
 
-/**
- * Edits the given sale receipt.
- */
 export function useEditReceipt(
   props?: UseMutationOptions<void, Error, [number, EditSaleReceiptBody]>
 ) {
@@ -94,9 +93,6 @@ export function useEditReceipt(
   });
 }
 
-/**
- * Deletes the given sale receipt.
- */
 export function useDeleteReceipt(props?: UseMutationOptions<void, Error, number>) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
@@ -111,22 +107,15 @@ export function useDeleteReceipt(props?: UseMutationOptions<void, Error, number>
   });
 }
 
-/**
- * Deletes multiple receipts in bulk.
- */
 export function useBulkDeleteReceipts(
-  props?: UseMutationOptions<
-    void,
-    Error,
-    { ids: number[]; skipUndeletable?: boolean }
-  >
+  props?: UseMutationOptions<void, Error, BulkDeleteReceiptsBody>
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 
   return useMutation({
     ...props,
-    mutationFn: ({ ids, skipUndeletable = false }: { ids: number[]; skipUndeletable?: boolean }) =>
+    mutationFn: ({ ids, skipUndeletable = false }: BulkDeleteReceiptsBody) =>
       bulkDeleteSaleReceipts(fetcher, { ids, skipUndeletable }),
     onSuccess: () => commonInvalidateQueries(queryClient),
   });
@@ -143,9 +132,6 @@ export function useValidateBulkDeleteReceipts(
   });
 }
 
-/**
- * Closes the given sale receipt.
- */
 export function useCloseReceipt(props?: UseMutationOptions<void, Error, number>) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
@@ -160,11 +146,8 @@ export function useCloseReceipt(props?: UseMutationOptions<void, Error, number>)
   });
 }
 
-/**
- * Retrieve sale receipts list with pagination meta.
- */
 export function useReceipts(
-  query?: Record<string, unknown>,
+  query?: GetSaleReceiptsQuery,
   props?: UseQueryOptions<SaleReceiptsListResponse, Error>
 ) {
   const fetcher = useApiFetcher();
@@ -176,9 +159,6 @@ export function useReceipts(
   });
 }
 
-/**
- * Retrieve sale receipt detail.
- */
 export function useReceipt(
   id: number | null | undefined,
   props?: UseQueryOptions<SaleReceipt, Error>
@@ -193,9 +173,6 @@ export function useReceipt(
   });
 }
 
-/**
- * Retrieve the receipt pdf document data.
- */
 export function usePdfReceipt(receiptId: number) {
   return useRequestPdf({ url: `sale-receipts/${receiptId}` });
 }
@@ -242,121 +219,60 @@ export function useReceiptSMSDetail(
       ...requestProps,
     },
     {
-      select: (res: { data: unknown }) => res.data,
       defaultData: {},
       ...props,
     }
   );
 }
 
-/**
- * Sends the sale receipt mail.
- */
 export function useSendSaleReceiptMail(
-  props?: UseMutationOptions<void, Error, [number, Record<string, unknown>]>
+  props?: UseMutationOptions<void, Error, [number, SaleReceiptSendMailBody]>
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 
   return useMutation({
     ...props,
-    mutationFn: ([id, values]: [number, Record<string, unknown>]) =>
+    mutationFn: ([id, values]: [number, SaleReceiptSendMailBody]) =>
       sendSaleReceiptMail(fetcher, id, values),
     onSuccess: () => commonInvalidateQueries(queryClient),
   });
 }
 
-export interface GetSaleReceiptMailStateResponse {
-  attachReceipt: boolean;
-  closedAtDate: string;
-  closedAtDateFormatted: string;
-  companyName: string;
-  customerName: string;
-  formatArgs: Record<string, unknown>;
-  from: string[];
-  fromOptions: Array<{ mail: string; label: string; primary: boolean }>;
-  message: string;
-  receiptDate: string;
-  receiptDateFormatted: string;
-  subject: string;
-  subtotal: number;
-  subtotalFormatted: string;
-  to: string[];
-  toOptions: Array<{ mail: string; label: string; primary: boolean }>;
-  discountAmount: number;
-  discountAmountFormatted: string;
-  discountLabel: string;
-  discountPercentage: number | null;
-  discountPercentageFormatted: string;
-  adjustment: number;
-  adjustmentFormatted: string;
-  total: number;
-  totalFormatted: string;
-  companyLogoUri?: string | null;
-  primaryColor?: string | null;
-  entries: Array<{
-    name: string;
-    quantity: number;
-    quantityFormatted: string;
-    rate: number;
-    rateFormatted: string;
-    total: number;
-    totalFormatted: string;
-  }>;
-  receiptNumber: string;
-}
-
 export function useSaleReceiptMailState(
   receiptId: number,
-  props?: UseQueryOptions<GetSaleReceiptMailStateResponse, Error>
-): UseQueryResult<GetSaleReceiptMailStateResponse, Error> {
-  const fetcher = useApiFetcher();
+  props?: UseQueryOptions<SaleReceiptMailResponse, Error>
+): UseQueryResult<SaleReceiptMailResponse, Error> {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
     queryKey: [ReceiptsQueryKeys.SALE_RECEIPT_MAIL_OPTIONS, receiptId],
-    queryFn: () =>
-      fetchSaleReceiptMail(fetcher, receiptId).then((data) =>
-        transformToCamelCase(data) as GetSaleReceiptMailStateResponse
-      ),
+    queryFn: () => fetchSaleReceiptMail(fetcher, receiptId),
   });
 }
 
-export type IGetReceiptStateResponse = SaleReceiptStateResponse;
-
 export function useGetReceiptState(
-  options?: UseQueryOptions<IGetReceiptStateResponse, Error>
-): UseQueryResult<IGetReceiptStateResponse, Error> {
-  const fetcher = useApiFetcher();
+  options?: UseQueryOptions<SaleReceiptStateResponse, Error>
+): UseQueryResult<SaleReceiptStateResponse, Error> {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,
     queryKey: ['SALE_RECEIPT_STATE'],
-    queryFn: () => fetchSaleReceiptState(fetcher).then((data) => transformToCamelCase(data) as IGetReceiptStateResponse),
+    queryFn: () => fetchSaleReceiptState(fetcher),
   });
 }
 
-interface GetReceiptHtmlResponse {
-  htmlContent: string;
-}
-
-/**
- * Retrieves the sale receipt html content (custom Accept header; not in SDK).
- */
 export function useGetSaleReceiptHtml(
   receiptId: number,
-  options?: UseQueryOptions<GetReceiptHtmlResponse, Error>
-): UseQueryResult<GetReceiptHtmlResponse, Error> {
-  const apiRequest = useApiRequest();
+  options?: UseQueryOptions<SaleReceiptHtmlContentResponse, Error>
+): UseQueryResult<SaleReceiptHtmlContentResponse, Error> {
+  const fetcher = useApiFetcher();
 
   return useQuery({
     ...options,
     queryKey: ['SALE_RECEIPT_HTML', receiptId],
-    queryFn: () =>
-      apiRequest
-        .get(`sale-receipts/${receiptId}`, {
-          headers: { Accept: 'application/json+html' },
-        })
-        .then((res) => transformToCamelCase(res.data) as GetReceiptHtmlResponse),
+    queryFn: () => fetchSaleReceiptHtmlContent(fetcher, receiptId),
   });
 }

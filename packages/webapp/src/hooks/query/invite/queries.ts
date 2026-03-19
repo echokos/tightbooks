@@ -2,7 +2,6 @@ import { useMutation, useQuery, UseMutationOptions, UseQueryOptions } from '@tan
 import type { AcceptInviteBody } from '@bigcapital/sdk-ts';
 import { acceptInvite, fetchInviteCheck, resendInvite } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
-import { transformToCamelCase } from '@/utils';
 import { inviteKeys } from './query-keys';
 
 /**
@@ -26,13 +25,12 @@ export function useInviteMetaByToken(
   token: string | null | undefined,
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: inviteKeys.meta(token),
     queryFn: () => fetchInviteCheck(fetcher, token!),
     enabled: !!token,
-    select: (data) => transformToCamelCase(data as Record<string, unknown>),
   });
 }
 
