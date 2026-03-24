@@ -1,8 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
-import { FormGroup, Position, Classes, ControlGroup } from '@blueprintjs/core';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
+import { ErrorMessage, useFormikContext } from 'formik';
 import { Features } from '@/constants';
 import {
   FFormGroup,
@@ -16,6 +15,7 @@ import {
   FMoneyInputGroup,
   ExchangeRateInputGroup,
   FDateInput,
+  Box,
 } from '@/components';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import {
@@ -24,6 +24,7 @@ import {
   useSetPrimaryBranchToForm,
 } from './utils';
 import { useCurrentOrganization } from '@/hooks/state';
+import CustomerFormSectionTitle from './CustomerFormSectionTitle';
 
 /**
  * Customer financial panel.
@@ -35,21 +36,23 @@ export default function CustomerFinancialPanel() {
   useSetPrimaryBranchToForm();
 
   return (
-    <div className={'tab-panel--financial'}>
-      <Row>
-        <Col xs={6}>
+    <Box>
+      <CustomerFormSectionTitle>
+        <T id={'financial'} />
+      </CustomerFormSectionTitle>
           {/*------------ Currency  -----------*/}
           <FFormGroup
             name={'currency_code'}
             label={<T id={'currency'} />}
             fastField
             inline
-          >
+            fill
+            >
             <CurrencySelectList
               name="currency_code"
               items={currencies}
               disabled={customerId}
-            />
+              />
           </FFormGroup>
 
           {/*------------ Opening balance  -----------*/}
@@ -66,7 +69,8 @@ export default function CustomerFinancialPanel() {
             <FFormGroup
               label={<T id={'customer.label.opening_branch'} />}
               name={'opening_balance_branch_id'}
-              inline={true}
+              inline
+              fill
             >
               <BranchSelect
                 name={'opening_balance_branch_id'}
@@ -75,9 +79,7 @@ export default function CustomerFinancialPanel() {
               />
             </FFormGroup>
           </FeatureCan>
-        </Col>
-      </Row>
-    </div>
+              </Box>
   );
 }
 
@@ -95,7 +97,8 @@ function CustomerOpeningBalanceAtField() {
     <FormGroup
       name={'opening_balance_at'}
       label={<T id={'opening_balance_at'} />}
-      inline={true}
+      inline
+      fill
       helperText={<ErrorMessage name="opening_balance_at" />}
     >
       <FDateInput
@@ -125,12 +128,13 @@ function CustomerOpeningBalanceField() {
     <FFormGroup
       label={<T id={'opening_balance'} />}
       name={'opening_balance'}
-      inline={true}
+      inline
+      fill
       shouldUpdate={openingBalanceFieldShouldUpdate}
       shouldUpdateDeps={{ currencyCode: values.currency_code }}
       fastField={true}
     >
-      <ControlGroup>
+      <ControlGroup fill>
         <InputPrependText text={values.currency_code} />
         <FMoneyInputGroup
           name={'opening_balance'}
@@ -161,7 +165,8 @@ function CustomerOpeningBalanceExchangeRateField() {
     <FFormGroup
       label={' '}
       name={'opening_balance_exchange_rate'}
-      inline={true}
+      inline
+      fill
     >
       <ExchangeRateInputGroup
         fromCurrency={values.currency_code}

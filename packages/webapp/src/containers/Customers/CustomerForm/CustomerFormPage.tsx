@@ -49,26 +49,17 @@ export default function CustomerFormPage() {
   return (
     <CustomerFormProvider customerId={customerId}>
       <CustomerFormPageLoading>
-        <DashboardCard page>
           <CustomerFormPageFormik
             onSubmitSuccess={handleSubmitSuccess}
             onCancel={handleFormCancel}
           />
-        </DashboardCard>
       </CustomerFormPageLoading>
     </CustomerFormProvider>
   );
 }
 
 const CustomerFormPageFormik = styled(CustomerFormFormik)`
-  .page-form {
-    &__floating-actions {
-      margin-left: -40px;
-      margin-right: -40px;
-    }
-  }
 `;
 
 const CustomerDashboardInsider = styled(DashboardInsider)`
-  padding-bottom: 64px;
 `;

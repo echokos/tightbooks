@@ -1,9 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
-import { FormGroup, InputGroup, ControlGroup } from '@blueprintjs/core';
-import { FastField, Field, ErrorMessage } from 'formik';
+import { ControlGroup, Divider, Icon as BlueprintIcon } from '@blueprintjs/core';
 import {
   Hint,
   FieldRequiredHint,
@@ -12,10 +10,12 @@ import {
   FormattedMessage as T,
   FInputGroup,
   FFormGroup,
+  Box,
+  Icon,
+  Stack,
 } from '@/components';
 import CustomerTypeRadioField from './CustomerTypeRadioField';
-import { CLASSES } from '@/constants/classes';
-import { inputIntent } from '@/utils';
+import CustomerFormSectionTitle from './CustomerFormSectionTitle';
 import { useAutofocus } from '@/hooks';
 
 /**
@@ -25,7 +25,9 @@ export default function CustomerFormPrimarySection({}) {
   const firstNameFieldRef = useAutofocus();
 
   return (
-    <div className={'customer-form__primary-section-content'}>
+    <Box>
+      <CustomerFormSectionTitle>Customer details</CustomerFormSectionTitle>
+
       {/**-----------Customer type. -----------*/}
       <CustomerTypeRadioField />
 
@@ -33,9 +35,10 @@ export default function CustomerFormPrimarySection({}) {
       <FFormGroup
         name={'salutation'}
         label={<T id={'contact_name'} />}
-        inline={true}
+        inline
+        fill
       >
-        <ControlGroup>
+        <ControlGroup fill>
           <SalutationList
             name={'salutation'}
             popoverProps={{ minimal: true }}
@@ -44,37 +47,93 @@ export default function CustomerFormPrimarySection({}) {
             name={'first_name'}
             placeholder={intl.get('first_name')}
             inputRef={(ref) => (firstNameFieldRef.current = ref)}
+            fill
           />
-          <FInputGroup name={'last_name'} placeholder={intl.get('last_name')} />
+          <FInputGroup
+            name={'last_name'}
+            placeholder={intl.get('last_name')}
+            fill
+          />
         </ControlGroup>
+      </FFormGroup>
+      
+      <FFormGroup
+        name={'customer_code'}
+        label={'Customer Code'}
+        helperText="Add a unique account number to identify, reference and search for the contact."
+        inline
+        fill
+      >
+        <FInputGroup
+          name={'customer_code'}
+          fill />
       </FFormGroup>
 
       {/*----------- Company Name -----------*/}
       <FFormGroup
         name={'company_name'}
         label={<T id={'company_name'} />}
-        inline={true}
+        inline
+        fill
       >
-        <FInputGroup name={'company_name'} />
+        <FInputGroup name={'company_name'} fill />
       </FFormGroup>
 
       {/*----------- Display Name -----------*/}
       <FFormGroup
         name={'display_name'}
         label={
-          <>
             <T id={'display_name'} />
-            <FieldRequiredHint />
-            <Hint />
-          </>
         }
-        inline={true}
+        inline
+        fill
       >
         <DisplayNameList
           name={'display_name'}
           popoverProps={{ minimal: true }}
+          buttonProps={{ fill: true }}
         />
       </FFormGroup>
-    </div>
+
+
+      <Divider  style={{ margin: '20px 0' }} />
+
+      {/*------------ Vendor email -----------*/}
+      <FFormGroup
+        name={'email'}
+        label={<T id={'vendor_email'} />}
+        inline={true}
+      >
+        <FInputGroup
+          name={'email'}
+          leftIcon={<Icon icon="envelope" />}
+        />
+      </FFormGroup>
+
+      {/*------------ Phone number -----------*/}
+      <FFormGroup
+        name={'work_phone'}
+        className={'form-group--phone-number'}
+        label={<T id={'phone_number'} />}
+        inline={true}
+      >
+        <Stack spacing={10}>
+          <FInputGroup name={'work_phone'} placeholder={intl.get('work')} />
+          <FInputGroup
+            name={'personal_phone'}
+            placeholder={intl.get('mobile')}
+          />
+        </Stack>
+      </FFormGroup>
+
+      {/*------------ Vendor website -----------*/}
+      <FFormGroup name={'website'} label={<T id={'website'} />} inline={true}>
+        <FInputGroup
+          name={'website'}
+          placeholder={'http://'}
+          leftIcon={<BlueprintIcon icon="globe-network" />}
+        />
+      </FFormGroup>
+    </Box>
   );
 }

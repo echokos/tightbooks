@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form } from 'formik';
-import { Intent } from '@blueprintjs/core';
+import { Divider, Intent, Tab, Tabs } from '@blueprintjs/core';
 import styled from 'styled-components';
 
 import { CLASSES } from '@/constants/classes';
@@ -11,20 +11,19 @@ import { CreateCustomerForm, EditCustomerForm } from './CustomerForm.schema';
 import { compose, transformToForm, saveInvoke, parseBoolean } from '@/utils';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { defaultInitialValues } from './utils';
+import { css } from '@emotion/css';
 
-import { AppToaster } from '@/components';
+import { AppToaster, Box, Card, Group } from '@/components';
 import CustomerFormPrimarySection from './CustomerFormPrimarySection';
 import CustomerFormAfterPrimarySection from './CustomerFormAfterPrimarySection';
 import CustomersTabs from './CustomersTabs';
-import CustomerFloatingActions from './CustomerFloatingActions';
+import { CustomerFloatingActions } from './CustomerFloatingActions';
 
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import CustomerFinancialPanel from './CustomerFinancialPanel';
+import CustomerShippingAddress from './CustomerShippingAddress';
+import CustomerBillingAddress from './CustomerBillingAddress';
 
-import '@/style/pages/Customers/Form.scss';
-
-/**
- * Customer form.
- */
 function CustomerFormFormik({
   organization: { base_currency },
 
@@ -95,11 +94,7 @@ function CustomerFormFormik({
 
   return (
     <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_CUSTOMER,
-        className,
-      )}
+      className={classNames(CLASSES.PAGE_FORM, className)}
     >
       <Formik
         validationSchema={isNewMode ? CreateCustomerForm : EditCustomerForm}
@@ -107,24 +102,27 @@ function CustomerFormFormik({
         onSubmit={handleFormSubmit}
       >
         <Form>
-          <CustomerFormHeaderPrimary>
-            <CustomerFormPrimarySection />
-          </CustomerFormHeaderPrimary>
-
-          <div className={'page-form__after-priamry-section'}>
-            <CustomerFormAfterPrimarySection />
-          </div>
-
-          <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
-            <CustomersTabs />
-          </div>
-
-          <CustomerFloatingActions onCancel={onCancel} />
+          <CustomerFormFields>
+            <Box px={'20px'} py={'10px'} mx={'auto'} maxWidth={'800px'}>
+              <CustomerFormContent />
+            </Box>
+          </CustomerFormFields>
         </Form>
       </Formik>
     </div>
   );
 }
+
+const CustomerFormFields = styled.div`
+  .bp4-form-content,
+  .bp6-form-content {
+    min-width: 300px;
+  }
+
+  .bp4-form-group.bp4-inline label.bp4-label {
+    min-width: 140px;
+  }
+`;
 
 export const CustomerFormHeaderPrimary = styled.div`
   --x-border: #e4e4e4;
@@ -140,3 +138,42 @@ export const CustomerFormHeaderPrimary = styled.div`
 `;
 
 export default compose(withCurrentOrganization())(CustomerFormFormik);
+
+function CustomerFormContent() {
+  return (
+    <Card>
+      <Group verticalAlign={'top'} alignItems={'flex-start'} flexWrap={'nowrap'}>
+          <Tabs vertical large defaultSelectedTabId={'primary'} className={css`position: sticky; top: 20px;`}>
+            <Tab id={'primary'} title={'Basic'} />
+            <Tab id={'financial'} title={'Financial'} />
+            <Tab id={'billing_address'} title={'Billing address'} />
+            <Tab id={'shipping_address'} title={'Ship address'} />
+          </Tabs>
+
+        <CustomerFormBasicSection />
+      </Group>
+        <CustomerFloatingActions />
+    </Card>
+  )
+}
+
+
+const customerFormSectionDividerClass = css`
+  margin: 20px 0;
+`;
+
+function CustomerFormBasicSection() {
+  return (
+    <Box>
+      <CustomerFormPrimarySection />
+      <Divider className={customerFormSectionDividerClass} />
+      <CustomerFinancialPanel />
+      <Divider className={customerFormSectionDividerClass} />
+      <CustomerBillingAddress />
+      <Divider className={customerFormSectionDividerClass} />
+      <CustomerShippingAddress />
+    </Box>
+  );
+}
+
+

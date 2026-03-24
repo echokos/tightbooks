@@ -21,7 +21,7 @@ import { safeInvoke } from '@/utils';
 /**
  * Customer floating actions bar.
  */
-export default function CustomerFloatingActions({ onCancel }) {
+export function CustomerFloatingActions({ onCancel }) {
   // Customer form context.
   const { isNewMode, setSubmitPayload } = useCustomerFormContext();
 
@@ -50,10 +50,7 @@ export default function CustomerFloatingActions({ onCancel }) {
   };
 
   return (
-    <Group
-      spacing={10}
-      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
-    >
+    <FloatingActionsGroup spacing={10}>
       <ButtonGroup>
         {/* ----------- Save and New ----------- */}
         <SaveButton
@@ -92,16 +89,19 @@ export default function CustomerFloatingActions({ onCancel }) {
         onClick={handleClearBtnClick}
         text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
       />
-      {/* ----------- Cancel  ----------- */}
-      <Button
-        className={'ml1'}
-        onClick={handleCancelBtnClick}
-        text={<T id={'cancel'} />}
-      />
-    </Group>
+    </FloatingActionsGroup>
   );
 }
 
+const FloatingActionsGroup = styled(Group)`
+  padding: 12px 0;
+  padding-left: 165px;
+  border-top: 1px solid #50555a;
+  position: sticky;
+  bottom: 0;
+  background: var(--color-card-background);
+`;
+
 const SaveButton = styled(Button)`
-  min-width: 100px;
+  min-width: 80px;
 `;
