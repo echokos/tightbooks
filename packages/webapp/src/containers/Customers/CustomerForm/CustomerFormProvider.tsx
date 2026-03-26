@@ -63,7 +63,7 @@ const CustomerFormContext = createContext<CustomerFormContextValue | undefined>(
   undefined,
 );
 
-function CustomerFormProvider({ query, customerId, children }: CustomerFormProviderProps) {
+export function CustomerFormProvider({ query, customerId, children }: CustomerFormProviderProps) {
   const { state } = useLocation<{ action?: number | string }>();
   const contactId = state?.action;
 
@@ -132,7 +132,7 @@ function CustomerFormProvider({ query, customerId, children }: CustomerFormProvi
   );
 }
 
-const useCustomerFormContext = () => {
+export const useCustomerFormContext = () => {
   const ctx = React.useContext(CustomerFormContext);
   if (!ctx) {
     throw new Error(
@@ -141,5 +141,3 @@ const useCustomerFormContext = () => {
   }
   return ctx;
 };
-
-export { CustomerFormProvider, useCustomerFormContext };

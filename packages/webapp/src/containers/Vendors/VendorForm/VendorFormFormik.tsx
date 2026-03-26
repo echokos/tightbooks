@@ -101,7 +101,7 @@ function VendorFormFormikBase({
   };
 
   return (
-    <Box mx={'auto'} maxWidth={800}>
+    
       <Formik
         validationSchema={
           isNewMode ? CreateVendorFormSchema : EditVendorFormSchema
@@ -114,8 +114,7 @@ function VendorFormFormikBase({
             <VendorFormContent onCancel={onCancel} />
           </VendorFormFields>
         </Form>
-      </Formik>
-        </Box>    
+      </Formik>    
   );
 }
 

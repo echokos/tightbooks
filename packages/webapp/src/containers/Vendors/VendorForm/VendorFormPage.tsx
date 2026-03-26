@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useParams, useHistory } from 'react-router-dom';
-import { DashboardCard, DashboardInsider } from '@/components';
+import { Box, DashboardCard, DashboardInsider } from '@/components';
 import { VendorFormProvider, useVendorFormContext } from './VendorFormProvider';
 import { VendorFormFormik } from './VendorFormFormik';
 
@@ -41,10 +41,12 @@ export function VendorFormPage() {
   return (
     <VendorFormProvider vendorId={id}>
       <VendorFormPageLoading>
+        <Box mx={'auto'} maxWidth={800}>
           <VendorFormFormik
             onSubmitSuccess={handleSubmitSuccess}
             onCancel={handleFormCancel}
-          />
+            />
+        </Box>
       </VendorFormPageLoading>
     </VendorFormProvider>
   );
