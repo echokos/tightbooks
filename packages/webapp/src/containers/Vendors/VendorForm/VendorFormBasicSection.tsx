@@ -49,6 +49,18 @@ export function VendorFormBasicSection({}) {
         </ControlGroup>
       </FFormGroup>
 
+      <FFormGroup
+        name={'vendor_code'}
+        label={'Vendor Code'}
+        helperText="Add a unique account number to identify, reference and search for the contact."
+        inline
+        fill
+      >
+        <FInputGroup
+          name={'vendor_code'}
+          fill />
+      </FFormGroup>
+
       {/*----------- Company Name -----------*/}
       <FFormGroup
         name={'company_name'}

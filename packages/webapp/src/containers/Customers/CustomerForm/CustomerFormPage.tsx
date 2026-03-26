@@ -10,26 +10,13 @@ import {
 } from './CustomerFormProvider';
 
 /**
- * Customer form page loading.
- * @returns {JSX}
- */
-function CustomerFormPageLoading({ children }) {
-  const { isFormLoading } = useCustomerFormContext();
-
-  return (
-    <DashboardInsider loading={isFormLoading}>
-      {children}
-    </DashboardInsider>
-  );
-}
-
-/**
  * Customer form page.
  * @returns {JSX}
  */
 export default function CustomerFormPage() {
   const history = useHistory();
   const { id } = useParams();
+  const { isFormLoading } = useCustomerFormContext();
 
   const customerId = parseInt(id, 10);
 
@@ -46,14 +33,14 @@ export default function CustomerFormPage() {
 
   return (
     <CustomerFormProvider customerId={customerId}>
-      <CustomerFormPageLoading>
+      <DashboardInsider loading={isFormLoading}>
         <Box mx={'auto'} maxWidth={800}>
           <CustomerFormFormik
             onSubmitSuccess={handleSubmitSuccess}
             onCancel={handleFormCancel}
           />
         </Box>
-      </CustomerFormPageLoading>
+      </DashboardInsider>
     </CustomerFormProvider>
   );
 }

@@ -63,4 +63,9 @@ export class EditCustomerDto extends ContactAddressDto {
   @IsOptional()
   @IsBoolean()
   active?: boolean;
+
+  @ApiProperty({ required: false, description: 'Customer code' })
+  @IsOptional()
+  @IsString()
+  code?: string;
 }

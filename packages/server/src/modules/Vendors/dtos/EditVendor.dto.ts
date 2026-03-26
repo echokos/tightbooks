@@ -60,4 +60,9 @@ export class EditVendorDto extends ContactAddressDto {
   @IsOptional()
   @IsBoolean()
   active?: boolean;
+
+  @ApiProperty({ required: false, description: 'Vendor code' })
+  @IsOptional()
+  @IsString()
+  code?: string;
 }
