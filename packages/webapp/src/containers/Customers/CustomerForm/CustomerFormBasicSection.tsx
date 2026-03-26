@@ -14,18 +14,15 @@ import {
   Icon,
   Stack,
 } from '@/components';
-import CustomerTypeRadioField from './CustomerTypeRadioField';
-import CustomerFormSectionTitle from './CustomerFormSectionTitle';
+import { CustomerTypeRadioField } from './CustomerTypeRadioField';
+import { CustomerFormSectionTitle } from './CustomerFormSectionTitle';
 import { useAutofocus } from '@/hooks';
 
-/**
- * Customer form primary section.
- */
-export default function CustomerFormPrimarySection({}) {
+export function CustomerFormBasicSection({}) {
   const firstNameFieldRef = useAutofocus();
 
   return (
-    <Box>
+    <Box data-section-id="primary">
       <CustomerFormSectionTitle>Customer details</CustomerFormSectionTitle>
 
       {/**-----------Customer type. -----------*/}
@@ -102,7 +99,7 @@ export default function CustomerFormPrimarySection({}) {
       <FFormGroup
         name={'email'}
         label={<T id={'vendor_email'} />}
-        inline={true}
+        inline
       >
         <FInputGroup
           name={'email'}
@@ -118,7 +115,11 @@ export default function CustomerFormPrimarySection({}) {
         inline={true}
       >
         <Stack spacing={10}>
-          <FInputGroup name={'work_phone'} placeholder={intl.get('work')} />
+          <FInputGroup
+            name={'work_phone'}
+            placeholder={intl.get('work')}
+            leftIcon="phone"
+          />
           <FInputGroup
             name={'personal_phone'}
             placeholder={intl.get('mobile')}

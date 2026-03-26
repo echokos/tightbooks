@@ -8,9 +8,7 @@ import {
   CustomerFormProvider,
   useCustomerFormContext,
 } from '@/containers/Customers/CustomerForm/CustomerFormProvider';
-import CustomerFormFormik, {
-  CustomerFormHeaderPrimary,
-} from '@/containers/Customers/CustomerForm/CustomerFormFormik';
+import { CustomerFormFormik } from '@/containers/Customers/CustomerForm/CustomerFormFormik';
 
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
@@ -56,11 +54,11 @@ function QuickCustomerFormDrawer({
     <CustomerFormProvider customerId={customerId}>
       <DrawerCustomerFormLoading>
         <CustomerFormCard>
-          <CustomerFormFormik
+          {/* <CustomerFormFormik
             initialValues={{ first_name: displayName }}
             onSubmitSuccess={handleSubmitSuccess}
             onCancel={handleCancelForm}
-          />
+          /> */}
         </CustomerFormCard>
       </DrawerCustomerFormLoading>
     </CustomerFormProvider>
@@ -74,9 +72,9 @@ const CustomerFormCard = styled(Card)`
   padding: 25px;
   margin-bottom: calc(15px + 65px);
 
-  ${CustomerFormHeaderPrimary} {
-    padding-top: 0;
-  }
+  // ${CustomerFormHeaderPrimary} {
+  //   padding-top: 0;
+  // }
   .page-form {
     padding: 0;
 

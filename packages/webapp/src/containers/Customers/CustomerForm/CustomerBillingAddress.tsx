@@ -7,11 +7,11 @@ import {
   FInputGroup,
   FTextArea,
 } from '@/components';
-import CustomerFormSectionTitle from './CustomerFormSectionTitle';
+import { CustomerFormSectionTitle } from './CustomerFormSectionTitle';
 
-export default function CustomerBillingAddress() {
+export function CustomerBillingAddress() {
   return (
-    <Box>
+    <Box data-section-id="billingAddress">
       <CustomerFormSectionTitle>
         <T id={'billing_address'} />
       </CustomerFormSectionTitle>

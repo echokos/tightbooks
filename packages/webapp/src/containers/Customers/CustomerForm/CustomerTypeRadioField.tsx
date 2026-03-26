@@ -8,7 +8,7 @@ import { FormattedMessage as T, FFormGroup } from '@/components';
 /**
  * Customer type selector (button group).
  */
-export default function CustomerTypeRadioField() {
+export function CustomerTypeRadioField() {
   return (
     <FFormGroup
       name={'customer_type'}

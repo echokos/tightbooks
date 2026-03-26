@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import {
@@ -11,40 +10,32 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { Group, Icon, FormattedMessage as T } from '@/components';
-import { CLASSES } from '@/constants/classes';
 import { useCustomerFormContext } from './CustomerFormProvider';
-import { safeInvoke } from '@/utils';
 
-/**
- * Customer floating actions bar.
- */
-export function CustomerFloatingActions({ onCancel }) {
+export function CustomerFloatingActions() {
   // Customer form context.
-  const { isNewMode, setSubmitPayload } = useCustomerFormContext();
+  const { isNewMode, setSubmitPayload } = useCustomerFormContext() as {
+    isNewMode: boolean;
+    setSubmitPayload: (payload: { noRedirect: boolean }) => void;
+  };
 
   // Formik context.
   const { resetForm, submitForm, isSubmitting } = useFormikContext();
 
   // Handle submit button click.
-  const handleSubmitBtnClick = (event) => {
+  const handleSubmitBtnClick = (_event: React.MouseEvent<HTMLElement>) => {
     setSubmitPayload({ noRedirect: false });
   };
 
-  // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
-    safeInvoke(onCancel, event);
-  };
-
   // handle clear button clicl.
-  const handleClearBtnClick = (event) => {
+  const handleClearBtnClick = (_event: React.MouseEvent<HTMLElement>) => {
     resetForm();
   };
 
   // Handle submit & new button click.
-  const handleSubmitAndNewClick = (event) => {
+  const handleSubmitAndNewClick = (_event: React.MouseEvent<HTMLElement>) => {
     submitForm();
     setSubmitPayload({ noRedirect: true });
   };

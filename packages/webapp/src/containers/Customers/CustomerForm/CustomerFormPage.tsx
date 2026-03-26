@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { DashboardCard, DashboardInsider } from '@/components';
 
-import CustomerFormFormik from './CustomerFormFormik';
+import { CustomerFormFormik } from './CustomerFormFormik';
 import {
   CustomerFormProvider,
   useCustomerFormContext,
@@ -19,9 +19,9 @@ function CustomerFormPageLoading({ children }) {
   const { isFormLoading } = useCustomerFormContext();
 
   return (
-    <CustomerDashboardInsider loading={isFormLoading}>
+    <DashboardInsider loading={isFormLoading}>
       {children}
-    </CustomerDashboardInsider>
+    </DashboardInsider>
   );
 }
 
@@ -49,7 +49,7 @@ export default function CustomerFormPage() {
   return (
     <CustomerFormProvider customerId={customerId}>
       <CustomerFormPageLoading>
-          <CustomerFormPageFormik
+          <CustomerFormFormik
             onSubmitSuccess={handleSubmitSuccess}
             onCancel={handleFormCancel}
           />
@@ -57,9 +57,3 @@ export default function CustomerFormPage() {
     </CustomerFormProvider>
   );
 }
-
-const CustomerFormPageFormik = styled(CustomerFormFormik)`
-`;
-
-const CustomerDashboardInsider = styled(DashboardInsider)`
-`;
