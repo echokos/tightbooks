@@ -17,9 +17,9 @@ function VendorFormPageLoading({ children }) {
   const { isFormLoading } = useVendorFormContext();
 
   return (
-    <VendorDashboardInsider loading={isFormLoading}>
+    <DashboardInsider loading={isFormLoading}>
       {children}
-    </VendorDashboardInsider>
+    </DashboardInsider>
   );
 }
 
@@ -44,26 +44,11 @@ export default function VendorFormPage() {
   return (
     <VendorFormProvider vendorId={id}>
       <VendorFormPageLoading>
-        <DashboardCard page>
-          <VendorFormPageFormik
+          <VendorFormFormik
             onSubmitSuccess={handleSubmitSuccess}
             onCancel={handleFormCancel}
           />
-        </DashboardCard>
       </VendorFormPageLoading>
     </VendorFormProvider>
   );
 }
-
-const VendorFormPageFormik = styled(VendorFormFormik)`
-  .page-form {
-    &__floating-actions {
-      margin-left: -40px;
-      margin-right: -40px;
-    }
-  }
-`;
-
-const VendorDashboardInsider = styled(DashboardInsider)`
-  padding-bottom: 64px;
-`;
