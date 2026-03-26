@@ -2,9 +2,7 @@
 import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-
-import { DashboardCard, DashboardInsider } from '@/components';
-
+import { Box, DashboardCard, DashboardInsider } from '@/components';
 import { CustomerFormFormik } from './CustomerFormFormik';
 import {
   CustomerFormProvider,
@@ -49,10 +47,12 @@ export default function CustomerFormPage() {
   return (
     <CustomerFormProvider customerId={customerId}>
       <CustomerFormPageLoading>
+        <Box mx={'auto'} maxWidth={800}>
           <CustomerFormFormik
             onSubmitSuccess={handleSubmitSuccess}
             onCancel={handleFormCancel}
           />
+        </Box>
       </CustomerFormPageLoading>
     </CustomerFormProvider>
   );

@@ -7,7 +7,7 @@ import { FormattedMessage as T, FFormGroup, FInputGroup } from '@/components';
 /**
  * Vendor form  after primary section.
  */
-function VendorFormAfterPrimarySection() {
+export function VendorFormAfterPrimarySection() {
   return (
     <div className={'customer-form__after-primary-section-content'}>
       {/*------------ Vendor email -----------*/}
@@ -42,5 +42,3 @@ function VendorFormAfterPrimarySection() {
     </div>
   );
 }
-
-export default VendorFormAfterPrimarySection;

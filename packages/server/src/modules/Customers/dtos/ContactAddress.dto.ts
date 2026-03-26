@@ -1,5 +1,6 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from '@/common/decorators/Validators';
 
 export class ContactAddressDto {
   @ApiProperty({ required: false, description: 'Billing address line 1' })

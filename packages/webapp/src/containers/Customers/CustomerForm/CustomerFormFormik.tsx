@@ -3,13 +3,11 @@ import intl from 'react-intl-universal';
 import { Formik, Form, FormikHelpers } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
-
 import { CreateCustomerForm, EditCustomerForm } from './CustomerForm.schema';
 import { compose, transformToForm, saveInvoke, parseBoolean } from '@/utils';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { defaultInitialValues } from './utils';
-
-import { AppToaster, Box } from '@/components';
+import { AppToaster } from '@/components';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { CustomerFormContent } from './CustomerFormContent';
 
@@ -140,7 +138,6 @@ function CustomerFormFormikRoot({
       setSubmitting(false);
       saveInvoke(onSubmitError, values, formArgs, submitPayload);
     };
-
     if (isNewMode) {
       createCustomerMutate(formValues).then(onSuccess).catch(onError);
     } else {
@@ -150,7 +147,6 @@ function CustomerFormFormikRoot({
   };
 
   return (
-    <Box mx={'auto'} maxWidth={800}>
       <Formik<CustomerFormValues>
         validationSchema={isNewMode ? CreateCustomerForm : EditCustomerForm}
         initialValues={initialValues}
@@ -162,7 +158,6 @@ function CustomerFormFormikRoot({
           </CustomerFormFields>
         </Form>
       </Formik>
-      </Box>
   );
 }
 
@@ -171,7 +166,6 @@ const CustomerFormFields = styled.div`
   .bp6-form-content {
     min-width: 300px;
   }
-
   .bp4-form-group.bp4-inline label.bp4-label {
     min-width: 140px;
   }

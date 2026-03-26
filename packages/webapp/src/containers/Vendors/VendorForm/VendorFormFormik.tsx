@@ -24,7 +24,7 @@ import { defaultInitialValues } from './utils';
 /**
  * Vendor form.
  */
-function VendorFormFormik({
+function VendorFormFormikBase({
   // #withCurrentOrganization
   organization: { base_currency },
 
@@ -131,4 +131,4 @@ const VendorFormFields = styled.div`
   }
 `;
 
-export default compose(withCurrentOrganization())(VendorFormFormik);
+export const VendorFormFormik = compose(withCurrentOrganization())(VendorFormFormikBase);

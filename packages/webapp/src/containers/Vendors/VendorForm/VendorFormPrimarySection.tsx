@@ -18,7 +18,7 @@ import { useAutofocus } from '@/hooks';
 /**
  * Vendor form primary section.
  */
-function VendorFormPrimarySection() {
+export function VendorFormPrimarySection() {
   const firstNameFieldRef = useAutofocus();
 
   return (
@@ -80,5 +80,3 @@ function VendorFormPrimarySection() {
     </div>
   );
 }
-
-export default VendorFormPrimarySection;

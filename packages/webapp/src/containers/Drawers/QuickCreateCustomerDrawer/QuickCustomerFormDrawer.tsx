@@ -53,34 +53,14 @@ function QuickCustomerFormDrawer({
   return (
     <CustomerFormProvider customerId={customerId}>
       <DrawerCustomerFormLoading>
-        <CustomerFormCard>
-          {/* <CustomerFormFormik
+          <CustomerFormFormik
             initialValues={{ first_name: displayName }}
             onSubmitSuccess={handleSubmitSuccess}
             onCancel={handleCancelForm}
-          /> */}
-        </CustomerFormCard>
+          />
       </DrawerCustomerFormLoading>
     </CustomerFormProvider>
   );
 }
 
 export default R.compose(withDrawerActions)(QuickCustomerFormDrawer);
-
-const CustomerFormCard = styled(Card)`
-  margin: 15px;
-  padding: 25px;
-  margin-bottom: calc(15px + 65px);
-
-  // ${CustomerFormHeaderPrimary} {
-  //   padding-top: 0;
-  // }
-  .page-form {
-    padding: 0;
-
-    &__floating-actions {
-      margin-left: -41px;
-      margin-right: -41px;
-    }
-  }
-`;

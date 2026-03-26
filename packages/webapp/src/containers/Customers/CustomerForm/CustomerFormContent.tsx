@@ -6,15 +6,8 @@ import { css } from '@emotion/css';
 import { CustomerFloatingActions } from "./CustomerFloatingActions";
 import { CustomerFormSections } from "./CustomerFormFields";
 
-const customerFormSections = {
-  primary: 'primary',
-  financial: 'financial',
-  billingAddress: 'billingAddress',
-  shippingAddress: 'shippingAddress',
-  notes: 'notes',
-};
 export function CustomerFormContent() {
-  const [selectedTabId, setSelectedTabId] = useState(customerFormSections.primary);
+  const [selectedTabId, setSelectedTabId] = useState('primary');
 
   const handleTabChange = (tabId: string) => {
     const sectionId = String(tabId);
@@ -38,11 +31,11 @@ export function CustomerFormContent() {
             onChange={handleTabChange}
             className={css`position: sticky; top: 20px; .bp4-large > .bp4-tab{font-size: 14px;} `}
           >
-            <Tab id={customerFormSections.primary} title={'Basic'} />
-            <Tab id={customerFormSections.financial} title={'Financial'} />
-            <Tab id={customerFormSections.billingAddress} title={'Billing address'} />
-            <Tab id={customerFormSections.shippingAddress} title={'Ship address'} />
-            <Tab id={customerFormSections.notes} title={'Notes'} />
+            <Tab id={'primary'} title={'Basic'} />
+            <Tab id={'financial'} title={'Financial'} />
+            <Tab id={'billingAddress'} title={'Billing address'} />
+            <Tab id={'shippingAddress'} title={'Ship address'} />
+            <Tab id={'notes'} title={'Notes'} />
           </Tabs>
 
         <CustomerFormSections />

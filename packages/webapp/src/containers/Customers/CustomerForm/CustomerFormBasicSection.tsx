@@ -92,7 +92,6 @@ export function CustomerFormBasicSection({}) {
         />
       </FFormGroup>
 
-
       <Divider  style={{ margin: '20px 0' }} />
 
       {/*------------ Vendor email -----------*/}
