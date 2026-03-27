@@ -54,14 +54,14 @@ export function VendorFormBasicSection({}) {
       </FFormGroup>
 
       <FFormGroup
-        name={'vendor_code'}
+        name={'code'}
         label={'Vendor Code'}
         helperText="Add a unique account number to identify, reference and search for the contact."
         inline
         fill
         fastField
       >
-        <FInputGroup name={'vendor_code'} fill fastField />
+        <FInputGroup name={'code'} fill fastField />
       </FFormGroup>
 
       {/*----------- Company Name -----------*/}

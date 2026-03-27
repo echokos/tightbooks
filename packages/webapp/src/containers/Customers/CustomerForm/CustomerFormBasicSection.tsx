@@ -55,14 +55,14 @@ export function CustomerFormBasicSection({}) {
       </FFormGroup>
       
       <FFormGroup
-        name={'customer_code'}
+        name={'code'}
         label={'Customer Code'}
         helperText="Add a unique account number to identify, reference and search for the contact."
         inline
         fill
       >
         <FInputGroup
-          name={'customer_code'}
+          name={'code'}
           fill />
       </FFormGroup>
 
