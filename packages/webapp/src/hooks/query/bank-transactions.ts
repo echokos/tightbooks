@@ -36,16 +36,10 @@ export function useUncategorizeTransactionsBulkAction(
     Error,
     UncategorizeTransactionsBulkValues
   >(
-    (value) => {
-      // Build query string with multiple uncategorizedTransactionIds parameters
-      const params = new URLSearchParams();
-      value.ids.forEach((id) =>
-        params.append('uncategorizedTransactionIds', String(id)),
-      );
-      return apiRequest.delete(
-        `/banking/categorize/bulk?${params.toString()}`,
-      );
-    },
+    (value) =>
+      apiRequest.delete(`/banking/categorize/bulk`, {
+        params: { uncategorizedTransactionIds: value.ids },
+      }),
     {
       onSuccess: (res, values) => {
         // Invalidate the account uncategorized transactions.
