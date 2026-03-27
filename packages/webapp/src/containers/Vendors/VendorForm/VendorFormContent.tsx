@@ -26,11 +26,10 @@ export function VendorFormContent() {
     <Card className={css`padding-bottom: 0 !important;`}>
       <Group verticalAlign={'top'} alignItems={'flex-start'} flexWrap={'nowrap'}>
         <Tabs
-          vertical
-          large
           selectedTabId={selectedTabId}
           onChange={handleTabChange}
-          className={css`position: sticky; top: 20px; .bp4-large > .bp4-tab{font-size: 14px;} `}
+          className={css`position: sticky; top: 20px;`}
+          vertical
         >
           <Tab id={'primary'} title={'Basic'} />
           <Tab id={'financial'} title={'Financial'} />

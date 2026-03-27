@@ -20,7 +20,7 @@ import { useVendorFormContext } from './VendorFormProvider';
  */
 export function VendorFloatingActions() {
   // Formik context.
-  const { resetForm, isSubmitting, submitForm } = useFormikContext();
+  const { isSubmitting, submitForm } = useFormikContext();
 
   // Vendor form context.
   const { isNewMode, setSubmitPayload } = useVendorFormContext();
@@ -36,16 +36,11 @@ export function VendorFloatingActions() {
     setSubmitPayload({ noRedirect: true });
   };
 
-  // Handle clear button click.
-  const handleClearBtnClick = () => {
-    resetForm();
-  };
-
   return (
     <FloatingActionsGroup spacing={10}>
       <ButtonGroup>
         {/* ----------- Save and New ----------- */}
-        <SaveButton
+        <Button
           disabled={isSubmitting}
           loading={isSubmitting}
           intent={Intent.PRIMARY}
@@ -62,9 +57,9 @@ export function VendorFloatingActions() {
               />
             </Menu>
           }
-          minimal={true}
           interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+          position={Position.BOTTOM_RIGHT}
+          minimal
         >
           <Button
             disabled={isSubmitting}
@@ -73,26 +68,16 @@ export function VendorFloatingActions() {
           />
         </Popover>
       </ButtonGroup>
-      {/* ----------- Clear & Reset----------- */}
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        onClick={handleClearBtnClick}
-        text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
-      />
     </FloatingActionsGroup>
   );
 }
 
 const FloatingActionsGroup = styled(Group)`
-  padding: 12px 0;
+  padding: 10px 0;
   padding-left: 165px;
   border-top: 1px solid #50555a;
   position: sticky;
   bottom: 0;
   background: var(--color-card-background);
-`;
-
-const SaveButton = styled(Button)`
-  min-width: 80px;
+  z-index: 1;
 `;

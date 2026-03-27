@@ -12,6 +12,7 @@ import {
   FMoneyInputGroup,
   ExchangeRateInputGroup,
   FDateInput,
+  Icon,
   Box,
 } from '@/components';
 import { useCustomerFormContext } from './CustomerFormProvider';
@@ -58,12 +59,12 @@ export function CustomerFormFinancialSection() {
               label={<T id={'customer.label.opening_branch'} />}
               name={'opening_balance_branch_id'}
               inline
-              fill
             >
               <BranchSelect
                 name={'opening_balance_branch_id'}
                 branches={branches}
                 popoverProps={{ minimal: true }}
+                fastField
               />
             </FFormGroup>
           </FeatureCan>
@@ -95,6 +96,9 @@ function CustomerOpeningBalanceAtField() {
         disabled={customerId}
         formatDate={(date) => date.toLocaleDateString()}
         parseDate={(str) => new Date(str)}
+        inputProps={{
+          leftIcon: <Icon icon={'date-range'} />,
+        }}
         fill={true}
       />
     </FFormGroup>
@@ -118,7 +122,7 @@ function CustomerOpeningBalanceField() {
       fastField={true}
       fill
     >
-      <ControlGroup fill>
+      <ControlGroup>
         <InputPrependText text={values.currency_code as string} />
         <FMoneyInputGroup
           name={'opening_balance'}

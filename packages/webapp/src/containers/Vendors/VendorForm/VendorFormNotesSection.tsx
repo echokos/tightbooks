@@ -9,8 +9,8 @@ export function VendorFormNotesSection() {
         <T id={'notes'} />
       </VendorFormSectionTitle>
 
-      <FFormGroup name={'note'} label={<T id={'note'} />} inline fill>
-        <FTextArea name={'note'} fill />
+      <FFormGroup name={'note'} label={<T id={'note'} />} inline fill fastField>
+        <FTextArea name={'note'} fill fastField />
       </FFormGroup>
     </Box>
   );

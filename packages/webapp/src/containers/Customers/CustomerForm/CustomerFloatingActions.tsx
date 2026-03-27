@@ -22,16 +22,11 @@ export function CustomerFloatingActions() {
   };
 
   // Formik context.
-  const { resetForm, submitForm, isSubmitting } = useFormikContext();
+  const { submitForm, isSubmitting } = useFormikContext();
 
   // Handle submit button click.
   const handleSubmitBtnClick = (_event: React.MouseEvent<HTMLElement>) => {
     setSubmitPayload({ noRedirect: false });
-  };
-
-  // handle clear button clicl.
-  const handleClearBtnClick = (_event: React.MouseEvent<HTMLElement>) => {
-    resetForm();
   };
 
   // Handle submit & new button click.
@@ -44,7 +39,7 @@ export function CustomerFloatingActions() {
     <FloatingActionsGroup spacing={10}>
       <ButtonGroup>
         {/* ----------- Save and New ----------- */}
-        <SaveButton
+        <Button
           disabled={isSubmitting}
           loading={isSubmitting}
           intent={Intent.PRIMARY}
@@ -61,9 +56,9 @@ export function CustomerFloatingActions() {
               />
             </Menu>
           }
-          minimal={true}
           interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+          position={Position.BOTTOM_RIGHT}
+          minimal
         >
           <Button
             disabled={isSubmitting}
@@ -72,27 +67,16 @@ export function CustomerFloatingActions() {
           />
         </Popover>
       </ButtonGroup>
-
-      {/* ----------- Clear & Reset----------- */}
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        onClick={handleClearBtnClick}
-        text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
-      />
     </FloatingActionsGroup>
   );
 }
 
 const FloatingActionsGroup = styled(Group)`
-  padding: 12px 0;
+  padding: 10px 0;
   padding-left: 165px;
   border-top: 1px solid #50555a;
   position: sticky;
   bottom: 0;
   background: var(--color-card-background);
-`;
-
-const SaveButton = styled(Button)`
-  min-width: 80px;
+  z-index: 1;
 `;

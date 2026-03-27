@@ -19,8 +19,9 @@ export function VendorBillingAddress() {
         label={<T id={'country'} />}
         inline
         fill
+        fastField
       >
-        <FInputGroup name={'billing_address_country'} fill />
+        <FInputGroup name={'billing_address_country'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
@@ -28,8 +29,9 @@ export function VendorBillingAddress() {
         label={<T id={'address_line_1'} />}
         inline
         fill
+        fastField
       >
-        <FTextArea name={'billing_address1'} fill />
+        <FTextArea name={'billing_address1'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
@@ -37,8 +39,9 @@ export function VendorBillingAddress() {
         label={<T id={'address_line_2'} />}
         inline
         fill
+        fastField
       >
-        <FTextArea name={'billing_address2'} fill />
+        <FTextArea name={'billing_address2'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
@@ -46,8 +49,9 @@ export function VendorBillingAddress() {
         label={<T id={'city_town'} />}
         inline
         fill
+        fastField
       >
-        <FInputGroup name={'billing_address_city'} fill />
+        <FInputGroup name={'billing_address_city'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
@@ -55,8 +59,9 @@ export function VendorBillingAddress() {
         label={<T id={'state'} />}
         inline
         fill
+        fastField
       >
-        <FInputGroup name={'billing_address_state'} fill />
+        <FInputGroup name={'billing_address_state'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
@@ -64,8 +69,9 @@ export function VendorBillingAddress() {
         label={<T id={'zip_code'} />}
         inline
         fill
+        fastField
       >
-        <FInputGroup name={'billing_address_postcode'} fill />
+        <FInputGroup name={'billing_address_postcode'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
@@ -73,8 +79,9 @@ export function VendorBillingAddress() {
         label={<T id={'phone'} />}
         inline
         fill
+        fastField
       >
-        <FInputGroup name={'billing_address_phone'} fill />
+        <FInputGroup name={'billing_address_phone'} fill fastField />
       </FFormGroup>
     </Box>
   );

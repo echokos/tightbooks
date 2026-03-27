@@ -120,7 +120,9 @@ const VendorFormFields = styled.div`
   .bp6-form-content {
     min-width: 300px;
   }
-
+  .bp4-form-group{
+    margin-bottom: 20px;
+  }
   .bp4-form-group.bp4-inline label.bp4-label {
     min-width: 140px;
   }

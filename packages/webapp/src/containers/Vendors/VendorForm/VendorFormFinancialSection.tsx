@@ -12,6 +12,7 @@ import {
   FMoneyInputGroup,
   ExchangeRateInputGroup,
   FDateInput,
+  Icon,
   Box,
 } from '@/components';
 import { useVendorFormContext } from './VendorFormProvider';
@@ -46,6 +47,7 @@ export function VendorFormFinancialSection() {
           name="currency_code"
           items={currencies}
           disabled={vendorId}
+          fastField
         />
       </FFormGroup>
 
@@ -95,6 +97,9 @@ function VendorOpeningBalanceAtField() {
         disabled={vendorId}
         formatDate={(date) => date.toLocaleDateString()}
         parseDate={(str) => new Date(str)}
+        inputProps={{
+          leftIcon: <Icon icon={'date-range'} />,
+        }}
         fill={true}
       />
     </FFormGroup>
