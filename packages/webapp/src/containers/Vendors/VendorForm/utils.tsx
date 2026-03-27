@@ -13,6 +13,7 @@ export const defaultInitialValues = {
   last_name: '',
   company_name: '',
   display_name: '',
+  code: '',
 
   email: '',
   work_phone: '',

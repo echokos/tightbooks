@@ -1,8 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
-import { FormGroup, Position, Classes, ControlGroup } from '@blueprintjs/core';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import { Position, ControlGroup } from '@blueprintjs/core';
+import { ErrorMessage, useFormikContext } from 'formik';
 import { Features } from '@/constants';
 import {
   FFormGroup,
@@ -11,11 +10,11 @@ import {
   CurrencySelectList,
   BranchSelect,
   FeatureCan,
-  Row,
-  Col,
   FMoneyInputGroup,
   ExchangeRateInputGroup,
   FDateInput,
+  Icon,
+  Box,
 } from '@/components';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import {
@@ -24,67 +23,56 @@ import {
   useSetPrimaryBranchToForm,
 } from './utils';
 import { useCurrentOrganization } from '@/hooks/state';
+import  { CustomerFormSectionTitle } from './CustomerFormSectionTitle';
 
-/**
- * Customer financial panel.
- */
-export default function CustomerFinancialPanel() {
+export function CustomerFormFinancialSection() {
   const { currencies, customerId, branches } = useCustomerFormContext();
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
 
   return (
-    <div className={'tab-panel--financial'}>
-      <Row>
-        <Col xs={6}>
-          {/*------------ Currency  -----------*/}
+    <Box data-section-id="financial">
+      <CustomerFormSectionTitle>
+        <T id={'financial'} />
+      </CustomerFormSectionTitle>
+          
           <FFormGroup
             name={'currency_code'}
             label={<T id={'currency'} />}
             fastField
             inline
-          >
+            fill
+            >
             <CurrencySelectList
               name="currency_code"
               items={currencies}
               disabled={customerId}
-            />
+              />
           </FFormGroup>
 
-          {/*------------ Opening balance  -----------*/}
           <CustomerOpeningBalanceField />
-
-          {/*------ Opening Balance Exchange Rate  -----*/}
           <CustomerOpeningBalanceExchangeRateField />
-
-          {/*------------ Opening balance at -----------*/}
           <CustomerOpeningBalanceAtField />
-
-          {/*------------ Opening branch  -----------*/}
+          
           <FeatureCan feature={Features.Branches}>
             <FFormGroup
               label={<T id={'customer.label.opening_branch'} />}
               name={'opening_balance_branch_id'}
-              inline={true}
+              inline
             >
               <BranchSelect
                 name={'opening_balance_branch_id'}
                 branches={branches}
                 popoverProps={{ minimal: true }}
+                fastField
               />
             </FFormGroup>
           </FeatureCan>
-        </Col>
-      </Row>
-    </div>
+              </Box>
   );
 }
 
-/**
- * Customer opening balance at date field.
- * @returns {JSX.Element}
- */
 function CustomerOpeningBalanceAtField() {
   const { customerId } = useCustomerFormContext();
 
@@ -92,10 +80,11 @@ function CustomerOpeningBalanceAtField() {
   if (customerId) return null;
 
   return (
-    <FormGroup
+    <FFormGroup
       name={'opening_balance_at'}
       label={<T id={'opening_balance_at'} />}
-      inline={true}
+      inline
+      fill
       helperText={<ErrorMessage name="opening_balance_at" />}
     >
       <FDateInput
@@ -104,16 +93,15 @@ function CustomerOpeningBalanceAtField() {
         disabled={customerId}
         formatDate={(date) => date.toLocaleDateString()}
         parseDate={(str) => new Date(str)}
+        inputProps={{
+          leftIcon: <Icon icon={'date-range'} />,
+        }}
         fill={true}
       />
-    </FormGroup>
+    </FFormGroup>
   );
 }
 
-/**
- * Customer opening balance field.
- * @returns {JSX.Element}
- */
 function CustomerOpeningBalanceField() {
   const { customerId } = useCustomerFormContext();
   const { values } = useFormikContext();
@@ -125,15 +113,17 @@ function CustomerOpeningBalanceField() {
     <FFormGroup
       label={<T id={'opening_balance'} />}
       name={'opening_balance'}
-      inline={true}
+      inline
       shouldUpdate={openingBalanceFieldShouldUpdate}
       shouldUpdateDeps={{ currencyCode: values.currency_code }}
       fastField={true}
+      fill
     >
       <ControlGroup>
-        <InputPrependText text={values.currency_code} />
+        <InputPrependText text={values.currency_code as string} />
         <FMoneyInputGroup
           name={'opening_balance'}
+          fastField
           inputGroupProps={{ fill: true }}
         />
       </ControlGroup>
@@ -141,11 +131,6 @@ function CustomerOpeningBalanceField() {
   );
 }
 
-/**
- * Customer opening balance exchange rate field if the customer has foreign
- * currency.
- * @returns {JSX.Element}
- */
 function CustomerOpeningBalanceExchangeRateField() {
   const { values } = useFormikContext();
   const { customerId } = useCustomerFormContext();
@@ -158,16 +143,14 @@ function CustomerOpeningBalanceExchangeRateField() {
     return null;
   }
   return (
-    <FFormGroup
-      label={' '}
-      name={'opening_balance_exchange_rate'}
-      inline={true}
-    >
+    
       <ExchangeRateInputGroup
         fromCurrency={values.currency_code}
         toCurrency={currentOrganization.base_currency}
         name={'opening_balance_exchange_rate'}
+        onRecalcConfirm={() => {}}
+        onCancel={() => {}}
+        formGroupProps={{ label: ' ' }}
       />
-    </FFormGroup>
   );
 }
