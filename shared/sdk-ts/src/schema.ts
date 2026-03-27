@@ -8338,6 +8338,11 @@ export interface components {
              * @default true
              */
             active: boolean;
+            /**
+             * @description Customer code
+             * @example CUST-001
+             */
+            code?: string;
         };
         EditCustomerDto: {
             /** @description Billing address line 1 */
@@ -8396,6 +8401,8 @@ export interface components {
             note?: string;
             /** @description Active status */
             active?: boolean;
+            /** @description Customer code */
+            code?: string;
         };
         CustomerOpeningBalanceEditDto: {
             /**
@@ -8536,6 +8543,11 @@ export interface components {
              * @default true
              */
             active: boolean;
+            /**
+             * @description Vendor code
+             * @example VEND-001
+             */
+            code?: string;
         };
         EditVendorDto: {
             /** @description Billing address line 1 */
@@ -8592,6 +8604,8 @@ export interface components {
             note?: string;
             /** @description Whether the vendor is active */
             active?: boolean;
+            /** @description Vendor code */
+            code?: string;
         };
         VendorOpeningBalanceEditDto: {
             /**

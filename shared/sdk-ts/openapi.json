@@ -29061,6 +29061,11 @@
             "type": "boolean",
             "description": "Active status",
             "default": true
+          },
+          "code": {
+            "type": "string",
+            "description": "Customer code",
+            "example": "CUST-001"
           }
         },
         "required": [
@@ -29183,6 +29188,10 @@
           "active": {
             "type": "boolean",
             "description": "Active status"
+          },
+          "code": {
+            "type": "string",
+            "description": "Customer code"
           }
         },
         "required": [
@@ -29418,6 +29427,11 @@
             "type": "boolean",
             "description": "Whether the vendor is active",
             "default": true
+          },
+          "code": {
+            "type": "string",
+            "description": "Vendor code",
+            "example": "VEND-001"
           }
         },
         "required": [
@@ -29534,6 +29548,10 @@
           "active": {
             "type": "boolean",
             "description": "Whether the vendor is active"
+          },
+          "code": {
+            "type": "string",
+            "description": "Vendor code"
           }
         }
       },
