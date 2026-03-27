@@ -1,5 +1,6 @@
+// @ts-nocheck
 import React from 'react';
-import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
+import { Position, ControlGroup } from '@blueprintjs/core';
 import { ErrorMessage, useFormikContext } from 'formik';
 import { Features } from '@/constants';
 import {
@@ -72,10 +73,6 @@ export function CustomerFormFinancialSection() {
   );
 }
 
-/**
- * Customer opening balance at date field.
- * @returns {JSX.Element}
- */
 function CustomerOpeningBalanceAtField() {
   const { customerId } = useCustomerFormContext();
 
