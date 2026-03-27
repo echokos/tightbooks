@@ -46,7 +46,6 @@ export function VendorFormContent() {
           <Tab id={vendorFormSections.shippingAddress} title={'Ship address'} />
           <Tab id={vendorFormSections.notes} title={'Notes'} />
         </Tabs>
-
         <VendorFormSections />
       </Group>
       <VendorFloatingActions />

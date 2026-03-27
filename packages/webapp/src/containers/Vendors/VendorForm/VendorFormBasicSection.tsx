@@ -74,13 +74,8 @@ export function VendorFormBasicSection({}) {
       {/*----------- Display Name -----------*/}
       <FFormGroup
         name={'display_name'}
-        label={
-          <>
-            <T id={'display_name'} />
-            <FieldRequiredHint />
-            <Hint />
-          </>
-        }
+        label={<T id={'display_name'} />}
+        helperText="This is the name that appears on invoices and emails."
         inline
         fill
       >
