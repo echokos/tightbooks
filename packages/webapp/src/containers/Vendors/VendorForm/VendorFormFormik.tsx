@@ -47,9 +47,6 @@ function VendorFormFormikBase({
     isNewMode,
   } = useVendorFormContext();
 
-  /**
-   * Initial values in create and edit mode.
-   */
   const initialFormValues = useMemo(
     () => ({
       ...defaultInitialValues,
@@ -101,7 +98,6 @@ function VendorFormFormikBase({
   };
 
   return (
-    
       <Formik
         validationSchema={
           isNewMode ? CreateVendorFormSchema : EditVendorFormSchema

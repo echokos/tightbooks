@@ -4,7 +4,7 @@ const vendorFormSectionTitleClass = css`
   font-size: 14px;
   color: #8f99a8;
   margin-bottom: 18px;
-  margin-top: 0;
+  margin-top: 10px;
 `;
 
 export function VendorFormSectionTitle({ children }: { children: React.ReactNode | string }) {

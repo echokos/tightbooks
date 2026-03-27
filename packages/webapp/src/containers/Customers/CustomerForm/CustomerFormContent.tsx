@@ -34,7 +34,7 @@ export function CustomerFormContent() {
             <Tab id={'primary'} title={'Basic'} />
             <Tab id={'financial'} title={'Financial'} />
             <Tab id={'billingAddress'} title={'Billing address'} />
-            <Tab id={'shippingAddress'} title={'Ship address'} />
+            <Tab id={'shippingAddress'} title={'Shipping address'} />
             <Tab id={'notes'} title={'Notes'} />
           </Tabs>
 
