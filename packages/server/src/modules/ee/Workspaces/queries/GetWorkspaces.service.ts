@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UserTenant } from '@/modules/System/models/UserTenant.model';
 import { WorkspaceDto } from '../dtos/WorkspaceResponse.dto';
+import { WorkspaceTransformer } from '../transformers/WorkspaceTransformer';
 
 @Injectable()
 export class GetWorkspacesService {
@@ -19,22 +20,7 @@ export class GetWorkspacesService {
       .where('userId', userId)
       .withGraphFetched('tenant.metadata');
 
-    return memberships.map((m) => ({
-      organizationId: m.tenant.organizationId,
-      isReady: m.tenant.isReady,
-      isBuildRunning: m.tenant.isBuildRunning,
-      buildJobId: m.tenant.buildJobId ?? undefined,
-      role: m.role,
-      metadata: m.tenant.metadata
-        ? {
-            name: m.tenant.metadata.name,
-            baseCurrency: m.tenant.metadata.baseCurrency,
-            industry: m.tenant.metadata.industry,
-            location: m.tenant.metadata.location,
-            timezone: m.tenant.metadata.timezone,
-            language: m.tenant.metadata.language,
-          }
-        : undefined,
-    }));
+    const transformer = new WorkspaceTransformer();
+    return memberships.map((membership) => transformer.transform(membership));
   }
 }

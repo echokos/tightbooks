@@ -7,7 +7,7 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { ClsService } from 'nestjs-cls';
 import { TenantAgnosticRoute } from '@/modules/Tenancy/TenancyGlobal.guard';
 import { IgnoreUserVerifiedRoute } from '@/modules/Auth/guards/EnsureUserVerified.guard';
@@ -23,9 +23,11 @@ import {
   CreateWorkspaceResponseDto,
   WorkspaceDto,
 } from './dtos/WorkspaceResponse.dto';
+import { WorkspaceBuildJobResponseDto } from './dtos/WorkspaceBuildJobResponse.dto';
 
 @ApiTags('Workspaces')
 @Controller('workspaces')
+@ApiExtraModels(WorkspaceDto, CreateWorkspaceResponseDto, WorkspaceBuildJobResponseDto)
 export class WorkspacesController {
   constructor(
     private readonly createWorkspaceService: CreateWorkspaceService,
@@ -43,6 +45,14 @@ export class WorkspacesController {
   @TenantAgnosticRoute()
   @IgnoreUserVerifiedRoute()
   @ApiOperation({ summary: 'List workspaces the authenticated user belongs to' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the list of workspaces',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(WorkspaceDto) },
+    },
+  })
   async listWorkspaces(): Promise<WorkspaceDto[]> {
     const userId = this.cls.get<number>('userId');
     return this.getWorkspacesService.getWorkspaces(userId);
@@ -58,6 +68,13 @@ export class WorkspacesController {
   @IgnoreUserVerifiedRoute()
   @HttpCode(200)
   @ApiOperation({ summary: 'Create a new workspace' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the created workspace details',
+    schema: {
+      $ref: getSchemaPath(CreateWorkspaceResponseDto),
+    },
+  })
   async createWorkspace(
     @Body() dto: CreateWorkspaceDto,
   ): Promise<CreateWorkspaceResponseDto> {
@@ -75,6 +92,10 @@ export class WorkspacesController {
   @IgnoreTenantModelsInitialize()
   @HttpCode(200)
   @ApiOperation({ summary: 'Delete a workspace (owner only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Workspace deleted successfully',
+  })
   async deleteWorkspace(
     @Param('organizationId') organizationId: string,
   ): Promise<void> {
@@ -89,7 +110,14 @@ export class WorkspacesController {
   @Get('build/:buildJobId')
   @TenantAgnosticRoute()
   @ApiOperation({ summary: 'Get workspace build job status' })
-  async buildJobStatus(@Param('buildJobId') buildJobId: string) {
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the workspace build job details',
+    schema: {
+      $ref: getSchemaPath(WorkspaceBuildJobResponseDto),
+    },
+  })
+  async buildJobStatus(@Param('buildJobId') buildJobId: string): Promise<WorkspaceBuildJobResponseDto> {
     return this.getWorkspaceBuildJobService.getJobDetails(buildJobId);
   }
 }

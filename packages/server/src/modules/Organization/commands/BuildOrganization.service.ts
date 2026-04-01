@@ -103,14 +103,21 @@ export class BuildOrganizationService {
         buildDto: transformedBuildDTO,
       } as OrganizationBuildQueueJobPayload,
     );
-    // Marks the tenant as currently building.
-    await this.tenantRepository.markAsBuilding(jobMeta.id).findById(tenant.id);
 
     return {
       delay: jobMeta.delay,
       processedOn: jobMeta.processedOn,
       jobId: jobMeta.id,
     };
+  }
+
+  /**
+   * Marks the tenant as building.
+   * @param {string} buildJobId - The build job id.
+   */
+  public async markAsBuilding(buildJobId: string) {
+    const tenant = await this.tenancyContext.getTenant();
+    await this.tenantRepository.markAsBuilding(buildJobId).findById(tenant.id);
   }
 
   /**

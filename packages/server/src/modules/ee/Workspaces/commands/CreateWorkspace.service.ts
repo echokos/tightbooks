@@ -1,6 +1,7 @@
 import { Queue } from 'bullmq';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
+import { Knex } from 'knex';
 import { UserTenant } from '@/modules/System/models/UserTenant.model';
 import { TenantRepository } from '@/modules/System/repositories/Tenant.repository';
 import {
@@ -9,6 +10,7 @@ import {
   OrganizationBuildQueueJobPayload,
 } from '@/modules/Organization/Organization.types';
 import { transformBuildDto } from '@/modules/Organization/Organization.utils';
+import { SystemKnexConnection } from '@/modules/System/SystemDB/SystemDB.constants';
 import { CreateWorkspaceDto } from '../dtos/CreateWorkspace.dto';
 import { CreateWorkspaceResponseDto } from '../dtos/WorkspaceResponse.dto';
 
@@ -22,34 +24,44 @@ export class CreateWorkspaceService {
 
     @InjectQueue(OrganizationBuildQueue)
     private readonly organizationBuildQueue: Queue,
+
+    @Inject(SystemKnexConnection)
+    private readonly systemKnex: Knex,
   ) {}
 
   /**
    * Creates a new workspace (organization) for the authenticated user.
-   * - Creates a new tenant row with a unique organizationId.
-   * - Links the user as owner via user_tenants.
-   * - Saves organization metadata.
-   * - Enqueues the tenant database build job.
+   * - Creates a new tenant row with a unique organizationId (in transaction).
+   * - Links the user as owner via user_tenants (in transaction).
+   * - Saves organization metadata (in transaction).
+   * - Enqueues the tenant database build job (outside transaction).
    */
   async createWorkspace(
     userId: number,
     dto: CreateWorkspaceDto,
   ): Promise<CreateWorkspaceResponseDto> {
-    // Create the new tenant row.
-    const tenant = await this.tenantRepository.createWithUniqueOrgId();
+    const transformedDto = transformBuildDto(dto);
 
-    // Link the authenticated user as the owner of this new workspace.
-    await this.userTenantModel.query().insert({
-      userId,
-      tenantId: tenant.id,
-      role: 'owner',
+    // Wrap tenant creation, user linking, and metadata save in a transaction.
+    // The job enqueue happens outside the transaction since it's async.
+    const tenant = await this.systemKnex.transaction(async (trx) => {
+      // Create the new tenant row.
+      const tenant = await this.tenantRepository.createWithUniqueOrgId(undefined, trx);
+
+      // Link the authenticated user as the owner of this new workspace.
+      await this.userTenantModel.query(trx).insert({
+        userId,
+        tenantId: tenant.id,
+        role: 'owner',
+      });
+      // Persist the organization metadata.
+      await this.tenantRepository.saveMetadata(tenant.id, transformedDto, trx);
+
+      return tenant;
     });
 
-    // Transform and persist the organization metadata.
-    const transformedDto = transformBuildDto(dto);
-    await this.tenantRepository.saveMetadata(tenant.id, transformedDto);
-
-    // Enqueue the build job using the same queue and processor as the existing flow.
+    // Enqueue the build job outside the transaction.
+    // This ensures the DB changes are committed before the job starts processing.
     const jobMeta = await this.organizationBuildQueue.add(
       OrganizationBuildQueueJob,
       {
@@ -58,9 +70,6 @@ export class CreateWorkspaceService {
         buildDto: transformedDto,
       } as OrganizationBuildQueueJobPayload,
     );
-
-    // Mark the tenant as currently building.
-    await this.tenantRepository.markAsBuilding(jobMeta.id).findById(tenant.id);
 
     return {
       organizationId: tenant.organizationId,
