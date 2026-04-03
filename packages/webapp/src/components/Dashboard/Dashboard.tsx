@@ -24,10 +24,12 @@ function DashboardPreferences() {
   return (
     <div className="dashboard-layout">
       <WorkspacesSidebar />
-      <DashboardSplitPane>
-        <Sidebar />
-        <PreferencesPage />
-      </DashboardSplitPane>
+      <div className="dashboard-layout__main">
+        <DashboardSplitPane>
+          <Sidebar />
+          <PreferencesPage />
+        </DashboardSplitPane>
+      </div>
     </div>
   );
 }
@@ -39,10 +41,12 @@ function DashboardAnyPage() {
   return (
     <div className="dashboard-layout">
       <WorkspacesSidebar />
-      <DashboardSplitPane>
-        <Sidebar />
-        <DashboardContent />
-      </DashboardSplitPane>
+      <div className="dashboard-layout__main">
+        <DashboardSplitPane>
+          <Sidebar />
+          <DashboardContent />
+        </DashboardSplitPane>
+      </div>
     </div>
   );
 }

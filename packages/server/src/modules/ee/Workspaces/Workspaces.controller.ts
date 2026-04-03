@@ -6,6 +6,7 @@ import {
   HttpCode,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { ClsService } from 'nestjs-cls';
@@ -16,9 +17,11 @@ import { IgnoreTenantSeededRoute } from '@/modules/Tenancy/EnsureTenantIsSeeded.
 import { IgnoreTenantModelsInitialize } from '@/modules/Tenancy/TenancyInitializeModels.guard';
 import { CreateWorkspaceService } from './commands/CreateWorkspace.service';
 import { DeleteWorkspaceService } from './commands/DeleteWorkspace.service';
+import { SetDefaultWorkspaceService } from './commands/SetDefaultWorkspace.service';
 import { GetWorkspacesService } from './queries/GetWorkspaces.service';
 import { GetWorkspaceBuildJobService } from './queries/GetWorkspaceBuildJob.service';
 import { CreateWorkspaceDto } from './dtos/CreateWorkspace.dto';
+import { SetDefaultWorkspaceDto } from './dtos/SetDefaultWorkspace.dto';
 import {
   CreateWorkspaceResponseDto,
   WorkspaceDto,
@@ -32,6 +35,7 @@ export class WorkspacesController {
   constructor(
     private readonly createWorkspaceService: CreateWorkspaceService,
     private readonly deleteWorkspaceService: DeleteWorkspaceService,
+    private readonly setDefaultWorkspaceService: SetDefaultWorkspaceService,
     private readonly getWorkspacesService: GetWorkspacesService,
     private readonly getWorkspaceBuildJobService: GetWorkspaceBuildJobService,
     private readonly cls: ClsService,
@@ -119,5 +123,28 @@ export class WorkspacesController {
   })
   async buildJobStatus(@Param('buildJobId') buildJobId: string): Promise<WorkspaceBuildJobResponseDto> {
     return this.getWorkspaceBuildJobService.getJobDetails(buildJobId);
+  }
+
+  /**
+   * Sets the given organization as the user's default workspace.
+   * No `organization-id` header required.
+   */
+  @Put('default')
+  @TenantAgnosticRoute()
+  @IgnoreUserVerifiedRoute()
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Set default workspace' })
+  @ApiResponse({
+    status: 200,
+    description: 'Default workspace set successfully',
+  })
+  async setDefaultWorkspace(
+    @Body() dto: SetDefaultWorkspaceDto,
+  ): Promise<void> {
+    const userId = this.cls.get<number>('userId');
+    return this.setDefaultWorkspaceService.setDefaultWorkspace(
+      userId,
+      dto.organizationId,
+    );
   }
 }

@@ -14,7 +14,11 @@ export function useSwitchOrganization() {
   const queryClient = useQueryClient();
 
   return useCallback(
-    (organizationId: string) => {
+    (organizationId: string, workspaceName?: string) => {
+      // Store workspace name for toast message after reload
+      if (workspaceName) {
+        sessionStorage.setItem('switchedWorkspaceName', workspaceName);
+      }
       setCookie('organization_id', organizationId);
       dispatch(setOrganizationId(organizationId));
       queryClient.removeQueries();

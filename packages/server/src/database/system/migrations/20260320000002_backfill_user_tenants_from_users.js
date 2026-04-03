@@ -1,9 +1,9 @@
 exports.up = function (knex) {
   return knex.raw(`
-    INSERT IGNORE INTO user_tenants (user_id, tenant_id, role, created_at, updated_at)
-    SELECT id, tenant_id, 'owner', NOW(), NOW()
-    FROM   users
-    WHERE  tenant_id IS NOT NULL
+    INSERT IGNORE INTO USER_TENANTS (USER_ID, TENANT_ID, ROLE, CREATED_AT, UPDATED_AT)
+    SELECT ID, TENANT_ID, 'owner', CREATED_AT, UPDATED_AT
+    FROM   USERS
+    WHERE  TENANT_ID IS NOT NULL
   `);
 };
 

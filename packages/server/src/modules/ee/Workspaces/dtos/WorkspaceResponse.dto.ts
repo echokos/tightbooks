@@ -15,6 +15,7 @@ export class WorkspaceDto {
   @ApiProperty() isBuildRunning: boolean;
   @ApiPropertyOptional() buildJobId?: string;
   @ApiProperty() role: 'owner' | 'member';
+  @ApiPropertyOptional() isDefault?: boolean;
   @ApiPropertyOptional({ type: WorkspaceMetadataDto })
   metadata?: WorkspaceMetadataDto;
 }

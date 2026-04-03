@@ -1,10 +1,14 @@
 // @ts-nocheck
-import React from 'react';
-import { Tooltip, Position, Spinner } from '@blueprintjs/core';
+import React, { useState } from 'react';
+import * as R from 'ramda';
+import { Tooltip, Position, Spinner, Icon } from '@blueprintjs/core';
 import { useWorkspaces } from '@/hooks/query';
 import { useAuthOrganizationId } from '@/hooks/state';
 import { useSwitchOrganization } from '@/hooks/useSwitchOrganization';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 import { firstLettersArgs } from '@/utils';
+import { WorkspaceSwitchingOverlay } from '@/components';
 import classNames from 'classnames';
 
 import '@/style/containers/Dashboard/WorkspacesSidebar.scss';
@@ -29,7 +33,9 @@ function WorkspaceIcon({ workspace, isActive, onClick }) {
           'is-active': isActive,
           'is-disabled': isDisabled,
         })}
-        onClick={() => !isDisabled && onClick(workspace.organizationId)}
+        onClick={() =>
+          !isDisabled && onClick(workspace.organizationId, name)
+        }
         disabled={isDisabled}
       >
         {workspace.isBuildRunning ? (
@@ -43,31 +49,106 @@ function WorkspaceIcon({ workspace, isActive, onClick }) {
 }
 
 /**
+ * Organizations list button.
+ */
+function OrganizationsListButton({ openDrawer }) {
+  return (
+    <Tooltip
+      content="View all organizations"
+      position={Position.RIGHT}
+      minimal
+      className="workspaces-sidebar__item-tooltip"
+    >
+      <button
+        className={classNames(
+          'workspaces-sidebar__item',
+          'workspaces-sidebar__list-btn',
+        )}
+        onClick={() => openDrawer(DRAWERS.ORGANIZATIONS_LIST)}
+      >
+        <Icon icon="list" size={16} />
+      </button>
+    </Tooltip>
+  );
+}
+
+/**
+ * Add workspace button.
+ */
+function AddWorkspaceButton({ openDrawer }) {
+  return (
+    <Tooltip
+      content="Create workspace"
+      position={Position.RIGHT}
+      minimal
+      className="workspaces-sidebar__item-tooltip"
+    >
+      <button
+        className={classNames(
+          'workspaces-sidebar__item',
+          'workspaces-sidebar__add-btn',
+        )}
+        onClick={() => openDrawer(DRAWERS.CREATE_WORKSPACE)}
+      >
+        <Icon icon="plus" size={16} />
+      </button>
+    </Tooltip>
+  );
+}
+
+/**
  * Workspaces sidebar container.
  */
-export function WorkspacesSidebar() {
+function WorkspacesSidebarRoot({ openDrawer }) {
   const { data: workspaces, isLoading } = useWorkspaces();
   const activeOrganizationId = useAuthOrganizationId();
   const switchOrganization = useSwitchOrganization();
+  const [switchingWorkspaceName, setSwitchingWorkspaceName] = useState(null);
+
+  const handleSwitchWorkspace = (organizationId, workspaceName) => {
+    if (organizationId === activeOrganizationId) {
+      return;
+    }
+    setSwitchingWorkspaceName(workspaceName);
+    // Small delay to let the overlay render before the browser navigates
+    setTimeout(() => {
+      switchOrganization(organizationId, workspaceName);
+    }, 350);
+  };
 
   return (
-    <div className="workspaces-sidebar">
-      <div className="workspaces-sidebar__list">
-        {isLoading ? (
-          <div className="workspaces-sidebar__loading">
-            <Spinner size={20} />
-          </div>
-        ) : (
-          workspaces?.map((workspace) => (
-            <WorkspaceIcon
-              key={workspace.organizationId}
-              workspace={workspace}
-              isActive={workspace.organizationId === activeOrganizationId}
-              onClick={switchOrganization}
-            />
-          ))
-        )}
+    <>
+      <div className="workspaces-sidebar">
+        <div className="workspaces-sidebar__scrollable">
+          {isLoading ? (
+            <div className="workspaces-sidebar__loading">
+              <Spinner size={20} />
+            </div>
+          ) : (
+            <div className="workspaces-sidebar__list">
+              {workspaces?.map((workspace) => (
+                <WorkspaceIcon
+                  key={workspace.organizationId}
+                  workspace={workspace}
+                  isActive={workspace.organizationId === activeOrganizationId}
+                  onClick={handleSwitchWorkspace}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="workspaces-sidebar__footer">
+          <OrganizationsListButton openDrawer={openDrawer} />
+          <AddWorkspaceButton openDrawer={openDrawer} />
+        </div>
       </div>
-    </div>
+      {switchingWorkspaceName && (
+        <WorkspaceSwitchingOverlay workspaceName={switchingWorkspaceName} />
+      )}
+    </>
   );
 }
+
+export const WorkspacesSidebar = R.compose(withDrawerActions)(
+  WorkspacesSidebarRoot,
+);

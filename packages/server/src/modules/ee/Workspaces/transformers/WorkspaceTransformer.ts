@@ -6,11 +6,13 @@ import { WorkspaceDto } from '../dtos/WorkspaceResponse.dto';
  * Transforms UserTenant (workspace membership) to WorkspaceDto.
  */
 export class WorkspaceTransformer extends Transformer<UserTenant> {
+  private defaultTenantId?: number;
+
   /**
    * Include these attributes in the transformed output.
    */
   public includeAttributes = (): string[] => {
-    return ['organizationId', 'isReady', 'isBuildRunning', 'buildJobId', 'role', 'metadata'];
+    return ['organizationId', 'isReady', 'isBuildRunning', 'buildJobId', 'role', 'metadata', 'isDefault'];
   };
 
   /**
@@ -59,15 +61,25 @@ export class WorkspaceTransformer extends Transformer<UserTenant> {
   };
 
   /**
+   * Determine if this workspace is the user's default.
+   */
+  protected isDefault = (membership: UserTenant): boolean => {
+    if (!this.defaultTenantId) return false;
+    return membership.tenantId === this.defaultTenantId;
+  };
+
+  /**
    * Transform single membership to WorkspaceDto.
    */
-  transform = (membership: UserTenant): WorkspaceDto => {
+  transform = (membership: UserTenant, defaultTenantId?: number): WorkspaceDto => {
+    this.defaultTenantId = defaultTenantId;
     return {
       organizationId: this.organizationId(membership),
       isReady: this.isReady(membership),
       isBuildRunning: this.isBuildRunning(membership),
       buildJobId: this.buildJobId(membership),
       role: membership.role,
+      isDefault: this.isDefault(membership),
       metadata: this.metadata(membership),
     };
   };

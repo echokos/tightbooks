@@ -5,8 +5,18 @@ $dashboard-views-bar-height: 44px;
   display: flex;
   height: 100vh;
 
-  > .split-pane {
-    flex: 1 1 auto;
+  &__main {
+    flex: 1;
+    display: flex;
+    min-width: 0;
+    overflow: hidden;
+
+    // Ensure react-split-pane fills the container
+    > .SplitPane {
+      position: relative !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
   }
 }
 
