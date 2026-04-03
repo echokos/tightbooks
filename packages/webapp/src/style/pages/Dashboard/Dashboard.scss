@@ -1,6 +1,15 @@
 @import '../../_base.scss';
 $dashboard-views-bar-height: 44px;
 
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+
+  > .split-pane {
+    flex: 1 1 auto;
+  }
+}
+
 .dashboard {
   display: flex;
   height: 100vh;
