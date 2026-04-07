@@ -3,11 +3,18 @@ import { BullModule } from '@nestjs/bullmq';
 import { WorkspacesController } from './Workspaces.controller';
 import { CreateWorkspaceService } from './commands/CreateWorkspace.service';
 import { DeleteWorkspaceService } from './commands/DeleteWorkspace.service';
+import { DeleteWorkspaceJobService } from './commands/DeleteWorkspaceJob.service';
+import { InactivateWorkspaceService } from './commands/InactivateWorkspace.service';
 import { SetDefaultWorkspaceService } from './commands/SetDefaultWorkspace.service';
 import { GetWorkspacesService } from './queries/GetWorkspaces.service';
+import { GetWorkspacesFinancialService } from './queries/GetWorkspacesFinancial.service';
 import { GetWorkspaceBuildJobService } from './queries/GetWorkspaceBuildJob.service';
 import { CreateUserTenantOnSignupSubscriber } from './subscribers/CreateUserTenantOnSignup.subscriber';
+import { WorkspaceCreatedSubscriber } from './subscribers/WorkspaceCreated.subscriber';
+import { DeleteWorkspaceProcessor } from './processors/DeleteWorkspace.processor';
 import { OrganizationBuildQueue } from '@/modules/Organization/Organization.types';
+import { DeleteWorkspaceQueue } from './Workspaces.types';
+import { OrganizationModule } from '@/modules/Organization/Organization.module';
 import { InjectSystemModel } from '@/modules/System/SystemModels/SystemModels.module';
 import { UserTenant } from '@/modules/System/models/UserTenant.model';
 import { SystemUser } from '@/modules/System/models/SystemUser';
@@ -18,8 +25,12 @@ import { TenantRepository } from '@/modules/System/repositories/Tenant.repositor
 
 @Module({
   imports: [
-    BullModule.registerQueue({ name: OrganizationBuildQueue }),
+    BullModule.registerQueue(
+      { name: OrganizationBuildQueue },
+      { name: DeleteWorkspaceQueue },
+    ),
     TenantDBManagerModule,
+    OrganizationModule,
   ],
   controllers: [WorkspacesController],
   providers: [
@@ -29,11 +40,16 @@ import { TenantRepository } from '@/modules/System/repositories/Tenant.repositor
     TenantRepository,
     CreateWorkspaceService,
     DeleteWorkspaceService,
+    DeleteWorkspaceJobService,
+    InactivateWorkspaceService,
     SetDefaultWorkspaceService,
     GetWorkspacesService,
+    GetWorkspacesFinancialService,
     GetWorkspaceBuildJobService,
     CreateUserTenantOnSignupSubscriber,
+    WorkspaceCreatedSubscriber,
     GetBuildOrganizationBuildJob,
+    DeleteWorkspaceProcessor,
   ],
 })
 export class WorkspacesModule {}

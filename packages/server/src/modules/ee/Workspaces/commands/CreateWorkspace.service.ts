@@ -1,18 +1,15 @@
-import { Queue } from 'bullmq';
 import { Inject, Injectable } from '@nestjs/common';
-import { InjectQueue } from '@nestjs/bullmq';
 import { Knex } from 'knex';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserTenant } from '@/modules/System/models/UserTenant.model';
 import { TenantRepository } from '@/modules/System/repositories/Tenant.repository';
-import {
-  OrganizationBuildQueue,
-  OrganizationBuildQueueJob,
-  OrganizationBuildQueueJobPayload,
-} from '@/modules/Organization/Organization.types';
+import { BuildOrganizationService } from '@/modules/Organization/commands/BuildOrganization.service';
 import { transformBuildDto } from '@/modules/Organization/Organization.utils';
 import { SystemKnexConnection } from '@/modules/System/SystemDB/SystemDB.constants';
+import { events } from '@/common/events/events';
 import { CreateWorkspaceDto } from '../dtos/CreateWorkspace.dto';
 import { CreateWorkspaceResponseDto } from '../dtos/WorkspaceResponse.dto';
+import { IWorkspaceCreatedEventPayload } from '../Workspaces.types';
 
 @Injectable()
 export class CreateWorkspaceService {
@@ -22,8 +19,9 @@ export class CreateWorkspaceService {
 
     private readonly tenantRepository: TenantRepository,
 
-    @InjectQueue(OrganizationBuildQueue)
-    private readonly organizationBuildQueue: Queue,
+    private readonly eventEmitter: EventEmitter2,
+
+    private readonly buildOrganizationService: BuildOrganizationService,
 
     @Inject(SystemKnexConnection)
     private readonly systemKnex: Knex,
@@ -60,20 +58,25 @@ export class CreateWorkspaceService {
       return tenant;
     });
 
-    // Enqueue the build job outside the transaction.
-    // This ensures the DB changes are committed before the job starts processing.
-    const jobMeta = await this.organizationBuildQueue.add(
-      OrganizationBuildQueueJob,
-      {
-        organizationId: tenant.organizationId,
-        userId,
-        buildDto: transformedDto,
-      } as OrganizationBuildQueueJobPayload,
+    // Emit workspace created event for subscribers to handle any post-creation setup.
+    await this.eventEmitter.emitAsync(events.workspace.created, {
+      tenantId: tenant.id,
+      organizationId: tenant.organizationId,
+      userId,
+      buildDTO: transformedDto,
+    } as IWorkspaceCreatedEventPayload);
+
+    // Build the organization for the newly created tenant.
+    // This creates the tenant database and seeds initial data.
+    await this.buildOrganizationService.buildForTenant(
+      tenant.id,
+      userId,
+      transformedDto,
     );
 
     return {
       organizationId: tenant.organizationId,
-      jobId: jobMeta.id,
+      jobId: null,
     };
   }
 }

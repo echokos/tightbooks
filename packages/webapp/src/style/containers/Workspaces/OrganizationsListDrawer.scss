@@ -173,33 +173,16 @@
     color: $white;
   }
 
-  &__movement {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-size: 13px;
+  &__income {
+    font-size: 14px;
+    font-weight: 500;
+    color: $green4;
+  }
 
-    &-in {
-      color: $green4;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-
-      .bp4-icon {
-        color: $green4;
-      }
-    }
-
-    &-out {
-      color: $red4;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-
-      .bp4-icon {
-        color: $red4;
-      }
-    }
+  &__expenses {
+    font-size: 14px;
+    font-weight: 500;
+    color: $red4;
   }
 
   &__default-checkbox {
@@ -220,6 +203,101 @@
 
     &:disabled {
       opacity: 0.3;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  &__delete-btn {
+    color: $red4 !important;
+
+    &:hover:not(:disabled) {
+      color: $red3 !important;
+      background: rgba($red4, 0.1) !important;
+    }
+
+    &:disabled {
+      opacity: 0.3;
+    }
+  }
+
+  &__inactivate-btn {
+    color: $orange4 !important;
+
+    &:hover:not(:disabled) {
+      color: $orange3 !important;
+      background: rgba($orange4, 0.1) !important;
+    }
+
+    &:disabled {
+      opacity: 0.3;
+    }
+  }
+}
+
+// Workspace Delete Dialog Styles
+.workspace-delete-dialog {
+  .bp4-dialog-body {
+    padding: 20px;
+  }
+
+  &__details {
+    margin-top: 16px;
+
+    p {
+      margin: 0 0 8px 0;
+      color: $gray1;
+    }
+
+    ul {
+      margin: 8px 0;
+      padding-left: 20px;
+      color: $gray1;
+
+      li {
+        margin-bottom: 4px;
+      }
+    }
+  }
+
+  &__warning {
+    margin-top: 16px;
+    padding: 12px;
+    background: rgba($red4, 0.1);
+    border-left: 3px solid $red4;
+    border-radius: 3px;
+    font-size: 13px;
+    color: $red3 !important;
+  }
+}
+
+// Workspace Inactivate Dialog Styles
+.workspace-inactivate-dialog {
+  .bp4-dialog-body {
+    padding: 20px;
+  }
+
+  &__details {
+    margin-top: 16px;
+
+    p {
+      margin: 0 0 8px 0;
+      color: $gray1;
+    }
+
+    ul {
+      margin: 8px 0;
+      padding-left: 20px;
+      color: $gray1;
+
+      li {
+        margin-bottom: 4px;
+      }
     }
   }
 }

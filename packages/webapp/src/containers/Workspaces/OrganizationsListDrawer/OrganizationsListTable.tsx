@@ -14,8 +14,10 @@ import { DataTable, TableSkeletonRows } from '@/components';
 import { useWorkspaces, useSetDefaultWorkspace } from '@/hooks/query';
 import { useAuthOrganizationId } from '@/hooks/state';
 import { useSwitchOrganization } from '@/hooks/useSwitchOrganization';
-import { firstLettersArgs } from '@/utils';
+import { firstLettersArgs, compose } from '@/utils';
 import { WorkspaceSwitchingOverlay } from '@/components';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 import classNames from 'classnames';
 import intl from 'react-intl-universal';
 
@@ -64,7 +66,7 @@ function formatCurrency(amount: number): string {
 /**
  * Organizations list table component.
  */
-export function OrganizationsListTable({ workspaces, isLoading, onClose }) {
+function OrganizationsListTable({ workspaces, isLoading, onClose, openDialog }) {
   const activeOrganizationId = useAuthOrganizationId();
   const switchOrganization = useSwitchOrganization();
   const setDefaultWorkspace = useSetDefaultWorkspace();
@@ -89,6 +91,27 @@ export function OrganizationsListTable({ workspaces, isLoading, onClose }) {
       setDefaultWorkspace.mutate({ organizationId });
     },
     [setDefaultWorkspace],
+  );
+
+  const handleDeleteWorkspace = useCallback(
+    (workspace) => {
+      openDialog(DialogsName.WorkspaceDelete, {
+        organizationId: workspace.organizationId,
+        workspaceName: workspace.metadata?.name || workspace.organizationId,
+      });
+    },
+    [openDialog],
+  );
+
+  const handleInactivateWorkspace = useCallback(
+    (workspace) => {
+      openDialog(DialogsName.WorkspaceInactivate, {
+        organizationId: workspace.organizationId,
+        workspaceName: workspace.metadata?.name || workspace.organizationId,
+        isActive: workspace.isActive,
+      });
+    },
+    [openDialog],
   );
 
   const columns = useMemo(
@@ -151,28 +174,34 @@ export function OrganizationsListTable({ workspaces, isLoading, onClose }) {
         },
       },
       {
-        Header: intl.get('money_movement', { fallback: 'Money Movement' }),
-        accessor: 'moneyMovement',
-        width: 200,
+        Header: intl.get('total_income', { fallback: 'Total Income' }),
+        accessor: 'totalIncome',
+        width: 150,
         Cell: ({ row }) => {
           const workspace = row.original;
-          // Mock money movement data
-          const mockIn = workspace.metadata?.name
-            ? workspace.organizationId.charCodeAt(0) * 5000 + Math.random() * 20000
-            : 0;
-          const mockOut = workspace.metadata?.name
-            ? workspace.organizationId.charCodeAt(0) * 3000 + Math.random() * 15000
-            : 0;
+          const totalIncome = workspace.totalIncome ?? 0;
 
           return (
-            <div className="organizations-list-table__movement">
-              <span className="organizations-list-table__movement-in">
-                <Icon icon="arrow-top-right" iconSize={12} />
-                {formatCurrency(mockIn)}
+            <div className="organizations-list-table__income">
+              <span className="organizations-list-table__income-amount">
+                {formatCurrency(totalIncome)}
               </span>
-              <span className="organizations-list-table__movement-out">
-                <Icon icon="arrow-bottom-right" iconSize={12} />
-                {formatCurrency(mockOut)}
+            </div>
+          );
+        },
+      },
+      {
+        Header: intl.get('total_expenses', { fallback: 'Total Expenses' }),
+        accessor: 'totalExpenses',
+        width: 150,
+        Cell: ({ row }) => {
+          const workspace = row.original;
+          const totalExpenses = workspace.totalExpenses ?? 0;
+
+          return (
+            <div className="organizations-list-table__expenses">
+              <span className="organizations-list-table__expenses-amount">
+                {formatCurrency(totalExpenses)}
               </span>
             </div>
           );
@@ -184,7 +213,7 @@ export function OrganizationsListTable({ workspaces, isLoading, onClose }) {
         width: 80,
         Cell: ({ row }) => {
           const workspace = row.original;
-          const isDisabled = !workspace.isReady || workspace.isBuildRunning;
+          const isDisabled = !workspace.isReady || workspace.isBuildRunning || !workspace.isActive;
 
           return (
             <Tooltip
@@ -205,28 +234,68 @@ export function OrganizationsListTable({ workspaces, isLoading, onClose }) {
       {
         Header: '',
         accessor: 'actions',
-        width: 60,
+        width: 140,
         disableSortBy: true,
         Cell: ({ row }) => {
           const workspace = row.original;
-          const isActive = workspace.organizationId === activeOrganizationId;
-          const isDisabled = !workspace.isReady || workspace.isBuildRunning;
+          const isActiveOrg = workspace.organizationId === activeOrganizationId;
+          const isDisabled = !workspace.isReady || workspace.isBuildRunning || workspace.isDeleting;
+          const isOwner = workspace.role === 'owner';
+          const canSwitch = !isDisabled && workspace.isActive;
 
           return (
-            <Button
-              minimal
-              disabled={isDisabled}
-              onClick={() =>
-                handleSwitchWorkspace(workspace.organizationId, workspace.metadata?.name)
-              }
-              className="organizations-list-table__switch-btn"
-              icon={<Icon icon="arrow-right" iconSize={20} />}
-            />
+            <div className="organizations-list-table__actions">
+              {isOwner && (
+                <>
+                  <Tooltip
+                    content={
+                      workspace.isActive
+                        ? intl.get('workspaces.inactivate_workspace', { fallback: 'Inactivate Workspace' })
+                        : intl.get('workspaces.activate_workspace', { fallback: 'Activate Workspace' })
+                    }
+                    position={Position.TOP}
+                  >
+                    <Button
+                      minimal
+                      disabled={isDisabled}
+                      onClick={() => handleInactivateWorkspace(workspace)}
+                      className="organizations-list-table__inactivate-btn"
+                      icon={<Icon
+                        icon={workspace.isActive ? 'pause' : 'play'}
+                        iconSize={16}
+                        intent={workspace.isActive ? Intent.WARNING : Intent.SUCCESS}
+                      />}
+                    />
+                  </Tooltip>
+                  <Tooltip
+                    content={intl.get('workspaces.delete_workspace', { fallback: 'Delete Workspace' })}
+                    position={Position.TOP}
+                  >
+                    <Button
+                      minimal
+                      disabled={isDisabled}
+                      onClick={() => handleDeleteWorkspace(workspace)}
+                      className="organizations-list-table__delete-btn"
+                      icon={<Icon icon="trash" iconSize={16} intent={Intent.DANGER} />}
+                    />
+                  </Tooltip>
+                </>
+              )}
+              <Button
+                minimal
+                disabled={!canSwitch}
+                onClick={() =>
+                  handleSwitchWorkspace(workspace.organizationId, workspace.metadata?.name)
+                }
+                className="organizations-list-table__switch-btn"
+                icon={<Icon icon="arrow-right" iconSize={20} />}
+              />
+            </div>
           );
         },
       },
     ],
-    [activeOrganizationId, handleSwitchWorkspace, handleSetDefault],
+    [activeOrganizationId, handleSwitchWorkspace, handleSetDefault, handleDeleteWorkspace, handleInactivateWorkspace],
   );
 
   return (
@@ -250,3 +319,5 @@ export function OrganizationsListTable({ workspaces, isLoading, onClose }) {
     </>
   );
 }
+
+export default compose(withDialogActions)(OrganizationsListTable);

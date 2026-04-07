@@ -46,6 +46,15 @@ export const events = {
   },
 
   /**
+   * Workspace service.
+   */
+  workspace: {
+    created: 'onWorkspaceCreated',
+    deleting: 'onWorkspaceDeleting',
+    deleted: 'onWorkspaceDeleted',
+  },
+
+  /**
    * Organization subscription.
    */
   subscription: {

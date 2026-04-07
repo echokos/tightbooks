@@ -5,7 +5,6 @@ import { Switch, Route } from 'react-router';
 import '@/style/pages/Dashboard/Dashboard.scss';
 
 import { Sidebar } from '@/containers/Dashboard/Sidebar/Sidebar';
-import { WorkspacesSidebar } from '@/containers/Dashboard/WorkspacesSidebar/WorkspacesSidebar';
 import DashboardContent from '@/components/Dashboard/DashboardContent';
 import DialogsContainer from '@/components/DialogsContainer';
 import PreferencesPage from '@/components/Preferences/PreferencesPage';
@@ -23,7 +22,6 @@ import { DashboardSockets } from './DashboardSockets';
 function DashboardPreferences() {
   return (
     <div className="dashboard-layout">
-      <WorkspacesSidebar />
       <div className="dashboard-layout__main">
         <DashboardSplitPane>
           <Sidebar />
@@ -40,7 +38,6 @@ function DashboardPreferences() {
 function DashboardAnyPage() {
   return (
     <div className="dashboard-layout">
-      <WorkspacesSidebar />
       <div className="dashboard-layout__main">
         <DashboardSplitPane>
           <Sidebar />

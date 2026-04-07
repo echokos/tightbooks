@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { ClsService } from 'nestjs-cls';
@@ -17,6 +19,8 @@ import { IgnoreTenantSeededRoute } from '@/modules/Tenancy/EnsureTenantIsSeeded.
 import { IgnoreTenantModelsInitialize } from '@/modules/Tenancy/TenancyInitializeModels.guard';
 import { CreateWorkspaceService } from './commands/CreateWorkspace.service';
 import { DeleteWorkspaceService } from './commands/DeleteWorkspace.service';
+import { DeleteWorkspaceJobService } from './commands/DeleteWorkspaceJob.service';
+import { InactivateWorkspaceService } from './commands/InactivateWorkspace.service';
 import { SetDefaultWorkspaceService } from './commands/SetDefaultWorkspace.service';
 import { GetWorkspacesService } from './queries/GetWorkspaces.service';
 import { GetWorkspaceBuildJobService } from './queries/GetWorkspaceBuildJob.service';
@@ -35,6 +39,8 @@ export class WorkspacesController {
   constructor(
     private readonly createWorkspaceService: CreateWorkspaceService,
     private readonly deleteWorkspaceService: DeleteWorkspaceService,
+    private readonly deleteWorkspaceJobService: DeleteWorkspaceJobService,
+    private readonly inactivateWorkspaceService: InactivateWorkspaceService,
     private readonly setDefaultWorkspaceService: SetDefaultWorkspaceService,
     private readonly getWorkspacesService: GetWorkspacesService,
     private readonly getWorkspaceBuildJobService: GetWorkspaceBuildJobService,
@@ -57,9 +63,16 @@ export class WorkspacesController {
       items: { $ref: getSchemaPath(WorkspaceDto) },
     },
   })
-  async listWorkspaces(): Promise<WorkspaceDto[]> {
+  async listWorkspaces(
+    @Query('includeInactive') includeInactive?: string,
+    @Query('currentOrganizationId') currentOrganizationId?: string,
+  ): Promise<WorkspaceDto[]> {
     const userId = this.cls.get<number>('userId');
-    return this.getWorkspacesService.getWorkspaces(userId);
+    return this.getWorkspacesService.getWorkspaces(
+      userId,
+      includeInactive === 'true',
+      currentOrganizationId,
+    );
   }
 
   /**
@@ -88,6 +101,7 @@ export class WorkspacesController {
 
   /**
    * Deletes a workspace. Only the workspace owner is permitted to delete it.
+   * The deletion runs asynchronously via a background job.
    * Requires `organization-id` header (must match the path param).
    */
   @Delete(':organizationId')
@@ -98,13 +112,69 @@ export class WorkspacesController {
   @ApiOperation({ summary: 'Delete a workspace (owner only)' })
   @ApiResponse({
     status: 200,
-    description: 'Workspace deleted successfully',
+    description: 'Workspace deletion initiated successfully',
+    schema: {
+      properties: {
+        jobId: { type: 'string' },
+        organizationId: { type: 'string' },
+      },
+    },
   })
   async deleteWorkspace(
     @Param('organizationId') organizationId: string,
+  ): Promise<{ jobId: string | number; organizationId: string }> {
+    const userId = this.cls.get<number>('userId');
+    const currentOrganizationId = this.cls.get<string>('organizationId');
+
+    if (organizationId === currentOrganizationId) {
+      throw new BadRequestException('Cannot delete the current organization');
+    }
+
+    return this.deleteWorkspaceJobService.initiateDelete(userId, organizationId);
+  }
+
+  /**
+   * Inactivates a workspace. Only the workspace owner is permitted to inactivate it.
+   * When inactivated, no one can sign in to the workspace until it's reactivated.
+   * Requires `organization-id` header (must match the path param).
+   */
+  @Put(':organizationId/inactivate')
+  @IgnoreTenantInitializedRoute()
+  @IgnoreTenantSeededRoute()
+  @IgnoreTenantModelsInitialize()
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Inactivate a workspace (owner only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Workspace inactivated successfully',
+  })
+  async inactivateWorkspace(
+    @Param('organizationId') organizationId: string,
   ): Promise<void> {
     const userId = this.cls.get<number>('userId');
-    await this.deleteWorkspaceService.deleteWorkspace(userId, organizationId);
+    return this.inactivateWorkspaceService.inactivateWorkspace(userId, organizationId);
+  }
+
+  /**
+   * Reactivates a workspace. Only the workspace owner is permitted to reactivate it.
+   * Once reactivated, users can sign in again.
+   * Requires `organization-id` header (must match the path param).
+   */
+  @Put(':organizationId/activate')
+  @IgnoreTenantInitializedRoute()
+  @IgnoreTenantSeededRoute()
+  @IgnoreTenantModelsInitialize()
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Reactivate a workspace (owner only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Workspace reactivated successfully',
+  })
+  async activateWorkspace(
+    @Param('organizationId') organizationId: string,
+  ): Promise<void> {
+    const userId = this.cls.get<number>('userId');
+    return this.inactivateWorkspaceService.activateWorkspace(userId, organizationId);
   }
 
   /**

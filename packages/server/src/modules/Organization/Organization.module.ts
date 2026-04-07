@@ -42,5 +42,6 @@ import { TransformerModule } from '../Transformer/Transformer.module';
     TransformerModule,
   ],
   controllers: [OrganizationController],
+  exports: [BuildOrganizationService],
 })
 export class OrganizationModule {}

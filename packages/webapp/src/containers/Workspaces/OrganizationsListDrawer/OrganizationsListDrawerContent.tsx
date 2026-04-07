@@ -6,7 +6,7 @@ import { FormGroup, InputGroup, Button, Intent } from '@blueprintjs/core';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 import { useWorkspaces } from '@/hooks/query';
-import { OrganizationsListTable } from './OrganizationsListTable';
+import OrganizationsListTable from './OrganizationsListTable';
 import intl from 'react-intl-universal';
 
 import '@/style/containers/Workspaces/OrganizationsListDrawer.scss';
@@ -17,7 +17,7 @@ import '@/style/containers/Workspaces/OrganizationsListDrawer.scss';
 function OrganizationsListDrawerContentRoot({ closeDrawer, openDrawer }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const { data: workspaces, isLoading } = useWorkspaces();
+  const { data: workspaces, isLoading } = useWorkspaces({ includeInactive: true });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSetSearch = useCallback(

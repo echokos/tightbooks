@@ -13,11 +13,15 @@ export class WorkspaceDto {
   @ApiProperty() organizationId: string;
   @ApiProperty() isReady: boolean;
   @ApiProperty() isBuildRunning: boolean;
+  @ApiProperty() isDeleting: boolean;
+  @ApiProperty() isActive: boolean;
   @ApiPropertyOptional() buildJobId?: string;
   @ApiProperty() role: 'owner' | 'member';
   @ApiPropertyOptional() isDefault?: boolean;
   @ApiPropertyOptional({ type: WorkspaceMetadataDto })
   metadata?: WorkspaceMetadataDto;
+  @ApiPropertyOptional() totalIncome?: number;
+  @ApiPropertyOptional() totalExpenses?: number;
 }
 
 export class CreateWorkspaceResponseDto {

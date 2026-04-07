@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Request,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
@@ -61,6 +62,13 @@ export class AuthController {
   ): Promise<AuthSigninResponseDto> {
     const { user } = req;
     const tenant = await this.tenantModel.query().findById(user.tenantId);
+
+    if (tenant.isInactive) {
+      throw new UnauthorizedException({
+        message: 'Organization is inactive. Please contact the administrator.',
+        errors: [{ type: 'ORGANIZATION.INACTIVE' }],
+      });
+    }
 
     return {
       accessToken: this.authSignin.signToken(user),

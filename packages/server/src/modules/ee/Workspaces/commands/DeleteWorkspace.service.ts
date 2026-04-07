@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { UserTenant } from '@/modules/System/models/UserTenant.model';
 import { TenantModel } from '@/modules/System/models/TenantModel';
-import { TenantRepository } from '@/modules/System/repositories/Tenant.repository';
 import { TenantDBManager } from '@/modules/TenantDBManager/TenantDBManager';
+import { events } from '@/common/events/events';
 
 const ERRORS = {
   WORKSPACE_NOT_FOUND: 'WORKSPACE.NOT_FOUND',
@@ -18,9 +19,8 @@ export class DeleteWorkspaceService {
 
     @Inject(TenantModel.name)
     private readonly tenantModel: typeof TenantModel,
-
-    private readonly tenantRepository: TenantRepository,
     private readonly tenantDBManager: TenantDBManager,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -47,5 +47,12 @@ export class DeleteWorkspaceService {
 
     // Delete the tenant row — cascades to user_tenants via FK.
     await this.tenantModel.query().deleteById(tenant.id);
+
+    // Emit workspace deleted event.
+    await this.eventEmitter.emitAsync(events.workspace.deleted, {
+      organizationId,
+      userId,
+      tenantId: tenant.id,
+    });
   }
 }

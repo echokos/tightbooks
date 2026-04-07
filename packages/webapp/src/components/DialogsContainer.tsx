@@ -50,6 +50,8 @@ import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransa
 import { SharePaymentLinkDialog } from '@/containers/PaymentLink/dialogs/SharePaymentLinkDialog/SharePaymentLinkDialog';
 import { SelectPaymentMethodsDialog } from '@/containers/PaymentLink/dialogs/SelectPaymentMethodsDialog/SelectPaymentMethodsDialog';
 import ApiKeysGenerateDialog from '@/containers/Dialogs/ApiKeysGenerateDialog';
+import WorkspaceDeleteDialog from '@/containers/Dialogs/Workspaces/WorkspaceDeleteDialog';
+import WorkspaceInactivateDialog from '@/containers/Dialogs/Workspaces/WorkspaceInactivateDialog';
 import InvoiceBulkDeleteDialog from '@/containers/Dialogs/Invoices/InvoiceBulkDeleteDialog';
 import EstimateBulkDeleteDialog from '@/containers/Dialogs/Estimates/EstimateBulkDeleteDialog';
 import ReceiptBulkDeleteDialog from '@/containers/Dialogs/Receipts/ReceiptBulkDeleteDialog';
@@ -185,6 +187,8 @@ export default function DialogsContainer() {
       <ApiKeysGenerateDialog
         dialogName={DialogsName.ApiKeysGenerate}
       />
+      <WorkspaceDeleteDialog dialogName={DialogsName.WorkspaceDelete} />
+      <WorkspaceInactivateDialog dialogName={DialogsName.WorkspaceInactivate} />
     </div>
   );
 }

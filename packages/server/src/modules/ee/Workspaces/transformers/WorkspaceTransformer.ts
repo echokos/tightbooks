@@ -2,17 +2,36 @@ import { Transformer } from '@/modules/Transformer/Transformer';
 import { UserTenant } from '@/modules/System/models/UserTenant.model';
 import { WorkspaceDto } from '../dtos/WorkspaceResponse.dto';
 
+interface FinancialData {
+  tenantId: number;
+  totalIncome: number;
+  totalExpenses: number;
+}
+
 /**
  * Transforms UserTenant (workspace membership) to WorkspaceDto.
  */
 export class WorkspaceTransformer extends Transformer<UserTenant> {
   private defaultTenantId?: number;
+  private financialData?: FinancialData;
 
   /**
    * Include these attributes in the transformed output.
    */
   public includeAttributes = (): string[] => {
-    return ['organizationId', 'isReady', 'isBuildRunning', 'buildJobId', 'role', 'metadata', 'isDefault'];
+    return [
+      'organizationId',
+      'isReady',
+      'isBuildRunning',
+      'isDeleting',
+      'isActive',
+      'buildJobId',
+      'role',
+      'metadata',
+      'isDefault',
+      'totalIncome',
+      'totalExpenses',
+    ];
   };
 
   /**
@@ -34,6 +53,20 @@ export class WorkspaceTransformer extends Transformer<UserTenant> {
    */
   protected isBuildRunning = (membership: UserTenant): boolean => {
     return membership.tenant?.isBuildRunning ?? false;
+  };
+
+  /**
+   * Extract isDeleting from tenant relation.
+   */
+  protected isDeleting = (membership: UserTenant): boolean => {
+    return membership.tenant?.isDeleting ?? false;
+  };
+
+  /**
+   * Extract isActive from tenant relation.
+   */
+  protected isActive = (membership: UserTenant): boolean => {
+    return membership.tenant?.isActive ?? false;
   };
 
   /**
@@ -69,18 +102,41 @@ export class WorkspaceTransformer extends Transformer<UserTenant> {
   };
 
   /**
+   * Get total income from financial data.
+   */
+  protected totalIncome = (): number => {
+    return this.financialData?.totalIncome ?? 0;
+  };
+
+  /**
+   * Get total expenses from financial data.
+   */
+  protected totalExpenses = (): number => {
+    return this.financialData?.totalExpenses ?? 0;
+  };
+
+  /**
    * Transform single membership to WorkspaceDto.
    */
-  transform = (membership: UserTenant, defaultTenantId?: number): WorkspaceDto => {
+  transform = (
+    membership: UserTenant,
+    defaultTenantId?: number,
+    financialData?: FinancialData,
+  ): WorkspaceDto => {
     this.defaultTenantId = defaultTenantId;
+    this.financialData = financialData;
     return {
       organizationId: this.organizationId(membership),
       isReady: this.isReady(membership),
       isBuildRunning: this.isBuildRunning(membership),
+      isDeleting: this.isDeleting(membership),
+      isActive: this.isActive(membership),
       buildJobId: this.buildJobId(membership),
       role: membership.role,
       isDefault: this.isDefault(membership),
       metadata: this.metadata(membership),
+      totalIncome: this.totalIncome(),
+      totalExpenses: this.totalExpenses(),
     };
   };
 }

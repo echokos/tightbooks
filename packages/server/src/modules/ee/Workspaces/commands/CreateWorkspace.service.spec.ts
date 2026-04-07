@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getQueueToken } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CreateWorkspaceService } from './CreateWorkspace.service';
 import { UserTenant } from '@/modules/System/models/UserTenant.model';
 import { TenantRepository } from '@/modules/System/repositories/Tenant.repository';
-import { OrganizationBuildQueue, OrganizationBuildQueueJob } from '@/modules/Organization/Organization.types';
+import { BuildOrganizationService } from '@/modules/Organization/commands/BuildOrganization.service';
 import { SystemKnexConnection } from '@/modules/System/SystemDB/SystemDB.constants';
+import { events } from '@/common/events/events';
 
 // Mock the Organization.utils module
 jest.mock('@/modules/Organization/Organization.utils', () => ({
@@ -19,7 +19,8 @@ describe('CreateWorkspaceService', () => {
   let service: CreateWorkspaceService;
   let tenantRepository: jest.Mocked<any>;
   let userTenantModel: jest.Mocked<any>;
-  let organizationBuildQueue: jest.Mocked<Queue>;
+  let mockBuildOrganizationService: jest.Mocked<BuildOrganizationService>;
+  let mockEventEmitter: jest.Mocked<EventEmitter2>;
   let mockKnexTransaction: jest.Mock;
 
   const mockTenant = {
@@ -29,13 +30,6 @@ describe('CreateWorkspaceService', () => {
     seededAt: null,
     builtAt: null,
     buildJobId: null,
-  };
-
-  const mockJob = {
-    id: 'job_123',
-    name: 'organization-build',
-    data: {},
-    opts: {},
   };
 
   const createMockQuery = () => ({
@@ -59,9 +53,15 @@ describe('CreateWorkspaceService', () => {
       findById: jest.fn().mockResolvedValue(mockTenant),
     };
 
-    const mockQueue = {
-      add: jest.fn().mockResolvedValue(mockJob),
-    };
+    // Mock build organization service
+    mockBuildOrganizationService = {
+      buildForTenant: jest.fn().mockResolvedValue(undefined),
+    } as any;
+
+    // Mock event emitter
+    mockEventEmitter = {
+      emitAsync: jest.fn().mockResolvedValue([]),
+    } as any;
 
     // Mock knex transaction
     mockKnexTransaction = jest.fn(async (callback) => {
@@ -85,12 +85,16 @@ describe('CreateWorkspaceService', () => {
           useValue: mockTenantRepository,
         },
         {
-          provide: getQueueToken(OrganizationBuildQueue),
-          useValue: mockQueue,
+          provide: BuildOrganizationService,
+          useValue: mockBuildOrganizationService,
         },
         {
           provide: SystemKnexConnection,
           useValue: mockSystemKnex,
+        },
+        {
+          provide: EventEmitter2,
+          useValue: mockEventEmitter,
         },
       ],
     }).compile();
@@ -98,7 +102,6 @@ describe('CreateWorkspaceService', () => {
     service = module.get<CreateWorkspaceService>(CreateWorkspaceService);
     tenantRepository = module.get(TenantRepository);
     userTenantModel = module.get(UserTenant.name);
-    organizationBuildQueue = module.get(getQueueToken(OrganizationBuildQueue));
   });
 
   afterEach(() => {
@@ -122,7 +125,7 @@ describe('CreateWorkspaceService', () => {
 
       expect(result).toEqual({
         organizationId: mockTenant.organizationId,
-        jobId: mockJob.id,
+        jobId: null,
       });
     });
 
@@ -166,33 +169,32 @@ describe('CreateWorkspaceService', () => {
       );
     });
 
-    it('should enqueue the organization build job outside the transaction', async () => {
-      const callOrder: string[] = [];
-
-      mockKnexTransaction.mockImplementationOnce(async (callback) => {
-        const trx = {};
-        const result = await callback(trx);
-        callOrder.push('transactionCommitted');
-        return result;
-      });
-
-      (organizationBuildQueue.add as jest.Mock).mockImplementationOnce(async () => {
-        callOrder.push('enqueueJob');
-        return mockJob;
-      });
-
+    it('should call buildForTenant after transaction commit', async () => {
       await service.createWorkspace(userId, dto);
 
-      expect(callOrder).toEqual(['transactionCommitted', 'enqueueJob']);
+      expect(mockBuildOrganizationService.buildForTenant).toHaveBeenCalledWith(
+        mockTenant.id,
+        userId,
+        expect.objectContaining({
+          name: dto.name,
+          baseCurrency: dto.baseCurrency,
+          location: dto.location,
+          timezone: dto.timezone,
+          fiscalYear: dto.fiscalYear,
+          language: dto.language,
+          industry: dto.industry,
+          dateFormat: 'DD MMM YYYY',
+        }),
+      );
     });
 
-    it('should return organization id and job id', async () => {
+    it('should return organization id with null job id', async () => {
       const result = await service.createWorkspace(userId, dto);
 
       expect(result).toHaveProperty('organizationId');
       expect(result).toHaveProperty('jobId');
       expect(result.organizationId).toBe(mockTenant.organizationId);
-      expect(result.jobId).toBe(mockJob.id);
+      expect(result.jobId).toBeNull();
     });
 
     it('should handle tenant creation failure and rollback transaction', async () => {
@@ -225,7 +227,7 @@ describe('CreateWorkspaceService', () => {
       );
     });
 
-    it('should not enqueue job if transaction fails', async () => {
+    it('should not call buildForTenant if transaction fails', async () => {
       tenantRepository.createWithUniqueOrgId.mockRejectedValueOnce(
         new Error('Database error'),
       );
@@ -234,17 +236,17 @@ describe('CreateWorkspaceService', () => {
         'Database error',
       );
 
-      expect(organizationBuildQueue.add).not.toHaveBeenCalled();
+      expect(mockBuildOrganizationService.buildForTenant).not.toHaveBeenCalled();
     });
 
-    it('should handle queue add failure after successful transaction', async () => {
-      organizationBuildQueue.add.mockRejectedValueOnce(
-        new Error('Queue error'),
+    it('should handle buildForTenant failure after successful transaction', async () => {
+      mockBuildOrganizationService.buildForTenant.mockRejectedValueOnce(
+        new Error('Build error'),
       );
 
-      // Transaction should succeed but then queue add should fail
+      // Transaction should succeed but then build should fail
       await expect(service.createWorkspace(userId, dto)).rejects.toThrow(
-        'Queue error',
+        'Build error',
       );
 
       // Transaction should have completed
@@ -321,14 +323,60 @@ describe('CreateWorkspaceService', () => {
         return mockTenant;
       });
 
-      (organizationBuildQueue.add as jest.Mock).mockImplementationOnce(async () => {
-        callOrder.push('enqueueJob');
-        return mockJob;
+      (mockEventEmitter.emitAsync as jest.Mock).mockImplementationOnce(async () => {
+        callOrder.push('emitEvent');
+        return [];
+      });
+
+      (mockBuildOrganizationService.buildForTenant as jest.Mock).mockImplementationOnce(async () => {
+        callOrder.push('buildForTenant');
       });
 
       await service.createWorkspace(userId, dto);
 
-      expect(callOrder).toEqual(['createTenant', 'linkUser', 'saveMetadata', 'transactionCommitted', 'enqueueJob']);
+      expect(callOrder).toEqual(['createTenant', 'linkUser', 'saveMetadata', 'transactionCommitted', 'emitEvent', 'buildForTenant']);
+    });
+
+    it('should emit workspace created event after transaction commit', async () => {
+      await service.createWorkspace(userId, dto);
+
+      expect(mockEventEmitter.emitAsync).toHaveBeenCalledWith(
+        events.workspace.created,
+        expect.objectContaining({
+          tenantId: mockTenant.id,
+          organizationId: mockTenant.organizationId,
+          userId,
+          buildDTO: expect.objectContaining({
+            name: dto.name,
+            baseCurrency: dto.baseCurrency,
+            location: dto.location,
+          }),
+        }),
+      );
+    });
+
+    it('should emit event after transaction commit and before build', async () => {
+      const callOrder: string[] = [];
+
+      mockKnexTransaction.mockImplementationOnce(async (callback) => {
+        const trx = {};
+        const result = await callback(trx);
+        callOrder.push('transactionCommitted');
+        return result;
+      });
+
+      (mockEventEmitter.emitAsync as jest.Mock).mockImplementationOnce(async () => {
+        callOrder.push('emitEvent');
+        return [];
+      });
+
+      (mockBuildOrganizationService.buildForTenant as jest.Mock).mockImplementationOnce(async () => {
+        callOrder.push('buildForTenant');
+      });
+
+      await service.createWorkspace(userId, dto);
+
+      expect(callOrder).toEqual(['transactionCommitted', 'emitEvent', 'buildForTenant']);
     });
   });
 });
