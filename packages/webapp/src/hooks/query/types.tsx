@@ -245,6 +245,10 @@ export const API_KEYS = {
   API_KEYS: 'API_KEYS',
 };
 
+const AUDIT_LOGS = {
+  AUDIT_LOGS: 'AUDIT_LOGS',
+};
+
 export default {
   ...Authentication,
   ...ACCOUNTS,
@@ -281,4 +285,5 @@ export default {
   ...TAX_RATES,
   ...EXCHANGE_RATE,
   ...API_KEYS,
+  ...AUDIT_LOGS,
 };
