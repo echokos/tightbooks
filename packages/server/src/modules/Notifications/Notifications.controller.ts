@@ -9,8 +9,9 @@ import {
   ParseIntPipe,
   HttpCode,
   HttpStatus,
-  Inject,
 } from '@nestjs/common';
+import { IsIn, IsInt, IsString, Min } from 'class-validator';
+import { ToNumber, IsOptional } from '@/common/decorators/Validators';
 import { GetNotificationsService } from './queries/GetNotifications.service';
 import { CreateNotificationService } from './commands/CreateNotification.service';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
@@ -22,9 +23,24 @@ class MarkAsReadDto {
 }
 
 class GetNotificationsQueryDto {
-  limit?: string;
-  offset?: string;
+  @IsOptional()
+  @ToNumber()
+  @IsInt()
+  @Min(1)
+  limit?: number;
+
+  @IsOptional()
+  @ToNumber()
+  @IsInt()
+  @Min(0)
+  offset?: number;
+
+  @IsOptional()
+  @IsIn(['true', 'false'])
   unreadOnly?: string;
+
+  @IsOptional()
+  @IsString()
   category?: string;
 }
 
@@ -46,8 +62,8 @@ export class NotificationsController {
   async getNotifications(@Query() query: GetNotificationsQueryDto) {
     const user = await this.tenancyContext.getSystemUser();
     const options = {
-      limit: query.limit ? parseInt(query.limit, 10) : 20,
-      offset: query.offset ? parseInt(query.offset, 10) : 0,
+      limit: query.limit ?? 20,
+      offset: query.offset ?? 0,
       unreadOnly: query.unreadOnly === 'true',
       category: query.category,
     };

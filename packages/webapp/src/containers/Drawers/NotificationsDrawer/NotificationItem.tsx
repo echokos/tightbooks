@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { Icon, Intent, Tooltip, Position } from '@blueprintjs/core';
-import { formatDistanceToNow } from 'date-fns';
+import moment from 'moment';
 import { Notification } from '@/hooks/query/notifications';
 import styles from './NotificationsDrawer.module.scss';
 
@@ -66,7 +66,7 @@ export function NotificationItem({ notification, onClick, onDelete }: Notificati
             position={Position.TOP}
           >
             <span className={styles.timestamp}>
-              {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
+              {moment(notification.createdAt).fromNow()}
             </span>
           </Tooltip>
         </div>

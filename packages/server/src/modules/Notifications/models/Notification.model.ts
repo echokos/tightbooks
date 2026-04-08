@@ -1,7 +1,8 @@
 import { Model } from 'objection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { TenantUser } from '../../Tenancy/TenancyModels/models/TenantUser.model';
 
-export class Notification extends TenantBaseModel {
+export class TenantNotification extends TenantBaseModel {
   public id!: number;
   public userId!: number | null;
   public title!: string;
@@ -9,7 +10,7 @@ export class Notification extends TenantBaseModel {
   public type!: 'success' | 'info' | 'warning' | 'error';
   public category!: 'inventory' | 'billing' | 'system' | 'export' | 'report';
   public metadata!: Record<string, any> | null;
-  public readAt!: Date | null;
+  public readAt!: Date | string | null;
   public createdAt!: Date;
   public updatedAt!: Date;
 
@@ -18,6 +19,14 @@ export class Notification extends TenantBaseModel {
    */
   static get tableName() {
     return 'notifications';
+  }
+
+  /**
+   * JSON columns only. Without this, Objection infers JSON attributes from jsonSchema; `readAt`
+   * would match `type: object` in anyOf and get JSON.stringify'd, breaking MySQL DATETIME updates.
+   */
+  static get jsonAttributes() {
+    return ['metadata'];
   }
 
   /**
@@ -96,15 +105,13 @@ export class Notification extends TenantBaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const { User } = require('@/modules/UsersModule/models/User.model');
-
     return {
       /**
-       * Notification belongs to a user.
+       * Notification belongs to a tenant user (`users` in the tenant database).
        */
       user: {
         relation: Model.BelongsToOneRelation,
-        modelClass: User,
+        modelClass: TenantUser,
         join: {
           from: 'notifications.userId',
           to: 'users.id',
@@ -128,7 +135,14 @@ export class Notification extends TenantBaseModel {
         type: { type: 'string', enum: ['success', 'info', 'warning', 'error'] },
         category: { type: 'string', enum: ['inventory', 'billing', 'system', 'export', 'report'] },
         metadata: { type: ['object', 'null'] },
-        readAt: { type: ['string', 'null'], format: 'date-time' },
+        // `Date` is allowed on patch; mysql2 binds it as DATETIME (see jsonAttributes above).
+        readAt: {
+          anyOf: [
+            { type: 'null' },
+            { type: 'string', format: 'date-time' },
+            { type: 'object' },
+          ],
+        },
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' },
       },

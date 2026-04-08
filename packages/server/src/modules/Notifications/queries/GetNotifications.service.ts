@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { Notification } from '../models/Notification.model';
+import { Inject, Injectable } from '@nestjs/common';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { TenantNotification } from '../models/Notification.model';
 
 interface GetNotificationsOptions {
   limit?: number;
@@ -10,20 +11,26 @@ interface GetNotificationsOptions {
 
 @Injectable()
 export class GetNotificationsService {
+  constructor(
+    @Inject(TenantNotification.name)
+    private readonly notificationModel: TenantModelProxy<typeof TenantNotification>,
+  ) {}
+
   /**
    * Retrieves notifications for a user with pagination and filtering.
    * @param {number} userId - The user ID
    * @param {GetNotificationsOptions} options - Query options
-   * @returns {Promise<{ notifications: Notification[]; total: number; unreadCount: number }>}
+   * @returns {Promise<{ notifications: TenantNotification[]; total: number; unreadCount: number }>}
    */
   async getNotifications(
     userId: number,
     options: GetNotificationsOptions = {},
-  ): Promise<{ notifications: Notification[]; total: number; unreadCount: number }> {
+  ): Promise<{ notifications: TenantNotification[]; total: number; unreadCount: number }> {
     const { limit = 20, offset = 0, unreadOnly = false, category } = options;
 
     // Build base query for user's notifications
-    let query = Notification.query()
+    let query = this.notificationModel()
+      .query()
       .modify('forUser', userId)
       .modify('newestFirst');
 
@@ -38,7 +45,8 @@ export class GetNotificationsService {
     }
 
     // Get total count for pagination
-    const countQuery = Notification.query()
+    const countQuery = this.notificationModel()
+      .query()
       .modify('forUser', userId)
       .modify(unreadOnly ? 'unread' : 'newestFirst');
 
@@ -65,7 +73,8 @@ export class GetNotificationsService {
    * @returns {Promise<number>}
    */
   async getUnreadCount(userId: number): Promise<number> {
-    return Notification.query()
+    return this.notificationModel()
+      .query()
       .modify('forUser', userId)
       .modify('unread')
       .resultSize();
