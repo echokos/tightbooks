@@ -102,7 +102,7 @@ import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
 import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
 import { SocketModule } from '../Socket/Socket.module';
-import { AuditLogsModule } from '../AuditLogs/AuditLogs.module';
+import { AuditLogsModule } from '../EE/AuditLogs/AuditLogs.module';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { AppThrottleModule } from './AppThrottle.module';
 

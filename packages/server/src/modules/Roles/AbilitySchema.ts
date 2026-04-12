@@ -16,7 +16,7 @@ import { BillAction } from "../Bills/Bills.types";
 import { AbilitySubject, ISubjectAbilitiesSchema, ISubjectAbilitySchema } from "./Roles.types";
 import { PaymentReceiveAction } from "../PaymentReceived/types/PaymentReceived.types";
 import { PreferencesAction } from "../Settings/Settings.types";
-import { AuditLogAction } from "../AuditLogs/types/AuditLogs.types";
+import { AuditLogAction } from "../EE/AuditLogs/types/AuditLogs.types";
 
 export const AbilitySchema: ISubjectAbilitiesSchema[] = [
   {

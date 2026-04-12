@@ -62,6 +62,9 @@ export enum AbilitySubject {
   Project = 'Project',
   TaxRate = 'TaxRate',
   AuditLog = 'AuditLog',
+  Role = 'Role',
+  Warehouse = 'Warehouse',
+  Branch = 'Branch',
 }
 
 export interface IRoleCreatedPayload {

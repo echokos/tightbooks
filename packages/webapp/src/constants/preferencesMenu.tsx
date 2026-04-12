@@ -73,11 +73,6 @@ export const PreferencesMenu = [
     disabled: false,
     href: '/preferences/api-keys',
   },
-  {
-    text: <T id={'auditing_system'} />,
-    disabled: false,
-    href: '/preferences/audit-log',
-  },
   // {
   //   text: <T id={'sms_integration.label'} />,
   //   disabled: false,

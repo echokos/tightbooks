@@ -127,13 +127,6 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
-    path: `${BASE_URL}/audit-log`,
-    component: lazy(
-      () => import('@/containers/Preferences/AuditLog/PreferencesAuditLog'),
-    ),
-    exact: true,
-  },
-  {
     path: `${BASE_URL}/`,
     component: lazy(() => import('../containers/Preferences/DefaultRoute')),
     exact: true,

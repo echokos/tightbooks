@@ -40,7 +40,7 @@ import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceive
 import { Model } from 'objection';
 import { ClsModule } from 'nestjs-cls';
 import { TenantUser } from './models/TenantUser.model';
-import { AuditLog } from '@/modules/AuditLogs/models/AuditLog.model';
+import { AuditLog } from '@/modules/EE/AuditLogs/models/AuditLog.model';
 
 const models = [
   Item,
