@@ -96,6 +96,14 @@ export const events = {
   },
 
   /**
+   * Contacts service.
+   */
+  contacts: {
+    onActivated: 'onContactActivated',
+    onInactivated: 'onContactInactivated',
+  },
+
+  /**
    * Manual journals service.
    */
   manualJournals: {

@@ -249,6 +249,10 @@ const AUDIT_LOGS = {
   AUDIT_LOGS: 'AUDIT_LOGS',
 };
 
+const AUDIT_LOG_FILTER_OPTIONS = {
+  AUDIT_LOG_FILTER_OPTIONS: 'AUDIT_LOG_FILTER_OPTIONS',
+};
+
 export default {
   ...Authentication,
   ...ACCOUNTS,
@@ -286,4 +290,5 @@ export default {
   ...EXCHANGE_RATE,
   ...API_KEYS,
   ...AUDIT_LOGS,
+  ...AUDIT_LOG_FILTER_OPTIONS,
 };
