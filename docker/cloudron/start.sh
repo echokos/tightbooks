@@ -49,9 +49,9 @@ export S3_BUCKET="${S3_BUCKET:-tightbooks}"
 # export S3_FORCE_PATH_STYLE=true  # needed for MinIO / path-style endpoints
 
 # ── Gotenberg binary paths ───────────────────────────────────────────────────
-# CHROMIUM_BIN_PATH: set in supervisord.conf gotenberg program env
-# LIBREOFFICE_BIN_PATH: soffice stub installed in Dockerfile; Office→PDF disabled
-export LIBREOFFICE_BIN_PATH="/usr/bin/soffice"
+# CHROMIUM_BIN_PATH, LIBREOFFICE_BIN_PATH, UNOCONVERTER_BIN_PATH:
+# Set directly in supervisord.conf [program:gotenberg] environment= so they
+# don't bleed into the Node process environment.
 
 # ── Stable JWT secret ─────────────────────────────────────────────────────────
 # Generated once on first boot and persisted in /app/data so it survives
