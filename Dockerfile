@@ -107,6 +107,9 @@ RUN chmod +x /app/start.sh
 # Remove the default nginx site that ships with the package
 RUN rm -f /etc/nginx/sites-enabled/default.conf 2>/dev/null || true
 
+# ── Persistent data directory (must exist as mount point for Cloudron) ──────
+RUN mkdir -p /app/data
+
 # ── Environment defaults ──────────────────────────────────────────────────────
 ENV NODE_ENV=production \
     NEW_RELIC_NO_CONFIG_FILE=true
