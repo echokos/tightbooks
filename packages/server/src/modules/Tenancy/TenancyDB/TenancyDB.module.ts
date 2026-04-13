@@ -34,6 +34,9 @@ export const TenancyDatabaseProxyProvider = ClsModule.forFeatureAsync({
       migrations: {
         directory: configService.get('tenantDatabase.migrationsDir'),
         loadExtensions: ['.js'],
+        // Use a separate migrations table so tenant migrations do not conflict
+        // with the system migrations recorded in the shared Cloudron database.
+        tableName: 'knex_tenant_migrations',
       },
       seeds: {
         directory: configService.get('tenantDatabase.seedsDir'),
