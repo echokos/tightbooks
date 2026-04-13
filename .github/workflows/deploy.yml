@@ -2,6 +2,7 @@ name: Deploy to Cloudron
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -25,16 +26,9 @@ jobs:
           tags: |
             ghcr.io/echokos/tightbooks:latest
             ghcr.io/echokos/tightbooks:${{ github.sha }}
+            ttl.sh/echokos-tightbooks:1w
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - name: Make package public
-        continue-on-error: true
-        run: |
-          gh api --method PATCH /user/packages/container/tightbooks \
-            -f visibility=public \
-            -H "Accept: application/vnd.github+json" || true
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy to Cloudron
         continue-on-error: true
         run: |
