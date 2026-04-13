@@ -107,6 +107,9 @@ RUN chmod +x /app/start.sh
 # Remove the default nginx site that ships with the package
 RUN rm -f /etc/nginx/sites-enabled/default.conf 2>/dev/null || true
 
+# Redirect nginx logs to stdout/stderr — /var/log/nginx/* is read-only in Cloudron
+RUN sed -i     -e "s|error_log /var/log/nginx/error.log.*|error_log /dev/stderr warn;|g"     -e "s|access_log /var/log/nginx/access.log.*|access_log /dev/stdout combined;|g"     /etc/nginx/nginx.conf
+
 # ── Persistent data directory (Cloudron mounts /app/data as writable volume) ──
 # VOLUME tells Docker this is an external mount point; RUN mkdir creates it.
 RUN mkdir -p /app/data
