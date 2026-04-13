@@ -1,0 +1,17 @@
+{
+  "id": "app.tightbooks",
+  "title": "Tight Books",
+  "version": "0.1.0",
+  "tagline": "Self-hosted double-entry bookkeeping for small business",
+  "description": "Tight Books is a self-hosted accounting platform forked from BigCapital. Provides invoicing, bills, financial reports, bank reconciliation, and double-entry bookkeeping. MySQL and Redis are provided by Cloudron addons.",
+  "website": "https://github.com/echokos/tightbooks",
+  "contactEmail": "support@echokos.com",
+  "httpPort": 3000,
+  "addons": {
+    "mysql": {},
+    "redis": {}
+  },
+  "healthCheckPath": "/api/system_db",
+  "minBoxVersion": "7.0.0",
+  "manifestVersion": 2
+}
