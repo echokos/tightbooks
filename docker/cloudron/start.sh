@@ -24,8 +24,13 @@ export DB_CHARSET="${DB_CHARSET:-utf8}"
 export SYSTEM_DB_NAME="${CLOUDRON_MYSQL_DATABASE}"
 export TENANT_DB_NAME_PERFIX="${CLOUDRON_MYSQL_DATABASE}_tenant_"
 
-# ── Map Cloudron Redis addon vars → BigCapital queue/cache vars ───────────────
-# Cloudron injects CLOUDRON_REDIS_* (not REDIS_* without prefix)
+# ── Map Cloudron Redis addon vars → BigCapital redis/queue vars ───────────────
+# Cloudron injects CLOUDRON_REDIS_* — BigCapital reads two separate configs:
+#   redis.*  → REDIS_HOST / REDIS_PORT / REDIS_PASSWORD  (ioredis direct connection)
+#   queue.*  → QUEUE_HOST / QUEUE_PORT                   (Bull job queues)
+export REDIS_HOST="${CLOUDRON_REDIS_HOST}"
+export REDIS_PORT="${CLOUDRON_REDIS_PORT}"
+export REDIS_PASSWORD="${CLOUDRON_REDIS_PASSWORD:-}"
 export QUEUE_HOST="${CLOUDRON_REDIS_HOST}"
 export QUEUE_PORT="${CLOUDRON_REDIS_PORT}"
 
