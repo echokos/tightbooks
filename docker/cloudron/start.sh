@@ -13,23 +13,21 @@ mkdir -p /app/data/uploads || true
 mkdir -p /app/data/public/pdf || true
 
 # ── Map Cloudron MySQL addon vars → BigCapital DB vars ────────────────────────
-# Cloudron injects: MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USERNAME,
-#                   MYSQL_PASSWORD, MYSQL_URL
-export DB_HOST="${MYSQL_HOST}"
-export DB_USER="${MYSQL_USERNAME}"
-export DB_PASSWORD="${MYSQL_PASSWORD}"
+# Cloudron injects CLOUDRON_MYSQL_* (not MYSQL_* without prefix)
+export DB_HOST="${CLOUDRON_MYSQL_HOST}"
+export DB_USER="${CLOUDRON_MYSQL_USERNAME}"
+export DB_PASSWORD="${CLOUDRON_MYSQL_PASSWORD}"
 export DB_CHARSET="${DB_CHARSET:-utf8}"
 
 # The Cloudron-provisioned database becomes the BigCapital system database.
 # Tenant databases are created dynamically by BigCapital using this prefix.
-export SYSTEM_DB_NAME="${MYSQL_DATABASE}"
-export TENANT_DB_NAME_PERFIX="${MYSQL_DATABASE}_tenant_"
+export SYSTEM_DB_NAME="${CLOUDRON_MYSQL_DATABASE}"
+export TENANT_DB_NAME_PERFIX="${CLOUDRON_MYSQL_DATABASE}_tenant_"
 
 # ── Map Cloudron Redis addon vars → BigCapital queue/cache vars ───────────────
-# Cloudron injects: REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_URL
-# REDIS_HOST / REDIS_PORT already match BigCapital's expected names.
-export QUEUE_HOST="${REDIS_HOST}"
-export QUEUE_PORT="${REDIS_PORT}"
+# Cloudron injects CLOUDRON_REDIS_* (not REDIS_* without prefix)
+export QUEUE_HOST="${CLOUDRON_REDIS_HOST}"
+export QUEUE_PORT="${CLOUDRON_REDIS_PORT}"
 
 # ── Stable JWT secret ─────────────────────────────────────────────────────────
 # Generated once on first boot and persisted in /app/data so it survives
@@ -43,7 +41,7 @@ fi
 export JWT_SECRET="$(cat "${JWT_SECRET_FILE}")"
 
 # ── Application URL ───────────────────────────────────────────────────────────
-# Cloudron injects APP_DOMAIN (e.g. books.example.com)
+# Cloudron injects APP_DOMAIN (e.g. app.tightbooks.com)
 export BASE_URL="https://${APP_DOMAIN:-localhost}"
 
 # ── Gotenberg (PDF generation) ────────────────────────────────────────────────
