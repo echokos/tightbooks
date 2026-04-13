@@ -19,9 +19,12 @@ export DB_USER="${CLOUDRON_MYSQL_USERNAME}"
 export DB_PASSWORD="${CLOUDRON_MYSQL_PASSWORD}"
 export DB_CHARSET="${DB_CHARSET:-utf8}"
 
-# The Cloudron-provisioned database becomes the BigCapital system database.
-# Tenant databases are created dynamically by BigCapital using this prefix.
+# The Cloudron-provisioned database becomes both the BigCapital system database
+# and the tenant database. BigCapital normally creates a separate DB per tenant,
+# but Cloudron only provisions one database per app. TENANT_DB_NAME overrides
+# the per-org database creation and reuses the single Cloudron database instead.
 export SYSTEM_DB_NAME="${CLOUDRON_MYSQL_DATABASE}"
+export TENANT_DB_NAME="${CLOUDRON_MYSQL_DATABASE}"
 export TENANT_DB_NAME_PERFIX="${CLOUDRON_MYSQL_DATABASE}_tenant_"
 
 # ── Map Cloudron Redis addon vars → BigCapital redis/queue vars ───────────────

@@ -40,6 +40,10 @@ export class TenantDBManager {
    * @return {Promise<boolean>}
    */
   public async databaseExists() {
+    // In single-tenant mode (TENANT_DB_NAME set), the database is pre-provisioned and always exists.
+    if (process.env.TENANT_DB_NAME) {
+      return true;
+    }
     const tenant = await this.tenancyContext.getTenant();
     const databaseName = this.getDatabaseName(tenant);
 
@@ -57,6 +61,10 @@ export class TenantDBManager {
    * @return {Promise<void>}
    */
   public async createDatabase(): Promise<void> {
+    // In single-tenant mode (TENANT_DB_NAME set), the database is pre-provisioned — skip CREATE DATABASE.
+    if (process.env.TENANT_DB_NAME) {
+      return;
+    }
     const tenant = await this.tenancyContext.getTenant();
     const databaseName = this.getDatabaseName(tenant);
 
@@ -72,6 +80,10 @@ export class TenantDBManager {
    * @param {ITenant} tenant -
    */
   public async dropDatabaseIfExists() {
+    // In single-tenant mode (TENANT_DB_NAME set), never drop the pre-provisioned database.
+    if (process.env.TENANT_DB_NAME) {
+      return;
+    }
     const tenant = await this.tenancyContext.getTenant();
     const isExists = await this.databaseExists();
 
