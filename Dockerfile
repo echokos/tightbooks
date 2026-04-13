@@ -107,8 +107,10 @@ RUN chmod +x /app/start.sh
 # Remove the default nginx site that ships with the package
 RUN rm -f /etc/nginx/sites-enabled/default.conf 2>/dev/null || true
 
-# ── Persistent data directory (must exist as mount point for Cloudron) ──────
+# ── Persistent data directory (Cloudron mounts /app/data as writable volume) ──
+# VOLUME tells Docker this is an external mount point; RUN mkdir creates it.
 RUN mkdir -p /app/data
+VOLUME /app/data
 
 # ── Environment defaults ──────────────────────────────────────────────────────
 ENV NODE_ENV=production \
@@ -117,3 +119,4 @@ ENV NODE_ENV=production \
 EXPOSE 3000
 
 CMD ["/app/start.sh"]
+
