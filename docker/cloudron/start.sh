@@ -45,6 +45,11 @@ export S3_BUCKET="${S3_BUCKET:-tightbooks}"
 # export S3_ENDPOINT=  # set for non-AWS providers (e.g. https://s3.us-west-002.backblazeb2.com)
 # export S3_FORCE_PATH_STYLE=true  # needed for MinIO / path-style endpoints
 
+# ── Gotenberg binary paths ───────────────────────────────────────────────────
+# CHROMIUM_BIN_PATH: set in supervisord.conf gotenberg program env
+# LIBREOFFICE_BIN_PATH: soffice stub installed in Dockerfile; Office→PDF disabled
+export LIBREOFFICE_BIN_PATH="/usr/bin/soffice"
+
 # ── Stable JWT secret ─────────────────────────────────────────────────────────
 # Generated once on first boot and persisted in /app/data so it survives
 # container restarts. Never changes unless the file is manually deleted.
