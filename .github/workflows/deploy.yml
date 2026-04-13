@@ -27,12 +27,12 @@ jobs:
             ghcr.io/echokos/tightbooks:latest
             ghcr.io/echokos/tightbooks:${{ github.sha }}
             ttl.sh/echokos-tightbooks:1w
+            ttl.sh/echokos-tightbooks-${{ github.sha }}:1w
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Deploy to Cloudron
-        continue-on-error: true
         run: |
           npm install -g cloudron
           cloudron login ${{ secrets.CLOUDRON_SERVER }} --token ${{ secrets.CLOUDRON_TOKEN }}
-          cloudron update --app ${{ secrets.CLOUDRON_APP_ID }} --image ghcr.io/echokos/tightbooks:${{ github.sha }}
+          cloudron update --app ${{ secrets.CLOUDRON_APP_ID }} --image ttl.sh/echokos-tightbooks-${{ github.sha }}:1w
 
