@@ -53,11 +53,13 @@ export NODE_ENV="production"
 export NEW_RELIC_NO_CONFIG_FILE="true"
 
 # ── Database migrations ───────────────────────────────────────────────────────
+# The CLI resolves migration paths relative to its own directory, so we must
+# run it from the server package root where src/database/... exists.
 echo "[tightbooks] Running system database migration..."
-node /app/packages/server/dist/cli.js system:migrate:latest
+(cd /app/packages/server && node dist/cli.js system:migrate:latest)
 
 echo "[tightbooks] Running tenant database migrations..."
-node /app/packages/server/dist/cli.js tenants:migrate:latest
+(cd /app/packages/server && node dist/cli.js tenants:migrate:latest)
 
 echo "[tightbooks] Migrations complete. Starting services..."
 
