@@ -34,6 +34,7 @@ RUN pnpm run build:webapp
 
 # ── Stage 2: Build the NestJS server ─────────────────────────────────────────
 FROM node:18.16.0-alpine AS server-builder
+# Cache-bust: 2026-04-13
 
 WORKDIR /app
 
@@ -111,10 +112,14 @@ RUN rm -f /etc/nginx/sites-enabled/default.conf 2>/dev/null || true
 # nginx opens the error log before reading config, so symlinks are the only reliable fix.
 RUN ln -sf /dev/stdout /var/log/nginx/access.log &&     ln -sf /dev/stderr /var/log/nginx/error.log
 
-# Gotenberg needs LibreOffice for Office→PDF. Install it, or stub it if only Chromium→PDF is needed.
-# Using a stub so we keep the image small; LibreOffice PDF routes will error gracefully at runtime.
-# Install full LibreOffice here if you need DOCX/XLSX→PDF support.
-RUN ln -sf /bin/true /usr/bin/soffice
+# Gotenberg requires several PDF tool binaries. We only use Chromium→PDF,
+# so stub all others with /bin/true to satisfy module initialization.
+# Gotenberg modules: chromium (used), libreoffice/unoconverter/pdftk/qpdf (stubbed).
+RUN ln -sf /bin/true /usr/bin/soffice && \
+    ln -sf /bin/true /usr/bin/unoconverter && \
+    ln -sf /bin/true /usr/bin/pdftk && \
+    ln -sf /bin/true /usr/bin/qpdf && \
+    ln -sf /bin/true /usr/bin/pdfcpu
 
 # ── Persistent data directory (Cloudron mounts /app/data as writable volume) ──
 # VOLUME tells Docker this is an external mount point; RUN mkdir creates it.
