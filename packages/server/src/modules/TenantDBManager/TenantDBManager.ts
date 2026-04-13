@@ -108,6 +108,9 @@ export class TenantDBManager {
    * @return {Promise<void>}
    */
   public async migrate(): Promise<void> {
+    // Release any stuck migration lock before running. This can happen if a
+    // previous migration attempt crashed mid-run (e.g. from a table conflict).
+    await this.tenantKnex().migrate.forceFreeMigrationsLock();
     await this.tenantKnex().migrate.latest();
   }
 
