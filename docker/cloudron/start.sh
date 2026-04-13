@@ -29,6 +29,17 @@ export TENANT_DB_NAME_PERFIX="${CLOUDRON_MYSQL_DATABASE}_tenant_"
 export QUEUE_HOST="${CLOUDRON_REDIS_HOST}"
 export QUEUE_PORT="${CLOUDRON_REDIS_PORT}"
 
+# ── S3 storage (required by BigCapital's Attachments module) ─────────────────
+# Set S3_* env vars in Cloudron app settings for file attachment support.
+# Without real credentials, the app runs but attachment uploads will fail.
+# Supports any S3-compatible store (AWS, Backblaze B2, Wasabi, MinIO, etc.)
+export S3_REGION="${S3_REGION:-us-east-1}"
+export S3_ACCESS_KEY_ID="${S3_ACCESS_KEY_ID:-placeholder}"
+export S3_SECRET_ACCESS_KEY="${S3_SECRET_ACCESS_KEY:-placeholder}"
+export S3_BUCKET="${S3_BUCKET:-tightbooks}"
+# export S3_ENDPOINT=  # set for non-AWS providers (e.g. https://s3.us-west-002.backblazeb2.com)
+# export S3_FORCE_PATH_STYLE=true  # needed for MinIO / path-style endpoints
+
 # ── Stable JWT secret ─────────────────────────────────────────────────────────
 # Generated once on first boot and persisted in /app/data so it survives
 # container restarts. Never changes unless the file is manually deleted.
