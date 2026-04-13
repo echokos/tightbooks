@@ -9,8 +9,8 @@ set -euo pipefail
 echo "[tightbooks] Starting Tight Books v0.1.0"
 
 # ── Persistent data directory (only /app/data is writable in Cloudron) ────────
-mkdir -p /app/data/uploads
-mkdir -p /app/data/public/pdf
+mkdir -p /app/data/uploads || true
+mkdir -p /app/data/public/pdf || true
 
 # ── Map Cloudron MySQL addon vars → BigCapital DB vars ────────────────────────
 # Cloudron injects: MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USERNAME,
