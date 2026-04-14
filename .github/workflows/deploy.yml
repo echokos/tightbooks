@@ -17,8 +17,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: clawdbot
+          password: ${{ secrets.GHCR_TOKEN }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build and push image
@@ -30,24 +30,17 @@ jobs:
             ghcr.io/echokos/tightbooks:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - name: Make GHCR package public
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          curl -sf -X PATCH \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/orgs/echokos/packages/container/tightbooks" \
-            -d '{"visibility":"public"}' || true
       - name: Deploy to Cloudron via API
         env:
           IMAGE: ghcr.io/echokos/tightbooks:${{ github.sha }}
           CLOUDRON_SERVER: ${{ secrets.CLOUDRON_SERVER }}
           CLOUDRON_APP_ID: ${{ secrets.CLOUDRON_APP_ID }}
           CLOUDRON_TOKEN: ${{ secrets.CLOUDRON_TOKEN }}
+          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
         run: |
           BODY=$(jq -n \
             --arg image "$IMAGE" \
+            --arg ghcr_token "$GHCR_TOKEN" \
             '{
               manifest: {
                 id: "app.tightbooks",
@@ -60,6 +53,11 @@ jobs:
                 minBoxVersion: "7.0.0",
                 manifestVersion: 2,
                 dockerImage: $image
+              },
+              dockerRegistryAuth: {
+                serverAddress: "ghcr.io",
+                username: "clawdbot",
+                password: $ghcr_token
               }
             }')
           curl -sf -X POST "$CLOUDRON_SERVER/api/v1/apps/$CLOUDRON_APP_ID/update" \
