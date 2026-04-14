@@ -13,7 +13,7 @@
 #   BACKUP_S3_BUCKET    — backup destination bucket  (default: tightbooks-backups)
 #   BACKUP_S3_REGION    — Wasabi region              (default: us-central-1)
 #   BACKUP_S3_ENDPOINT  — Wasabi endpoint URL        (default: https://s3.us-central-1.wasabisys.com)
-#   NTFY_BACKUP_PASS    — ntfy basic-auth password   (default: Pinsight/32)
+#   NTFY_BACKUP_PASS    — ntfy basic-auth password   (required; no default)
 
 set -euo pipefail
 
@@ -32,7 +32,7 @@ log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] backup: $*"; }
 fail() {
     log "ERROR: $*"
     curl -sf \
-        -u "aurora:${NTFY_BACKUP_PASS:-Pinsight/32}" \
+        -u "aurora:${NTFY_BACKUP_PASS}" \
         -X POST "https://notify.servv.net/aurora-alerts" \
         -H "Title: Tight Books Backup FAILED" \
         -H "Priority: urgent" \
@@ -87,6 +87,6 @@ aws s3 ls "s3://${BUCKET}/" \
                 --endpoint-url "${ENDPOINT}" \
                 || log "Warning: failed to delete ${fname}"
         fi
-    done
+    done || true
 
 log "Backup complete."
