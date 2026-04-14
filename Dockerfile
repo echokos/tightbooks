@@ -61,6 +61,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-liberation \
     fontconfig \
     ca-certificates \
+    default-mysql-client \
+    awscli \
+    cron \
     && rm -rf /var/lib/apt/lists/*
 
 # Gotenberg looks for "google-chrome" in PATH; alias our system chromium.
@@ -113,6 +116,13 @@ COPY docker/cloudron/nginx.conf       /etc/nginx/sites-enabled/default
 COPY docker/cloudron/supervisord.conf /etc/supervisor/conf.d/tightbooks.conf
 COPY docker/cloudron/start.sh         /app/start.sh
 RUN chmod +x /app/start.sh
+
+# ── Backup cron ───────────────────────────────────────────────────────────────
+COPY docker/cloudron/backup.sh /usr/local/bin/tightbooks-backup.sh
+RUN chmod +x /usr/local/bin/tightbooks-backup.sh && \
+    echo "0 9 * * * root bash /usr/local/bin/tightbooks-backup.sh >> /app/data/backup.log 2>&1" \
+        > /etc/cron.d/tightbooks-backup && \
+    chmod 0644 /etc/cron.d/tightbooks-backup
 
 # Remove the default nginx site that ships with the package
 RUN rm -f /etc/nginx/sites-enabled/default.conf 2>/dev/null || true

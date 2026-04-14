@@ -92,7 +92,13 @@ echo "[tightbooks] Running tenant database migrations..."
 
 echo "[tightbooks] Migrations complete. Starting services..."
 
+# ── Snapshot environment for cron jobs ───────────────────────────────────────
+# cron runs with a minimal environment; dump all exported vars so backup.sh
+# can source them. /app/data persists across container restarts.
+declare -px > /app/data/cron-env.sh
+chmod 600 /app/data/cron-env.sh
+
 # ── Hand off to supervisord ───────────────────────────────────────────────────
-# supervisord manages nginx (port 3000), gotenberg (3001), node (3002).
+# supervisord manages cron, nginx (port 3000), gotenberg (3001), node (3002).
 # All exported env vars above are inherited by child processes.
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/tightbooks.conf
