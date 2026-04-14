@@ -30,6 +30,17 @@ export class TenantsMigrateLatestCommand extends BaseCommand {
 
   async run(passedParams: string[], options: TenantsMigrateLatestOptions): Promise<void> {
     try {
+      // In single-DB mode all tenants share one database; migrate it once.
+      if (process.env.TENANT_DB_NAME) {
+        const tenantKnex = this.initTenantKnex('');
+        const [batchNo, _log] = await tenantKnex.migrate.latest();
+        if (_log.length === 0) {
+          this.log('Already up to date');
+        }
+        this.log(`Single-DB mode > Batch ${batchNo} run: ${_log.length} migrations`);
+        this.success('Tenant migrations complete (single-DB mode).');
+      }
+
       const sysKnex = this.initSystemKnex();
       const tenants = await this.getAllInitializedTenants(sysKnex);
       const tenantsOrgsIds = tenants.map((tenant: any) => tenant.organizationId);
