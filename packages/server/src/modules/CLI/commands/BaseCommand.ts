@@ -33,18 +33,25 @@ export abstract class BaseCommand extends CommandRunner {
   }
 
   protected initTenantKnex(organizationId: string = ''): any {
+    // In single-DB mode (TENANT_DB_NAME set) all tenants share one database.
+    const database =
+      process.env.TENANT_DB_NAME ||
+      `${this.configService.get('tenantDatabase.dbNamePrefix')}${organizationId}`;
+
     return Knex({
       client: this.configService.get('tenantDatabase.client'),
       connection: {
         host: this.configService.get('tenantDatabase.host'),
         user: this.configService.get('tenantDatabase.user'),
         password: this.configService.get('tenantDatabase.password'),
-        database: `${this.configService.get('tenantDatabase.dbNamePrefix')}${organizationId}`,
+        database,
         charset: 'utf8',
       },
       migrations: {
         directory: this.configService.get('tenantDatabase.migrationsDir') || './src/database/migrations',
         loadExtensions: ['.js'],
+        // Separate table avoids collision with system migrations in single-DB mode.
+        tableName: 'knex_tenant_migrations',
       },
       seeds: {
         directory: this.configService.get('tenantDatabase.seedsDir') || './src/database/seeds/core',

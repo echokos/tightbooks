@@ -27,9 +27,13 @@ export class TenantDBManager {
 
   /**
    * Retrieves the tenant database name.
+   * In single-DB mode (TENANT_DB_NAME set) all tenants share one database.
    * @return {string}
    */
   private getDatabaseName(tenant: TenantModel) {
+    if (process.env.TENANT_DB_NAME) {
+      return process.env.TENANT_DB_NAME;
+    }
     return sanitizeDatabaseName(
       `${this.configService.get('tenantDatabase.dbNamePrefix')}${tenant.organizationId}`,
     );
@@ -40,6 +44,10 @@ export class TenantDBManager {
    * @return {Promise<boolean>}
    */
   public async databaseExists() {
+    if (process.env.TENANT_DB_NAME) {
+      // Single-DB mode: shared database always exists.
+      return true;
+    }
     const tenant = await this.tenancyContext.getTenant();
     const databaseName = this.getDatabaseName(tenant);
 
@@ -53,10 +61,16 @@ export class TenantDBManager {
 
   /**
    * Creates a tenant database.
+   * In single-DB mode (TENANT_DB_NAME set) creation is skipped because all
+   * tenants share the pre-existing system database.
    * @throws {TenantAlreadyInitialized}
    * @return {Promise<void>}
    */
   public async createDatabase(): Promise<void> {
+    if (process.env.TENANT_DB_NAME) {
+      // Single-DB mode: shared database already exists, nothing to create.
+      return;
+    }
     const tenant = await this.tenancyContext.getTenant();
     const databaseName = this.getDatabaseName(tenant);
 
@@ -69,10 +83,14 @@ export class TenantDBManager {
 
   /**
    * Dropdowns the tenant database if it was exist.
+   * In single-DB mode this is a no-op to prevent dropping the shared database.
    * @param {ITenant} tenant -
    */
   public async dropDatabaseIfExists() {
-    const tenant = await this.tenancyContext.getTenant();
+    if (process.env.TENANT_DB_NAME) {
+      // Single-DB mode: never drop the shared database.
+      return;
+    }
     const isExists = await this.databaseExists();
 
     if (!isExists) {
@@ -83,8 +101,13 @@ export class TenantDBManager {
 
   /**
    * dropdowns the tenant's database.
+   * In single-DB mode this is a no-op to prevent dropping the shared database.
    */
   public async dropDatabase() {
+    if (process.env.TENANT_DB_NAME) {
+      // Single-DB mode: never drop the shared database.
+      return;
+    }
     const tenant = await this.tenancyContext.getTenant();
     const databaseName = this.getDatabaseName(tenant);
 
