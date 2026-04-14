@@ -42,6 +42,19 @@ if [ ! -f "${JWT_SECRET_FILE}" ]; then
 fi
 export JWT_SECRET="$(cat "${JWT_SECRET_FILE}")"
 
+# ── Map Cloudron email addon vars → BigCapital mail vars ─────────────────────
+# Cloudron injects: CLOUDRON_MAIL_SMTP_SERVER, CLOUDRON_MAIL_SMTP_PORT,
+#                   CLOUDRON_MAIL_SMTP_USERNAME, CLOUDRON_MAIL_SMTP_PASSWORD,
+#                   CLOUDRON_MAIL_FROM, CLOUDRON_MAIL_DOMAIN
+# Cloudron email relay runs on port 25, no TLS (MAIL_SECURE=false).
+export MAIL_HOST="${CLOUDRON_MAIL_SMTP_SERVER:-localhost}"
+export MAIL_PORT="${CLOUDRON_MAIL_SMTP_PORT:-25}"
+export MAIL_USERNAME="${CLOUDRON_MAIL_SMTP_USERNAME:-}"
+export MAIL_PASSWORD="${CLOUDRON_MAIL_SMTP_PASSWORD:-}"
+export MAIL_SECURE="false"
+export MAIL_FROM_ADDRESS="${CLOUDRON_MAIL_FROM:-noreply@${APP_DOMAIN:-localhost}}"
+export MAIL_FROM_NAME="${MAIL_FROM_NAME:-Tight Books}"
+
 # ── Application URL ───────────────────────────────────────────────────────────
 # Cloudron injects APP_DOMAIN (e.g. books.example.com)
 export BASE_URL="https://${APP_DOMAIN:-localhost}"
