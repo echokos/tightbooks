@@ -1,5 +1,5 @@
 exports.up = function (knex) {
-  return knex.schema.createTable('plaid_items', (table) => {
+  return knex.schema.createTable('tenant_plaid_items', (table) => {
     table.increments('id');
     table.integer('tenant_id').unsigned();
     table.string('plaid_item_id');
