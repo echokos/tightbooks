@@ -65,7 +65,7 @@ export class DashboardService {
 
     const tenantUser = await this.tenantUserModel()
       .query()
-      .findOne('systemUserId', authorizedUser.id)
+      .findOne({ systemUserId: authorizedUser.id })
       .withGraphFetched('role.permissions')
       .throwIfNotFound();
 

@@ -25,7 +25,7 @@ export class SyncTenantAcceptInviteSubscriber {
   }: IAcceptInviteEventPayload) {
     await this.tenantUserModel()
       .query()
-      .where('systemUserId', inviteToken.userId)
+      .where({ systemUserId: inviteToken.userId })
       .update({
         ...pick(user, ['firstName', 'lastName', 'email', 'active']),
         inviteAcceptedAt: moment().format('YYYY-MM-DD'),

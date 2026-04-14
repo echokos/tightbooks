@@ -47,7 +47,7 @@ export class AuthorizationGuard implements CanActivate {
     const userId = this.clsService.get('userId');
     const tenantUser = await this.tenantUserModel()
       .query()
-      .findOne('systemUserId', userId)
+      .findOne({ systemUserId: userId })
       .withGraphFetched('role.permissions');
 
     return getAbilityForRole(tenantUser.role);
