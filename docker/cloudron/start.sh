@@ -43,6 +43,7 @@ export REDIS_PORT="${CLOUDRON_REDIS_PORT}"
 export REDIS_PASSWORD="${CLOUDRON_REDIS_PASSWORD:-}"
 export QUEUE_HOST="${CLOUDRON_REDIS_HOST}"
 export QUEUE_PORT="${CLOUDRON_REDIS_PORT}"
+export QUEUE_PASSWORD="${CLOUDRON_REDIS_PASSWORD:-}"
 
 # ── Stable JWT secret ─────────────────────────────────────────────────────────
 # Generated once on first boot and persisted in /app/data so it survives
