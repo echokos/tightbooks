@@ -66,6 +66,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Gotenberg looks for "google-chrome" in PATH; alias our system chromium.
 RUN ln -sf /usr/bin/chromium /usr/local/bin/google-chrome
 
+# Patch nginx main config to write logs to /dev/std* and pid to /tmp
+# (Cloudron container filesystem is read-only except /app/data and /tmp)
+RUN sed -i \
+        -e 's|error_log /var/log/nginx/error\.log|error_log /dev/stderr|g' \
+        -e 's|access_log /var/log/nginx/access\.log|access_log /dev/stdout|g' \
+        -e 's|pid /run/nginx\.pid|pid /tmp/nginx.pid|g' \
+        -e 's|pid /var/run/nginx\.pid|pid /tmp/nginx.pid|g' \
+    /etc/nginx/nginx.conf && \
+    mkdir -p /tmp/nginx_client_body /tmp/nginx_proxy /tmp/nginx_fastcgi
+
 # Copy the pre-built gotenberg binary from the official image.
 # Gotenberg 7 is a single Go binary; it uses the system Chrome we installed above.
 COPY --from=gotenberg/gotenberg:7 /usr/bin/gotenberg /usr/local/bin/gotenberg
