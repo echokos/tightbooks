@@ -13,7 +13,6 @@
 #   BACKUP_S3_BUCKET    — backup destination bucket  (default: tightbooks-backups)
 #   BACKUP_S3_REGION    — Wasabi region              (default: us-central-1)
 #   BACKUP_S3_ENDPOINT  — Wasabi endpoint URL        (default: https://s3.us-central-1.wasabisys.com)
-#   NTFY_BACKUP_PASS    — ntfy basic-auth password   (required; no default)
 
 set -euo pipefail
 
@@ -31,13 +30,6 @@ log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] backup: $*"; }
 
 fail() {
     log "ERROR: $*"
-    curl -sf \
-        -u "aurora:${NTFY_BACKUP_PASS}" \
-        -X POST "https://notify.servv.net/aurora-alerts" \
-        -H "Title: Tight Books Backup FAILED" \
-        -H "Priority: urgent" \
-        -H "Tags: warning,x-mark" \
-        -d "MySQL backup failed ${DATE}: $*" 2>/dev/null || true
     rm -f "${TEMP_FILE}"
     exit 1
 }
