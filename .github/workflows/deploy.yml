@@ -11,6 +11,8 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Login to GHCR
         uses: docker/login-action@v3
         with:
@@ -65,4 +67,9 @@ jobs:
             -H "Content-Type: application/json" \
             -d "$BODY"
       - name: Sync main with develop
-        run: git push origin HEAD:main
+        run: |
+          git config user.name "Paperclip CI"
+          git config user.email "ci@paperclip.ing"
+          git fetch origin main
+          git merge -X ours origin/main --no-edit
+          git push origin HEAD:main
