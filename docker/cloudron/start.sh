@@ -12,8 +12,8 @@ echo "[tightbooks] Starting Tight Books v0.1.0"
 echo "[tightbooks] Addon env check: CLOUDRON_MYSQL_HOST=${CLOUDRON_MYSQL_HOST:-<unset>} CLOUDRON_REDIS_HOST=${CLOUDRON_REDIS_HOST:-<unset>}"
 
 # ── Persistent data directory (only /app/data is writable in Cloudron) ────────
-mkdir -p /app/data/uploads
-mkdir -p /app/data/public/pdf
+mkdir -p /app/data/uploads || true
+mkdir -p /app/data/public/pdf || true
 
 # ── Map Cloudron MySQL addon vars → BigCapital DB vars ────────────────────────
 # Cloudron injects: CLOUDRON_MYSQL_HOST, CLOUDRON_MYSQL_PORT, CLOUDRON_MYSQL_DATABASE,
@@ -70,7 +70,7 @@ export MAIL_FROM_ADDRESS="${CLOUDRON_MAIL_FROM:-noreply@${APP_DOMAIN:-localhost}
 export MAIL_FROM_NAME="${MAIL_FROM_NAME:-Tight Books}"
 
 # ── Application URL ───────────────────────────────────────────────────────────
-# Cloudron injects APP_DOMAIN (e.g. books.example.com)
+# Cloudron injects APP_DOMAIN (e.g. app.tightbooks.com)
 export BASE_URL="https://${APP_DOMAIN:-localhost}"
 
 # ── Gotenberg (PDF generation) ────────────────────────────────────────────────
