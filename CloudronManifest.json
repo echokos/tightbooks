@@ -9,7 +9,8 @@
   "httpPort": 3000,
   "addons": {
     "mysql": {},
-    "redis": {}
+    "redis": {},
+    "email": {}
   },
   "healthCheckPath": "/api/system_db",
   "minBoxVersion": "7.0.0",
