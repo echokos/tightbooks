@@ -34,7 +34,11 @@ function createMigrationTable(
   schemaName: string,
   trxOrKnex,
 ) {
-  return getSchemaBuilder(trxOrKnex, schemaName).createTable(
+  // Use createTableIfNotExists to guard against case-sensitivity mismatches between
+  // hasTable() (which checks the original lowercase name) and createTable() (which
+  // goes through knexSnakeCaseMappers and uses UPPERCASE). On case-sensitive MySQL
+  // instances the hasTable guard can silently miss an existing UPPERCASE table.
+  return getSchemaBuilder(trxOrKnex, schemaName).createTableIfNotExists(
     getTableName(tableName),
     (t) => {
       t.increments();
@@ -57,10 +61,13 @@ function createMigrationLockTable(
   schemaName: string,
   trxOrKnex,
 ) {
-  return getSchemaBuilder(trxOrKnex, schemaName).createTable(tableName, (t) => {
-    t.increments('index').primary();
-    t.integer('is_locked');
-  });
+  return getSchemaBuilder(trxOrKnex, schemaName).createTableIfNotExists(
+    tableName,
+    (t) => {
+      t.increments('index').primary();
+      t.integer('is_locked');
+    },
+  );
 }
 
 /**
