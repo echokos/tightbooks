@@ -37,6 +37,17 @@ export REDIS_PASSWORD="${CLOUDRON_REDIS_PASSWORD:-}"
 export QUEUE_HOST="${CLOUDRON_REDIS_HOST}"
 export QUEUE_PORT="${CLOUDRON_REDIS_PORT}"
 
+# ── Map Cloudron email addon vars → BigCapital mail vars ──────────────────────
+# Cloudron injects CLOUDRON_MAIL_* when the "email" addon is declared in
+# CloudronManifest.json. BigCapital reads MAIL_HOST, MAIL_PORT, etc.
+export MAIL_HOST="${CLOUDRON_MAIL_SMTP_SERVER:-localhost}"
+export MAIL_PORT="${CLOUDRON_MAIL_SMTP_PORT:-25}"
+export MAIL_USERNAME="${CLOUDRON_MAIL_SMTP_USERNAME:-}"
+export MAIL_PASSWORD="${CLOUDRON_MAIL_SMTP_PASSWORD:-}"
+export MAIL_FROM_ADDRESS="${CLOUDRON_MAIL_FROM:-noreply@${APP_DOMAIN:-localhost}}"
+export MAIL_FROM_NAME="${MAIL_FROM_NAME:-Tight Books}"
+export MAIL_SECURE="${MAIL_SECURE:-false}"
+
 # ── S3 storage (required by BigCapital's Attachments module) ─────────────────
 # Set S3_* env vars in Cloudron app settings for file attachment support.
 # Without real credentials, the app runs but attachment uploads will fail.
