@@ -4,36 +4,45 @@
 # generates a stable JWT secret, runs DB migrations, then hands off to
 # supervisord which manages nginx + gotenberg + node.
 
-set -euo pipefail
+set -eo pipefail
 
 echo "[tightbooks] Starting Tight Books v0.1.0"
+
+# ── Diagnostic: log which Cloudron addon vars are present ────────────────────
+echo "[tightbooks] Addon env check: CLOUDRON_MYSQL_HOST=${CLOUDRON_MYSQL_HOST:-<unset>} CLOUDRON_REDIS_HOST=${CLOUDRON_REDIS_HOST:-<unset>}"
 
 # ── Persistent data directory (only /app/data is writable in Cloudron) ────────
 mkdir -p /app/data/uploads
 mkdir -p /app/data/public/pdf
 
 # ── Map Cloudron MySQL addon vars → BigCapital DB vars ────────────────────────
-# Cloudron injects: MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USERNAME,
-#                   MYSQL_PASSWORD, MYSQL_URL
-export DB_HOST="${MYSQL_HOST}"
-export DB_USER="${MYSQL_USERNAME}"
-export DB_PASSWORD="${MYSQL_PASSWORD}"
+# Cloudron injects: CLOUDRON_MYSQL_HOST, CLOUDRON_MYSQL_PORT, CLOUDRON_MYSQL_DATABASE,
+#                   CLOUDRON_MYSQL_USERNAME, CLOUDRON_MYSQL_PASSWORD, CLOUDRON_MYSQL_URL
+if [ -z "${CLOUDRON_MYSQL_HOST:-}" ]; then
+  echo "[tightbooks] FATAL: CLOUDRON_MYSQL_HOST not set - MySQL addon not provisioned"
+  exit 1
+fi
+export DB_HOST="${CLOUDRON_MYSQL_HOST}"
+export DB_USER="${CLOUDRON_MYSQL_USERNAME}"
+export DB_PASSWORD="${CLOUDRON_MYSQL_PASSWORD}"
 export DB_CHARSET="${DB_CHARSET:-utf8}"
 
 # The Cloudron-provisioned database becomes the BigCapital system database.
 # Tenant databases are created dynamically by BigCapital using this prefix.
-export SYSTEM_DB_NAME="${MYSQL_DATABASE}"
-export TENANT_DB_NAME_PERFIX="${MYSQL_DATABASE}_tenant_"
+export SYSTEM_DB_NAME="${CLOUDRON_MYSQL_DATABASE}"
+export TENANT_DB_NAME_PERFIX="${CLOUDRON_MYSQL_DATABASE}_tenant_"
 # Route all tenants to the single Cloudron-provisioned database (single-DB mode).
 # Per-tenant database creation requires elevated MySQL privileges that Cloudron's
 # addon user does not have; using TENANT_DB_NAME keeps everything in one database.
-export TENANT_DB_NAME="${MYSQL_DATABASE}"
+export TENANT_DB_NAME="${CLOUDRON_MYSQL_DATABASE}"
 
 # ── Map Cloudron Redis addon vars → BigCapital queue/cache vars ───────────────
-# Cloudron injects: REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_URL
-# REDIS_HOST / REDIS_PORT already match BigCapital's expected names.
-export QUEUE_HOST="${REDIS_HOST}"
-export QUEUE_PORT="${REDIS_PORT}"
+# Cloudron injects: CLOUDRON_REDIS_HOST, CLOUDRON_REDIS_PORT, CLOUDRON_REDIS_PASSWORD
+export REDIS_HOST="${CLOUDRON_REDIS_HOST}"
+export REDIS_PORT="${CLOUDRON_REDIS_PORT}"
+export REDIS_PASSWORD="${CLOUDRON_REDIS_PASSWORD:-}"
+export QUEUE_HOST="${CLOUDRON_REDIS_HOST}"
+export QUEUE_PORT="${CLOUDRON_REDIS_PORT}"
 
 # ── Stable JWT secret ─────────────────────────────────────────────────────────
 # Generated once on first boot and persisted in /app/data so it survives
