@@ -43,10 +43,30 @@ jobs:
           import json
           with open('CloudronManifest.json') as f:
               m = json.load(f)
-          m['dockerImage'] = '$IMAGE'
+          import os
+          m['dockerImage'] = os.environ['IMAGE']
           print(json.dumps(m))
-          ")
-          curl -sf -X POST "${{ secrets.CLOUDRON_SERVER }}/api/v1/apps/${{ secrets.CLOUDRON_APP_ID }}/update" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDRON_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d "{\"manifest\": $MANIFEST}"
+          " IMAGE="$IMAGE")
+
+          # Retry up to 10 times with 30s delay to handle Cloudron busy (409)
+          for attempt in $(seq 1 10); do
+            HTTP=$(curl -s -o /tmp/cr_response.json -w "%{http_code}" \
+              -X POST "${{ secrets.CLOUDRON_SERVER }}/api/v1/apps/${{ secrets.CLOUDRON_APP_ID }}/update" \
+              -H "Authorization: Bearer ${{ secrets.CLOUDRON_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "{\"manifest\": $MANIFEST}")
+            echo "Attempt $attempt: HTTP $HTTP"
+            cat /tmp/cr_response.json
+            if [ "$HTTP" = "202" ] || [ "$HTTP" = "200" ]; then
+              echo "Deploy triggered successfully."
+              exit 0
+            elif [ "$HTTP" = "409" ]; then
+              echo "Cloudron busy, waiting 30s..."
+              sleep 30
+            else
+              echo "Unexpected response: $HTTP"
+              exit 1
+            fi
+          done
+          echo "Deploy timed out after retries."
+          exit 1
