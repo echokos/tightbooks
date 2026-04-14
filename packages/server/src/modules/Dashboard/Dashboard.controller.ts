@@ -6,6 +6,7 @@ import {
   ApiExtraModels,
 } from '@nestjs/swagger';
 import { Controller, Get } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { DashboardService } from './Dashboard.service';
 import { GetDashboardBootMetaResponseDto } from './dtos/GetDashboardBootMetaResponse.dto';
 
@@ -21,6 +22,7 @@ export class DashboardController {
     description: 'The dashboard details have been successfully retrieved.',
     schema: { $ref: getSchemaPath(GetDashboardBootMetaResponseDto) },
   })
+  @SkipThrottle()
   @Get('boot')
   getBootMeta() {
     return this.dashboardService.getBootMeta();
