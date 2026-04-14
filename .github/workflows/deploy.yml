@@ -26,12 +26,11 @@ jobs:
           tags: |
             ghcr.io/echokos/tightbooks:latest
             ghcr.io/echokos/tightbooks:${{ github.sha }}
-            ttl.sh/echokos-tightbooks-${{ github.sha }}:1w
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Deploy to Cloudron via API
         run: |
-          IMAGE="ttl.sh/echokos-tightbooks-${{ github.sha }}:1w"
+          IMAGE="ghcr.io/echokos/tightbooks:${{ github.sha }}"
           MANIFEST=$(cat <<JSON
           {
             "id": "app.tightbooks",
