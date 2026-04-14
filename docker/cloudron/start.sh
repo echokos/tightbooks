@@ -24,6 +24,10 @@ export DB_CHARSET="${DB_CHARSET:-utf8}"
 # Tenant databases are created dynamically by BigCapital using this prefix.
 export SYSTEM_DB_NAME="${MYSQL_DATABASE}"
 export TENANT_DB_NAME_PERFIX="${MYSQL_DATABASE}_tenant_"
+# Route all tenants to the single Cloudron-provisioned database (single-DB mode).
+# Per-tenant database creation requires elevated MySQL privileges that Cloudron's
+# addon user does not have; using TENANT_DB_NAME keeps everything in one database.
+export TENANT_DB_NAME="${MYSQL_DATABASE}"
 
 # ── Map Cloudron Redis addon vars → BigCapital queue/cache vars ───────────────
 # Cloudron injects: REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_URL
