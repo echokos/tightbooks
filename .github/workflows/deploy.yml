@@ -46,7 +46,7 @@ jobs:
                 version: "0.1.0",
                 tagline: "Self-hosted double-entry bookkeeping for small business",
                 httpPort: 3000,
-                addons: {mysql: {}, redis: {}},
+                addons: {mysql: {}, redis: {}, email: {}},
                 healthCheckPath: "/api/system_db",
                 minBoxVersion: "7.0.0",
                 manifestVersion: 2,
