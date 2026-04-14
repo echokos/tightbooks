@@ -124,6 +124,13 @@ RUN chmod +x /usr/local/bin/tightbooks-backup.sh && \
         > /etc/cron.d/tightbooks-backup && \
     chmod 0644 /etc/cron.d/tightbooks-backup
 
+# ── Backup verification cron ──────────────────────────────────────────────────
+COPY docker/cloudron/check-backup.sh /usr/local/bin/tightbooks-check-backup.sh
+RUN chmod +x /usr/local/bin/tightbooks-check-backup.sh && \
+    echo "0 10 * * * root bash /usr/local/bin/tightbooks-check-backup.sh >> /app/data/backup-check.log 2>&1" \
+        > /etc/cron.d/tightbooks-check-backup && \
+    chmod 0644 /etc/cron.d/tightbooks-check-backup
+
 # Remove the default nginx site that ships with the package
 RUN rm -f /etc/nginx/sites-enabled/default.conf 2>/dev/null || true
 
