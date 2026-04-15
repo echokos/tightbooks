@@ -22,7 +22,7 @@ export class DashboardController {
     description: 'The dashboard details have been successfully retrieved.',
     schema: { $ref: getSchemaPath(GetDashboardBootMetaResponseDto) },
   })
-  @SkipThrottle()
+  @SkipThrottle({ default: true, auth: true })
   @Get('boot')
   getBootMeta() {
     return this.dashboardService.getBootMeta();
