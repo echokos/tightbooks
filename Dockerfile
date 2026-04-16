@@ -34,6 +34,7 @@ RUN pnpm run build:webapp
 
 # ── Stage 2: Build the NestJS server ─────────────────────────────────────────
 FROM node:18.16.0-alpine AS server-builder
+# Cache-bust: 2026-04-13
 
 WORKDIR /app
 

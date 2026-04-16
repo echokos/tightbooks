@@ -15,9 +15,11 @@ export class TenantUser extends TenantBaseModel {
 
   /**
    * Table name.
+   * Renamed from 'users' to avoid conflict with the system DB 'users' table
+   * when running in single-tenant mode with a shared database (TENANT_DB_NAME).
    */
   static get tableName() {
-    return 'users';
+    return 'tenant_users';
   }
 
   /**
@@ -62,7 +64,7 @@ export class TenantUser extends TenantBaseModel {
         relation: Model.BelongsToOneRelation,
         modelClass: Role,
         join: {
-          from: 'users.roleId',
+          from: 'tenant_users.roleId',
           to: 'roles.id',
         },
       },
