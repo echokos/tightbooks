@@ -6,7 +6,7 @@ import './utils/moment-mysql';
 import { AppModule } from './modules/App/App.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
-global.__public_dirname = path.join(__dirname, '..', 'public');
+global.__public_dirname = process.env.PUBLIC_DIRNAME || path.join(__dirname, '..', 'public');
 global.__static_dirname = path.join(__dirname, '../static');
 global.__views_dirname = path.join(global.__static_dirname, '/views');
 global.__images_dirname = path.join(global.__static_dirname, '/images');

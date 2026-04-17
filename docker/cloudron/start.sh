@@ -14,6 +14,9 @@ echo "[tightbooks] Addon env check: CLOUDRON_MYSQL_HOST=${CLOUDRON_MYSQL_HOST:-<
 # ── Persistent data directory (only /app/data is writable in Cloudron) ────────
 mkdir -p /app/data/uploads
 mkdir -p /app/data/public/pdf
+# PUBLIC_DIRNAME: writable directory for Gotenberg's temp HTML files.
+# Must be served by Node at /public so Gotenberg can fetch them.
+export PUBLIC_DIRNAME="/app/data/public"
 
 # ── Map Cloudron MySQL addon vars → BigCapital DB vars ────────────────────────
 # Cloudron injects: CLOUDRON_MYSQL_HOST, CLOUDRON_MYSQL_PORT, CLOUDRON_MYSQL_DATABASE,

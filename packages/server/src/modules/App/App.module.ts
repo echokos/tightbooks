@@ -109,7 +109,7 @@ import { AppThrottleModule } from './AppThrottle.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../..', 'public'),
+      rootPath: process.env.PUBLIC_DIRNAME || join(__dirname, '../../..', 'public'),
       serveRoot: '/public',
     }),
     ConfigModule.forRoot({
