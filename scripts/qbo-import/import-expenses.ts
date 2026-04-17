@@ -205,16 +205,21 @@ async function main() {
   }
 
   // 8. Get all BigCapital accounts to build a live map for on-the-fly account creation
+  // Note: inactive accounts may not appear in the default list; we try both.
   const bcAccountMap = new Map<number, { name: string; accountType: string }>(); // bigcapId → info
   const bcAccountByName = new Map<string, number>(); // nameLower → bigcapId
   {
-    const resp = await client.get<any>('/accounts?per_page=1000');
-    const accounts: any[] = Array.isArray(resp) ? resp : (resp?.accounts ?? []);
-    for (const a of accounts) {
-      bcAccountMap.set(a.id, { name: a.name, accountType: a.account_type });
-      bcAccountByName.set((a.name as string).toLowerCase(), a.id);
+    for (const query of ['/accounts?per_page=1000', '/accounts?per_page=1000&inactive=true']) {
+      const resp = await client.get<any>(query);
+      const accounts: any[] = Array.isArray(resp) ? resp : (resp?.accounts ?? []);
+      for (const a of accounts) {
+        if (!bcAccountMap.has(a.id)) {
+          bcAccountMap.set(a.id, { name: a.name, accountType: a.account_type });
+          bcAccountByName.set((a.name as string).toLowerCase(), a.id);
+        }
+      }
     }
-    log('INFO', `Loaded ${bcAccountMap.size} BigCapital accounts.`);
+    log('INFO', `Loaded ${bcAccountMap.size} BigCapital accounts (including inactive).`);
   }
 
   // Extend account map with live BigCap accounts (in case there are IDs in account map not yet in bcAccountMap)
@@ -225,23 +230,35 @@ async function main() {
   }
 
   // Known QBO payment accounts that might be missing from account map (deleted in QBO)
-  const knownMissingAccounts: Record<string, { name: string; type: 'credit-card' | 'bank' }> = {
-    '61': { name: 'Barclaycard (archived)', type: 'credit-card' },
-    '62': { name: 'Citi Prestige Card (archived)', type: 'credit-card' },
-    '84': { name: 'Stripe Payment Account (archived)', type: 'bank' },
-    '94': { name: 'AMEX Blue Cash (archived)', type: 'credit-card' },
-    '95': { name: 'Discover It (archived)', type: 'credit-card' },
+  // knownBcId: ID already created in BigCapital from a previous run (inactive — not returned by listing endpoint)
+  const knownMissingAccounts: Record<string, { name: string; type: 'credit-card' | 'bank'; knownBcId?: number }> = {
+    '61': { name: 'Barclaycard (archived)', type: 'credit-card', knownBcId: 1144 },
+    '62': { name: 'Citi Prestige Card (archived)', type: 'credit-card', knownBcId: 1145 },
+    '84': { name: 'Stripe Payment Account (archived)', type: 'bank', knownBcId: 1146 },
+    '94': { name: 'AMEX Blue Cash (archived)', type: 'credit-card', knownBcId: 1147 },
+    '95': { name: 'Discover It (archived)', type: 'credit-card', knownBcId: 1148 },
   };
 
-  // Create any missing archived accounts
+  // Create any missing archived accounts (or reuse known IDs if already created)
   for (const [qboId, info] of Object.entries(knownMissingAccounts)) {
     if (resolvedPaymentAccounts.has(qboId)) continue;
+
+    // First: check by name in the active accounts map
     const existingId = bcAccountByName.get(info.name.toLowerCase());
     if (existingId != null) {
       resolvedPaymentAccounts.set(qboId, existingId);
       log('REUSED', `Payment account "${info.name}" already exists (id=${existingId})`);
       continue;
     }
+
+    // Second: use known BigCap ID (created in a previous run; inactive accounts not returned by listing endpoint)
+    if (info.knownBcId != null) {
+      resolvedPaymentAccounts.set(qboId, info.knownBcId);
+      log('REUSED', `Archived account "${info.name}" using known id=${info.knownBcId}`);
+      continue;
+    }
+
+    // Otherwise: create it
     await new Promise((r) => setTimeout(r, 1000));
     const res = await client.post<any>('/accounts', {
       name: info.name,
