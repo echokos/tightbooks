@@ -73,7 +73,7 @@ export MAIL_FROM_ADDRESS="${CLOUDRON_MAIL_FROM:-noreply@${APP_DOMAIN:-localhost}
 export MAIL_FROM_NAME="${MAIL_FROM_NAME:-Tight Books}"
 
 # ── Application URL ───────────────────────────────────────────────────────────
-# Cloudron injects APP_DOMAIN (e.g. books.example.com)
+# Cloudron injects APP_DOMAIN (e.g. app.tightbooks.com)
 export BASE_URL="https://${APP_DOMAIN:-localhost}"
 
 # ── Gotenberg (PDF generation) ────────────────────────────────────────────────
