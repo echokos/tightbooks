@@ -11,3 +11,6 @@ test-results/
 
 
 .pnpm-store
+
+# QBO import output artifacts (maps, logs)
+scripts/qbo-import/output/
