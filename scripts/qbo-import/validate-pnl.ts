@@ -130,7 +130,7 @@ interface BcPnlNode {
   node_type: string;
 }
 
-function parseBcPnl(data: BcPnlNode[]): PnlSummary {
+function parseBcPnl(data: BcPnlNode[], debugSections = false): PnlSummary {
   const lines: PnlLine[] = [];
   let totalIncome = 0;
   let cogs = 0;
@@ -138,16 +138,48 @@ function parseBcPnl(data: BcPnlNode[]): PnlSummary {
   let totalExpenses = 0;
   let netIncome = 0;
 
+  // Walk only leaf ACCOUNT nodes to avoid double-counting parent totals.
+  // If an ACCOUNT has ACCOUNT children, those children will be walked instead.
+  // If there are transactions directly on a parent account (no sub-accounts would
+  // cover them), we emit a residual line so the parent's amount isn't silently lost.
   function walkNode(node: BcPnlNode, group: PnlLine['group'], parent?: string) {
-    if (node.node_type === 'ACCOUNT') {
+    if (node.node_type !== 'ACCOUNT') return;
+
+    const accountChildren = (node.children ?? []).filter((c) => c.node_type === 'ACCOUNT');
+    if (accountChildren.length === 0) {
+      // Leaf account — emit directly
       const amount = Math.abs(node.total?.amount ?? 0);
       if (amount !== 0) {
         lines.push({ name: node.name, amount, group, parent });
       }
-      for (const child of node.children ?? []) {
+    } else {
+      // Parent account — walk children. If parent total != sum(children), there are
+      // direct transactions on the parent; emit a residual so nothing is hidden.
+      const childSum = accountChildren.reduce((s, c) => s + Math.abs(c.total?.amount ?? 0), 0);
+      const parentTotal = Math.abs(node.total?.amount ?? 0);
+      const residual = Math.round((parentTotal - childSum) * 100) / 100;
+      if (Math.abs(residual) > 0.01) {
+        lines.push({ name: node.name, amount: residual, group, parent });
+      }
+      for (const child of accountChildren) {
         walkNode(child, group, node.name);
       }
     }
+  }
+
+  if (debugSections) {
+    console.log('\n=== RAW BigCapital P&L sections ===');
+    for (const s of data) {
+      const children = s.children ?? [];
+      console.log(`  [${s.id}] total=${s.total?.amount ?? 'n/a'} children=${children.length}`);
+      for (const c of children) {
+        console.log(`    child node_type=${c.node_type} name=${c.name} total=${c.total?.amount ?? 'n/a'} subchildren=${(c.children ?? []).length}`);
+        for (const gc of c.children ?? []) {
+          console.log(`      grandchild node_type=${gc.node_type} name=${gc.name} total=${gc.total?.amount ?? 'n/a'}`);
+        }
+      }
+    }
+    console.log('===================================\n');
   }
 
   for (const section of data) {
@@ -165,9 +197,9 @@ function parseBcPnl(data: BcPnlNode[]): PnlSummary {
       // skip — we use NET_INCOME
     } else if (section.id === 'OTHER_INCOME') {
       for (const child of section.children ?? []) walkNode(child, 'other_income');
-    } else if (section.id === 'OTHER_EXPENSE') {
+    } else if (section.id === 'OTHER_EXPENSE' || section.id === 'OTHER_EXPENSES') {
       for (const child of section.children ?? []) walkNode(child, 'other_expense');
-    } else if (section.id === 'COST_OF_GOODS_SOLD') {
+    } else if (section.id === 'COST_OF_GOODS_SOLD' || section.id === 'COST_OF_SALES') {
       cogs = section.total?.amount ?? 0;
       for (const child of section.children ?? []) walkNode(child, 'cogs');
     }
@@ -392,7 +424,7 @@ async function main() {
   );
 
   const bcData: BcPnlNode[] = bcPnlRaw?.data ?? [];
-  const bc = parseBcPnl(bcData);
+  const bc = parseBcPnl(bcData, true);
 
   console.log('Loading QBO P&L...');
   const qboRaw = JSON.parse(fs.readFileSync(path.join(QBO_DIR, 'pnl_2025.json'), 'utf8'));
