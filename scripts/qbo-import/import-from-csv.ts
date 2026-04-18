@@ -37,6 +37,7 @@ const DRY_RUN = process.env.DRY_RUN !== 'false';
 const DELAY_MS = parseInt(process.env.DELAY_MS ?? '1200', 10);
 
 const OUTPUT_DIR = path.join(__dirname, 'output');
+const PROGRESS_FILE = '/tmp/ek743-imported-refs.json';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -125,38 +126,19 @@ async function fetchWithRetry(url: string, opts: RequestInit): Promise<Response>
   return fetch(url, opts); // final attempt
 }
 
-async function fetchExistingRefs(token: string, org: string): Promise<Set<string>> {
-  const headers = makeHeaders(token, org);
-  const refs = new Set<string>();
-  const seenIds = new Set<number>();
-  let page = 1;
-  let total = Infinity;
-
-  while (refs.size + seenIds.size < total) {
-    const res = await fetchWithRetry(`${API_BASE}/expenses?page=${page}&pageSize=200`, { headers });
-    if (!res.ok) throw new Error(`GET expenses page ${page} failed: ${res.status}`);
-    const data = await res.json() as any;
-    const items: any[] = data?.expenses ?? [];
-
-    if (page === 1) {
-      total = data?.pagination?.total ?? data?.meta?.total ?? 0;
-      if (total === 0) break;
-    }
-
-    let newItems = 0;
-    for (const e of items) {
-      if (seenIds.has(e.id)) break; // pagination cycling
-      seenIds.add(e.id);
-      newItems++;
-      const ref = e.reference_no ?? e.referenceNo ?? '';
-      if (ref) refs.add(ref);
-    }
-    if (items.length === 0 || newItems === 0) break;
-    if (seenIds.size >= total) break;
-    page++;
-    await sleep(300);
+async function fetchExistingRefs(_token: string, _org: string): Promise<Set<string>> {
+  // BigCapital API only returns 12 expenses regardless of page/pageSize params.
+  // Use a local progress file for restart-safe dedup instead of API pagination.
+  if (fs.existsSync(PROGRESS_FILE)) {
+    const saved = JSON.parse(fs.readFileSync(PROGRESS_FILE, 'utf8')) as string[];
+    log('INFO', `Loaded ${saved.length} already-imported refs from progress file.`);
+    return new Set(saved);
   }
-  return refs;
+  return new Set();
+}
+
+function saveProgress(refs: Set<string>) {
+  fs.writeFileSync(PROGRESS_FILE, JSON.stringify([...refs]));
 }
 
 // ── CSV parsing ──────────────────────────────────────────────────────────
@@ -327,6 +309,7 @@ async function main() {
       createdCount++;
       idMap[exp.referenceNo] = newId;
       existing.add(exp.referenceNo); // prevent duplicate if we restart mid-run
+      saveProgress(existing);
       if (createdCount % 50 === 0 || createdCount <= 5) {
         log('CREATED', `[${i + 1}/${expenses.length}] ${exp.referenceNo} → id=${newId} date=${exp.paymentDate}`);
       }
@@ -336,8 +319,8 @@ async function main() {
       const waitMs = retryAfter > 0 ? retryAfter * 1000 : 60_000;
       log('WARN', `[${i + 1}/${expenses.length}] ${exp.referenceNo} got 429 — waiting ${waitMs}ms then checking existence`);
       await sleep(waitMs);
-      // Check if expense was actually created
-      const checkRes = await fetchWithRetry(`${API_BASE}/expenses?page=1&pageSize=12`, { headers });
+      // Check if expense was actually created (sort by id desc = newest first)
+      const checkRes = await fetchWithRetry(`${API_BASE}/expenses?page=1&pageSize=12&sortBy=id&sortOrder=desc`, { headers });
       if (checkRes.ok) {
         const checkData = await checkRes.json() as any;
         const found = (checkData?.expenses ?? []).find((e: any) =>
@@ -347,6 +330,7 @@ async function main() {
           createdCount++;
           idMap[exp.referenceNo] = found.id;
           existing.add(exp.referenceNo);
+          saveProgress(existing);
           log('CREATED', `[${i + 1}/${expenses.length}] ${exp.referenceNo} → id=${found.id} (found after 429)`);
         } else {
           // Not created — retry once after the wait
@@ -364,6 +348,7 @@ async function main() {
             createdCount++;
             idMap[exp.referenceNo] = newId;
             existing.add(exp.referenceNo);
+            saveProgress(existing);
             log('CREATED', `[${i + 1}/${expenses.length}] ${exp.referenceNo} → id=${newId} (retry after 429)`);
           } else {
             failedCount++;
