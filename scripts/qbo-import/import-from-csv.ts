@@ -104,11 +104,15 @@ function makeHeaders(token: string, org: string) {
   };
 }
 
+// Only retry GET/DELETE, never POST (POST may have been processed on 429)
 async function fetchWithRetry(url: string, opts: RequestInit): Promise<Response> {
-  let delay = 2000;
-  for (let attempt = 0; attempt < 8; attempt++) {
+  const method = (opts.method ?? 'GET').toUpperCase();
+  const maxAttempts = method === 'POST' ? 1 : 8;
+  let delay = 3000;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const res = await fetch(url, opts);
     if (res.status === 429 || res.status >= 500) {
+      if (attempt >= maxAttempts - 1) return res; // return rate-limit response for caller to handle
       const retryAfter = Number(res.headers.get('retry-after') ?? 0);
       const wait = retryAfter > 0 ? retryAfter * 1000 : delay;
       console.warn(`[RETRY] ${res.status} attempt ${attempt + 1} — waiting ${wait}ms`);
@@ -118,7 +122,7 @@ async function fetchWithRetry(url: string, opts: RequestInit): Promise<Response>
     }
     return res;
   }
-  throw new Error(`Max retries exceeded for ${url}`);
+  return fetch(url, opts); // final attempt
 }
 
 async function fetchExistingRefs(token: string, org: string): Promise<Set<string>> {
@@ -322,8 +326,53 @@ async function main() {
       const newId = data?.expense?.id ?? data?.id ?? '?';
       createdCount++;
       idMap[exp.referenceNo] = newId;
+      existing.add(exp.referenceNo); // prevent duplicate if we restart mid-run
       if (createdCount % 50 === 0 || createdCount <= 5) {
         log('CREATED', `[${i + 1}/${expenses.length}] ${exp.referenceNo} → id=${newId} date=${exp.paymentDate}`);
+      }
+    } else if (res.status === 429) {
+      // 429 may mean the POST was processed — wait then check existence
+      const retryAfter = Number(res.headers.get('retry-after') ?? 0);
+      const waitMs = retryAfter > 0 ? retryAfter * 1000 : 60_000;
+      log('WARN', `[${i + 1}/${expenses.length}] ${exp.referenceNo} got 429 — waiting ${waitMs}ms then checking existence`);
+      await sleep(waitMs);
+      // Check if expense was actually created
+      const checkRes = await fetchWithRetry(`${API_BASE}/expenses?page=1&pageSize=12`, { headers });
+      if (checkRes.ok) {
+        const checkData = await checkRes.json() as any;
+        const found = (checkData?.expenses ?? []).find((e: any) =>
+          (e.reference_no ?? e.referenceNo ?? '') === exp.referenceNo
+        );
+        if (found) {
+          createdCount++;
+          idMap[exp.referenceNo] = found.id;
+          existing.add(exp.referenceNo);
+          log('CREATED', `[${i + 1}/${expenses.length}] ${exp.referenceNo} → id=${found.id} (found after 429)`);
+        } else {
+          // Not created — retry once after the wait
+          await sleep(DELAY_MS);
+          const retryRes = await fetch(`${API_BASE}/expenses`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload),
+          });
+          const retryRaw = await retryRes.text();
+          let retryData: any;
+          try { retryData = JSON.parse(retryRaw); } catch { retryData = {}; }
+          if (retryRes.ok) {
+            const newId = retryData?.expense?.id ?? retryData?.id ?? '?';
+            createdCount++;
+            idMap[exp.referenceNo] = newId;
+            existing.add(exp.referenceNo);
+            log('CREATED', `[${i + 1}/${expenses.length}] ${exp.referenceNo} → id=${newId} (retry after 429)`);
+          } else {
+            failedCount++;
+            log('ERROR', `[${i + 1}/${expenses.length}] ${exp.referenceNo} failed after 429 retry: ${retryRes.status} ${retryRaw.slice(0, 100)}`);
+          }
+        }
+      } else {
+        failedCount++;
+        log('ERROR', `[${i + 1}/${expenses.length}] ${exp.referenceNo} 429 — could not check existence`);
       }
     } else {
       failedCount++;

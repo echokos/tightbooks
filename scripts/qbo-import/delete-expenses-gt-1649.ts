@@ -70,46 +70,24 @@ async function fetchWithRetry(url: string, opts: RequestInit): Promise<Response>
   throw new Error(`Max retries exceeded for ${url}`);
 }
 
-async function fetchAllExpenseIds(token: string, org: string): Promise<number[]> {
+/**
+ * Fetch one batch of expense IDs > BASELINE_ID from page 1.
+ * Caller repeats until the batch is empty.
+ * This avoids pagination cycling issues: after each deletion batch,
+ * fetching page 1 again gives the next set of items.
+ */
+async function fetchBatch(token: string, org: string): Promise<number[]> {
   const headers = makeHeaders(token, org);
-  const ids: number[] = [];
-  const seen = new Set<number>();
-  let page = 1;
-  let total = Infinity;
-
-  while (ids.length + seen.size < total) {
-    const res = await fetchWithRetry(`${API_BASE}/expenses?page=${page}&pageSize=200`, { headers });
-    if (!res.ok) throw new Error(`GET expenses page ${page} failed: ${res.status}`);
-    const data = await res.json() as any;
-    const items: any[] = data?.expenses ?? [];
-
-    // Capture total from first page
-    if (page === 1) {
-      total = data?.pagination?.total ?? data?.meta?.total ?? items.length;
-      log('INFO', `  API reports ${total} total expenses`);
-    }
-
-    let newItems = 0;
-    for (const e of items) {
-      if (seen.has(e.id)) {
-        // Pagination is cycling — stop
-        log('INFO', `  Pagination cycle detected at page ${page}, stopping fetch`);
-        total = 0; // trigger loop exit
-        break;
-      }
-      seen.add(e.id);
-      newItems++;
-      if (e.id > BASELINE_ID) ids.push(e.id);
-    }
-
-    if (page % 10 === 0) {
-      log('INFO', `  Page ${page}: ${items.length} items, ${ids.length} to-delete so far (${seen.size} seen)`);
-    }
-    if (items.length === 0 || newItems === 0) break;
-    if (seen.size >= total) break;
-    page++;
-    await sleep(300);
+  const res = await fetchWithRetry(`${API_BASE}/expenses?page=1&pageSize=200`, { headers });
+  if (!res.ok) {
+    log('WARN', `GET expenses page 1 returned ${res.status} — skipping batch`);
+    return [];
   }
+  const data = await res.json() as any;
+  const items: any[] = data?.expenses ?? [];
+  const ids = items.filter((e: any) => e.id > BASELINE_ID).map((e: any) => e.id as number);
+  const total = data?.pagination?.total ?? 0;
+  log('INFO', `  Batch: ${total} total in DB, ${items.length} on page, ${ids.length} to delete`);
   return ids;
 }
 
@@ -124,9 +102,7 @@ async function main() {
     log('INFO', 'Authenticated.');
   }
 
-  log('INFO', 'Fetching all expense IDs > 1649...');
-  const idsToDelete = DRY_RUN ? [] : await fetchAllExpenseIds(token, org);
-  log('INFO', `Found ${idsToDelete.length} expenses with ID > ${BASELINE_ID} to delete.`);
+  log('INFO', `Deleting all expenses with ID > ${BASELINE_ID} (batch-by-batch)...`);
 
   if (DRY_RUN) {
     log('DRY', `Would delete all expenses with ID > ${BASELINE_ID}.`);
@@ -134,17 +110,29 @@ async function main() {
     let deleted = 0;
     let failed = 0;
     const headers = makeHeaders(token, org);
-    for (const id of idsToDelete) {
-      await sleep(DELAY_MS);
-      const res = await fetchWithRetry(`${API_BASE}/expenses/${id}`, { method: 'DELETE', headers });
-      if (res.ok || res.status === 404) {
-        deleted++;
-        if (deleted % 50 === 0) log('INFO', `  Deleted ${deleted}/${idsToDelete.length}...`);
-      } else {
-        const txt = await res.text();
-        log('ERROR', `Failed to delete ${id}: ${res.status} ${txt.slice(0, 100)}`);
-        failed++;
+    let round = 0;
+
+    while (true) {
+      round++;
+      const batchIds = await fetchBatch(token, org);
+      if (batchIds.length === 0) {
+        log('INFO', `Round ${round}: no more IDs > ${BASELINE_ID}, done.`);
+        break;
       }
+      log('INFO', `Round ${round}: deleting ${batchIds.length} IDs...`);
+      for (const id of batchIds) {
+        await sleep(DELAY_MS);
+        const res = await fetchWithRetry(`${API_BASE}/expenses/${id}`, { method: 'DELETE', headers });
+        if (res.ok || res.status === 404) {
+          deleted++;
+          if (deleted % 50 === 0) log('INFO', `  Deleted ${deleted} total...`);
+        } else {
+          const txt = await res.text();
+          log('ERROR', `Failed to delete ${id}: ${res.status} ${txt.slice(0, 100)}`);
+          failed++;
+        }
+      }
+      await sleep(500); // brief pause between rounds
     }
     log('INFO', `=== DONE: deleted=${deleted}, failed=${failed} ===`);
     log('INFO', `Remaining expenses should be ≤ ${BASELINE_ID + 1} IDs (historical baseline).`);
