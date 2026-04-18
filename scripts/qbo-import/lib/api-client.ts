@@ -59,6 +59,7 @@ export class TightbooksApiClient {
   ): Promise<{ ok: boolean; status: number; data: T; raw: string }> {
     let attempt = 0;
     let delayMs = 2000;
+    let serverErrorDelay = 8000;
     while (true) {
       const res = await fetch(`${this.baseUrl}${path}`, {
         method: 'POST',
@@ -70,6 +71,13 @@ export class TightbooksApiClient {
         const wait = retryAfter > 0 ? retryAfter * 1000 : delayMs;
         await new Promise((r) => setTimeout(r, wait));
         delayMs = Math.min(delayMs * 2, 30_000);
+        attempt++;
+        continue;
+      }
+      if (res.status >= 500 && attempt < maxRetries) {
+        console.warn(`[RETRY] 5xx (attempt ${attempt + 1}/${maxRetries}) — waiting ${serverErrorDelay / 1000}s`);
+        await new Promise((r) => setTimeout(r, serverErrorDelay));
+        serverErrorDelay = Math.min(serverErrorDelay * 2, 60_000);
         attempt++;
         continue;
       }

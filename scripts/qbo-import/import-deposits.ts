@@ -202,9 +202,12 @@ async function main() {
     const result = await client.post<any>('/manual-journals', payload);
 
     if (result.status >= 500) {
-      log('ERROR', `5xx on QBO-${dep.Id}: ${result.raw.slice(0, 200)}`);
+      // api-client already retried 6 times; log and skip this record
+      log('ERROR', `5xx exhausted retries on QBO-${dep.Id} — skipping: ${result.raw.slice(0, 200)}`);
+      failed++;
+      failures.push(`QBO ${dep.Id}: 5xx ${result.raw.slice(0, 120)}`);
       flushLog(ts);
-      process.exit(1);
+      continue;
     }
     if (!result.ok) {
       log('ERROR', `${result.status} on QBO-${dep.Id}: ${result.raw.slice(0, 200)}`);

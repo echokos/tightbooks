@@ -77,15 +77,16 @@ async function main() {
   log('INFO', 'Authenticated.');
 
   // Auto-create accounts missing from the account map (archived loans/liabilities)
-  const missingAccounts: Record<string, { name: string; type: string }> = {
+  // knownBcId: already created in BigCapital during expenses import — use these IDs directly
+  const missingAccounts: Record<string, { name: string; type: string; knownBcId?: number }> = {
     '73': { name: 'Discover Loan (archived)', type: 'long-term-liability' },
     '97': { name: 'Affirm Loan (archived)', type: 'long-term-liability' },
     '99': { name: 'Sofi Loan (archived)', type: 'long-term-liability' },
-    '61': { name: 'Barclaycard (archived)', type: 'credit-card' },
-    '62': { name: 'Citi Prestige Card (archived)', type: 'credit-card' },
-    '84': { name: 'Stripe Payment Account (archived)', type: 'bank' },
-    '94': { name: 'AMEX Blue Cash (archived)', type: 'credit-card' },
-    '95': { name: 'Discover It (archived)', type: 'credit-card' },
+    '61': { name: 'Barclaycard (archived)', type: 'credit-card', knownBcId: 1144 },
+    '62': { name: 'Citi Prestige Card (archived)', type: 'credit-card', knownBcId: 1145 },
+    '84': { name: 'Stripe Payment Account (archived)', type: 'bank', knownBcId: 1146 },
+    '94': { name: 'AMEX Blue Cash (archived)', type: 'credit-card', knownBcId: 1147 },
+    '95': { name: 'Discover It (archived)', type: 'credit-card', knownBcId: 1148 },
   };
 
   // Fetch existing accounts to check for already-created archived accounts
@@ -101,6 +102,12 @@ async function main() {
 
   for (const [qboId, info] of Object.entries(missingAccounts)) {
     if (accountMap[qboId]) continue; // already mapped
+    // Use known BigCap ID if available (inactive accounts not returned by listing endpoint)
+    if (info.knownBcId != null) {
+      accountMap[qboId] = info.knownBcId;
+      log('REUSED', `Archived account "${info.name}" using known id=${info.knownBcId}`);
+      continue;
+    }
     const existingId = bcAccountByName.get(info.name.toLowerCase());
     if (existingId != null) {
       accountMap[qboId] = existingId;
@@ -196,6 +203,15 @@ async function main() {
       continue;
     }
 
+    // Skip zero-amount entries — BigCapital rejects credit_debit_not_equal_zero
+    const totalDebits = entries.reduce((s, e) => s + (e.debit ?? 0), 0);
+    const totalCredits = entries.reduce((s, e) => s + (e.credit ?? 0), 0);
+    if (totalDebits === 0 && totalCredits === 0) {
+      log('SKIPPED', `JournalEntry QBO-${j.Id}: all-zero amounts — skipping (no P&L impact)`);
+      skipped++;
+      continue;
+    }
+
     const payload: Record<string, unknown> = {
       date: j.TxnDate,
       journalNumber: refNo,
@@ -209,8 +225,10 @@ async function main() {
     const result = await client.post<any>('/manual-journals', payload);
 
     if (result.status >= 500) {
-      log('ERROR', `5xx on QBO-${j.Id}: ${result.raw.slice(0, 200)}`);
-      process.exit(1);
+      // api-client already retried 6 times; log and skip
+      log('ERROR', `5xx exhausted retries on QBO-${j.Id} — skipping: ${result.raw.slice(0, 200)}`);
+      failed++;
+      continue;
     }
     if (!result.ok) {
       log('ERROR', `${result.status} on QBO-${j.Id}: ${result.raw.slice(0, 200)}`);

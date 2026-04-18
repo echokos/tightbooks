@@ -403,10 +403,12 @@ async function main() {
     }
 
     if (result.status >= 500) {
-      log('ERROR', `5xx on QBO-${p.Id}: ${result.raw.slice(0, 200)}`);
-      console.error('Aborting due to server error.');
+      // api-client already retried 6 times; log and skip this record
+      log('ERROR', `5xx exhausted retries on QBO-${p.Id} — skipping: ${result.raw.slice(0, 200)}`);
+      failed++;
+      failures.push(`QBO-${p.Id}: 5xx ${result.raw.slice(0, 120)}`);
       flushLog(timestamp);
-      process.exit(1);
+      continue;
     }
 
     if (!result.ok) {
