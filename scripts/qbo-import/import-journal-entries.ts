@@ -79,9 +79,9 @@ async function main() {
   // Auto-create accounts missing from the account map (archived loans/liabilities)
   // knownBcId: already created in BigCapital during expenses import — use these IDs directly
   const missingAccounts: Record<string, { name: string; type: string; knownBcId?: number }> = {
-    '73': { name: 'Discover Loan (archived)', type: 'long-term-liability' },
-    '97': { name: 'Affirm Loan (archived)', type: 'long-term-liability' },
-    '99': { name: 'Sofi Loan (archived)', type: 'long-term-liability' },
+    '73': { name: 'Discover Loan (archived)', type: 'long-term-liability', knownBcId: 1149 },
+    '97': { name: 'Affirm Loan (archived)', type: 'long-term-liability', knownBcId: 1150 },
+    '99': { name: 'Sofi Loan (archived)', type: 'long-term-liability', knownBcId: 1151 },
     '61': { name: 'Barclaycard (archived)', type: 'credit-card', knownBcId: 1144 },
     '62': { name: 'Citi Prestige Card (archived)', type: 'credit-card', knownBcId: 1145 },
     '84': { name: 'Stripe Payment Account (archived)', type: 'bank', knownBcId: 1146 },
