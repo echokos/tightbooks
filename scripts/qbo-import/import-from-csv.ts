@@ -124,17 +124,31 @@ async function fetchWithRetry(url: string, opts: RequestInit): Promise<Response>
 async function fetchExistingRefs(token: string, org: string): Promise<Set<string>> {
   const headers = makeHeaders(token, org);
   const refs = new Set<string>();
+  const seenIds = new Set<number>();
   let page = 1;
-  while (true) {
+  let total = Infinity;
+
+  while (refs.size + seenIds.size < total) {
     const res = await fetchWithRetry(`${API_BASE}/expenses?page=${page}&pageSize=200`, { headers });
     if (!res.ok) throw new Error(`GET expenses page ${page} failed: ${res.status}`);
     const data = await res.json() as any;
     const items: any[] = data?.expenses ?? [];
+
+    if (page === 1) {
+      total = data?.pagination?.total ?? data?.meta?.total ?? 0;
+      if (total === 0) break;
+    }
+
+    let newItems = 0;
     for (const e of items) {
+      if (seenIds.has(e.id)) break; // pagination cycling
+      seenIds.add(e.id);
+      newItems++;
       const ref = e.reference_no ?? e.referenceNo ?? '';
       if (ref) refs.add(ref);
     }
-    if (items.length < 12) break;
+    if (items.length === 0 || newItems === 0) break;
+    if (seenIds.size >= total) break;
     page++;
     await sleep(300);
   }

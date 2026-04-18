@@ -73,17 +73,40 @@ async function fetchWithRetry(url: string, opts: RequestInit): Promise<Response>
 async function fetchAllExpenseIds(token: string, org: string): Promise<number[]> {
   const headers = makeHeaders(token, org);
   const ids: number[] = [];
+  const seen = new Set<number>();
   let page = 1;
-  while (true) {
+  let total = Infinity;
+
+  while (ids.length + seen.size < total) {
     const res = await fetchWithRetry(`${API_BASE}/expenses?page=${page}&pageSize=200`, { headers });
     if (!res.ok) throw new Error(`GET expenses page ${page} failed: ${res.status}`);
     const data = await res.json() as any;
     const items: any[] = data?.expenses ?? [];
+
+    // Capture total from first page
+    if (page === 1) {
+      total = data?.pagination?.total ?? data?.meta?.total ?? items.length;
+      log('INFO', `  API reports ${total} total expenses`);
+    }
+
+    let newItems = 0;
     for (const e of items) {
+      if (seen.has(e.id)) {
+        // Pagination is cycling — stop
+        log('INFO', `  Pagination cycle detected at page ${page}, stopping fetch`);
+        total = 0; // trigger loop exit
+        break;
+      }
+      seen.add(e.id);
+      newItems++;
       if (e.id > BASELINE_ID) ids.push(e.id);
     }
-    log('INFO', `  Page ${page}: ${items.length} items, ${ids.length} to-delete so far`);
-    if (items.length < 12) break;
+
+    if (page % 10 === 0) {
+      log('INFO', `  Page ${page}: ${items.length} items, ${ids.length} to-delete so far (${seen.size} seen)`);
+    }
+    if (items.length === 0 || newItems === 0) break;
+    if (seen.size >= total) break;
     page++;
     await sleep(300);
   }
