@@ -10,9 +10,11 @@ export class PlaidItem extends BaseModel {
 
   /**
    * Table name.
+   * Renamed from 'plaid_items' to avoid conflict with the system DB 'plaid_items'
+   * table when running in single-tenant mode with a shared database (TENANT_DB_NAME).
    */
   static get tableName() {
-    return 'plaid_items';
+    return 'tenant_plaid_items';
   }
 
   /**
