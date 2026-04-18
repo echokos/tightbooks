@@ -43,7 +43,7 @@ const PASSWORD = process.env.TIGHTBOOKS_PASSWORD ?? '';
 const QBO_DIR = process.env.QBO_EXPORT_DIR ?? '/home/elliott/nanoclaw/groups/maggie/exports/qbo';
 const DRY_RUN = process.env.DRY_RUN !== 'false'; // default: true
 const RESUME_FROM = process.env.RESUME_FROM ?? '';
-const REQUEST_DELAY_MS = 300; // expenses are heavier; 300ms gives ~3/s
+const REQUEST_DELAY_MS = parseInt(process.env.REQUEST_DELAY_MS ?? '1200', 10); // default 1200ms; tune via env
 
 const OUTPUT_DIR = path.join(__dirname, 'output');
 
